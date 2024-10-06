@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HAMS.Infrastructure\Users.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
