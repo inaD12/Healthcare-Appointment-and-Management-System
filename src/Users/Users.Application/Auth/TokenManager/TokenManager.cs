@@ -16,7 +16,7 @@ namespace Users.Application.Auth.TokenManager
 			_jwtOptions = jwtOptions;
 		}
 
-		public string CreateToken(string username, string role, int secondsValid)
+		public string CreateToken(string username, string role)
 		{
 			try
 			{
@@ -25,7 +25,7 @@ namespace Users.Application.Auth.TokenManager
 					.WithSecret(_jwtOptions.CurrentValue.SecretKey)
 					.AddClaim("username", username)
 					.AddClaim(ClaimTypes.Role, role)
-					.AddClaim("exp", DateTimeOffset.UtcNow.AddSeconds(secondsValid).ToUnixTimeSeconds())
+					.AddClaim("exp", DateTimeOffset.UtcNow.AddSeconds(_jwtOptions.CurrentValue.SecondsValid).ToUnixTimeSeconds())
 					.AddClaim("iss", _jwtOptions.CurrentValue.Issuer)
 					.AddClaim("aud", _jwtOptions.CurrentValue.Audience)
 					.Encode();

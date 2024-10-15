@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Users.Domain;
 using Users.Domain.Entities;
+using Users.Domain.Result;
 using Users.Infrastructure.UsersDBContexts;
 
 namespace Users.Infrastructure.Repositories
@@ -13,40 +15,73 @@ namespace Users.Infrastructure.Repositories
 			_context = context;
 		}
 
-		public async Task<IEnumerable<User>> GetAllUsersAsync()
+		public Result<IEnumerable<User>> GetAllUsers()
 		{
-			return await _context.Users.ToListAsync();
+			IEnumerable<User> users = _context.Users.ToList();
+
+			if (users.Any())
+			{
+				return Result<IEnumerable<User>>.Failure(ResponseMessages.NoUsersFound);
+			}
+
+			return Result<IEnumerable<User>>.Success(users); 
 		}
 
-		public async Task<User> GetUserByIdAsync(int id)
+		public Result<User> GetUserById(int id)
 		{
-			return await _context.Users.FindAsync(id);
+			User user = _context.Users.Find(id);
+
+			if (user is null)
+			{
+				return Result<User>.Failure(ResponseMessages.UserNotFound);
+			}
+
+			return Result<User>.Success(user);
 		}
 
-		public async Task<User> GetUserByEmailAsync(string email)
+		public Result<User> GetUserByEmail(string email)
 		{
-			return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+			User user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+			if (user is null)
+			{
+				return Result<User>.Failure(ResponseMessages.UserNotFound);
+			}
+
+			return Result<User>.Success(user);
 		}
 
-		public async Task AddUserAsync(User user)
+		public Result<User> GetUserByFirstName(string FirstName)
 		{
-			await _context.Users.AddAsync(user);
-			await _context.SaveChangesAsync();
+			User user = _context.Users.FirstOrDefault(u => u.FirstName == FirstName);
+
+			if (user is null)
+			{
+				return Result<User>.Failure(ResponseMessages.UserNotFound);
+			}
+
+			return Result<User>.Success(user);
 		}
 
-		public async Task UpdateUserAsync(User user)
+		public void AddUser(User user)
+		{
+			 _context.Users.Add(user);
+			_context.SaveChanges();
+		}
+
+		public void UpdateUser(User user)
 		{
 			_context.Users.Update(user);
-			await _context.SaveChangesAsync();
+			 _context.SaveChanges();
 		}
 
-		public async Task DeleteUserAsync(int id)
+		public void DeleteUser(int id)
 		{
-			var user = await _context.Users.FindAsync(id);
+			var user =  _context.Users.Find(id);
 			if (user != null)
 			{
 				_context.Users.Remove(user);
-				await _context.SaveChangesAsync();
+				_context.SaveChanges();
 			}
 		}
 	}

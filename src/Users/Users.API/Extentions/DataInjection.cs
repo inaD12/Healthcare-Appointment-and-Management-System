@@ -40,7 +40,6 @@ namespace Healthcare_Appointment_and_Management_System.Extentions
 			services.Configure<ConnectionStrings>(
 				configuration.GetSection("ConnectionStrings"));
 
-
 			return services;
 		}
 
