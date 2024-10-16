@@ -6,7 +6,7 @@ namespace Users.Infrastructure.Repositories
 	public interface IUserRepository
 	{
 		Result<IEnumerable<User>> GetAllUsers();
-		Result<User> GetUserById(int id);
+		Result<User> GetUserById(string id);
 		Result<User> GetUserByEmail(string email);
 		Result<User> GetUserByFirstName(string FirstName);
 		void AddUser(User user);

@@ -1,5 +1,22 @@
 ﻿namespace Users.Domain.Result
 {
+	public class Result<T>
+	{
+		private Result(bool isSuccess, string description, T? value)
+		{
+			IsSuccess = isSuccess;
+			Description = description;
+			Value = value;
+		}
+
+		public bool IsSuccess { get; }
+		public bool IsFailure => !IsSuccess;
+		public string Description { get; }
+		public T? Value { get; }
+
+		public static Result<T> Success(T value, string description = "") => new(true, description, value);
+		public static Result<T> Failure(string description) => new(false, description, default(T));
+	}
 	public class Result
 	{
 		private Result(bool isSuccess, string? description, object? obj)

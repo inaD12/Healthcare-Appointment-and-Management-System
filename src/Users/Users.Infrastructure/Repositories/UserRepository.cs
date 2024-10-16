@@ -27,7 +27,7 @@ namespace Users.Infrastructure.Repositories
 			return Result<IEnumerable<User>>.Success(users); 
 		}
 
-		public Result<User> GetUserById(int id)
+		public Result<User> GetUserById(string id)
 		{
 			User user = _context.Users.Find(id);
 

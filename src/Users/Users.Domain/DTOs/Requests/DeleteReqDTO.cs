@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Users.Domain.DTOs.Requests
 {
-	internal class DeleteReqDTO
+	public class DeleteReqDTO
 	{
+		[Required]
+		public string Id { get; set; }
 	}
 }
