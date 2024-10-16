@@ -16,15 +16,15 @@ namespace Users.Application.Auth.TokenManager
 			_jwtOptions = jwtOptions;
 		}
 
-		public string CreateToken(string username, string role)
+		public string CreateToken(string id)
 		{
 			try
 			{
 				string token = JwtBuilder.Create()
 					.WithAlgorithm(new HMACSHA256Algorithm())
 					.WithSecret(_jwtOptions.CurrentValue.SecretKey)
-					.AddClaim("username", username)
-					.AddClaim(ClaimTypes.Role, role)
+					.AddClaim("id", id)
+					//.AddClaim(ClaimTypes.Role, role)
 					.AddClaim("exp", DateTimeOffset.UtcNow.AddSeconds(_jwtOptions.CurrentValue.SecondsValid).ToUnixTimeSeconds())
 					.AddClaim("iss", _jwtOptions.CurrentValue.Issuer)
 					.AddClaim("aud", _jwtOptions.CurrentValue.Audience)

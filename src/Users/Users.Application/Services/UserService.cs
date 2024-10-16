@@ -32,7 +32,7 @@ namespace Users.Application.Services
 			if (!_passwordManager.VerifyPassword(loginDTO.Password, user.PasswordHash, user.Salt))
 				return Result<string>.Failure(ResponseMessages.IncorrectPass);
 
-			string Token = _tokenManager.CreateToken(user.FirstName, user.Role);
+			string Token = _tokenManager.CreateToken(user.Id);
 
 			return Result<string>.Success(Token);
 		}
