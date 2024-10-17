@@ -13,6 +13,7 @@ namespace Users.Domain.Result
 			StatusCode = statusCode;
 		}
 
+		public static Response Ok => new("Operation successful", HttpStatusCode.OK);
 		public static Response UserNotFound => new("User not found", HttpStatusCode.NotFound);
 		public static Response NoUsersFound => new("No users in the system", HttpStatusCode.NotFound);
 		public static Response IncorrectPassword => new("Incorrect password", HttpStatusCode.Unauthorized);

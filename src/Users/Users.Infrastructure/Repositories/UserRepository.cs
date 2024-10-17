@@ -21,7 +21,7 @@ namespace Users.Infrastructure.Repositories
 
 			if (users.Any())
 			{
-				return Result<IEnumerable<User>>.Failure(ResponseMessages.NoUsersFound);
+				return Result<IEnumerable<User>>.Failure(Response.NoUsersFound);
 			}
 
 			return Result<IEnumerable<User>>.Success(users); 
@@ -33,7 +33,7 @@ namespace Users.Infrastructure.Repositories
 
 			if (user is null)
 			{
-				return Result<User>.Failure(ResponseMessages.UserNotFound);
+				return Result<User>.Failure(Response.UserNotFound);
 			}
 
 			return Result<User>.Success(user);
@@ -45,7 +45,7 @@ namespace Users.Infrastructure.Repositories
 
 			if (user is null)
 			{
-				return Result<User>.Failure(ResponseMessages.UserNotFound);
+				return Result<User>.Failure(Response.UserNotFound);
 			}
 
 			return Result<User>.Success(user);
@@ -57,7 +57,7 @@ namespace Users.Infrastructure.Repositories
 
 			if (user is null)
 			{
-				return Result<User>.Failure(ResponseMessages.UserNotFound);
+				return Result<User>.Failure(Response.UserNotFound);
 			}
 
 			return Result<User>.Success(user);

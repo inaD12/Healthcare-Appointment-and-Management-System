@@ -19,6 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureAppSettings(config);
 builder.Services.InjectAuthentication(config);
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services
 	.AddApplicationLayer()
 	.AddInfrastructureLayer();
@@ -40,6 +42,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+EndpointMapper.MapAllEndpoints(app);
 
 app.Run();

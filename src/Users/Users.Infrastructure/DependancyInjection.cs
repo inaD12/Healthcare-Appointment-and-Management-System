@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Users.Infrastructure.Repositories;
 
 namespace Users.Infrastructure
 {
@@ -6,7 +7,7 @@ namespace Users.Infrastructure
 	{
 		public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services)
 		{
-			//services.AddTransient<ISqlConnectionFactory, SqlConnectionFactory>();
+			services.AddTransient<IUserRepository, UserRepository>();
 
 			return services;
 		}

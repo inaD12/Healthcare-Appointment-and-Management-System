@@ -14,7 +14,8 @@
 		public Response Response { get; }
 		public T? Value { get; }
 
-		public static Result<T> Success(T value, Response response = null) => new(true, response, value);
+		public static Result<T> Success(T value, Response response) => new(true, response, value);
+		public static Result<T> Success(T value) => new(true, Response.Ok, value);
 		public static Result<T> Failure(Response response) => new(false, response, default(T));
 	}
 	public class Result
@@ -34,8 +35,8 @@
 
 		public object Object { get; }
 
-		public static Result Success(Response? response = null, object? obj = null) => new(true, response, obj);
-
+		public static Result Success(Response response, object? obj = null) => new(true, response, obj);
+		public static Result Success(object? obj = null) => new(true, Response.Ok, obj);
 		public static Result Failure(Response response) => new(false, response, null);
 	}
 }

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Healthcare_Appointment_and_Management_System</RootNamespace>
+    <UserSecretsId>afac6cd6-fe4a-4fc6-b7f0-d6978c0cdae8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
