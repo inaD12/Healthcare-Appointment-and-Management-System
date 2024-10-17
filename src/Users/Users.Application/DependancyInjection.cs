@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
+using Users.Application.Factories;
 using Users.Application.Helpers;
 using Users.Application.Services;
 using Users.Infrastructure.Repositories;
@@ -15,6 +16,7 @@ namespace Users.Application
 			services.AddTransient<IJwtParser, JwtParser>();
 			services.AddTransient<IPasswordManager, PasswordManager>();
 			services.AddTransient<ITokenManager, TokenManager>();
+			services.AddTransient<IEntityFactory, EntityFactory>();
 
 			return services;
 		}

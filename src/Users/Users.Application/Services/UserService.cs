@@ -2,6 +2,7 @@
 using Users.Application.Auth.TokenManager;
 using Users.Domain;
 using Users.Domain.DTOs.Requests;
+using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
 using Users.Domain.Result;
 using Users.Infrastructure.Repositories;
@@ -20,21 +21,21 @@ namespace Users.Application.Services
 			_tokenManager = tokenManager;
 		}
 
-		public Result<string> Login(LoginReqDTO loginDTO)
+		public Result<TokenDTO> Login(LoginReqDTO loginDTO)
 		{
 			var res = _userRepository.GetUserByEmail(loginDTO.Email);
 
 			if (res.IsFailure)
-				return Result<string>.Failure(res.Response);
+				return Result<TokenDTO>.Failure(res.Response);
 
 			User user = res.Value;
 
 			if (!_passwordManager.VerifyPassword(loginDTO.Password, user.PasswordHash, user.Salt))
-				return Result<string>.Failure(Response.IncorrectPassword);
+				return Result<TokenDTO>.Failure(Response.IncorrectPassword);
 
-			string Token = _tokenManager.CreateToken(user.Id);
+			TokenDTO Token = _tokenManager.CreateToken(user.Id);
 
-			return Result<string>.Success(Token);
+			return Result<TokenDTO>.Success(Token);
 		}
 
 		public Result Register(RegisterReqDTO registerReqDTO)

@@ -20,7 +20,6 @@ namespace Healthcare_Appointment_and_Management_System.Extentions
 									statusCode: (int)result.Response.StatusCode);
 			}
 
-			// If the result state is unknown, return a generic error response
 			return Results.Json(new { message = "Unknown result state" }, statusCode: 500);
 		}
 
@@ -38,7 +37,6 @@ namespace Healthcare_Appointment_and_Management_System.Extentions
 									statusCode: (int)result.Response.StatusCode);
 			}
 
-			// If the result state is unknown, return a generic error response
 			return Results.Json(new { message = "Unknown result state" }, statusCode: 500);
 		}
 	}
