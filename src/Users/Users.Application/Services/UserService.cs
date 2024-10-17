@@ -25,12 +25,12 @@ namespace Users.Application.Services
 			var res = _userRepository.GetUserByEmail(loginDTO.Email);
 
 			if (res.IsFailure)
-				return Result<string>.Failure(res.Description);
+				return Result<string>.Failure(res.Response);
 
 			User user = res.Value;
 
 			if (!_passwordManager.VerifyPassword(loginDTO.Password, user.PasswordHash, user.Salt))
-				return Result<string>.Failure(ResponseMessages.IncorrectPass);
+				return Result<string>.Failure(Response.IncorrectPassword);
 
 			string Token = _tokenManager.CreateToken(user.Id);
 
@@ -42,7 +42,7 @@ namespace Users.Application.Services
 			var res = _userRepository.GetUserByEmail(registerReqDTO.Email);
 
 			if (res.IsSuccess)
-				return Result.Failure(ResponseMessages.EmailTaken);
+				return Result.Failure(Response.EmailTaken);
 
 			User user = new()
 			{
@@ -62,7 +62,7 @@ namespace Users.Application.Services
 			//	return ResponseMessages.UserBadEmailSyntax;
 			//}
 
-			return Result.Success(ResponseMessages.RegSuccessful);
+			return Result.Success(Response.RegistrationSuccessful);
 		}
 
 		public Result UpdateUser(UpdateUserReqDTO updateDTO, string id)
@@ -70,7 +70,7 @@ namespace Users.Application.Services
 			var res = _userRepository.GetUserById(id);
 
 			if (res.IsFailure)
-				return Result.Failure(res.Description);
+				return Result.Failure(res.Response);
 
 			User user = res.Value;
 
@@ -80,7 +80,7 @@ namespace Users.Application.Services
 
 			if (newEmailExists)
 			{
-				return Result.Failure(ResponseMessages.EmailTaken);
+				return Result.Failure(Response.EmailTaken);
 			}
 
 			user.FirstName = updateDTO.FirstName ?? user.FirstName;
@@ -89,7 +89,7 @@ namespace Users.Application.Services
 
 			_userRepository.UpdateUser(user);
 
-			return Result.Success(ResponseMessages.UpdateSuccessful);
+			return Result.Success(Response.UpdateSuccessful);
 		}
 
 		public Result DeleteUser(DeleteReqDTO deleteReqDTO)
@@ -100,7 +100,7 @@ namespace Users.Application.Services
 
 			if (res.IsFailure)
 			{
-				return Result.Failure(res.Description);
+				return Result.Failure(res.Response);
 			}
 
 			return Result.Success();
