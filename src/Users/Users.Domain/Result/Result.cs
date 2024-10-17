@@ -1,52 +1,41 @@
-﻿using Users.Domain.Enums;
-
-namespace Users.Domain.Result
+﻿namespace Users.Domain.Result
 {
 	public class Result<T>
 	{
-		private Result(bool isSuccess, string description, T? value, HttpStatusCode statusCode)
+		private Result(bool isSuccess, Response response, T? value)
 		{
 			IsSuccess = isSuccess;
-			Description = description;
+			Response = response;
 			Value = value;
-			StatusCode = statusCode;
 		}
 
 		public bool IsSuccess { get; }
 		public bool IsFailure => !IsSuccess;
-		public string Description { get; }
+		public Response Response { get; }
 		public T? Value { get; }
 
-		public HttpStatusCode StatusCode { get; }
-
-		public static Result<T> Success(T value, string description = "", HttpStatusCode statusCode = HttpStatusCode.OK) =>
-			new(true, description, value, statusCode);
-
-		public static Result<T> Failure(string description, HttpStatusCode statusCode = HttpStatusCode.BadRequest) =>
-			new(false, description, default(T), statusCode);
+		public static Result<T> Success(T value, Response response = null) => new(true, response, value);
+		public static Result<T> Failure(Response response) => new(false, response, default(T));
 	}
 	public class Result
 	{
-		private Result(bool isSuccess, string? description, object? obj, HttpStatusCode statusCode)
+		private Result(bool isSuccess, Response? response, object? obj)
 		{
+
 			IsSuccess = isSuccess;
-			Description = description;
+			Response = response;
 			Object = obj;
-			StatusCode = statusCode;
 		}
-
 		public bool IsSuccess { get; }
+
 		public bool IsFailure => !IsSuccess;
-		public string Description { get; }
-		public object? Object { get; }
 
-		public HttpStatusCode StatusCode { get; }
+		public Response Response { get; }
 
-		public static Result Success(string? description = null, object? obj = null, HttpStatusCode statusCode = HttpStatusCode.OK) =>
-			new(true, description, obj, statusCode);
+		public object Object { get; }
 
-		public static Result Failure(string description, HttpStatusCode statusCode = HttpStatusCode.BadRequest) =>
-			new(false, description, null, statusCode);
+		public static Result Success(Response? response = null, object? obj = null) => new(true, response, obj);
+
+		public static Result Failure(Response response) => new(false, response, null);
 	}
-
 }
