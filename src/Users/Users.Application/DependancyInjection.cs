@@ -16,7 +16,7 @@ namespace Users.Application
 			services.AddTransient<IJwtParser, JwtParser>();
 			services.AddTransient<IPasswordManager, PasswordManager>();
 			services.AddTransient<ITokenManager, TokenManager>();
-			services.AddTransient<IEntityFactory, EntityFactory>();
+			services.AddTransient<ITokenDTOFactory, TokenDTOFactory>();
 
 			return services;
 		}

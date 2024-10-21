@@ -2,7 +2,7 @@
 
 namespace Users.Application.Factories
 {
-	public interface IEntityFactory
+	public interface ITokenDTOFactory
 	{
 		TokenDTO CreateToken(string token);
 	}

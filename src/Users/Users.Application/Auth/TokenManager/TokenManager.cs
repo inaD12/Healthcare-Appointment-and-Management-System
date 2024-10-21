@@ -12,9 +12,9 @@ namespace Users.Application.Auth.TokenManager
 	public class TokenManager : ITokenManager
 	{
 		private readonly IOptionsMonitor<AuthValues> _jwtOptions;
-		private readonly IEntityFactory _entityFactory;
+		private readonly ITokenDTOFactory _entityFactory;
 
-		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions, IEntityFactory entityFactory)
+		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions, ITokenDTOFactory entityFactory)
 		{
 			_jwtOptions = jwtOptions;
 			_entityFactory = entityFactory;

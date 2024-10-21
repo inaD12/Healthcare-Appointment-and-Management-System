@@ -1,25 +1,32 @@
-﻿using Users.Domain.Enums;
+﻿using Users.Domain.DTOs.Responses;
+using Users.Domain.Enums;
+using Users.Domain.Strings;
 
 namespace Users.Domain.Result
 {
-	public class Response
+    public class Response
 	{
-		public string Message { get; }
+		public MessageDTO Message { get; }
 		public HttpStatusCode StatusCode { get; }
 
 		private Response(string message, HttpStatusCode statusCode)
 		{
-			Message = message;
+			Message = new MessageDTO(message);
 			StatusCode = statusCode;
 		}
 
-		public static Response Ok => new("Operation successful", HttpStatusCode.OK);
-		public static Response UserNotFound => new("User not found", HttpStatusCode.NotFound);
-		public static Response NoUsersFound => new("No users in the system", HttpStatusCode.NotFound);
-		public static Response IncorrectPassword => new("Incorrect password", HttpStatusCode.Unauthorized);
-		public static Response RegistrationSuccessful => new("Registration successful", HttpStatusCode.Created);
-		public static Response EmailTaken => new("This email has been taken", HttpStatusCode.Conflict);
-		public static Response UpdateSuccessful => new("Update successful", HttpStatusCode.OK);
+		public static Response Create(string message, HttpStatusCode statusCode) => new Response(message, statusCode);
+
+		// Success Responses
+		public static Response Ok => Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);
+		public static Response RegistrationSuccessful => Create(SuccessMessages.RegistrationSuccessful, HttpStatusCode.Created);
+		public static Response UpdateSuccessful => Create(SuccessMessages.UpdateSuccessful, HttpStatusCode.OK);
+
+		// Error Responses
+		public static Response UserNotFound => Create(ErrorMessages.UserNotFound, HttpStatusCode.NotFound);
+		public static Response NoUsersFound => Create(ErrorMessages.NoUsersFound, HttpStatusCode.NotFound);
+		public static Response IncorrectPassword => Create(ErrorMessages.IncorrectPassword, HttpStatusCode.Unauthorized);
+		public static Response EmailTaken => Create(ErrorMessages.EmailTaken, HttpStatusCode.Conflict);
 
 	}
 }

@@ -14,7 +14,7 @@ namespace Healthcare_Appointment_and_Management_System.Extentions
 				.AddJwtBearer(opts =>
 				{
 					byte[] signingKeyBytes = Encoding.UTF8
-						.GetBytes(configuration["Jwtoptions:SigningKey"]);
+						.GetBytes(configuration["Auth:SecretKey"]);
 
 					opts.TokenValidationParameters = new TokenValidationParameters
 					{
@@ -22,9 +22,9 @@ namespace Healthcare_Appointment_and_Management_System.Extentions
 						ValidateAudience = true,
 						ValidateLifetime = true,
 						ValidateIssuerSigningKey = true,
-						ValidIssuer = configuration["Jwtoptions:Issuer"],
-						ValidAudience = configuration["Jwtoptions:Audience"],
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwtoptions:SigningKey"]))
+						ValidIssuer = configuration["Auth:Issuer"],
+						ValidAudience = configuration["Auth:Audience"],
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Auth:SecretKey"]))
 					};
 				});
 

@@ -2,11 +2,11 @@
 
 namespace Users.Application.Factories
 {
-	public class EntityFactory : IEntityFactory
+	public class TokenDTOFactory : ITokenDTOFactory
 	{
 		public TokenDTO CreateToken(string token)
 		{
-			return new TokenDTO { Token = token };
+			return new TokenDTO(token);
 		}
 	}
 }

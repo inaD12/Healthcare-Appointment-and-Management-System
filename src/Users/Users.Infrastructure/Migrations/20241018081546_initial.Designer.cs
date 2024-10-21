@@ -12,8 +12,8 @@ using Users.Infrastructure.UsersDBContexts;
 namespace Users.Infrastructure.Migrations
 {
     [DbContext(typeof(UsersDBContext))]
-    [Migration("20241004090535_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241018081546_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,8 @@ namespace Users.Infrastructure.Migrations
 
             modelBuilder.Entity("Users.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -61,6 +58,10 @@ namespace Users.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
