@@ -77,11 +77,11 @@ namespace Users.Application.Services
 
 			User user = res.Value;
 
-			bool newEmailExists = updateDTO.NewEmail != null
+			bool newEmailIsCorrect = updateDTO.NewEmail != null
 					&& user.Email != updateDTO.NewEmail
 					&& _userRepository.GetUserByEmail(updateDTO.NewEmail).IsFailure;
 
-			if (newEmailExists)
+			if (!newEmailIsCorrect)
 			{
 				return Result.Failure(Response.EmailTaken);
 			}
