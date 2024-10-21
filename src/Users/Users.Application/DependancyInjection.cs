@@ -4,7 +4,6 @@ using Users.Application.Auth.TokenManager;
 using Users.Application.Factories;
 using Users.Application.Helpers;
 using Users.Application.Services;
-using Users.Infrastructure.Repositories;
 
 namespace Users.Application
 {
@@ -17,6 +16,7 @@ namespace Users.Application
 			services.AddTransient<IPasswordManager, PasswordManager>();
 			services.AddTransient<ITokenManager, TokenManager>();
 			services.AddTransient<ITokenDTOFactory, TokenDTOFactory>();
+			services.AddTransient<IMessageDTOFactory, MessageDTOFactory>();
 
 			return services;
 		}

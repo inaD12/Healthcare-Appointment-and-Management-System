@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Users.Domain;
-using Users.Domain.Entities;
-using Users.Domain.Result;
+﻿using Users.Domain.Entities;
 using Users.Infrastructure.UsersDBContexts;
+using Users.Domain.Result;
 
 namespace Users.Infrastructure.Repositories
 {

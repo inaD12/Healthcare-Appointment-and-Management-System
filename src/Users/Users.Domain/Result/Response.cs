@@ -14,8 +14,7 @@ namespace Users.Domain.Result
 			Message = new MessageDTO(message);
 			StatusCode = statusCode;
 		}
-
-		public static Response Create(string message, HttpStatusCode statusCode) => new Response(message, statusCode);
+		private static Response Create(string message, HttpStatusCode statusCode) => new Response(message, statusCode);
 
 		// Success Responses
 		public static Response Ok => Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);

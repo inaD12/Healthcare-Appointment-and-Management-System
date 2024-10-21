@@ -56,8 +56,10 @@ namespace Users.Application.Services
 				DateOfBirth = registerReqDTO.DateOfBirth,
 				PhoneNumber = registerReqDTO.PhoneNumber,
 				Address = registerReqDTO.Address,
+				Role = "User"
 			};
 
+			_userRepository.AddUser(user);
 			//if (!_emailConfirmation.SendEmail(user.Email, user.Id))
 			//{
 			//	return ResponseMessages.UserBadEmailSyntax;

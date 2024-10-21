@@ -1,4 +1,5 @@
-﻿namespace Users.Domain.Result
+﻿
+namespace Users.Domain.Result
 {
 	public class Result<T>
 	{
