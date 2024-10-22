@@ -5,6 +5,7 @@ using Users.Infrastructure;
 using Healthcare_Appointment_and_Management_System.Extentions;
 using Serilog;
 using Healthcare_Appointment_and_Management_System.Middlewares;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,11 @@ builder.Services
 	.AddInfrastructureLayer();
 
 builder.Host.ConfigureSerilog();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+	options.SuppressModelStateInvalidFilter = false;
+});
 
 var app = builder.Build();
 

@@ -1,6 +1,8 @@
-﻿using Healthcare_Appointment_and_Management_System.Extentions;
+﻿using FluentValidation;
+using Healthcare_Appointment_and_Management_System.Extentions;
 using Users.Application.Helpers;
 using Users.Application.Services;
+using Users.Application.Validators;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 
@@ -14,24 +16,27 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 
 			group.MapPost("login", Login)
 				.Produces<TokenDTO>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status400BadRequest)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.AllowAnonymous();
 
 			group.MapPost("register", Register)
 				.Produces<MessageDTO>(StatusCodes.Status201Created)
+				.Produces(StatusCodes.Status400BadRequest)
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.AllowAnonymous();
 
-			group.MapPost("update", Update)
+			group.MapPut("update", Update)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
-				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.Produces(StatusCodes.Status400BadRequest)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.RequireAuthorization();
 
-			group.MapPost("delete", Delete)
+			group.MapDelete("delete", Delete)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
 				.Produces(StatusCodes.Status500InternalServerError)
@@ -40,8 +45,16 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 
 		public  IResult Login(
 			LoginReqDTO loginReqDTO,
-			IUserService userService)
+			IUserService userService,
+			IValidator<LoginReqDTO> validator)
 		{
+			var valResult = validator.Validate(loginReqDTO);
+
+			if (!valResult.IsValid)
+			{
+				var errors = valResult.Errors.Select(e => e.ErrorMessage).ToList();
+				return Results.BadRequest(new { Errors = errors });
+			}
 
 			var res = userService.Login(loginReqDTO);
 
