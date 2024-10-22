@@ -12,9 +12,26 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 		{
 			var group = app.MapGroup("api/users");
 
-			group.MapPost("login", Login).Produces<TokenDTO>(StatusCodes.Status200OK).Produces<MessageDTO>(StatusCodes.Status404NotFound);
-			group.MapPost("register", Register).Produces<MessageDTO>(StatusCodes.Status201Created).Produces<MessageDTO>(StatusCodes.Status409Conflict);
-			group.MapPost("update", Update).Produces<MessageDTO>(StatusCodes.Status200OK).Produces<MessageDTO>(StatusCodes.Status409Conflict).Produces<MessageDTO>(StatusCodes.Status404NotFound);
+			group.MapPost("login", Login)
+				.Produces<TokenDTO>(StatusCodes.Status200OK)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.AllowAnonymous();
+
+			group.MapPost("register", Register)
+				.Produces<MessageDTO>(StatusCodes.Status201Created)
+				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.AllowAnonymous();
+
+			group.MapPost("update", Update)
+				.Produces<MessageDTO>(StatusCodes.Status200OK)
+				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.RequireAuthorization();
+
+			group.MapPost("delete", Delete)
+				.Produces<MessageDTO>(StatusCodes.Status200OK)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.RequireAuthorization();
 		}
 
 		public  IResult Login(
@@ -43,6 +60,17 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 			string id = jwtParser.GetIdFromToken();
 
 			var res = userService.UpdateUser(updateUserReqDTO, id);
+
+			return ControllerResponse.ParseAndReturnMessage(res);
+		}
+
+		public IResult Delete(
+			IUserService userService,
+			IJwtParser jwtParser)
+		{
+			string id = jwtParser.GetIdFromToken();
+
+			var res = userService.DeleteUser(id);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

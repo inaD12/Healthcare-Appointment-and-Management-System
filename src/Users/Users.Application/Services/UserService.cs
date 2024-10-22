@@ -95,9 +95,9 @@ namespace Users.Application.Services
 			return Result.Success(Response.UpdateSuccessful);
 		}
 
-		public Result DeleteUser(DeleteReqDTO deleteReqDTO)
+		public Result DeleteUser(string id)
 		{
-			var res = _userRepository.GetUserById(deleteReqDTO.Id);
+			var res = _userRepository.GetUserById(id);
 
 			User user = res.Value;
 

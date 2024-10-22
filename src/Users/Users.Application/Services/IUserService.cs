@@ -6,7 +6,7 @@ namespace Users.Application.Services
 {
 	public interface IUserService
 	{
-		Result DeleteUser(DeleteReqDTO deleteReqDTO);
+		Result DeleteUser(string id);
 		Result<TokenDTO> Login(LoginReqDTO loginDTO);
 		Result Register(RegisterReqDTO registerReqDTO);
 		Result UpdateUser(UpdateUserReqDTO updateDTO, string id);
