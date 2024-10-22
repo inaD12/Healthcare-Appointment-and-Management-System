@@ -1,6 +1,5 @@
 ﻿using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
-using Users.Domain;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;

@@ -4,6 +4,7 @@ using Users.Application;
 using Users.Infrastructure;
 using Healthcare_Appointment_and_Management_System.Extentions;
 using Serilog;
+using Healthcare_Appointment_and_Management_System.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.MapControllers();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 EndpointMapper.MapAllEndpoints(app);
 
 app.Run();
