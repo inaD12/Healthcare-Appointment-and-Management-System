@@ -15,22 +15,26 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 			group.MapPost("login", Login)
 				.Produces<TokenDTO>(StatusCodes.Status200OK)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces(StatusCodes.Status500InternalServerError)
 				.AllowAnonymous();
 
 			group.MapPost("register", Register)
 				.Produces<MessageDTO>(StatusCodes.Status201Created)
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.Produces(StatusCodes.Status500InternalServerError)
 				.AllowAnonymous();
 
 			group.MapPost("update", Update)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces(StatusCodes.Status500InternalServerError)
 				.RequireAuthorization();
 
 			group.MapPost("delete", Delete)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces(StatusCodes.Status500InternalServerError)
 				.RequireAuthorization();
 		}
 

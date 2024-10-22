@@ -26,6 +26,7 @@ namespace Users.Domain.Result
 		public static Response NoUsersFound => Create(ErrorMessages.NoUsersFound, HttpStatusCode.NotFound);
 		public static Response IncorrectPassword => Create(ErrorMessages.IncorrectPassword, HttpStatusCode.Unauthorized);
 		public static Response EmailTaken => Create(ErrorMessages.EmailTaken, HttpStatusCode.Conflict);
+		public static Response InternalError => Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 
 	}
 }
