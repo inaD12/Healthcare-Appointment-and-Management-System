@@ -22,6 +22,10 @@ namespace Users.Application
 			services.AddTransient<ITokenDTOFactory, TokenDTOFactory>();
 			services.AddTransient<IMessageDTOFactory, MessageDTOFactory>();
 			services.AddTransient<IValidator<LoginReqDTO>, LoginReqDTOValidator>();
+			services.AddTransient<IValidator<RegisterReqDTO>, RegisterReqDTOValidator>();
+			services.AddTransient<IValidator<UpdateUserReqDTO>, UpdateUserReqDTOValidator>();
+
+
 
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
