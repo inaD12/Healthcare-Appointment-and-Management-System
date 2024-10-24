@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Users.Application.Auth.PasswordManager;
@@ -13,7 +15,7 @@ namespace Users.Application
 {
 	public static class DependancyInjection
 	{
-		public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
+		public static IServiceCollection AddApplicationLayer(this IServiceCollection services, IConfiguration configuration )
 		{
 			services.AddTransient<IUserService, UserService>();
 			services.AddTransient<IJwtParser, JwtParser>();
@@ -28,6 +30,9 @@ namespace Users.Application
 
 
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+			services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
+					.AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
 
 			return services;
 		}

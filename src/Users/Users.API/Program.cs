@@ -26,7 +26,7 @@ builder.Services.AddSwagger();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
-	.AddApplicationLayer()
+	.AddApplicationLayer(config)
 	.AddInfrastructureLayer();
 
 builder.Host.ConfigureSerilog();

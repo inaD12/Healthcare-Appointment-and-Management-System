@@ -27,7 +27,7 @@ namespace Users.Application.Validators
 
 			RuleFor(x => x.PhoneNumber)
 				.NotEmpty().WithMessage("Phone Number is required.")
-				.Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format.");
+				.Matches(@"^\+?[0-9]\d{1,14}$").WithMessage("Invalid phone number format.");
 
 			RuleFor(x => x.Address)
 				.NotEmpty().WithMessage("Address is required.");

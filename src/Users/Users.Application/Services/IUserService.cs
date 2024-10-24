@@ -1,4 +1,5 @@
-﻿using Users.Domain.DTOs.Requests;
+﻿using FluentEmail.Core;
+using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Result;
 

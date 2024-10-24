@@ -1,4 +1,6 @@
-﻿using Users.Application.Auth.PasswordManager;
+﻿using FluentEmail.Core;
+using Serilog;
+using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
@@ -13,11 +15,13 @@ namespace Users.Application.Services
 		private readonly IUserRepository _userRepository;
 		private readonly IPasswordManager _passwordManager;
 		private readonly ITokenManager _tokenManager;
-		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager)
+		private readonly IFluentEmail _fluentEmail;
+		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager, IFluentEmail fluentEmail)
 		{
 			_userRepository = userRepository;
 			_passwordManager = passwordManager;
 			_tokenManager = tokenManager;
+			_fluentEmail = fluentEmail;
 		}
 
 		public Result<TokenDTO> Login(LoginReqDTO loginDTO)
@@ -39,32 +43,42 @@ namespace Users.Application.Services
 
 		public Result Register(RegisterReqDTO registerReqDTO)
 		{
-			var res = _userRepository.GetUserByEmail(registerReqDTO.Email);
-
-			if (res.IsSuccess)
-				return Result.Failure(Response.EmailTaken);
-
-			User user = new()
+			try
 			{
-				Id = Guid.NewGuid().ToString(),
-				Email = registerReqDTO.Email,
-				FirstName = registerReqDTO.FirstName,
-				LastName = registerReqDTO.LastName,
-				PasswordHash = _passwordManager.HashPassword(registerReqDTO.Password, out string salt),
-				Salt = salt,
-				DateOfBirth = registerReqDTO.DateOfBirth,
-				PhoneNumber = registerReqDTO.PhoneNumber,
-				Address = registerReqDTO.Address,
-				Role = "User"
-			};
+				var res = _userRepository.GetUserByEmail(registerReqDTO.Email);
 
-			_userRepository.AddUser(user);
-			//if (!_emailConfirmation.SendEmail(user.Email, user.Id))
-			//{
-			//	return ResponseMessages.UserBadEmailSyntax;
-			//}
+				if (res.IsSuccess)
+					return Result.Failure(Response.EmailTaken);
 
-			return Result.Success(Response.RegistrationSuccessful);
+				User user = new()
+				{
+					Id = Guid.NewGuid().ToString(),
+					Email = registerReqDTO.Email,
+					FirstName = registerReqDTO.FirstName,
+					LastName = registerReqDTO.LastName,
+					PasswordHash = _passwordManager.HashPassword(registerReqDTO.Password, out string salt),
+					Salt = salt,
+					DateOfBirth = registerReqDTO.DateOfBirth,
+					PhoneNumber = registerReqDTO.PhoneNumber,
+					Address = registerReqDTO.Address,
+					Role = "User"
+				};
+
+				_userRepository.AddUser(user);
+
+				_fluentEmail
+				   .To(user.Email)
+				   .Subject("Email verifivation for HAMS")
+				   .Body("To verify your email click here")
+				   .Send();
+
+				return Result.Success(Response.RegistrationSuccessful);
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in Register() in UserService: {ex.Message} {ex.Source} {ex.InnerException}");
+				return Result.Failure(Response.InternalError);
+			}
 		}
 
 		public Result UpdateUser(UpdateUserReqDTO updateDTO, string id)
@@ -98,12 +112,14 @@ namespace Users.Application.Services
 		{
 			var res = _userRepository.GetUserById(id);
 
-			User user = res.Value;
-
 			if (res.IsFailure)
 			{
 				return Result.Failure(res.Response);
 			}
+
+			User user = res.Value;
+
+			_userRepository.DeleteUser(id);
 
 			return Result.Success();
 		}

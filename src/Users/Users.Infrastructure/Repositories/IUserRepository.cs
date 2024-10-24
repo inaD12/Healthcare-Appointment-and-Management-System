@@ -11,6 +11,6 @@ namespace Users.Infrastructure.Repositories
 		Result<User> GetUserByFirstName(string FirstName);
 		void AddUser(User user);
 		void UpdateUser(User user);
-		void DeleteUser(int id);
+		void DeleteUser(string id);
 	}
 }

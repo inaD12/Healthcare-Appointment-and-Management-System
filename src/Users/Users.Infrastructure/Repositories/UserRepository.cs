@@ -120,7 +120,7 @@ namespace Users.Infrastructure.Repositories
 			}
 		}
 
-		public void DeleteUser(int id)
+		public void DeleteUser(string id)
 		{
 			try
 			{
