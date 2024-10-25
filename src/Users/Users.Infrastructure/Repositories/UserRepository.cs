@@ -136,5 +136,11 @@ namespace Users.Infrastructure.Repositories
 				Log.Error($"Error in DeleteUser() in UserRepository: {ex.Message}");
 			}
 		}
+
+		public void VerifyEmail(User user)
+		{
+			user.EmailVerified = true;
+			UpdateUser(user);
+		}
 	}
 }

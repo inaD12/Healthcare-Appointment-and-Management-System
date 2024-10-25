@@ -12,5 +12,6 @@ namespace Users.Infrastructure.Repositories
 		void AddUser(User user);
 		void UpdateUser(User user);
 		void DeleteUser(string id);
+		void VerifyEmail(User user);
 	}
 }

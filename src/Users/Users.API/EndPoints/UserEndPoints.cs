@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Healthcare_Appointment_and_Management_System.Extentions;
+using Microsoft.AspNetCore.Builder;
 using Users.Application.Helpers;
 using Users.Application.Services;
 using Users.Domain.DTOs.Requests;
@@ -7,8 +8,10 @@ using Users.Domain.DTOs.Responses;
 
 namespace Healthcare_Appointment_and_Management_System.EndPoints
 {
-	public class UserEndPoints : IEndPoints
+	internal class UserEndPoints : IEndPoints
 	{
+		public const string VerifyEmail = "VerifyEmail";
+
 		public void RegisterEndpoints(IEndpointRouteBuilder app)
 		{
 			var group = app.MapGroup("api/users");
@@ -42,6 +45,12 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.RequireAuthorization();
+
+			group.MapGet("verify-email", VerifyEmails)
+				.Produces<MessageDTO>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status500InternalServerError)
+				.WithName(VerifyEmail);
 		}
 
 		private async Task<IResult?> ValidateAndReturnResponse<T>(T dto, IValidator<T> validator)
@@ -112,5 +121,12 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
+
+		public async Task<IResult> VerifyEmails(string token, IEmailService emailService)
+		{
+			var res = await emailService.Handle(token);
+
+			return ControllerResponse.ParseAndReturnMessage(res);
+		} 
 	}
 }

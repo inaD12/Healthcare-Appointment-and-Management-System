@@ -1,9 +1,12 @@
 ﻿using FluentEmail.Core;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Serilog;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
+using Users.Application.EmailVerification;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
+using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Result;
 using Users.Infrastructure.Repositories;
@@ -13,15 +16,19 @@ namespace Users.Application.Services
 	public class UserService : IUserService
 	{
 		private readonly IUserRepository _userRepository;
+		private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepository;
 		private readonly IPasswordManager _passwordManager;
 		private readonly ITokenManager _tokenManager;
 		private readonly IFluentEmail _fluentEmail;
-		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager, IFluentEmail fluentEmail)
+		private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactory;
+		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager, IFluentEmail fluentEmail, IEmailVerificationTokenRepository emailVerificationTokenRepository, IEmailVerificationLinkFactory emailVerificationLinkFactory)
 		{
 			_userRepository = userRepository;
 			_passwordManager = passwordManager;
 			_tokenManager = tokenManager;
 			_fluentEmail = fluentEmail;
+			_emailVerificationTokenRepository = emailVerificationTokenRepository;
+			_emailVerificationLinkFactory = emailVerificationLinkFactory;
 		}
 
 		public Result<TokenDTO> Login(LoginReqDTO loginDTO)
@@ -61,15 +68,29 @@ namespace Users.Application.Services
 					DateOfBirth = registerReqDTO.DateOfBirth,
 					PhoneNumber = registerReqDTO.PhoneNumber,
 					Address = registerReqDTO.Address,
-					Role = "User"
+					Role = "User",
+					EmailVerified = false
 				};
 
 				_userRepository.AddUser(user);
 
+				DateTime utcNow = DateTime.UtcNow;
+				EmailVerificationToken emailVerificationToken = new()
+				{
+					Id = Guid.NewGuid().ToString(),
+					UserId = user.Id,
+					CreatedOnUtc = utcNow,
+					ExpiresOnUtc = utcNow.AddDays(1),
+				};
+
+				_emailVerificationTokenRepository.AddToken(emailVerificationToken);
+
+				string verificationLink = _emailVerificationLinkFactory.Create(emailVerificationToken);
+
 				_fluentEmail
 				   .To(user.Email)
 				   .Subject("Email verifivation for HAMS")
-				   .Body("To verify your email click here")
+				   .Body($"To verify your email <a href='{verificationLink}'>click here</a>", isHtml:true)
 				   .Send();
 
 				return Result.Success(Response.RegistrationSuccessful);

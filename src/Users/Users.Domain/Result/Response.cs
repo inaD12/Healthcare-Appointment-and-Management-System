@@ -28,5 +28,8 @@ namespace Users.Domain.Result
 		public static Response EmailTaken => Create(ErrorMessages.EmailTaken, HttpStatusCode.Conflict);
 		public static Response InternalError => Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 
+		public static Response TokenNotFound => Create(ErrorMessages.TokenNotFound, HttpStatusCode.NotFound);
+		public static Response InvalidVerificationToken => Create(ErrorMessages.InvalidVerificationToken, HttpStatusCode.BadRequest);
+
 	}
 }

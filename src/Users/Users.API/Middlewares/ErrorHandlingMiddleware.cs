@@ -20,7 +20,7 @@ namespace Healthcare_Appointment_and_Management_System.Middlewares
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Unhandled exception caught: {ex.Message}");
+				Log.Error($"Unhandled exception caught: {ex.Message} {ex.Source} {ex.InnerException} {ex.StackTrace}");
 				await HandleExceptionAsync(context, ex);
 			}
 		}

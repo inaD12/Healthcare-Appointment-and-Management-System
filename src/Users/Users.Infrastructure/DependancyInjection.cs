@@ -8,6 +8,7 @@ namespace Users.Infrastructure
 		public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services)
 		{
 			services.AddTransient<IUserRepository, UserRepository>();
+			services.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
 
 			return services;
 		}

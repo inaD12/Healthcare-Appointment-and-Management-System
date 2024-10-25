@@ -6,6 +6,8 @@ using Healthcare_Appointment_and_Management_System.Extentions;
 using Serilog;
 using Healthcare_Appointment_and_Management_System.Middlewares;
 using Microsoft.AspNetCore.Mvc;
+using Users.Application.EmailVerification;
+using Users.API.EmailVerification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services
 	.AddApplicationLayer(config)
 	.AddInfrastructureLayer();
+
+builder.Services.AddScoped<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
 
 builder.Host.ConfigureSerilog();
 
