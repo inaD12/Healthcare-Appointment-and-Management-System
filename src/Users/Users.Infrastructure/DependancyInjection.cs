@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Users.Application.Factories;
+using Users.Infrastructure.DBContexts;
 using Users.Infrastructure.Repositories;
 
 namespace Users.Infrastructure
@@ -9,6 +11,8 @@ namespace Users.Infrastructure
 		{
 			services.AddTransient<IUserRepository, UserRepository>();
 			services.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
+			services.AddTransient<IRepositoryFactory, RepositoryFactory>();
+			services.AddSingleton<IDBContext, DBContext>();
 
 			return services;
 		}

@@ -27,6 +27,7 @@ namespace Users.Application
 			services.AddTransient<IValidator<RegisterReqDTO>, RegisterReqDTOValidator>();
 			services.AddTransient<IValidator<UpdateUserReqDTO>, UpdateUserReqDTOValidator>();
 			services.AddTransient<IEmailService, EmailService>();
+			services.AddTransient<IEmailVerificationTokenFactory, EmailVerificationTokenFactory>();
 
 
 

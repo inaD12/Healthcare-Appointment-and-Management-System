@@ -1,9 +1,9 @@
 ﻿using FluentEmail.Core;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Serilog;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.EmailVerification;
+using Users.Application.Factories;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.EmailVerification;
@@ -21,6 +21,7 @@ namespace Users.Application.Services
 		private readonly ITokenManager _tokenManager;
 		private readonly IFluentEmail _fluentEmail;
 		private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactory;
+		private readonly IEmailVerificationTokenFactory _emailVerificationTokenFactory;
 		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager, IFluentEmail fluentEmail, IEmailVerificationTokenRepository emailVerificationTokenRepository, IEmailVerificationLinkFactory emailVerificationLinkFactory)
 		{
 			_userRepository = userRepository;
@@ -75,13 +76,12 @@ namespace Users.Application.Services
 				_userRepository.AddUser(user);
 
 				DateTime utcNow = DateTime.UtcNow;
-				EmailVerificationToken emailVerificationToken = new()
-				{
-					Id = Guid.NewGuid().ToString(),
-					UserId = user.Id,
-					CreatedOnUtc = utcNow,
-					ExpiresOnUtc = utcNow.AddDays(1),
-				};
+
+				EmailVerificationToken emailVerificationToken = _emailVerificationTokenFactory.CreateToken(
+					Guid.NewGuid().ToString(),
+					user.Id,
+					utcNow,
+					utcNow.AddDays(1));
 
 				_emailVerificationTokenRepository.AddToken(emailVerificationToken);
 
