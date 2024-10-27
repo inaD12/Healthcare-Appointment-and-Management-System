@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Healthcare_Appointment_and_Management_System.Extentions;
-using Microsoft.AspNetCore.Builder;
 using Users.Application.Helpers;
 using Users.Application.Services;
 using Users.Domain.DTOs.Requests;

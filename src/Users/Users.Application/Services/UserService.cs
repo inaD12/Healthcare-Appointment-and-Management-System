@@ -1,13 +1,9 @@
-﻿using FluentEmail.Core;
-using Serilog;
+﻿using Serilog;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
-using Users.Application.EmailVerification;
-using Users.Application.Factories;
 using Users.Application.Helpers;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
-using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Result;
 using Users.Infrastructure.DBContexts;
