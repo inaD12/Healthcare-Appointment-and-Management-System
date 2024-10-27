@@ -15,7 +15,7 @@ namespace Users.Infrastructure.Repositories
 			_context = context;
 		}
 
-		public async Task AddToken(EmailVerificationToken token)
+		public async Task AddTokenAsync(EmailVerificationToken token)
 		{
 			try
 			{
@@ -28,7 +28,7 @@ namespace Users.Infrastructure.Repositories
 			}
 		}
 
-		public async Task<Result<EmailVerificationToken>> GetTokenById(string id)
+		public async Task<Result<EmailVerificationToken>> GetTokenByIdAsync(string id)
 		{
 			try
 			{

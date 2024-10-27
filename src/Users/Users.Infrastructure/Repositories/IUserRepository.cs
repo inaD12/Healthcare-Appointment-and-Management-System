@@ -5,13 +5,14 @@ namespace Users.Infrastructure.Repositories
 {
 	public interface IUserRepository
 	{
-		Result<IEnumerable<User>> GetAllUsers();
-		Result<User> GetUserById(string id);
-		Result<User> GetUserByEmail(string email);
-		Result<User> GetUserByFirstName(string FirstName);
-		void AddUser(User user);
-		void UpdateUser(User user);
-		void DeleteUser(string id);
-		void VerifyEmail(User user);
+		Task<Result<IEnumerable<User>>> GetAllUsersAsync();
+		Task<Result<User>> GetUserByIdAsync(string id);
+		Task<Result<User>> GetUserByEmailAsync(string email);
+		Task<Result<User>> GetUserByFirstNameAsync(string firstName);
+		Task AddUserAsync(User user);
+		Task UpdateUserAsync(User user);
+		Task DeleteUserAsync(string id);
+		Task VerifyEmailAsync(User user);
 	}
+
 }

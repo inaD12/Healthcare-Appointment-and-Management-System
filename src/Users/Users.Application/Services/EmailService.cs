@@ -16,14 +16,14 @@ namespace Users.Application.Services
 
 		public async Task<Result> Handle(string tokenId)
 		{
-			var res = await _emailVerificationTokenRepository.GetTokenById(tokenId);
+			var res = await _emailVerificationTokenRepository.GetTokenByIdAsync(tokenId);
 
 			if (res.IsFailure || res.Value.ExpiresOnUtc < DateTime.UtcNow || res.Value.User.EmailVerified)
 			{
 				return Result.Failure(Response.InvalidVerificationToken);
 			}
 
-			_userRepository.VerifyEmail(res.Value.User);
+			await _userRepository.VerifyEmailAsync(res.Value.User);
 
 			return Result.Success(Response.Ok);
 		}

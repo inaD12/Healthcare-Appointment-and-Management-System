@@ -7,9 +7,9 @@ namespace Users.Application.Services
 {
 	public interface IUserService
 	{
-		Result DeleteUser(string id);
-		Result<TokenDTO> Login(LoginReqDTO loginDTO);
-		Result Register(RegisterReqDTO registerReqDTO);
-		Result UpdateUser(UpdateUserReqDTO updateDTO, string id);
+		Task<Result> DeleteUserAsync(string id);
+		Task<Result<TokenDTO>> LoginAsync(LoginReqDTO loginDTO);
+		Task<Result> RegisterAsync(RegisterReqDTO registerReqDTO);
+		Task<Result> UpdateUserAsync(UpdateUserReqDTO updateDTO, string id);
 	}
 }

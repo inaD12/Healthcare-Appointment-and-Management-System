@@ -2,7 +2,7 @@
 
 namespace Users.Infrastructure.DBContexts
 {
-	internal interface IDBContext
+	public interface IDBContext
 	{
 		IEmailVerificationTokenRepository EmailVerificationToken { get; }
 		IUserRepository User { get; }

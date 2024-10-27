@@ -5,7 +5,7 @@ namespace Users.Infrastructure.Repositories
 {
 	public interface IEmailVerificationTokenRepository
 	{
-		Task AddToken(EmailVerificationToken token);
-		Task<Result<EmailVerificationToken>> GetTokenById(string tokenId);
+		Task AddTokenAsync(EmailVerificationToken token);
+		Task<Result<EmailVerificationToken>> GetTokenByIdAsync(string tokenId);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Users.Domain.Entities;
 using Users.Domain.Result;
 using Users.Infrastructure.UsersDBContexts;
@@ -14,13 +15,13 @@ namespace Users.Infrastructure.Repositories
 			_context = context;
 		}
 
-		public Result<IEnumerable<User>> GetAllUsers()
+		public async Task<Result<IEnumerable<User>>> GetAllUsersAsync()
 		{
 			try
 			{
-				IEnumerable<User> users = _context.Users.ToList();
+				var users = await _context.Users.ToListAsync();
 
-				if (users.Any())
+				if (!users.Any())
 				{
 					return Result<IEnumerable<User>>.Failure(Response.NoUsersFound);
 				}
@@ -29,18 +30,18 @@ namespace Users.Infrastructure.Repositories
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in GetAllUsers() in UserRepository: {ex.Message}");
+				Log.Error($"Error in GetAllUsersAsync() in UserRepository: {ex.Message}");
 				return Result<IEnumerable<User>>.Failure(Response.InternalError);
 			}
 		}
 
-		public Result<User> GetUserById(string id)
+		public async Task<Result<User>> GetUserByIdAsync(string id)
 		{
 			try
 			{
-				User? user = _context.Users.Find(id);
+				var user = await _context.Users.FindAsync(id);
 
-				if (user is null)
+				if (user == null)
 				{
 					return Result<User>.Failure(Response.UserNotFound);
 				}
@@ -49,18 +50,18 @@ namespace Users.Infrastructure.Repositories
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in GetUserById() in UserRepository: {ex.Message}");
+				Log.Error($"Error in GetUserByIdAsync() in UserRepository: {ex.Message}");
 				return Result<User>.Failure(Response.InternalError);
 			}
 		}
 
-		public Result<User> GetUserByEmail(string email)
+		public async Task<Result<User>> GetUserByEmailAsync(string email)
 		{
 			try
 			{
-				User? user = _context.Users.FirstOrDefault(u => u.Email == email);
+				var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-				if (user is null)
+				if (user == null)
 				{
 					return Result<User>.Failure(Response.UserNotFound);
 				}
@@ -69,18 +70,18 @@ namespace Users.Infrastructure.Repositories
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in GetUserByEmail() in UserRepository: {ex.Message}");
+				Log.Error($"Error in GetUserByEmailAsync() in UserRepository: {ex.Message}");
 				return Result<User>.Failure(Response.InternalError);
 			}
 		}
 
-		public Result<User> GetUserByFirstName(string FirstName)
+		public async Task<Result<User>> GetUserByFirstNameAsync(string firstName)
 		{
 			try
 			{
-				User? user = _context.Users.FirstOrDefault(u => u.FirstName == FirstName);
+				var user = await _context.Users.FirstOrDefaultAsync(u => u.FirstName == firstName);
 
-				if (user is null)
+				if (user == null)
 				{
 					return Result<User>.Failure(Response.UserNotFound);
 				}
@@ -89,58 +90,58 @@ namespace Users.Infrastructure.Repositories
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in GetUserByEmail() in UserRepository: {ex.Message}");
+				Log.Error($"Error in GetUserByFirstNameAsync() in UserRepository: {ex.Message}");
 				return Result<User>.Failure(Response.InternalError);
 			}
 		}
 
-		public void AddUser(User user)
+		public async Task AddUserAsync(User user)
 		{
 			try
 			{
-				_context.Users.Add(user);
-				_context.SaveChanges();
+				await _context.Users.AddAsync(user);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in AddUser() in UserRepository: {ex.Message}");
+				Log.Error($"Error in AddUserAsync() in UserRepository: {ex.Message}");
 			}
 		}
 
-		public void UpdateUser(User user)
+		public async Task UpdateUserAsync(User user)
 		{
 			try
 			{
 				_context.Users.Update(user);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in UpdateUser() in UserRepository: {ex.Message}");
+				Log.Error($"Error in UpdateUserAsync() in UserRepository: {ex.Message}");
 			}
 		}
 
-		public void DeleteUser(string id)
+		public async Task DeleteUserAsync(string id)
 		{
 			try
 			{
-				var user = _context.Users.Find(id);
+				var user = await _context.Users.FindAsync(id);
 				if (user != null)
 				{
 					_context.Users.Remove(user);
-					_context.SaveChanges();
+					await _context.SaveChangesAsync();
 				}
 			}
 			catch (Exception ex)
 			{
-				Log.Error($"Error in DeleteUser() in UserRepository: {ex.Message}");
+				Log.Error($"Error in DeleteUserAsync() in UserRepository: {ex.Message}");
 			}
 		}
 
-		public void VerifyEmail(User user)
+		public async Task VerifyEmailAsync(User user)
 		{
 			user.EmailVerified = true;
-			UpdateUser(user);
+			await UpdateUserAsync(user);
 		}
 	}
 }

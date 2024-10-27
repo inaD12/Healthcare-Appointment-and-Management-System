@@ -12,7 +12,7 @@ namespace Users.Infrastructure
 			services.AddTransient<IUserRepository, UserRepository>();
 			services.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
 			services.AddTransient<IRepositoryFactory, RepositoryFactory>();
-			services.AddSingleton<IDBContext, DBContext>();
+			services.AddScoped<IDBContext, DBContext>();
 
 			return services;
 		}

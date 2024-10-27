@@ -4,37 +4,34 @@ using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.EmailVerification;
 using Users.Application.Factories;
+using Users.Application.Helpers;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Result;
-using Users.Infrastructure.Repositories;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.Services
 {
 	public class UserService : IUserService
 	{
-		private readonly IUserRepository _userRepository;
-		private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepository;
+		private readonly IDBContext _dbContext;
 		private readonly IPasswordManager _passwordManager;
 		private readonly ITokenManager _tokenManager;
-		private readonly IFluentEmail _fluentEmail;
-		private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactory;
-		private readonly IEmailVerificationTokenFactory _emailVerificationTokenFactory;
-		public UserService(IUserRepository userRepository, IPasswordManager passwordManager, ITokenManager tokenManager, IFluentEmail fluentEmail, IEmailVerificationTokenRepository emailVerificationTokenRepository, IEmailVerificationLinkFactory emailVerificationLinkFactory)
+		private readonly IEmailVerificationSender _emailVerificationSender;
+
+		public UserService(IPasswordManager passwordManager, ITokenManager tokenManager, IDBContext dbContext, IEmailVerificationSender emailVerificationSender = null)
 		{
-			_userRepository = userRepository;
 			_passwordManager = passwordManager;
 			_tokenManager = tokenManager;
-			_fluentEmail = fluentEmail;
-			_emailVerificationTokenRepository = emailVerificationTokenRepository;
-			_emailVerificationLinkFactory = emailVerificationLinkFactory;
+			_dbContext = dbContext;
+			_emailVerificationSender = emailVerificationSender;
 		}
 
-		public Result<TokenDTO> Login(LoginReqDTO loginDTO)
+		public async Task<Result<TokenDTO>> LoginAsync(LoginReqDTO loginDTO)
 		{
-			var res = _userRepository.GetUserByEmail(loginDTO.Email);
+			var res = await _dbContext.User.GetUserByEmailAsync(loginDTO.Email);
 
 			if (res.IsFailure)
 				return Result<TokenDTO>.Failure(res.Response);
@@ -44,16 +41,16 @@ namespace Users.Application.Services
 			if (!_passwordManager.VerifyPassword(loginDTO.Password, user.PasswordHash, user.Salt))
 				return Result<TokenDTO>.Failure(Response.IncorrectPassword);
 
-			TokenDTO Token = _tokenManager.CreateToken(user.Id);
+			TokenDTO token = _tokenManager.CreateToken(user.Id);
 
-			return Result<TokenDTO>.Success(Token);
+			return Result<TokenDTO>.Success(token);
 		}
 
-		public Result Register(RegisterReqDTO registerReqDTO)
+		public async Task<Result> RegisterAsync(RegisterReqDTO registerReqDTO)
 		{
 			try
 			{
-				var res = _userRepository.GetUserByEmail(registerReqDTO.Email);
+				var res = await _dbContext.User.GetUserByEmailAsync(registerReqDTO.Email);
 
 				if (res.IsSuccess)
 					return Result.Failure(Response.EmailTaken);
@@ -73,25 +70,12 @@ namespace Users.Application.Services
 					EmailVerified = false
 				};
 
-				_userRepository.AddUser(user);
+				await _dbContext.User.AddUserAsync(user);
 
-				DateTime utcNow = DateTime.UtcNow;
+				Result emailSenderResult = await _emailVerificationSender.SendEmailAsync(user);
 
-				EmailVerificationToken emailVerificationToken = _emailVerificationTokenFactory.CreateToken(
-					Guid.NewGuid().ToString(),
-					user.Id,
-					utcNow,
-					utcNow.AddDays(1));
-
-				_emailVerificationTokenRepository.AddToken(emailVerificationToken);
-
-				string verificationLink = _emailVerificationLinkFactory.Create(emailVerificationToken);
-
-				_fluentEmail
-				   .To(user.Email)
-				   .Subject("Email verifivation for HAMS")
-				   .Body($"To verify your email <a href='{verificationLink}'>click here</a>", isHtml:true)
-				   .Send();
+				if (emailSenderResult.IsFailure)
+					return emailSenderResult;
 
 				return Result.Success(Response.RegistrationSuccessful);
 			}
@@ -102,9 +86,9 @@ namespace Users.Application.Services
 			}
 		}
 
-		public Result UpdateUser(UpdateUserReqDTO updateDTO, string id)
+		public async Task<Result> UpdateUserAsync(UpdateUserReqDTO updateDTO, string id)
 		{
-			var res = _userRepository.GetUserById(id);
+			var res = await _dbContext.User.GetUserByIdAsync(id);
 
 			if (res.IsFailure)
 				return Result.Failure(res.Response);
@@ -113,7 +97,7 @@ namespace Users.Application.Services
 
 			bool newEmailIsCorrect = updateDTO.NewEmail != null
 					&& user.Email != updateDTO.NewEmail
-					&& _userRepository.GetUserByEmail(updateDTO.NewEmail).IsFailure;
+					&& (await _dbContext.User.GetUserByEmailAsync(updateDTO.NewEmail)).IsFailure;
 
 			if (!newEmailIsCorrect)
 			{
@@ -124,25 +108,24 @@ namespace Users.Application.Services
 			user.LastName = updateDTO.LastName ?? user.LastName;
 			user.Email = updateDTO.NewEmail ?? user.Email;
 
-			_userRepository.UpdateUser(user);
+			await _dbContext.User.UpdateUserAsync(user);
 
 			return Result.Success(Response.UpdateSuccessful);
 		}
 
-		public Result DeleteUser(string id)
+		public async Task<Result> DeleteUserAsync(string id)
 		{
-			var res = _userRepository.GetUserById(id);
+			var res = await _dbContext.User.GetUserByIdAsync(id);
 
 			if (res.IsFailure)
 			{
 				return Result.Failure(res.Response);
 			}
 
-			User user = res.Value;
-
-			_userRepository.DeleteUser(id);
+			await _dbContext.User.DeleteUserAsync(id);
 
 			return Result.Success();
 		}
 	}
+
 }

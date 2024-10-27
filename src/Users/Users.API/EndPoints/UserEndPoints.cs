@@ -75,7 +75,7 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 			if (validationResponse != null)
 				return validationResponse;
 
-			var res = userService.Login(loginReqDTO);
+			var res = await userService.LoginAsync(loginReqDTO);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
@@ -89,7 +89,7 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 			if (validationResponse != null)
 				return validationResponse;
 
-			var res = userService.Register(registerReqDTO);
+			var res = await userService.RegisterAsync(registerReqDTO);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
@@ -106,7 +106,7 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 
 			string id = jwtParser.GetIdFromToken();
 
-			var res = userService.UpdateUser(updateUserReqDTO, id);
+			var res = await userService.UpdateUserAsync(updateUserReqDTO, id);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
@@ -117,7 +117,7 @@ namespace Healthcare_Appointment_and_Management_System.EndPoints
 		{
 			string id = jwtParser.GetIdFromToken();
 
-			var res = userService.DeleteUser(id);
+			var res = await userService.DeleteUserAsync(id);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
