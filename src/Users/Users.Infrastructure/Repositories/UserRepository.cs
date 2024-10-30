@@ -2,11 +2,12 @@
 using Serilog;
 using Users.Domain.Entities;
 using Users.Domain.Result;
+using Users.Infrastructure.Repositories.Interfaces;
 using Users.Infrastructure.UsersDBContexts;
 
 namespace Users.Infrastructure.Repositories
 {
-	public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
 	{
 		private readonly UsersDBContext _context;
 

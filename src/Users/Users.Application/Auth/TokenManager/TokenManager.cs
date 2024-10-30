@@ -2,8 +2,7 @@
 using JWT.Builder;
 using Microsoft.Extensions.Options;
 using Serilog;
-using System.Security.Claims;
-using Users.Application.Factories;
+using Users.Application.Factories.Interfaces;
 using Users.Application.Settings;
 using Users.Domain.DTOs.Responses;
 
@@ -12,12 +11,12 @@ namespace Users.Application.Auth.TokenManager
 	public class TokenManager : ITokenManager
 	{
 		private readonly IOptionsMonitor<AuthValues> _jwtOptions;
-		private readonly ITokenDTOFactory _entityFactory;
+		private readonly ITokenDTOFactory _tokenDTOfactory;
 
-		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions, ITokenDTOFactory entityFactory)
+		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions, ITokenDTOFactory tokenDTOfactory)
 		{
 			_jwtOptions = jwtOptions;
-			_entityFactory = entityFactory;
+			_tokenDTOfactory = tokenDTOfactory;
 		}
 
 		public TokenDTO CreateToken(string id)
@@ -34,14 +33,13 @@ namespace Users.Application.Auth.TokenManager
 					.AddClaim("aud", _jwtOptions.CurrentValue.Audience)
 					.Encode();
 
-				return _entityFactory.CreateToken(token);
+				return _tokenDTOfactory.CreateToken(token);
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex.Message, ex);
+				Log.Error($"Error in CreateToken() in TokenManager: {ex.Message} {ex.Source} {ex.InnerException}");
+				return null;
 			}
-
-			return null;
 		}
 	}
 }

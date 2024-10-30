@@ -6,12 +6,38 @@
 		public string Email { get; set; }
 		public string PasswordHash { get; set; }
 		public string Salt { get; set; }
-		public string Role { get; set; } // Patient, Doctor, Admin
+		public string Role { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public DateTime DateOfBirth { get; set; }
 		public string PhoneNumber { get; set; }
 		public string Address { get; set; }
 		public bool EmailVerified { get; set; }
+
+		public User(
+			string id,
+			string email,
+			string passwordHash,
+			string salt,
+			string role,
+			string firstName,
+			string lastName,
+			DateTime dateOfBirth,
+			string phoneNumber,
+			string address,
+			bool emailVerified)
+		{
+			Id = id;
+			Email = email;
+			PasswordHash = passwordHash;
+			Salt = salt;
+			Role = role;
+			FirstName = firstName;
+			LastName = lastName;
+			DateOfBirth = dateOfBirth;
+			PhoneNumber = phoneNumber;
+			Address = address;
+			EmailVerified = emailVerified;
+		}
 	}
 }

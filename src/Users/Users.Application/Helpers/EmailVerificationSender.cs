@@ -1,30 +1,26 @@
 ﻿using FluentEmail.Core;
 using Serilog;
-using Users.Application.EmailVerification;
-using Users.Application.Factories;
+using Users.Application.Helpers.Interfaces;
+using Users.Application.Managers.Interfaces;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Result;
-using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.Helpers
 {
-	internal class EmailVerificationSender : IEmailVerificationSender
+    internal class EmailVerificationSender : IEmailVerificationSender
 	{
 		private readonly IFluentEmail _fluentEmail;
-		private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactory;
-		private readonly IEmailVerificationTokenFactory _emailVerificationTokenFactory;
-		private readonly IDBContext _dbContext;
+		private readonly IFactoryManager _factoryManager;
+		private readonly IRepositoryManager _repositoryManager;
 
 		public EmailVerificationSender(IFluentEmail fluentEmail,
-			IEmailVerificationLinkFactory emailVerificationLinkFactory,
-			IEmailVerificationTokenFactory emailVerificationTokenFactory,
-			IDBContext dbContext)
+			IRepositoryManager repositotyManager,
+			IFactoryManager factoryManager)
 		{
 			_fluentEmail = fluentEmail;
-			_emailVerificationLinkFactory = emailVerificationLinkFactory;
-			_emailVerificationTokenFactory = emailVerificationTokenFactory;
-			_dbContext = dbContext;
+			_repositoryManager = repositotyManager;
+			_factoryManager = factoryManager;
 		}
 
 		public async Task<Result> SendEmailAsync(User user)
@@ -33,15 +29,15 @@ namespace Users.Application.Helpers
 			{
 				DateTime utcNow = DateTime.UtcNow;
 
-				EmailVerificationToken emailVerificationToken = _emailVerificationTokenFactory.CreateToken(
+				EmailVerificationToken emailVerificationToken = _factoryManager.EmailTokenFactory.CreateToken(
 					Guid.NewGuid().ToString(),
 					user.Id,
 					utcNow,
 					utcNow.AddDays(1));
 
-				await _dbContext.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
+				await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
 
-				string verificationLink = _emailVerificationLinkFactory.Create(emailVerificationToken);
+				string verificationLink = _factoryManager.EmailLinkFactory.Create(emailVerificationToken);
 
 				var response = await _fluentEmail
 				   .To(user.Email)

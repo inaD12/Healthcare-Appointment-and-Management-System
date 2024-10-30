@@ -1,27 +1,30 @@
-﻿using Users.Domain.Result;
-using Users.Infrastructure.DBContexts;
+﻿using Users.Application.Managers.Interfaces;
+using Users.Application.Services.Interfaces;
+using Users.Domain.Result;
 
 namespace Users.Application.Services
 {
-	public class EmailService : IEmailService
+    public class EmailService : IEmailService
 	{
-		private readonly IDBContext _dbContext;
+		private readonly IRepositoryManager _repositoryManager;
 
-		public EmailService(IDBContext dbContext)
+		public EmailService(IRepositoryManager repositotyManager)
 		{
-			_dbContext = dbContext;
+			_repositoryManager = repositotyManager;
 		}
 
-		public async Task<Result> Handle(string tokenId)
+		public async Task<Result> HandleAsync(string tokenId)
 		{
-			var res = await _dbContext.EmailVerificationToken.GetTokenByIdAsync(tokenId);
+			var tokenResult = await _repositoryManager.EmailVerificationToken.GetTokenByIdAsync(tokenId);
 
-			if (res.IsFailure || res.Value.ExpiresOnUtc < DateTime.UtcNow || res.Value.User.EmailVerified)
+			if (tokenResult.IsFailure ||
+				tokenResult.Value.ExpiresOnUtc < DateTime.UtcNow ||
+				tokenResult.Value.User.EmailVerified)
 			{
 				return Result.Failure(Response.InvalidVerificationToken);
 			}
 
-			await _dbContext.User.VerifyEmailAsync(res.Value.User);
+			await _repositoryManager.User.VerifyEmailAsync(tokenResult.Value.User);
 
 			return Result.Success(Response.Ok);
 		}

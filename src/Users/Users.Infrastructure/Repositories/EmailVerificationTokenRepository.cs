@@ -2,11 +2,12 @@
 using Serilog;
 using Users.Domain.EmailVerification;
 using Users.Domain.Result;
+using Users.Infrastructure.Repositories.Interfaces;
 using Users.Infrastructure.UsersDBContexts;
 
 namespace Users.Infrastructure.Repositories
 {
-	public class EmailVerificationTokenRepository : IEmailVerificationTokenRepository
+    public class EmailVerificationTokenRepository : IEmailVerificationTokenRepository
 	{
 		private readonly UsersDBContext _context;
 

@@ -4,6 +4,8 @@ using System.Text;
 using Users.Application.Settings;
 using Serilog;
 using Microsoft.OpenApi.Models;
+using Users.Application.EmailVerification;
+using Users.Application.Factories.Interfaces;
 
 namespace Healthcare_Appointment_and_Management_System.Extentions
 {

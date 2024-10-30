@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using Users.Application.Helpers.Interfaces;
 
 namespace Users.Application.Helpers
 {
-	public class JwtParser : IJwtParser
+    public class JwtParser : IJwtParser
 	{
 		private readonly IHttpContextAccessor _httpContextAccessor;
 

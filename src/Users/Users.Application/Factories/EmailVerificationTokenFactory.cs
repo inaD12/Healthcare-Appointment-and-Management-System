@@ -1,9 +1,10 @@
-﻿using Users.Domain.EmailVerification;
+﻿using Users.Application.Factories.Interfaces;
+using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 
 namespace Users.Application.Factories
 {
-	public class EmailVerificationTokenFactory : IEmailVerificationTokenFactory
+    public class EmailVerificationTokenFactory : IEmailVerificationTokenFactory
 	{
 		public EmailVerificationToken CreateToken(string Id, string userId, DateTime CreatedOnUtc, DateTime ExpiresOnUtc, User? User = null)
 		{

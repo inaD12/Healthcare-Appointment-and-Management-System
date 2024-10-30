@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Users.Domain.DTOs.Requests
+﻿namespace Users.Domain.DTOs.Requests
 {
 	public class RegisterReqDTO
 	{
