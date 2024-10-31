@@ -93,25 +93,23 @@ namespace Users.Application.Services
 		{
 			try
 			{
-				var res = await _repositotyManager.User.GetUserByIdAsync(id);
+				var userResult = await _repositotyManager.User.GetUserByIdAsync(id);
+				if (userResult.IsFailure)
+					return Result.Failure(userResult.Response);
 
-				if (res.IsFailure)
-					return Result.Failure(res.Response);
+				User user = userResult.Value;
 
-				User user = res.Value;
-
-				bool newEmailIsCorrect = updateDTO.NewEmail != null
-						&& user.Email != updateDTO.NewEmail
-						&& (await _repositotyManager.User.GetUserByEmailAsync(updateDTO.NewEmail)).IsFailure;
-
-				if (!newEmailIsCorrect)
+				if (!string.IsNullOrEmpty(updateDTO.NewEmail) && updateDTO.NewEmail != user.Email)
 				{
-					return Result.Failure(Response.EmailTaken);
+					var emailCheckResult = await _repositotyManager.User.GetUserByEmailAsync(updateDTO.NewEmail);
+					if (emailCheckResult.IsSuccess)
+						return Result.Failure(Response.EmailTaken);
+
+					user.Email = updateDTO.NewEmail;
 				}
 
 				user.FirstName = updateDTO.FirstName ?? user.FirstName;
 				user.LastName = updateDTO.LastName ?? user.LastName;
-				user.Email = updateDTO.NewEmail ?? user.Email;
 
 				await _repositotyManager.User.UpdateUserAsync(user);
 
@@ -123,6 +121,7 @@ namespace Users.Application.Services
 				return Result.Failure(Response.InternalError);
 			}
 		}
+
 
 		public async Task<Result> DeleteUserAsync(string id)
 		{
