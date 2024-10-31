@@ -103,7 +103,7 @@ namespace Users.Application.UnitTests.Helpers
 			// Assert
 			result.Should().BeEquivalentTo(Result.Failure(Response.EmailNotSent));
 			await _mockFluentEmail.Received(1).SendAsync();
-			await _mockRepositoryManager.EmailVerificationToken.Received(1).AddTokenAsync(emailVerificationToken);
+			await _mockRepositoryManager.EmailVerificationToken.DidNotReceive().AddTokenAsync(emailVerificationToken);
 		}
 
 		[Fact]

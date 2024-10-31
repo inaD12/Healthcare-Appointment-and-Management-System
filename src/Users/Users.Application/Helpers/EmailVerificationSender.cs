@@ -35,7 +35,6 @@ namespace Users.Application.Helpers
 					utcNow,
 					utcNow.AddDays(1));
 
-				await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
 
 				string verificationLink = _factoryManager.EmailLinkFactory.Create(emailVerificationToken);
 
@@ -49,6 +48,8 @@ namespace Users.Application.Helpers
 				{
 					return Result.Failure(Response.EmailNotSent);
 				}
+
+				await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
 
 				return Result.Success();
 			}
