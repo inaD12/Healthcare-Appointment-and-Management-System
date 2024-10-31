@@ -10,5 +10,6 @@
 
 		public const string TokenNotFound = "Token not found";
 		public const string InvalidVerificationToken = "Invalid verification token";
+		public const string EmailNotSent = "Email wasn't sent due to an internal error";
 	}
 }

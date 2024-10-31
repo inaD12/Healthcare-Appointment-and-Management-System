@@ -8,7 +8,7 @@ using Users.Domain.Result;
 
 namespace Users.Application.Helpers
 {
-    internal class EmailVerificationSender : IEmailVerificationSender
+    public class EmailVerificationSender : IEmailVerificationSender
 	{
 		private readonly IFluentEmail _fluentEmail;
 		private readonly IFactoryManager _factoryManager;
@@ -44,6 +44,11 @@ namespace Users.Application.Helpers
 				   .Subject("Email verifivation for HAMS")
 				   .Body($"To verify your email <a href='{verificationLink}'>click here</a>", isHtml: true)
 				   .SendAsync();
+
+				if (!response.Successful)
+				{
+					return Result.Failure(Response.EmailNotSent);
+				}
 
 				return Result.Success();
 			}

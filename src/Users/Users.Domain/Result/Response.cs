@@ -30,6 +30,7 @@ namespace Users.Domain.Result
 
 		public static Response TokenNotFound => Create(ErrorMessages.TokenNotFound, HttpStatusCode.NotFound);
 		public static Response InvalidVerificationToken => Create(ErrorMessages.InvalidVerificationToken, HttpStatusCode.BadRequest);
+		public static Response EmailNotSent => Create(ErrorMessages.EmailNotSent, HttpStatusCode.InternalServerError);
 
 	}
 }
