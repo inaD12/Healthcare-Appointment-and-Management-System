@@ -5,7 +5,8 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "users.api": "StartDebugging",
-        "gateway.api": "StartDebugging"
+        "gateway.api": "StartDebugging",
+        "appointments.api": "StartDebugging"
       }
     }
   }
