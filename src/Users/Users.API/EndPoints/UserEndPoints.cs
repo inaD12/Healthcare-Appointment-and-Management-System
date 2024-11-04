@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Healthcare_Appointment_and_Management_System.Extentions;
+using UsersAPI.Extentions;
 using Users.Application.Helpers.Interfaces;
 using Users.Application.Services.Interfaces;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 
-namespace Healthcare_Appointment_and_Management_System.EndPoints
+namespace UsersAPI.EndPoints
 {
     internal class UserEndPoints : IEndPoints
 	{

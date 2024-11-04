@@ -41,12 +41,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Appointments", "Appointments", "{452209D6-76BD-4D3F-8918-120DE35B9B6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.Application", "src\Appointments\Appointment.Application\Appointments.Application.csproj", "{18539A1A-9266-4ADD-8F92-95BD012336D4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B91E14BD-F270-415D-BBEB-6AED3ED58F58} = {B91E14BD-F270-415D-BBEB-6AED3ED58F58}
+		{FAE128B3-BFBD-41D5-8366-8519F716CBAB} = {FAE128B3-BFBD-41D5-8366-8519F716CBAB}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.Domain", "src\Appointments\Appointments.Domain\Appointments.Domain.csproj", "{B91E14BD-F270-415D-BBEB-6AED3ED58F58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.Infrastructure", "src\Appointments\Appointments.Infrastructure\Appointments.Infrastructure.csproj", "{FAE128B3-BFBD-41D5-8366-8519F716CBAB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B91E14BD-F270-415D-BBEB-6AED3ED58F58} = {B91E14BD-F270-415D-BBEB-6AED3ED58F58}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.API", "src\Appointments\Appointments.API\Appointments.API.csproj", "{0008E23B-A084-451E-9168-9B015FF70CC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.API", "src\Appointments\Appointments.API\Appointments.API.csproj", "{0008E23B-A084-451E-9168-9B015FF70CC5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18539A1A-9266-4ADD-8F92-95BD012336D4} = {18539A1A-9266-4ADD-8F92-95BD012336D4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

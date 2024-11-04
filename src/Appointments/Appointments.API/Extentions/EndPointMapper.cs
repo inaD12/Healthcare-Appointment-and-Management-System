@@ -1,6 +1,6 @@
-﻿using UsersAPI.EndPoints;
+﻿using Appointments.API.EndPoints;
 
-namespace UsersAPI.Extentions
+namespace Appointments.API.Extentions
 {
 	public static class EndpointMapper
 	{

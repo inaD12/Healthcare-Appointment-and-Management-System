@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Users.Domain.Enums;
-using Users.Domain.Result;
+﻿using Appointments.Domain.Result;
+using System.Net;
 
-namespace UsersAPI.Extentions
+namespace Appointments.API.Extentions
 {
 	public static class ControllerResponse
 	{

@@ -5,7 +5,7 @@ using Users.Application.Settings;
 using Serilog;
 using Microsoft.OpenApi.Models;
 
-namespace Healthcare_Appointment_and_Management_System.Extentions
+namespace UsersAPI.Extentions
 {
 	public static class DataInjection
 	{

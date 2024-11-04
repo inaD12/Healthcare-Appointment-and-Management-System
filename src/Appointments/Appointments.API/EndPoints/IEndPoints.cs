@@ -1,4 +1,4 @@
-﻿namespace UsersAPI.EndPoints
+﻿namespace Appointments.API.EndPoints
 {
 	public interface IEndPoints
 	{

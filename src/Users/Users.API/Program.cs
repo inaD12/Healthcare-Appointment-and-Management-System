@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Users.Infrastructure.UsersDBContexts;
 using Users.Application;
 using Users.Infrastructure;
-using Healthcare_Appointment_and_Management_System.Extentions;
+using UsersAPI.Extentions;
 using Serilog;
-using Healthcare_Appointment_and_Management_System.Middlewares;
+using UsersAPI.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Serilog;
 
-namespace UsersAPI.Middlewares
+namespace Appointments.API.Middlewares
 {
 	public class ErrorHandlingMiddleware
 	{
