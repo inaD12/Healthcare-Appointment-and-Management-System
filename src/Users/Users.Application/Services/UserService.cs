@@ -145,5 +145,4 @@ namespace Users.Application.Services
 			}
 		}
 	}
-
 }

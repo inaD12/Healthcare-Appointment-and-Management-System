@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    build:
+      context: .
+      dockerfile: Gateway.API\Dockerfile
+    ports:
+     - "5000:5000"
+     - "5001:5001"
+
+  users.api:
+    image: ${DOCKER_REGISTRY-}usersapi
+    build:
+      context: .
+      dockerfile: src\Users\Users.API\Dockerfile
+    ports:
+     - "5100:5100"
+     - "5101:5101"
+
+
