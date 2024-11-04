@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}gatewayapi
     build:
       context: .
-      dockerfile: Gateway.API\Dockerfile
+      dockerfile: src\Gateway\Gateway.API\Dockerfile
     ports:
      - "5000:5000"
      - "5001:5001"
@@ -18,12 +18,12 @@ services:
     ports:
      - "5100:5100"
      - "5101:5101"
-
-
-
   appointments.api:
     image: ${DOCKER_REGISTRY-}appointmentsapi
     build:
-      context: src\Appointments\Healthcare Appointment and Management System
-      dockerfile: ..\Appointments.API\Dockerfile
+      context: .
+      dockerfile: src\Appointments\Appointments.API\Dockerfile
+    ports:
+     - "5200:5200"
+     - "5201:5201"
 
