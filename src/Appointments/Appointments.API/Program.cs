@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwagger();
 
 builder.Services
-	.AddApplicationLayer(config)
+	.AddApplicationLayer()
 	.AddInfrastructureLayer();
 
 builder.Host.ConfigureSerilog();

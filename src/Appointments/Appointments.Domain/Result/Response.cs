@@ -20,8 +20,7 @@ namespace Appointments.Domain.Result
 		public static Response Ok => Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);
 
 		// Error Responses
-		//public static Response UserNotFound => Create(ErrorMessages.UserNotFound, HttpStatusCode.NotFound);
-
-
+		public static Response AppointmentNotFound => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
+		public static Response EntityNotFound => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 	}
 }

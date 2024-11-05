@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Appointments.Application
+namespace Appointments.Application.DependancyInjection
 {
 	public static class DependancyInjection
 	{
