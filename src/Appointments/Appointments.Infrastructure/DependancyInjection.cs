@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Appointments.Infrastructure
+namespace Appointments.Infrastructure.DependancyInjection
 {
 	public static class DependancyInjection
 	{

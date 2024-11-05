@@ -1,10 +1,10 @@
-﻿using Appointments.Domain.DTOS;
+﻿using Appointments.Domain.DTOS.Response;
 using Appointments.Domain.Strings;
 using System.Net;
 
 namespace Appointments.Domain.Result
 {
-	public class Response
+    public class Response
 	{
 		public MessageDTO Message { get; }
 		public HttpStatusCode StatusCode { get; }

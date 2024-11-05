@@ -7,8 +7,8 @@ namespace Appointments.Domain.Entities
 	{
 		public string PatientId { get; set; }
 		public string DoctorId { get; set; }
-		public DateTime ScheduledTime { get; set; }
-		public DateTime? RescheduledTime { get; set; }
+		public DateTime ScheduledStartTime { get; set; }
+		public DateTime ScheduledEndTime { get; set; }
 		public AppointmentStatus Status { get; set; }
 	}
 }

@@ -1,5 +1,7 @@
 using Appointments.API.Extentions;
 using Appointments.API.Middlewares;
+using Appointments.Application.DependancyInjection;
+using Appointments.Infrastructure.DependancyInjection;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +14,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSwagger();
 
 builder.Services
-	.AddApplicationLayer()
-	.AddInfrastructureLayer();
+	.AddApplicationLayer(config)
+	.AddInfrastructureLayer(config);
 
 builder.Host.ConfigureSerilog();
 
