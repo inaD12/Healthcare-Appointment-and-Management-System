@@ -1,16 +1,16 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.Base;
+﻿using Appointments.Domain.Entities.Base;
 using Appointments.Domain.Result;
+using Appointments.Infrastructure.DBContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Appointments.Infrastructure.Repositories
 {
 	internal abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 	{
-		private readonly DbContext _context;
+		private readonly AppDBContext _context;
 		private DbSet<T> Entities => _context.Set<T>();
 
-		public GenericRepository(DbContext context)
+		public GenericRepository(AppDBContext context)
 		{
 			_context = context;
 		}
