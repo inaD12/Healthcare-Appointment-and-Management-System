@@ -5,6 +5,6 @@ namespace Appointments.Infrastructure.Repositories
 {
 	public interface IUserDataRepository : IGenericRepository<UserData>
 	{
-		Task<Result<UserData>> GetUserDataByUserEmailAsync(string id);
+		Task<Result<UserData>> GetUserDataByEmailAsync(string id);
 	}
 }

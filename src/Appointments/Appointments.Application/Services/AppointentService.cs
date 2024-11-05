@@ -22,11 +22,11 @@ namespace Appointments.Application.Services
 		{
 			try
 			{
-				var doctorDataRes = await _userDataRepository.GetUserDataByUserEmailAsync(createAppointmentDTO.DoctorEmail);
+				var doctorDataRes = await _userDataRepository.GetUserDataByEmailAsync(createAppointmentDTO.DoctorEmail);
 				if (doctorDataRes.IsFailure)
 					return Result.Failure(Response.DoctorNotFound);
 
-				var patientDataRes = await _userDataRepository.GetUserDataByUserEmailAsync(createAppointmentDTO.PatientEmail);
+				var patientDataRes = await _userDataRepository.GetUserDataByEmailAsync(createAppointmentDTO.PatientEmail);
 				if (patientDataRes.IsFailure)
 					return Result.Failure(Response.PatientNotFound);
 
