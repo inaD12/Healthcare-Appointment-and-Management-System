@@ -8,5 +8,6 @@
 		public const string EntityNotFound = "Entity not found";
 		public const string TimeSlotNotAvailable = "Time slot is not available";
 		public const string InternalError = "Internal error, please try again";
+		public const string UserDataNotFound = "User data not found";
 	}
 }

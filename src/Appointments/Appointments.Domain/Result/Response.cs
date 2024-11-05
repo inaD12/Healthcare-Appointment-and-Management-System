@@ -26,5 +26,6 @@ namespace Appointments.Domain.Result
 		public static Response EntityNotFound => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 		public static Response TimeSlotNotAvailable => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.Conflict);
 		public static Response InternalError => Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
+		public static Response UserDataNotFound => Create(ErrorMessages.UserDataNotFound, HttpStatusCode.NotFound);
 	}
 }

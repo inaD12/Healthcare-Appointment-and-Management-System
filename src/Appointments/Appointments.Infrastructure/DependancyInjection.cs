@@ -10,7 +10,6 @@ namespace Appointments.Infrastructure.DependancyInjection
 		public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddTransient<IAppointmentRepository, AppointmentRepository>();
-			services.AddSingleton<IDBContextManager, DBContextManager>();
 
 			return services;
 		}
