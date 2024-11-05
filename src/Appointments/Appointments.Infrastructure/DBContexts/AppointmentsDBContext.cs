@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Appointments.Infrastructure.DBContexts
 {
-	public class AppDBContext : DbContext
+	public class AppointmentsDBContext : DbContext
 	{
 		public DbSet<Appointment> Appointments { get; set; }
 
-		public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
+		public AppointmentsDBContext(DbContextOptions<AppointmentsDBContext> options) : base(options) { }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

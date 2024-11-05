@@ -1,12 +1,20 @@
 using Appointments.API.Extentions;
 using Appointments.API.Middlewares;
 using Appointments.Application.DependancyInjection;
+using Appointments.Infrastructure.DBContexts;
 using Appointments.Infrastructure.DependancyInjection;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
+
+//builder.Services.AddDbContext<AppointmentsDBContext>(options =>
+//	options.UseSqlServer(builder.Configuration.GetConnectionString("AppointmentsDBConnection")));
+
+builder.Services.AddDbContext<UserDataDBContext>(options =>
+	options.UseSqlServer(builder.Configuration.GetConnectionString("UsersDataDBConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -7,10 +7,10 @@ namespace Appointments.Infrastructure.Repositories
 {
 	internal abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 	{
-		private readonly AppDBContext _context;
+		private readonly AppointmentsDBContext _context;
 		private DbSet<T> Entities => _context.Set<T>();
 
-		public GenericRepository(AppDBContext context)
+		public GenericRepository(AppointmentsDBContext context)
 		{
 			_context = context;
 		}

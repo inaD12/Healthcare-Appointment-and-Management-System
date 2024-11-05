@@ -9,8 +9,8 @@ namespace Appointments.Infrastructure.Repositories
 {
 	internal class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
 	{
-		private readonly AppDBContext _context;
-		public AppointmentRepository(AppDBContext context) : base(context)
+		private readonly AppointmentsDBContext _context;
+		public AppointmentRepository(AppointmentsDBContext context) : base(context)
 		{
 			_context = context;
 		}
