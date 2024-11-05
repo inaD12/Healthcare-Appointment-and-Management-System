@@ -1,4 +1,5 @@
-﻿using Appointments.Infrastructure.Repositories;
+﻿using Appointments.Infrastructure.DBContexts;
+using Appointments.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ namespace Appointments.Infrastructure.DependancyInjection
 		public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddTransient<IAppointmentRepository, AppointmentRepository>();
+			services.AddSingleton<IDBContextManager, DBContextManager>();
 
 			return services;
 		}
