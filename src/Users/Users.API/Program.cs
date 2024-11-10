@@ -44,7 +44,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -52,5 +51,7 @@ app.UseAuthorization();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 EndpointMapper.MapAllEndpoints(app);
+
+//app.UseHttpsRedirection();
 
 app.Run();

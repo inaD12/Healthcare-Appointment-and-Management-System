@@ -1,29 +1,50 @@
 version: '3.4'
 
 services:
-  gateway.api:
-    image: ${DOCKER_REGISTRY-}gatewayapi
-    build:
-      context: .
-      dockerfile: src\Gateway\Gateway.API\Dockerfile
-    ports:
-     - "5000:5000"
-     - "5001:5001"
-
-  users.api:
-    image: ${DOCKER_REGISTRY-}usersapi
-    build:
-      context: .
-      dockerfile: src\Users\Users.API\Dockerfile
-    ports:
-     - "5100:5100"
-     - "5101:5101"
   appointments.api:
     image: ${DOCKER_REGISTRY-}appointmentsapi
     build:
       context: .
-      dockerfile: src\Appointments\Appointments.API\Dockerfile
+      dockerfile: src/Appointments/Appointments.API/Dockerfile
     ports:
-     - "5200:5200"
-     - "5201:5201"
+      - "5200:5200"
+      - "5201:5201"
+    # networks:
+    #   - my_network
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gatewayapi
+    build:
+      context: .
+      dockerfile: src/Gateway/Gateway.API/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    # networks:
+    #   - my_network
+  users.api:
+    image: ${DOCKER_REGISTRY-}usersapi
+    build:
+      context: .
+      dockerfile: src/Users/Users.API/Dockerfile
+    ports:
+      - "5100:5100"
+      # - "5101:5101"
+    # networks:
+    #   - my_network
+  appointments.database:
+    image: postgres:latest
+    container_name: appointments.database
+    environment:
+      - POSTGRES_DB=appointments
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/appointments-db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    # networks:
+    #   - my_network
 
+# networks:
+#   my_network:
+#     driver: bridge

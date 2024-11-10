@@ -1,6 +1,0 @@
-@Healthcare_Appointment_and_Management_System_HostAddress = http://localhost:5101
-
-GET {{Healthcare_Appointment_and_Management_System_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

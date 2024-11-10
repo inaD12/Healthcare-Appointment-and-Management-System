@@ -1,17 +1,17 @@
 version: '3.4'
 
 services:
-  users.api:
+  appointments.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=5100
-      - ASPNETCORE_HTTPS_PORTS=5101
+      - ASPNETCORE_HTTP_PORTS=5200
+      - ASPNETCORE_HTTPS_PORTS=5201
     ports:
-      - "5100:5100"
-      - "5101:5101"
+      - "5200:5200"
+      - "5201:5201"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets:ro
-      - ${APPDATA}/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
   gateway.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -21,16 +21,17 @@ services:
       - "5000:5000"
       - "5001:5001"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:C:\Users\ContainerUser\AppData\Roaming\Microsoft\UserSecrets:ro
-      - ${APPDATA}/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
-  appointments.api:
+  users.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=5100
+      # - ASPNETCORE_HTTPS_PORTS=5101
     ports:
-      - "8080"
-      - "8081"
+      - "5100:5100"
+      # - "5101:5101"
     volumes:
-      - ${APPDATA}/ASP.NET/Https:C:\Users\ContainerUser\AppData\Roaming\ASP.NET\Https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
