@@ -16,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.InjectAuthentication(config);
 
 builder.Services.AddSwagger();
+builder.Services.ConfigureAppSettings(config);
+builder.Services.InjectMassTransit();
 
 builder.Services
 	.AddApplicationLayer(config)
@@ -29,6 +31,7 @@ if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
+	app.ApplyMigrations();
 }
 
 app.UseSerilogRequestLogging();

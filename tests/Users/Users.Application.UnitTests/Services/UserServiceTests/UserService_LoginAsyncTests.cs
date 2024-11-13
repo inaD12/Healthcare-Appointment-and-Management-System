@@ -11,6 +11,7 @@ using Users.Domain.DTOs.Responses;
 using Users.Domain.Result;
 using FluentAssertions;
 using NSubstitute.ExceptionExtensions;
+using Users.Infrastructure.MessageBroker;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
 {
@@ -21,6 +22,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
         private readonly ITokenManager _mockTokenManager;
         private readonly IEmailVerificationSender _mockEmailVerificationSender;
         private readonly IFactoryManager _mockFactoryManager;
+        private readonly IEventBus _mockEventBus;
 
         private readonly UserService _userService;
 
@@ -35,13 +37,15 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
             _mockTokenManager = Substitute.For<ITokenManager>();
             _mockEmailVerificationSender = Substitute.For<IEmailVerificationSender>();
             _mockFactoryManager = Substitute.For<IFactoryManager>();
+            _mockEventBus = Substitute.For<IEventBus>();
 
             _userService = new UserService(
                 _mockPasswordManager,
                 _mockTokenManager,
                 _mockRepositoryManager,
                 _mockEmailVerificationSender,
-                _mockFactoryManager
+                _mockFactoryManager,
+                _mockEventBus
             );
 
 			_loginReqDTO = new LoginReqDTO { Email = "test@example.com", Password = "ValidPassword123" };

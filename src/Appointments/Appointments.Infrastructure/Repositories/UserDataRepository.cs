@@ -8,8 +8,8 @@ namespace Appointments.Infrastructure.Repositories
 {
 	internal class UserDataRepository : GenericRepository<UserData>, IUserDataRepository
 	{
-		private readonly UserDataDBContext _dbContext;
-		public UserDataRepository(UserDataDBContext context) : base(context)
+		private readonly AppointmentsDBContext _dbContext;
+		public UserDataRepository(AppointmentsDBContext context) : base(context)
 		{
 			_dbContext = context;
 		}

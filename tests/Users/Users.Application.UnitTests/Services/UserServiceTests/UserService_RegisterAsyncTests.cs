@@ -10,6 +10,7 @@ using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
 using Users.Domain.Result;
+using Users.Infrastructure.MessageBroker;
 using Xunit;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
@@ -21,6 +22,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		private readonly ITokenManager _mockTokenManager;
 		private readonly IEmailVerificationSender _mockEmailVerificationSender;
 		private readonly IFactoryManager _mockFactoryManager;
+		private readonly IEventBus _mockEventBus;
 
 		private readonly RegisterReqDTO _registerReqDTO;
 		private readonly UserService _userService;
@@ -36,13 +38,15 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 			_mockTokenManager = Substitute.For<ITokenManager>();
 			_mockEmailVerificationSender = Substitute.For<IEmailVerificationSender>();
 			_mockFactoryManager = Substitute.For<IFactoryManager>();
+			_mockEventBus = Substitute.For<IEventBus>();
 
 			_userService = new UserService(
 				_mockPasswordManager,
 				_mockTokenManager,
 				_mockRepositoryManager,
 				_mockEmailVerificationSender,
-				_mockFactoryManager
+				_mockFactoryManager,
+				_mockEventBus
 			);
 
 			_registerReqDTO = new RegisterReqDTO

@@ -15,10 +15,10 @@ namespace Users.Infrastructure.Migrations
                 name: "EmailVerificationTokens",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpiresOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<string>(type: "varchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(450)", nullable: false),
+                    CreatedOnUtc = table.Column<DateTime>(type: "timestamp", nullable: false),
+                    ExpiresOnUtc = table.Column<DateTime>(type: "timestamp", nullable: false)
                 },
                 constraints: table =>
                 {

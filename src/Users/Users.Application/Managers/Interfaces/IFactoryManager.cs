@@ -9,6 +9,8 @@ namespace Users.Application.Managers.Interfaces
         ITokenDTOFactory TokenDTOFactory { get; }
         IUserFactory UserFactory { get; }
         IEmailVerificationLinkFactory EmailLinkFactory { get; }
+		IUserCreatedEventFactory UserCreatedEventFactory {  get; }
 
-    }
+
+	}
 }

@@ -10,7 +10,7 @@ namespace Appointments.Infrastructure.DependancyInjection
 		public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddTransient<IAppointmentRepository, AppointmentRepository>();
-			services.AddTransient<IUserDataRepository, UserDataRepository>();
+			services.AddScoped<IUserDataRepository, UserDataRepository>();
 
 			return services;
 		}

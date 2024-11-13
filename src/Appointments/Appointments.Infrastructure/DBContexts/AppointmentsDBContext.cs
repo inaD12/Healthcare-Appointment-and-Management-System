@@ -6,6 +6,7 @@ namespace Appointments.Infrastructure.DBContexts
 	public class AppointmentsDBContext : DbContext
 	{
 		public DbSet<Appointment> Appointments { get; set; }
+		public DbSet<UserData> UserData { get; set; }
 
 		public AppointmentsDBContext(DbContextOptions<AppointmentsDBContext> options) : base(options) { }
 
@@ -14,6 +15,10 @@ namespace Appointments.Infrastructure.DBContexts
 			base.OnModelCreating(modelBuilder);
 
 			modelBuilder.Entity<Appointment>()
+				.HasIndex(u => u.Id)
+				.IsUnique();
+
+			modelBuilder.Entity<UserData>()
 				.HasIndex(u => u.Id)
 				.IsUnique();
 		}

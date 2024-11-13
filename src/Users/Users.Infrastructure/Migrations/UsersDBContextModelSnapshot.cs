@@ -10,102 +10,100 @@ using Users.Infrastructure.UsersDBContexts;
 
 namespace Users.Infrastructure.Migrations
 {
-    [DbContext(typeof(UsersDBContext))]
-    partial class UsersDBContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
+	[DbContext(typeof(UsersDBContext))]
+	partial class UsersDBContextModelSnapshot : ModelSnapshot
+	{
+		protected override void BuildModel(ModelBuilder modelBuilder)
+		{
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+			modelBuilder
+				.HasAnnotation("ProductVersion", "8.0.8")
+				.HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+			modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
+			{
+				b.Property<string>("Id")
+					.HasColumnType("varchar(450)");
 
-            modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+				b.Property<DateTime>("CreatedOnUtc")
+					.HasColumnType("timestamp");
 
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
+				b.Property<DateTime>("ExpiresOnUtc")
+					.HasColumnType("timestamp");
 
-                    b.Property<DateTime>("ExpiresOnUtc")
-                        .HasColumnType("datetime2");
+				b.Property<string>("UserId")
+					.IsRequired()
+					.HasColumnType("varchar(450)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+				b.HasKey("Id");
 
-                    b.HasKey("Id");
+				b.HasIndex("UserId");
 
-                    b.HasIndex("UserId");
+				b.ToTable("EmailVerificationTokens");
+			});
 
-                    b.ToTable("EmailVerificationTokens");
-                });
+			modelBuilder.Entity("Users.Domain.Entities.User", b =>
+			{
+				b.Property<string>("Id")
+					.HasColumnType("varchar(450)");
 
-            modelBuilder.Entity("Users.Domain.Entities.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+				b.Property<string>("Address")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<DateTime>("DateOfBirth")
+					.HasColumnType("timestamp");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+				b.Property<string>("Email")
+					.IsRequired()
+					.HasColumnType("varchar(450)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+				b.Property<bool>("EmailVerified")
+					.HasColumnType("boolean");
 
-                    b.Property<bool>("EmailVerified")
-                        .HasColumnType("bit");
+				b.Property<string>("FirstName")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<string>("LastName")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<string>("PasswordHash")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<string>("PhoneNumber")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<string>("Role")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.Property<string>("Salt")
+					.IsRequired()
+					.HasColumnType("text");
 
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+				b.HasKey("Id");
 
-                    b.HasKey("Id");
+				b.HasIndex("Email")
+					.IsUnique();
 
-                    b.HasIndex("Email")
-                        .IsUnique();
+				b.ToTable("Users");
+			});
 
-                    b.ToTable("Users");
-                });
+			modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
+			{
+				b.HasOne("Users.Domain.Entities.User", "User")
+					.WithMany()
+					.HasForeignKey("UserId")
+					.OnDelete(DeleteBehavior.Cascade)
+					.IsRequired();
 
-            modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
-                {
-                    b.HasOne("Users.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
+				b.Navigation("User");
+			});
 #pragma warning restore 612, 618
-        }
-    }
+		}
+	}
 }

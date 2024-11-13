@@ -8,6 +8,7 @@ using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
 using Users.Domain.Result;
+using Users.Infrastructure.MessageBroker;
 
 namespace Users.Application.Services
 {
@@ -18,14 +19,16 @@ namespace Users.Application.Services
 		private readonly ITokenManager _tokenManager;
 		private readonly IEmailVerificationSender _emailVerificationSender;
 		private readonly IFactoryManager _factoryManager;
+		private readonly IEventBus _eventBus;
 
-		public UserService(IPasswordManager passwordManager, ITokenManager tokenManager, IRepositoryManager repositotyManager, IEmailVerificationSender emailVerificationSender = null, IFactoryManager factoryManager = null)
+		public UserService(IPasswordManager passwordManager, ITokenManager tokenManager, IRepositoryManager repositotyManager, IEmailVerificationSender emailVerificationSender, IFactoryManager factoryManager, IEventBus eventBus)
 		{
 			_passwordManager = passwordManager;
 			_tokenManager = tokenManager;
 			_repositotyManager = repositotyManager;
 			_emailVerificationSender = emailVerificationSender;
 			_factoryManager = factoryManager;
+			_eventBus = eventBus;
 		}
 
 		public async Task<Result<TokenDTO>> LoginAsync(LoginReqDTO loginDTO)
@@ -75,10 +78,17 @@ namespace Users.Application.Services
 
 				await _repositotyManager.User.AddUserAsync(user);
 
-				Result emailSenderResult = await _emailVerificationSender.SendEmailAsync(user);
+				await _eventBus.PublishAsync(
+					_factoryManager.UserCreatedEventFactory.CreateUserCreatedEvent(
+						user.Id,
+						user.Email,
+						user.Role
+					));
 
-				if (emailSenderResult.IsFailure)
-					return emailSenderResult;
+				//Result emailSenderResult = await _emailVerificationSender.SendEmailAsync(user);
+
+				//if (emailSenderResult.IsFailure)
+				//	return emailSenderResult;
 
 				return Result.Success(Response.RegistrationSuccessful);
 			}

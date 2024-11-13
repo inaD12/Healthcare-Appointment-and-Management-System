@@ -18,6 +18,17 @@ namespace Users.Infrastructure.UsersDBContexts
 			modelBuilder.Entity<User>()
 				.HasIndex(u => u.Email)
 				.IsUnique();
+
+			modelBuilder.Entity<EmailVerificationToken>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				entity.Property(e => e.UserId).IsRequired();
+
+				entity.HasOne(e => e.User)
+					.WithMany()
+					.HasForeignKey(e => e.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+			});
 		}
 	}
 }

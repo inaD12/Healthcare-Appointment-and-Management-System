@@ -13,7 +13,7 @@ namespace Users.Infrastructure.Migrations
             migrationBuilder.AddColumn<bool>(
                 name: "EmailVerified",
                 table: "Users",
-                type: "bit",
+                type: "boolean",
                 nullable: false,
                 defaultValue: false);
         }

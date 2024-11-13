@@ -8,6 +8,7 @@ using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
 using Users.Domain.Entities;
 using Users.Domain.Result;
+using Users.Infrastructure.MessageBroker;
 using Xunit;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
@@ -20,6 +21,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		private readonly ITokenManager _mockTokenManager = Substitute.For<ITokenManager>();
 		private readonly IEmailVerificationSender _mockEmailVerificationSender = Substitute.For<IEmailVerificationSender>();
 		private readonly IFactoryManager _mockFactoryManager = Substitute.For<IFactoryManager>();
+		private readonly IEventBus _mockEventBus = Substitute.For<IEventBus>();
 
 		private readonly string _existingUserId = "existingUserId";
 		private readonly string _nonExistentUserId = "nonExistentUserId";
@@ -28,7 +30,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 		public UserService_DeleteUserAsyncTests()
 		{
-			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager);
+			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager, _mockEventBus);
 
 			_testUser = new User(_existingUserId, "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 		}

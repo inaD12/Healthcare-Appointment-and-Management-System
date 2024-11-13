@@ -1,4 +1,7 @@
-﻿using Appointments.Infrastructure.DBContexts;
+﻿using Appointments.Application.Consumers;
+using Appointments.Application.Settings;
+using Appointments.Infrastructure.DBContexts;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -34,6 +37,31 @@ namespace Appointments.API.Extentions
 
 			return services;
 		}
+
+		public static IServiceCollection InjectMassTransit(this IServiceCollection services)
+		{
+			services.AddMassTransit(busConfiguratior =>
+			{
+				busConfiguratior.SetKebabCaseEndpointNameFormatter();
+
+				busConfiguratior.AddConsumer<UserCreatedConsumer>();
+
+				busConfiguratior.UsingRabbitMq((context, configurator) =>
+				{
+					MessageBrokerSettings settings = context.GetRequiredService<MessageBrokerSettings>();
+
+					configurator.Host(new Uri(settings.Host), h =>
+					{
+						h.Username(settings.Username);
+						h.Password(settings.Password);
+					});
+
+					configurator.ConfigureEndpoints(context);
+				});
+			});
+
+			return services;
+		}
 		public static void ConfigureSerilog(this IHostBuilder hostBuilder)
 		{
 			hostBuilder.UseSerilog((context, configuration) =>
@@ -43,13 +71,18 @@ namespace Appointments.API.Extentions
 			);
 		}
 
+		public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.Configure<MessageBrokerSettings>(
+				configuration.GetSection("MessageBroker"));
+
+			return services;
+		}
+
 		public static IServiceCollection ConfigureDBs(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<AppointmentsDBContext>(options =>
 				options.UseNpgsql(configuration.GetConnectionString("AppointmentsDBConnection")));
-
-			services.AddDbContext<UserDataDBContext>(options =>
-				options.UseSqlServer(configuration.GetConnectionString("UsersDataDBConnection")));
 
 			return services;
 		}

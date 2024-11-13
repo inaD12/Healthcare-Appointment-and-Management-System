@@ -8,6 +8,7 @@ using Users.Application.Services;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.Entities;
 using Users.Domain.Result;
+using Users.Infrastructure.MessageBroker;
 using Xunit;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
@@ -20,6 +21,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		private readonly ITokenManager _mockTokenManager = Substitute.For<ITokenManager>();
 		private readonly IEmailVerificationSender _mockEmailVerificationSender = Substitute.For<IEmailVerificationSender>();
 		private readonly IFactoryManager _mockFactoryManager = Substitute.For<IFactoryManager>();
+		private readonly IEventBus _mockEvenyBus = Substitute.For<IEventBus>();
 
 		private readonly string _id = "1";
 		private readonly User _testUser;
@@ -27,7 +29,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 		public UserService_UpdateUserAsyncTests()
 		{
-			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager);
+			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager, _mockEvenyBus);
 
 			_testUser = new User("123", "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 
