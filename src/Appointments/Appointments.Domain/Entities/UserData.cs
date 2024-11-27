@@ -1,4 +1,5 @@
 ﻿using Appointments.Domain.Entities.Base;
+using Contracts.Enums;
 
 namespace Appointments.Domain.Entities
 {
@@ -6,6 +7,6 @@ namespace Appointments.Domain.Entities
 	{
 		public string UserId { get; set; }
 		public string Email { get; set; }
-		public string Role { get; set; }
+		public Roles Role { get; set; }
 	}
 }

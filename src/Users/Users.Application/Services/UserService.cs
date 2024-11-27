@@ -73,7 +73,8 @@ namespace Users.Application.Services
 					registerReqDTO.LastName,
 					registerReqDTO.DateOfBirth,
 					registerReqDTO.PhoneNumber,
-					registerReqDTO.Address
+					registerReqDTO.Address,
+					registerReqDTO.Role
 					);
 
 				await _repositotyManager.User.AddUserAsync(user);

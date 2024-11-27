@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Contracts.Enums;
+using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Users.Application.Auth.PasswordManager;
@@ -32,7 +33,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager, _mockEventBus);
 
-			_testUser = new User(_existingUserId, "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
+			_testUser = new User(_existingUserId, "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 		}
 
 		[Fact]

@@ -1,4 +1,6 @@
-﻿namespace Contracts.Events
+﻿using Contracts.Enums;
+
+namespace Contracts.Events
 {
-	public record UserCreatedEvent(string UserId, string Email, string Role);
+	public record UserCreatedEvent(string UserId, string Email, Roles Role);
 }

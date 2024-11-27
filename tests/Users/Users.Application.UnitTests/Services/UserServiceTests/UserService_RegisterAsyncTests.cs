@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Contracts.Enums;
+using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Users.Application.Auth.PasswordManager;
@@ -60,7 +61,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 				Password = "Password"
 			};
 
-			_user = new User("1", _registerReqDTO.Email, _hashedPassword, _salt, "UserRole", _registerReqDTO.FirstName, _registerReqDTO.LastName, _registerReqDTO.DateOfBirth, _registerReqDTO.PhoneNumber, _registerReqDTO.Address, true);
+			_user = new User("1", _registerReqDTO.Email, _hashedPassword, _salt, Roles.Patient, _registerReqDTO.FirstName, _registerReqDTO.LastName, _registerReqDTO.DateOfBirth, _registerReqDTO.PhoneNumber, _registerReqDTO.Address, true);
 		}
 
 
@@ -73,7 +74,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			_mockPasswordManager.HashPassword(_registerReqDTO.Password, out _salt).Returns(_hashedPassword);
 
-			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>())
+			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Roles>())
 				.Returns(_user);
 
 			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Success(Response.RegistrationSuccessful));
@@ -109,7 +110,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			_mockPasswordManager.HashPassword(_registerReqDTO.Password, out _salt).Returns(_hashedPassword);
 
-			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>())
+			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Roles>())
 				.Returns(_user);
 
 			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Failure(Response.InternalError));

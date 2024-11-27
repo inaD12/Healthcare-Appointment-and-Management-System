@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Users.Infrastructure.UsersDBContexts;
 
@@ -10,100 +9,101 @@ using Users.Infrastructure.UsersDBContexts;
 
 namespace Users.Infrastructure.Migrations
 {
-	[DbContext(typeof(UsersDBContext))]
-	partial class UsersDBContextModelSnapshot : ModelSnapshot
-	{
-		protected override void BuildModel(ModelBuilder modelBuilder)
-		{
+    [DbContext(typeof(UsersDBContext))]
+    partial class UsersDBContextModelSnapshot : ModelSnapshot
+    {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-			modelBuilder
-				.HasAnnotation("ProductVersion", "8.0.8")
-				.HasAnnotation("Relational:MaxIdentifierLength", 128);
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-			modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
-			{
-				b.Property<string>("Id")
-					.HasColumnType("varchar(450)");
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-				b.Property<DateTime>("CreatedOnUtc")
-					.HasColumnType("timestamp");
+            modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
-				b.Property<DateTime>("ExpiresOnUtc")
-					.HasColumnType("timestamp");
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
 
-				b.Property<string>("UserId")
-					.IsRequired()
-					.HasColumnType("varchar(450)");
+                    b.Property<DateTime>("ExpiresOnUtc")
+                        .HasColumnType("timestamp with time zone");
 
-				b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.HasIndex("UserId");
+                    b.HasKey("Id");
 
-				b.ToTable("EmailVerificationTokens");
-			});
+                    b.HasIndex("UserId");
 
-			modelBuilder.Entity("Users.Domain.Entities.User", b =>
-			{
-				b.Property<string>("Id")
-					.HasColumnType("varchar(450)");
+                    b.ToTable("EmailVerificationTokens");
+                });
 
-				b.Property<string>("Address")
-					.IsRequired()
-					.HasColumnType("text");
+            modelBuilder.Entity("Users.Domain.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
-				b.Property<DateTime>("DateOfBirth")
-					.HasColumnType("timestamp");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("Email")
-					.IsRequired()
-					.HasColumnType("varchar(450)");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
 
-				b.Property<bool>("EmailVerified")
-					.HasColumnType("boolean");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("FirstName")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<bool>("EmailVerified")
+                        .HasColumnType("boolean");
 
-				b.Property<string>("LastName")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("PasswordHash")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("PhoneNumber")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("Role")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.Property<string>("Salt")
-					.IsRequired()
-					.HasColumnType("text");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
-				b.HasKey("Id");
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-				b.HasIndex("Email")
-					.IsUnique();
+                    b.HasKey("Id");
 
-				b.ToTable("Users");
-			});
+                    b.HasIndex("Email")
+                        .IsUnique();
 
-			modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
-			{
-				b.HasOne("Users.Domain.Entities.User", "User")
-					.WithMany()
-					.HasForeignKey("UserId")
-					.OnDelete(DeleteBehavior.Cascade)
-					.IsRequired();
+                    b.ToTable("Users");
+                });
 
-				b.Navigation("User");
-			});
+            modelBuilder.Entity("Users.Domain.EmailVerification.EmailVerificationToken", b =>
+                {
+                    b.HasOne("Users.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
 #pragma warning restore 612, 618
-		}
-	}
+        }
+    }
 }

@@ -41,7 +41,9 @@ app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseHttpsRedirection();
+EndpointMapper.MapAllEndpoints(app);
+
+//app.UseHttpsRedirection();
 
 app.Run();
 

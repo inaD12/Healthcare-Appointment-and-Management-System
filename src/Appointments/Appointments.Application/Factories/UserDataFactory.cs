@@ -1,10 +1,11 @@
 ﻿using Appointments.Domain.Entities;
+using Contracts.Enums;
 
 namespace Appointments.Application.Factories
 {
 	public class UserDataFactory : IUserDataFactory
 	{
-		public UserData Create(string userId, string email, string role)
+		public UserData Create(string userId, string email, Roles role)
 		{
 			return new UserData
 			{

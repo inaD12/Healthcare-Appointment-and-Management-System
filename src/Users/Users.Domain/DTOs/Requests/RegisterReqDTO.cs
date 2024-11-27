@@ -1,4 +1,6 @@
-﻿namespace Users.Domain.DTOs.Requests
+﻿using Contracts.Enums;
+
+namespace Users.Domain.DTOs.Requests
 {
 	public class RegisterReqDTO
 	{
@@ -9,6 +11,6 @@
 		public DateTime DateOfBirth { get; set; }
 		public string PhoneNumber { get; set; }
 		public string Address { get; set; }
-
+		public Roles Role { get; set; }
 	}
 }

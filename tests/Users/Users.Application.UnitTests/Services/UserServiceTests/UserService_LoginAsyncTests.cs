@@ -12,6 +12,7 @@ using Users.Domain.Result;
 using FluentAssertions;
 using NSubstitute.ExceptionExtensions;
 using Users.Infrastructure.MessageBroker;
+using Contracts.Enums;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
 {
@@ -50,7 +51,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			_loginReqDTO = new LoginReqDTO { Email = "test@example.com", Password = "ValidPassword123" };
 
-			_testUser = new User("21212", "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
+			_testUser = new User("21212", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 
 			_tokenDTO = new TokenDTO("someToken");
 		}

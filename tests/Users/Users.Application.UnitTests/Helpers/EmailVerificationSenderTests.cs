@@ -10,6 +10,7 @@ using Users.Application.Factories.Interfaces;
 using Users.Domain.EmailVerification;
 using FluentEmail.Core.Models;
 using NSubstitute.ExceptionExtensions;
+using Contracts.Enums;
 
 namespace Users.Application.UnitTests.Helpers
 {
@@ -41,7 +42,7 @@ namespace Users.Application.UnitTests.Helpers
 				_mockFactoryManager
 			);
 
-			_mockUser = new User("userId", "test@example.com", "hashedPassword", "salt", "UserRole", "FirstName", "LastName", DateTime.UtcNow, "1234567890", "Address", true);
+			_mockUser = new User("userId", "test@example.com", "hashedPassword", "salt", Roles.Patient, "FirstName", "LastName", DateTime.UtcNow, "1234567890", "Address", true);
 		}
 
 		[Fact]

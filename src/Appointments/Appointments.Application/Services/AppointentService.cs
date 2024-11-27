@@ -5,7 +5,7 @@ using Serilog;
 
 namespace Appointments.Application.Services
 {
-	internal class AppointentService
+	internal class AppointentService : IAppointentService
 	{
 		private readonly IRepositoryManager _repositoryManager;
 		private readonly IFactoryManager _factoryManager;

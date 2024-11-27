@@ -1,4 +1,7 @@
-﻿namespace Users.Domain.Entities
+﻿using Contracts.Enums;
+using Users.Domain.Enums;
+
+namespace Users.Domain.Entities
 {
 	public class User
 	{
@@ -6,7 +9,7 @@
 		public string Email { get; set; }
 		public string PasswordHash { get; set; }
 		public string Salt { get; set; }
-		public string Role { get; set; }
+		public Roles Role { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public DateTime DateOfBirth { get; set; }
@@ -19,7 +22,7 @@
 			string email,
 			string passwordHash,
 			string salt,
-			string role,
+			Roles role,
 			string firstName,
 			string lastName,
 			DateTime dateOfBirth,

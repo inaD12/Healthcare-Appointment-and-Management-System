@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Contracts.Enums;
+using FluentAssertions;
 using NSubstitute;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
@@ -31,7 +32,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			_userService = new UserService(_mockPasswordManager, _mockTokenManager, _mockRepositoryManager, _mockEmailVerificationSender, _mockFactoryManager, _mockEvenyBus);
 
-			_testUser = new User("123", "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
+			_testUser = new User("123", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 
 			_updateUserDTO = new UpdateUserReqDTO
 			{
@@ -97,7 +98,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			// Arrange
 			var updateDTO = new UpdateUserReqDTO { LastName = "UpdatedLastName" };
-			var existingUser = new User(_id, "user@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
+			var existingUser = new User(_id, "user@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", true);
 
 			_mockRepositoryManager.User.GetUserByIdAsync(_id)
 				.Returns(Result<User>.Success(existingUser));

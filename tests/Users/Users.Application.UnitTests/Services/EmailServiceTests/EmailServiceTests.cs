@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Contracts.Enums;
+using FluentAssertions;
 using NSubstitute;
 using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
@@ -21,7 +22,7 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
 			_emailService = new EmailService(_mockRepositoryManager);
 
-			_user = new User("123", "test@example.com", "hashedPassword", "salt", "UserRole", "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
+			_user = new User("123", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 			_validToken = new EmailVerificationToken
 			(
 				"token123",
