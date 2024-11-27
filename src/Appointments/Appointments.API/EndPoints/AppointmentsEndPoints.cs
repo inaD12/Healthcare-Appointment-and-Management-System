@@ -12,14 +12,23 @@ namespace Appointments.API.EndPoints
 		{
 			var group = app.MapGroup("api/appointments");
 
-			group.MapPut("create", Create)
+			group.MapPost("create", Create)
+				.Produces<MessageDTO>(StatusCodes.Status201Created)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status401Unauthorized)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.Produces(StatusCodes.Status500InternalServerError);
+			//.RequireAuthorization();
+
+			group.MapPut("cancel-appointment", CancelAppointment)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
 				.Produces(StatusCodes.Status400BadRequest)
 				.Produces(StatusCodes.Status401Unauthorized)
 				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces(StatusCodes.Status500InternalServerError);
-				//.RequireAuthorization();
+			//.RequireAuthorization();
 		}
 
 		private async Task<IResult?> ValidateAndReturnResponse<T>(T dto, IValidator<T> validator)
@@ -44,6 +53,15 @@ namespace Appointments.API.EndPoints
 				return validationResponse;
 
 			var res = await appointentService.CreateAsync(appointmentDTO);
+
+			return ControllerResponse.ParseAndReturnMessage(res);
+		}
+
+		public async Task<IResult> CancelAppointment(
+			string appointmentId,
+			IAppointentService appointentService)
+		{
+			var res = await appointentService.CancelAppointmentAsync(appointmentId);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

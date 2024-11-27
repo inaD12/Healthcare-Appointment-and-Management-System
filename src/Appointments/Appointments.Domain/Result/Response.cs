@@ -18,6 +18,7 @@ namespace Appointments.Domain.Result
 
 		// Success Responses
 		public static Response Ok => Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);
+		public static Response AppointmentCreated => Create(SuccessMessages.AppointmentCreated, HttpStatusCode.Created);
 
 		// Error Responses
 		public static Response AppointmentNotFound => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
@@ -27,5 +28,7 @@ namespace Appointments.Domain.Result
 		public static Response TimeSlotNotAvailable => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.Conflict);
 		public static Response InternalError => Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 		public static Response UserDataNotFound => Create(ErrorMessages.UserDataNotFound, HttpStatusCode.NotFound);
+		public static Response JWTNotFound => Create(ErrorMessages.JWTokenNotFound, HttpStatusCode.NotFound);
+		public static Response CannotCancelOthersAppointment => Create(ErrorMessages.CannotCancelOthersAppointment, HttpStatusCode.Unauthorized);
 	}
 }

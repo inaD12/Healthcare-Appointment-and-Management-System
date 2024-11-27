@@ -31,7 +31,7 @@ namespace Appointments.Infrastructure.Repositories
 		//	return await Entities.ToListAsync();
 		//}
 
-		public virtual async Task<Result<T>> GetByIdAsync(int id)
+		public virtual async Task<Result<T>> GetByIdAsync(string id)
 		{
 			var res = await Entities.FindAsync(id);
 

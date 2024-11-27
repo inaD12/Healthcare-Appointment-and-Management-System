@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using FluentValidation;
+using Appointments.Application.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Appointments.Application.DependancyInjection
 {
@@ -22,8 +24,10 @@ namespace Appointments.Application.DependancyInjection
 			services.AddSingleton<IAppointmentFactory, AppointmentFactory>();
 			services.AddSingleton<IUserDataFactory, UserDataFactory>();
 			services.AddTransient<IAppointentService, AppointentService>();
+			services.AddTransient<IJwtParser, JwtParser>();
 
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 			return services;
 		}

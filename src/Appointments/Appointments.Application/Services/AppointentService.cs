@@ -1,5 +1,8 @@
-﻿using Appointments.Application.Managers.Interfaces;
+﻿using Appointments.Application.Helpers;
+using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.DTOS.Request;
+using Appointments.Domain.Entities;
+using Appointments.Domain.Enums;
 using Appointments.Domain.Result;
 using Serilog;
 
@@ -9,11 +12,13 @@ namespace Appointments.Application.Services
 	{
 		private readonly IRepositoryManager _repositoryManager;
 		private readonly IFactoryManager _factoryManager;
+		private readonly IJwtParser _jwtParser;
 
-		public AppointentService(IRepositoryManager repositoryManager, IFactoryManager factoryManager)
+		public AppointentService(IRepositoryManager repositoryManager, IFactoryManager factoryManager, IJwtParser jwtParser)
 		{
 			_repositoryManager = repositoryManager;
 			_factoryManager = factoryManager;
+			_jwtParser = jwtParser;
 		}
 
 		public async Task<Result> CreateAsync(CreateAppointmentDTO createAppointmentDTO)
@@ -51,11 +56,45 @@ namespace Appointments.Application.Services
 
 				await _repositoryManager.Appointment.AddAsync(appointment);
 
-				return Result.Success(Response.Ok);
+				return Result.Success(Response.AppointmentCreated);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in CreateAsync() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
+				return Result.Failure(Response.InternalError);
+			}
+		}
+
+		public async Task<Result> CancelAppointmentAsync(string appointmentId)
+		{
+			try
+			{
+				var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(appointmentId);
+
+				if (appointmentRes.IsFailure)
+					return Result.Failure(appointmentRes.Response);
+
+				Appointment appointment = appointmentRes.Value;
+
+				var userIdRes = _jwtParser.GetIdFromToken();
+
+				if (userIdRes.IsFailure)
+					return Result.Failure(userIdRes.Response);
+
+				string userId = userIdRes.Value;
+
+				if (userId != appointment.PatientId || userId != appointment.DoctorId)
+				{
+					return Result.Failure(Response.CannotCancelOthersAppointment);
+				}
+
+				var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Cancelled);
+
+				return changeStatusRes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in CancelAppointmentAsync() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
 				return Result.Failure(Response.InternalError);
 			}
 		}

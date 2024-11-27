@@ -6,7 +6,7 @@ namespace Appointments.Infrastructure.Repositories
 	{
 		Task AddAsync(T entity);
 		Task DeleteAsync(T entity);
-		Task<Result<T>> GetByIdAsync(int id);
+		Task<Result<T>> GetByIdAsync(string id);
 		Task UpdateAsync(T entity);
 	}
 }

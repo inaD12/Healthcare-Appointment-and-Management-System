@@ -34,5 +34,22 @@ namespace Appointments.Infrastructure.Repositories
 				return Result<bool>.Failure(Response.InternalError);
 			}
 		}
+
+		public async Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)
+		{
+			try
+			{
+				appointment.Status = newStatus;
+
+				_context.SaveChanges();
+
+				return Result.Success(Response.Ok);
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in ChangeStatus() in AppointmentRepository: {ex.Message} {ex.Source} {ex.InnerException}");
+				return Result.Failure(Response.InternalError);
+			}
+		}
 	}
 }

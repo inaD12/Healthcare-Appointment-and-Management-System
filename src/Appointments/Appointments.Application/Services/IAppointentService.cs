@@ -6,5 +6,6 @@ namespace Appointments.Application.Services
 	public interface IAppointentService
 	{
 		Task<Result> CreateAsync(CreateAppointmentDTO createAppointmentDTO);
+		Task<Result> CancelAppointmentAsync(string appointmentId);
 	}
 }
