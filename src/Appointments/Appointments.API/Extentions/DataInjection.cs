@@ -1,11 +1,14 @@
 ﻿using Appointments.Application.Consumers;
 using Appointments.Application.Settings;
+using Appointments.Domain.Enums;
 using Appointments.Infrastructure.DBContexts;
+using Contracts.Enums;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 using Serilog;
 using System.Text;
 
@@ -82,7 +85,12 @@ namespace Appointments.API.Extentions
 		public static IServiceCollection ConfigureDBs(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddDbContext<AppointmentsDBContext>(options =>
-				options.UseNpgsql(configuration.GetConnectionString("AppointmentsDBConnection")));
+			options.UseNpgsql(configuration.GetConnectionString("AppointmentsDBConnection"), o =>
+		   {
+			   o.MapEnum<Roles>("roles");
+	
+			   o.MapEnum<AppointmentStatus>("appointmentstatus");
+		  }));
 
 			return services;
 		}

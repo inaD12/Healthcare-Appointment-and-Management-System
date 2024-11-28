@@ -36,10 +36,12 @@ namespace Appointments.Application.Services
 				var doctorData = doctorDataRes.Value;
 				var patientData = patientDataRes.Value;
 
+				DateTime EndTime = createAppointmentDTO.ScheduledStartTime.AddMinutes(((int)createAppointmentDTO.Duration));
+
 				var isTimeSlotAvailableRes = await _repositoryManager.Appointment.IsTimeSlotAvailableAsync(
 					doctorData.UserId,
 					createAppointmentDTO.ScheduledStartTime,
-					createAppointmentDTO.ScheduledEndTime);
+					EndTime);
 
 				if (isTimeSlotAvailableRes.IsFailure)
 					return Result.Failure(Response.InternalError);
@@ -52,7 +54,7 @@ namespace Appointments.Application.Services
 					patientData.Id,
 					doctorData.Id,
 					createAppointmentDTO.ScheduledStartTime,
-					createAppointmentDTO.ScheduledEndTime);
+					EndTime);
 
 				await _repositoryManager.Appointment.AddAsync(appointment);
 

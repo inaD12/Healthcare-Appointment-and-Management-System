@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contracts.Enums;
+using Microsoft.EntityFrameworkCore;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 

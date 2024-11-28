@@ -7,13 +7,14 @@ using Serilog;
 using UsersAPI.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Healthcare_Appointment_and_Management_System.Extentions;
+using Contracts.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
 builder.Services.AddDbContext<UsersDBContext>(options =>
-	options.UseNpgsql(builder.Configuration.GetConnectionString("UsersDBConnection")));
+	options.UseNpgsql(builder.Configuration.GetConnectionString("UsersDBConnection"), o => o.MapEnum<Roles>("roles")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

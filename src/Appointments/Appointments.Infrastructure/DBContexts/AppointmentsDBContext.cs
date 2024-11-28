@@ -14,13 +14,17 @@ namespace Appointments.Infrastructure.DBContexts
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<Appointment>()
-				.HasIndex(u => u.Id)
-				.IsUnique();
+			modelBuilder.Entity<Appointment>(entity =>
+			{
+				entity.HasIndex(a => a.Id).IsUnique();
 
-			modelBuilder.Entity<UserData>()
-				.HasIndex(u => u.Id)
-				.IsUnique();
+			});
+
+			modelBuilder.Entity<UserData>(entity =>
+			{
+				entity.HasIndex(u => u.Id).IsUnique();
+			});
 		}
+
 	}
 }
