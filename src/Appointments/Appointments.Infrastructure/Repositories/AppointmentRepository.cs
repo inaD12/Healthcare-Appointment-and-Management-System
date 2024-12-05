@@ -23,8 +23,8 @@ namespace Appointments.Infrastructure.Repositories
 					.AnyAsync(appointment =>
 						appointment.DoctorId == doctorId &&
 						appointment.Status == AppointmentStatus.Scheduled &&
-						appointment.ScheduledStartTime < requestedEndTime &&
-						appointment.ScheduledEndTime > requestedStartTime);
+						appointment.ScheduledStartTime <= requestedEndTime &&
+						appointment.ScheduledEndTime >= requestedStartTime);
 
 				return Result<bool>.Success(!isSlotTaken);
 			}

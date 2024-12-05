@@ -51,8 +51,8 @@ namespace Appointments.Application.Services
 					return Result.Failure(Response.TimeSlotNotAvailable);
 
 				var appointment = _factoryManager.Appointment.Create(
-					patientData.Id,
-					doctorData.Id,
+					patientData.UserId,
+					doctorData.UserId,
 					createAppointmentDTO.ScheduledStartTime,
 					EndTime);
 

@@ -25,7 +25,7 @@ namespace Appointments.Domain.Result
 		public static Response DoctorNotFound => Create(ErrorMessages.DoctorNotFound, HttpStatusCode.NotFound);
 		public static Response PatientNotFound => Create(ErrorMessages.PatientNotFound, HttpStatusCode.NotFound);
 		public static Response EntityNotFound => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
-		public static Response TimeSlotNotAvailable => Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.Conflict);
+		public static Response TimeSlotNotAvailable => Create(ErrorMessages.TimeSlotNotAvailable, HttpStatusCode.Conflict);
 		public static Response InternalError => Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 		public static Response UserDataNotFound => Create(ErrorMessages.UserDataNotFound, HttpStatusCode.NotFound);
 		public static Response JWTNotFound => Create(ErrorMessages.JWTokenNotFound, HttpStatusCode.NotFound);
