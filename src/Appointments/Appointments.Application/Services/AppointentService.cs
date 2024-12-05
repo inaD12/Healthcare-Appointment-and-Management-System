@@ -1,5 +1,6 @@
 ﻿using Appointments.Application.Helpers;
 using Appointments.Application.Managers.Interfaces;
+using Appointments.Domain.DTOS;
 using Appointments.Domain.DTOS.Request;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
@@ -78,17 +79,12 @@ namespace Appointments.Application.Services
 
 				Appointment appointment = appointmentRes.Value;
 
-				var userIdRes = _jwtParser.GetIdFromToken();
-
+				var userIdRes = await GetUserIdFromTokenAsync();
 				if (userIdRes.IsFailure)
 					return Result.Failure(userIdRes.Response);
 
-				string userId = userIdRes.Value;
-
-				if (userId != appointment.PatientId || userId != appointment.DoctorId)
-				{
+				if (!IsUserAuthorized(userIdRes.Value, appointment.PatientId, appointment.DoctorId))
 					return Result.Failure(Response.CannotCancelOthersAppointment);
-				}
 
 				var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Cancelled);
 
@@ -99,6 +95,72 @@ namespace Appointments.Application.Services
 				Log.Error($"Error in CancelAppointmentAsync() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
 				return Result.Failure(Response.InternalError);
 			}
+		}
+
+		public async Task<Result> RescheduleAppointment(RescheduleAppointmentDTO rescheduleAppointmentDTO)
+		{
+			try
+			{
+				var detailedAppointmentRes = await _repositoryManager.Appointment.GetAppointmentWithUserDetailsAsync(rescheduleAppointmentDTO.AppointmentID);
+
+				if (detailedAppointmentRes.IsFailure)
+					return Result.Failure(detailedAppointmentRes.Response);
+
+				AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value;
+
+				//var userIdRes = await GetUserIdFromTokenAsync();
+				//if (userIdRes.IsFailure)
+				//	return Result.Failure(userIdRes.Response);
+
+				//if (!IsUserAuthorized(userIdRes.Value, appointmentWithDetails.PatientId, appointmentWithDetails.DoctorId))
+				//	return Result.Failure(Response.CannotRescheduleOthersAppointment);
+
+				var createRes = await CreateAsync(_factoryManager.CreateAppointmentDTO.Create(
+					appointmentWithDetails.PatientEmail,
+					appointmentWithDetails.DoctorEmail,
+					rescheduleAppointmentDTO.ScheduledStartTime,
+					rescheduleAppointmentDTO.Duration));
+
+				if (createRes.IsFailure)
+					return Result.Failure(createRes.Response);
+
+				var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(rescheduleAppointmentDTO.AppointmentID);
+
+				if (appointmentRes.IsFailure)
+					return Result.Failure(appointmentRes.Response);
+
+				Appointment appointment = appointmentRes.Value;
+
+				var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Rescheduled);
+
+				return changeStatusRes;
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in RescheduleAppointment() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
+				return Result.Failure(Response.InternalError);
+			}
+		}
+		private async Task<Result<string>> GetUserIdFromTokenAsync()
+		{
+			try
+			{
+				var userIdRes = _jwtParser.GetIdFromToken();
+				if (userIdRes.IsFailure)
+					return Result<string>.Failure(userIdRes.Response);
+
+				return Result<string>.Success(userIdRes.Value);
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in GetUserIdFromTokenAsync(): {ex.Message}");
+				return Result<string>.Failure(Response.InternalError);
+			}
+		}
+
+		private bool IsUserAuthorized(string userId, string patientId, string doctorId)
+		{
+			return userId == patientId || userId == doctorId;
 		}
 	}
 }

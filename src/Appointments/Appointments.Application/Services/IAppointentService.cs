@@ -7,5 +7,6 @@ namespace Appointments.Application.Services
 	{
 		Task<Result> CreateAsync(CreateAppointmentDTO createAppointmentDTO);
 		Task<Result> CancelAppointmentAsync(string appointmentId);
+		Task<Result> RescheduleAppointment(RescheduleAppointmentDTO rescheduleAppointmentDTO);
 	}
 }

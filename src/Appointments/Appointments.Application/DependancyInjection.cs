@@ -23,6 +23,7 @@ namespace Appointments.Application.DependancyInjection
 				sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
 			services.AddSingleton<IAppointmentFactory, AppointmentFactory>();
 			services.AddSingleton<IUserDataFactory, UserDataFactory>();
+			services.AddSingleton<ICreateAppointmentDTOFactory, CreateAppointmentDTOFactory>();
 			services.AddTransient<IAppointentService, AppointentService>();
 			services.AddTransient<IJwtParser, JwtParser>();
 

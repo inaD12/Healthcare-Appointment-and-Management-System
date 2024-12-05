@@ -30,5 +30,6 @@ namespace Appointments.Domain.Result
 		public static Response UserDataNotFound => Create(ErrorMessages.UserDataNotFound, HttpStatusCode.NotFound);
 		public static Response JWTNotFound => Create(ErrorMessages.JWTokenNotFound, HttpStatusCode.NotFound);
 		public static Response CannotCancelOthersAppointment => Create(ErrorMessages.CannotCancelOthersAppointment, HttpStatusCode.Unauthorized);
+		public static Response CannotRescheduleOthersAppointment => Create(ErrorMessages.CannotRescheduleOthersAppointment, HttpStatusCode.Unauthorized);
 	}
 }

@@ -11,5 +11,6 @@
 		public const string UserDataNotFound = "User data not found";
 		public const string JWTokenNotFound = "No JWToken found";
 		public const string CannotCancelOthersAppointment = "You cannot cancel someone else's appointment";
+		public const string CannotRescheduleOthersAppointment = "You cannot reschedule someone else's appointment";
 	}
 }

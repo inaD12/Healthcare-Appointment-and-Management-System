@@ -29,6 +29,15 @@ namespace Appointments.API.EndPoints
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces(StatusCodes.Status500InternalServerError);
 			//.RequireAuthorization();
+
+			group.MapPut("reschedule-appointment", RescheduleAppointment)
+				.Produces<MessageDTO>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status400BadRequest)
+				.Produces(StatusCodes.Status401Unauthorized)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+				.Produces(StatusCodes.Status500InternalServerError);
+			//.RequireAuthorization();
 		}
 
 		private async Task<IResult?> ValidateAndReturnResponse<T>(T dto, IValidator<T> validator)
@@ -62,6 +71,15 @@ namespace Appointments.API.EndPoints
 			IAppointentService appointentService)
 		{
 			var res = await appointentService.CancelAppointmentAsync(appointmentId);
+
+			return ControllerResponse.ParseAndReturnMessage(res);
+		}
+
+		public async Task<IResult> RescheduleAppointment(
+			RescheduleAppointmentDTO appointmentDTO,
+			IAppointentService appointentService)
+		{
+			var res = await appointentService.RescheduleAppointment(appointmentDTO);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

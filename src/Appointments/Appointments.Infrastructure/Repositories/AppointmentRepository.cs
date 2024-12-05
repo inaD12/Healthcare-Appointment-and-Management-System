@@ -1,8 +1,10 @@
-﻿using Appointments.Domain.Entities;
+﻿using Appointments.Domain.DTOS;
+using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Result;
 using Appointments.Infrastructure.DBContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Serilog;
 
 namespace Appointments.Infrastructure.Repositories
@@ -51,5 +53,33 @@ namespace Appointments.Infrastructure.Repositories
 				return Result.Failure(Response.InternalError);
 			}
 		}
+
+		public async Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId)
+		{
+			var result = await (
+				from appointment in _context.Appointments
+				join doctor in _context.UserData on appointment.DoctorId equals doctor.UserId
+				join patient in _context.UserData on appointment.PatientId equals patient.UserId
+				where appointment.Id == appointmentId
+				select new AppointmentWithDetailsDTO
+				{
+					AppointmentId = appointment.Id,
+					ScheduledStartTime = appointment.ScheduledStartTime,
+					ScheduledEndTime = appointment.ScheduledEndTime,
+					Status = appointment.Status,
+					DoctorEmail = doctor.Email,
+					PatientEmail = patient.Email,
+					DoctorId = doctor.UserId,
+					PatientId = patient.UserId
+				}
+			).FirstOrDefaultAsync();
+
+			if (result == null)
+				return Result<AppointmentWithDetailsDTO>.Failure(Response.AppointmentNotFound);
+
+			return Result<AppointmentWithDetailsDTO>.Success(result);
+		}
+
+
 	}
 }

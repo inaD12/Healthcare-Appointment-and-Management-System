@@ -6,6 +6,7 @@ namespace Appointments.Application.Managers.Interfaces
     {
         IAppointmentFactory Appointment { get; }
 		IUserDataFactory UserData { get; }
+		ICreateAppointmentDTOFactory CreateAppointmentDTO {  get; }
 
 	}
 }
