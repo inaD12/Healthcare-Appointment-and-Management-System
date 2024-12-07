@@ -11,11 +11,13 @@
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.3-develop.2143" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Serilog" Version="4.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contracts\Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\Appointments.Infrastructure\Appointments.Infrastructure.csproj" />
+    <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
   </ItemGroup>
 
 </Project>

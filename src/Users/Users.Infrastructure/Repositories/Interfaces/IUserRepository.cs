@@ -1,5 +1,5 @@
-﻿using Users.Domain.Entities;
-using Users.Domain.Result;
+﻿using Contracts.Results;
+using Users.Domain.Entities;
 
 namespace Users.Infrastructure.Repositories.Interfaces
 {

@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Contracts.Results;
+using Serilog;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Helpers.Interfaces;
@@ -7,7 +8,7 @@ using Users.Application.Services.Interfaces;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.MessageBroker;
 
 namespace Users.Application.Services
@@ -43,7 +44,7 @@ namespace Users.Application.Services
 				User user = res.Value;
 
 				if (!_passwordManager.VerifyPassword(loginDTO.Password, user.PasswordHash, user.Salt))
-					return Result<TokenDTO>.Failure(Response.IncorrectPassword);
+					return Result<TokenDTO>.Failure(Responses.IncorrectPassword);
 
 				TokenDTO token = _tokenManager.CreateToken(user.Id);
 
@@ -52,7 +53,7 @@ namespace Users.Application.Services
 			catch (Exception ex)
 			{
 				Log.Error($"Error in LoginAsync() in UserService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result<TokenDTO>.Failure(Response.InternalError);
+				return Result<TokenDTO>.Failure(Responses.InternalError);
 			}
 		}
 
@@ -63,7 +64,7 @@ namespace Users.Application.Services
 				var res = await _repositotyManager.User.GetUserByEmailAsync(registerReqDTO.Email);
 
 				if (res.IsSuccess)
-					return Result.Failure(Response.EmailTaken);
+					return Result.Failure(Responses.EmailTaken);
 
 				User user = _factoryManager.UserFactory.CreateUser(
 					registerReqDTO.Email,
@@ -91,12 +92,12 @@ namespace Users.Application.Services
 				//if (emailSenderResult.IsFailure)
 				//	return emailSenderResult;
 
-				return Result.Success(Response.RegistrationSuccessful);
+				return Result.Success(Responses.RegistrationSuccessful);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in RegisterAsync() in UserService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 
@@ -114,7 +115,7 @@ namespace Users.Application.Services
 				{
 					var emailCheckResult = await _repositotyManager.User.GetUserByEmailAsync(updateDTO.NewEmail);
 					if (emailCheckResult.IsSuccess)
-						return Result.Failure(Response.EmailTaken);
+						return Result.Failure(Responses.EmailTaken);
 
 					user.Email = updateDTO.NewEmail;
 				}
@@ -124,12 +125,12 @@ namespace Users.Application.Services
 
 				await _repositotyManager.User.UpdateUserAsync(user);
 
-				return Result.Success(Response.UpdateSuccessful);
+				return Result.Success(Responses.UpdateSuccessful);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in UpdateUserAsync() in UserService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 
@@ -152,7 +153,7 @@ namespace Users.Application.Services
 			catch (Exception ex)
 			{
 				Log.Error($"Error in DeleteUserAsync() in UserService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 	}

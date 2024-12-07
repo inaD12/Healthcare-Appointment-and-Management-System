@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.DTOS.Request;
-using Appointments.Domain.Result;
+using Contracts.Results;
 
 namespace Appointments.Application.Services
 {

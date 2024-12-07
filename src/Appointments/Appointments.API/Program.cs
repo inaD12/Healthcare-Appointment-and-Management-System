@@ -2,6 +2,7 @@ using Appointments.API.Extentions;
 using Appointments.API.Middlewares;
 using Appointments.Application.DependancyInjection;
 using Appointments.Infrastructure.DependancyInjection;
+using Hangfire;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ builder.Services.InjectAuthentication(config);
 builder.Services.AddSwagger();
 builder.Services.ConfigureAppSettings(config);
 builder.Services.InjectMassTransit();
+builder.Services.ConfigureHangFire(config);
 
 builder.Services
 	.AddApplicationLayer(config)
@@ -40,6 +42,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.UseHangfireDashboard();
 
 EndpointMapper.MapAllEndpoints(app);
 

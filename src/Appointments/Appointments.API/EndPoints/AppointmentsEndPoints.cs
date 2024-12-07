@@ -1,7 +1,7 @@
 ﻿using Appointments.API.Extentions;
 using Appointments.Application.Services;
 using Appointments.Domain.DTOS.Request;
-using Appointments.Domain.DTOS.Response;
+using Contracts.Results;
 using FluentValidation;
 
 namespace Appointments.API.EndPoints

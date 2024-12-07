@@ -1,4 +1,4 @@
-﻿using Appointments.Infrastructure.DBContexts;
+﻿using Appointments.Domain.Repositories;
 using Appointments.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

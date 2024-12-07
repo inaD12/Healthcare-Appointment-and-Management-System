@@ -1,5 +1,5 @@
-﻿using Users.Domain.EmailVerification;
-using Users.Domain.Result;
+﻿using Contracts.Results;
+using Users.Domain.EmailVerification;
 
 namespace Users.Infrastructure.Repositories.Interfaces
 {

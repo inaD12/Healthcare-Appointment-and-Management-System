@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contracts.Results;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Users.Domain.EmailVerification;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.Repositories.Interfaces;
 using Users.Infrastructure.UsersDBContexts;
 
@@ -39,7 +40,7 @@ namespace Users.Infrastructure.Repositories
 
 				if (token is null)
 				{
-					return Result<EmailVerificationToken>.Failure(Response.TokenNotFound);
+					return Result<EmailVerificationToken>.Failure(Responses.TokenNotFound);
 				}
 
 				return Result<EmailVerificationToken>.Success(token);
@@ -47,7 +48,7 @@ namespace Users.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetTokenById() in EmailVerificationTokenRepository: {ex.Message}");
-				return Result<EmailVerificationToken>.Failure(Response.InternalError);
+				return Result<EmailVerificationToken>.Failure(Responses.InternalError);
 			}
 		}
 	}

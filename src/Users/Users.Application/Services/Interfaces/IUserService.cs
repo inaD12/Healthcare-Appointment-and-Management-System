@@ -1,6 +1,6 @@
-﻿using Users.Domain.DTOs.Requests;
+﻿using Contracts.Results;
+using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
-using Users.Domain.Result;
 
 namespace Users.Application.Services.Interfaces
 {

@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Users.Domain.Enums;
-using Users.Domain.Result;
+﻿using Contracts.Results;
+using System.Net;
 
 namespace UsersAPI.Extentions
 {

@@ -1,10 +1,11 @@
-﻿using FluentEmail.Core;
+﻿using Contracts.Results;
+using FluentEmail.Core;
 using Serilog;
 using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 
 namespace Users.Application.Helpers
 {
@@ -46,7 +47,7 @@ namespace Users.Application.Helpers
 
 				if (!response.Successful)
 				{
-					return Result.Failure(Response.EmailNotSent);
+					return Result.Failure(Responses.EmailNotSent);
 				}
 
 				await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
@@ -56,7 +57,7 @@ namespace Users.Application.Helpers
 			catch (Exception ex)
 			{
 				Log.Error($"Error in SendEmail() in EmailVerificationSender: {ex.Message} {ex.StackTrace}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 	}

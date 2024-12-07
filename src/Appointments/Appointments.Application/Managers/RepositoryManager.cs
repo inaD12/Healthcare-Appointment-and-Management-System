@@ -1,5 +1,5 @@
 ﻿using Appointments.Application.Managers.Interfaces;
-using Appointments.Infrastructure.Repositories;
+using Appointments.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Appointments.Application.Managers

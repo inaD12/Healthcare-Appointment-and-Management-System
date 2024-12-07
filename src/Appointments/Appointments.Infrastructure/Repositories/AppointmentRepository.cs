@@ -1,10 +1,11 @@
 ﻿using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
-using Appointments.Domain.Result;
+using Appointments.Domain.Repositories;
+using Appointments.Domain.Responses;
 using Appointments.Infrastructure.DBContexts;
+using Contracts.Results;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Serilog;
 
 namespace Appointments.Infrastructure.Repositories
@@ -33,7 +34,7 @@ namespace Appointments.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in IsTimeSlotAvailableAsync() in AppointmentRepository: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result<bool>.Failure(Response.InternalError);
+				return Result<bool>.Failure(Responses.InternalError);
 			}
 		}
 
@@ -45,12 +46,12 @@ namespace Appointments.Infrastructure.Repositories
 
 				_context.SaveChanges();
 
-				return Result.Success(Response.Ok);
+				return Result.Success(Responses.Ok);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in ChangeStatus() in AppointmentRepository: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 
@@ -75,11 +76,21 @@ namespace Appointments.Infrastructure.Repositories
 			).FirstOrDefaultAsync();
 
 			if (result == null)
-				return Result<AppointmentWithDetailsDTO>.Failure(Response.AppointmentNotFound);
+				return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
 
 			return Result<AppointmentWithDetailsDTO>.Success(result);
 		}
 
+		public async Task<List<Appointment>> GetAppointmentsToCompleteAsync(DateTime currentTime)
+		{
+			return await _context.Appointments
+				.Where(a => a.ScheduledEndTime <= currentTime && a.Status == AppointmentStatus.Scheduled)
+				.ToListAsync();
+		}
 
+		public async Task SaveChangesAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using Users.Domain.Result;
+﻿using Contracts.Results;
 
 namespace Users.Application.Services.Interfaces
 {

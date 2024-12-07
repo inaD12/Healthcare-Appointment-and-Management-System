@@ -3,12 +3,13 @@ using Appointments.Application.Settings;
 using Appointments.Domain.Enums;
 using Appointments.Infrastructure.DBContexts;
 using Contracts.Enums;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Npgsql;
 using Serilog;
 using System.Text;
 
@@ -76,6 +77,20 @@ namespace Appointments.API.Extentions
 
 		public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
+			services.AddHangfire(config =>
+			{
+				config.UseSimpleAssemblyNameTypeSerializer()
+				.UseRecommendedSerializerSettings()
+				.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(configuration.GetConnectionString("AppointmentsDBConnection")));
+			});
+
+			services.AddHangfireServer();
+
+			return services;
+		}
+
+		public static IServiceCollection ConfigureHangFire(this IServiceCollection services, IConfiguration configuration)
+		{
 			services.Configure<MessageBrokerSettings>(
 				configuration.GetSection("MessageBroker"));
 
@@ -88,9 +103,9 @@ namespace Appointments.API.Extentions
 			options.UseNpgsql(configuration.GetConnectionString("AppointmentsDBConnection"), o =>
 		   {
 			   o.MapEnum<Roles>("roles");
-	
+
 			   o.MapEnum<AppointmentStatus>("appointmentstatus");
-		  }));
+		   }));
 
 			return services;
 		}

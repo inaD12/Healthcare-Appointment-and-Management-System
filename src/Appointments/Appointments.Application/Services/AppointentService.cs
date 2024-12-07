@@ -4,7 +4,8 @@ using Appointments.Domain.DTOS;
 using Appointments.Domain.DTOS.Request;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
-using Appointments.Domain.Result;
+using Appointments.Domain.Responses;
+using Contracts.Results;
 using Serilog;
 
 namespace Appointments.Application.Services
@@ -28,11 +29,11 @@ namespace Appointments.Application.Services
 			{
 				var doctorDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(createAppointmentDTO.DoctorEmail);
 				if (doctorDataRes.IsFailure)
-					return Result.Failure(Response.DoctorNotFound);
+					return Result.Failure(Responses.DoctorNotFound);
 
 				var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(createAppointmentDTO.PatientEmail);
 				if (patientDataRes.IsFailure)
-					return Result.Failure(Response.PatientNotFound);
+					return Result.Failure(Responses.PatientNotFound);
 
 				var doctorData = doctorDataRes.Value;
 				var patientData = patientDataRes.Value;
@@ -45,11 +46,11 @@ namespace Appointments.Application.Services
 					EndTime);
 
 				if (isTimeSlotAvailableRes.IsFailure)
-					return Result.Failure(Response.InternalError);
+					return Result.Failure(Responses.InternalError);
 
 				bool isTimeSlotAvailable = isTimeSlotAvailableRes.Value;
 				if (!isTimeSlotAvailable)
-					return Result.Failure(Response.TimeSlotNotAvailable);
+					return Result.Failure(Responses.TimeSlotNotAvailable);
 
 				var appointment = _factoryManager.Appointment.Create(
 					patientData.UserId,
@@ -59,12 +60,12 @@ namespace Appointments.Application.Services
 
 				await _repositoryManager.Appointment.AddAsync(appointment);
 
-				return Result.Success(Response.AppointmentCreated);
+				return Result.Success(Responses.AppointmentCreated);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in CreateAsync() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 
@@ -84,7 +85,7 @@ namespace Appointments.Application.Services
 					return Result.Failure(userIdRes.Response);
 
 				if (!IsUserAuthorized(userIdRes.Value, appointment.PatientId, appointment.DoctorId))
-					return Result.Failure(Response.CannotCancelOthersAppointment);
+					return Result.Failure(Responses.CannotCancelOthersAppointment);
 
 				var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Cancelled);
 
@@ -93,7 +94,7 @@ namespace Appointments.Application.Services
 			catch (Exception ex)
 			{
 				Log.Error($"Error in CancelAppointmentAsync() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 
@@ -138,7 +139,7 @@ namespace Appointments.Application.Services
 			catch (Exception ex)
 			{
 				Log.Error($"Error in RescheduleAppointment() in AppointentService: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result.Failure(Response.InternalError);
+				return Result.Failure(Responses.InternalError);
 			}
 		}
 		private async Task<Result<string>> GetUserIdFromTokenAsync()
@@ -154,7 +155,7 @@ namespace Appointments.Application.Services
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetUserIdFromTokenAsync(): {ex.Message}");
-				return Result<string>.Failure(Response.InternalError);
+				return Result<string>.Failure(Responses.InternalError);
 			}
 		}
 

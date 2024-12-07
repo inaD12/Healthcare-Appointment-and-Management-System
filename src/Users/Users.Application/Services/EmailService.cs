@@ -1,6 +1,7 @@
-﻿using Users.Application.Managers.Interfaces;
+﻿using Contracts.Results;
+using Users.Application.Managers.Interfaces;
 using Users.Application.Services.Interfaces;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 
 namespace Users.Application.Services
 {
@@ -21,7 +22,7 @@ namespace Users.Application.Services
 				tokenResult.Value.ExpiresOnUtc < DateTime.UtcNow ||
 				tokenResult.Value.User.EmailVerified)
 			{
-				return Result.Failure(Response.InvalidVerificationToken);
+				return Result.Failure(Responses.InvalidVerificationToken);
 			}
 
 			await _repositoryManager.User.VerifyEmailAsync(tokenResult.Value.User);

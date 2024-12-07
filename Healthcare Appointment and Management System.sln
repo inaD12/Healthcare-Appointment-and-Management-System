@@ -57,6 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.API", "src\App
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.Application", "src\Appointments\Appointments.Application\Appointments.Application.csproj", "{E966FE30-2B00-4542-920F-BC7523989632}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B91E14BD-F270-415D-BBEB-6AED3ED58F58} = {B91E14BD-F270-415D-BBEB-6AED3ED58F58}
+	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4BCFECFE-6858-4F26-9425-3E406761B9DE}"
 EndProject

@@ -1,6 +1,8 @@
 ﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Result;
+using Appointments.Domain.Repositories;
+using Appointments.Domain.Responses;
 using Appointments.Infrastructure.DBContexts;
+using Contracts.Results;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -22,14 +24,14 @@ namespace Appointments.Infrastructure.Repositories
 					.FirstOrDefaultAsync(u => u.Email == email);
 
 				if (user == null)
-					return Result<UserData>.Failure(Response.UserDataNotFound);
+					return Result<UserData>.Failure(Responses.UserDataNotFound);
 
 				return Result<UserData>.Success(user);
 			}
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetUserDataByEmailAsync() in UserDataRepository: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result<UserData>.Failure(Response.InternalError);
+				return Result<UserData>.Failure(Responses.InternalError);
 			}
 		}
 	}

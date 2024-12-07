@@ -1,5 +1,7 @@
 ﻿using Appointments.Domain.Entities.Base;
-using Appointments.Domain.Result;
+using Appointments.Domain.Repositories;
+using Appointments.Domain.Responses;
+using Contracts.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace Appointments.Infrastructure.Repositories
@@ -37,7 +39,7 @@ namespace Appointments.Infrastructure.Repositories
 
 			if (res == null)
 			{
-				return Result<T>.Failure(Response.EntityNotFound);
+				return Result<T>.Failure(Responses.EntityNotFound);
 			}
 
 			return Result<T>.Success(res);

@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Contracts.Results;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.Repositories.Interfaces;
 using Users.Infrastructure.UsersDBContexts;
 
@@ -24,7 +25,7 @@ namespace Users.Infrastructure.Repositories
 
 				if (!users.Any())
 				{
-					return Result<IEnumerable<User>>.Failure(Response.NoUsersFound);
+					return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
 				}
 
 				return Result<IEnumerable<User>>.Success(users);
@@ -32,7 +33,7 @@ namespace Users.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetAllUsersAsync() in UserRepository: {ex.Message}");
-				return Result<IEnumerable<User>>.Failure(Response.InternalError);
+				return Result<IEnumerable<User>>.Failure(Responses.InternalError);
 			}
 		}
 
@@ -44,7 +45,7 @@ namespace Users.Infrastructure.Repositories
 
 				if (user == null)
 				{
-					return Result<User>.Failure(Response.UserNotFound);
+					return Result<User>.Failure(Responses.UserNotFound);
 				}
 
 				return Result<User>.Success(user);
@@ -52,7 +53,7 @@ namespace Users.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetUserByIdAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Response.InternalError);
+				return Result<User>.Failure(Responses.InternalError);
 			}
 		}
 
@@ -64,7 +65,7 @@ namespace Users.Infrastructure.Repositories
 
 				if (user == null)
 				{
-					return Result<User>.Failure(Response.UserNotFound);
+					return Result<User>.Failure(Responses.UserNotFound);
 				}
 
 				return Result<User>.Success(user);
@@ -72,7 +73,7 @@ namespace Users.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetUserByEmailAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Response.InternalError);
+				return Result<User>.Failure(Responses.InternalError);
 			}
 		}
 
@@ -84,7 +85,7 @@ namespace Users.Infrastructure.Repositories
 
 				if (user == null)
 				{
-					return Result<User>.Failure(Response.UserNotFound);
+					return Result<User>.Failure(Responses.UserNotFound);
 				}
 
 				return Result<User>.Success(user);
@@ -92,7 +93,7 @@ namespace Users.Infrastructure.Repositories
 			catch (Exception ex)
 			{
 				Log.Error($"Error in GetUserByFirstNameAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Response.InternalError);
+				return Result<User>.Failure(Responses.InternalError);
 			}
 		}
 

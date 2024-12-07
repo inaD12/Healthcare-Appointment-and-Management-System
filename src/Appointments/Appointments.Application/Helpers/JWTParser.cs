@@ -1,4 +1,5 @@
-﻿using Appointments.Domain.Result;
+﻿using Appointments.Domain.Responses;
+using Contracts.Results;
 using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,7 +28,7 @@ namespace Appointments.Application.Helpers
 
 				if (string.IsNullOrEmpty(jwtToken))
 				{
-					return Result<string>.Failure(Response.JWTNotFound);
+					return Result<string>.Failure(Responses.JWTNotFound);
 				}
 
 				var handler = new JwtSecurityTokenHandler();
@@ -37,7 +38,7 @@ namespace Appointments.Application.Helpers
 				if (string.IsNullOrEmpty(claimValue))
 				{
 					Log.Error($"Token doesn't contain the requested claim type: {claimType}");
-					return Result<string>.Failure(Response.InternalError);
+					return Result<string>.Failure(Responses.InternalError);
 				}
 
 				return Result<string>.Success(claimValue);
@@ -45,7 +46,7 @@ namespace Appointments.Application.Helpers
 			catch (Exception ex)
 			{
 				Log.Error($"Error parsing token: {ex.Message}");
-				return Result<string>.Failure(Response.InternalError);
+				return Result<string>.Failure(Responses.InternalError);
 			}
 		}
 	}

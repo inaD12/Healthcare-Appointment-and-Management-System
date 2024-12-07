@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\Contracts\Contracts\Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOS\Response\" />
+  </ItemGroup>
+
 </Project>
