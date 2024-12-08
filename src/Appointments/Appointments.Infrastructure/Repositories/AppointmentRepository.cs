@@ -71,7 +71,9 @@ namespace Appointments.Infrastructure.Repositories
 					DoctorEmail = doctor.Email,
 					PatientEmail = patient.Email,
 					DoctorId = doctor.UserId,
-					PatientId = patient.UserId
+					PatientId = patient.UserId,
+					Appointment = appointment
+					
 				}
 			).FirstOrDefaultAsync();
 

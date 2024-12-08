@@ -1,4 +1,5 @@
-﻿using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Entities;
+using Appointments.Domain.Enums;
 
 namespace Appointments.Domain.DTOS
 {
@@ -12,6 +13,7 @@ namespace Appointments.Domain.DTOS
 		public string PatientEmail { get; set; }
 		public string DoctorId { get; set; }
 		public string PatientId { get; set; }
+		public Appointment Appointment { get; set; }
 	}
 
 }

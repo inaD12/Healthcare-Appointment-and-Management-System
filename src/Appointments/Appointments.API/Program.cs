@@ -16,6 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.InjectAuthentication(config);
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 builder.Services.AddSwagger();
 builder.Services.ConfigureAppSettings(config);
 builder.Services.InjectMassTransit();

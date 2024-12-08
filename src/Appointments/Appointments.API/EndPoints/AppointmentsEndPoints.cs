@@ -1,8 +1,11 @@
 ﻿using Appointments.API.Extentions;
-using Appointments.Application.Services;
+using Appointments.Application.Appoints.Commands.CancelAppointment;
+using Appointments.Application.Appoints.Commands.CreateAppointment;
+using Appointments.Application.Appoints.Commands.RescheduleAppointment;
 using Appointments.Domain.DTOS.Request;
 using Contracts.Results;
 using FluentValidation;
+using MediatR;
 
 namespace Appointments.API.EndPoints
 {
@@ -54,32 +57,45 @@ namespace Appointments.API.EndPoints
 		}
 		public async Task<IResult> Create(
 			CreateAppointmentDTO appointmentDTO,
-			IAppointentService appointentService,
-			IValidator<CreateAppointmentDTO> validator)
+			ISender sender,
+			IValidator<CreateAppointmentDTO> validator,
+			CancellationToken cancellationToken)
 		{
 			var validationResponse = await ValidateAndReturnResponse(appointmentDTO, validator);
 			if (validationResponse != null)
 				return validationResponse;
 
-			var res = await appointentService.CreateAsync(appointmentDTO);
+			var command = new CreateAppointmentCommand(
+				appointmentDTO.PatientEmail,
+				appointmentDTO.DoctorEmail,
+				appointmentDTO.ScheduledStartTime,
+				appointmentDTO.Duration);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
 		public async Task<IResult> CancelAppointment(
 			string appointmentId,
-			IAppointentService appointentService)
+			ISender sender,
+			CancellationToken cancellationToken)
 		{
-			var res = await appointentService.CancelAppointmentAsync(appointmentId);
+			var command = new CancelAppointmentCommand(appointmentId);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
 		public async Task<IResult> RescheduleAppointment(
 			RescheduleAppointmentDTO appointmentDTO,
-			IAppointentService appointentService)
+			ISender sender,
+			CancellationToken cancellationToken)
 		{
-			var res = await appointentService.RescheduleAppointment(appointmentDTO);
+			var command = new RescheduleAppointmentCommand(appointmentDTO.AppointmentID, appointmentDTO.ScheduledStartTime, appointmentDTO.Duration);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

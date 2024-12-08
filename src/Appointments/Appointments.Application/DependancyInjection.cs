@@ -1,7 +1,6 @@
 ﻿using Appointments.Application.Factories;
 using Appointments.Application.Managers;
 using Appointments.Application.Managers.Interfaces;
-using Appointments.Application.Services;
 using Appointments.Application.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using System.Reflection;
 using FluentValidation;
 using Appointments.Application.Helpers;
 using Microsoft.AspNetCore.Http;
+using Appointments.Application.Appoints.Commands.Shared;
 
 namespace Appointments.Application.DependancyInjection
 {
@@ -24,8 +24,9 @@ namespace Appointments.Application.DependancyInjection
 			services.AddSingleton<IAppointmentFactory, AppointmentFactory>();
 			services.AddSingleton<IUserDataFactory, UserDataFactory>();
 			services.AddSingleton<ICreateAppointmentDTOFactory, CreateAppointmentDTOFactory>();
-			services.AddTransient<IAppointentService, AppointentService>();
 			services.AddTransient<IJwtParser, JwtParser>();
+			services.AddTransient<IJWTUserExtractor, JWTUserExtractor>();
+			services.AddTransient<IAppointmentCommandHandlerHelper, AppointmentCommandHandlerHelper>();
 
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
