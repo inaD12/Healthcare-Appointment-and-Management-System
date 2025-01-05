@@ -44,11 +44,7 @@ namespace Users.Application
 			services.AddSingleton(sp =>
 				sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
 
-
 			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-			services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
-					.AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
 
 			return services;
 		}

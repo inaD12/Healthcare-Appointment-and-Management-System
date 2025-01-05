@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Users.Infrastructure.UsersDBContexts;
 
-namespace Healthcare_Appointment_and_Management_System.Extentions
+namespace UsersAPI.Extentions
 {
 	public static class MigrationExtensions
 	{

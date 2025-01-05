@@ -91,8 +91,13 @@ namespace Appointments.API.EndPoints
 		public async Task<IResult> RescheduleAppointment(
 			RescheduleAppointmentDTO appointmentDTO,
 			ISender sender,
+			IValidator<RescheduleAppointmentDTO> validator,
 			CancellationToken cancellationToken)
 		{
+			var validationResponse = await ValidateAndReturnResponse(appointmentDTO, validator);
+			if (validationResponse != null)
+				return validationResponse;
+
 			var command = new RescheduleAppointmentCommand(appointmentDTO.AppointmentID, appointmentDTO.ScheduledStartTime, appointmentDTO.Duration);
 
 			var res = await sender.Send(command, cancellationToken);

@@ -1,20 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using Users.Infrastructure.UsersDBContexts;
 using Users.Application;
 using Users.Infrastructure;
 using UsersAPI.Extentions;
 using Serilog;
 using UsersAPI.Middlewares;
 using Microsoft.AspNetCore.Mvc;
-using Healthcare_Appointment_and_Management_System.Extentions;
-using Contracts.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-builder.Services.AddDbContext<UsersDBContext>(options =>
-	options.UseNpgsql(builder.Configuration.GetConnectionString("UsersDBConnection"), o => o.MapEnum<Roles>("roles")));
+builder.Services.ConfigureDBs(config);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +20,7 @@ builder.Services.InjectAuthentication(config);
 builder.Services.AddSwagger();
 builder.Services.AddHttpContextAccessor();
 builder.Services.InjectMassTransit();
+builder.Services.AddFluentEmail(config);
 
 builder.Services
 	.AddApplicationLayer(config)
@@ -47,7 +43,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
-
 
 app.UseAuthentication();
 app.UseAuthorization();

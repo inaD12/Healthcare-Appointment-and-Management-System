@@ -1,5 +1,7 @@
-﻿using MassTransit;
+﻿using Contracts.Enums;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -65,6 +67,17 @@ namespace UsersAPI.Extentions
 			return services;
 		}
 
+		public static void ConfigureDBs(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddDbContext<UsersDBContext>(options =>
+				options.UseNpgsql(configuration.GetConnectionString("UsersDBConnection"), o => o.MapEnum<Roles>("roles")));
+		}
+
+		public static void AddFluentEmail(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
+					.AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
+		}
 		public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<AuthValues>(
@@ -77,7 +90,7 @@ namespace UsersAPI.Extentions
 			return services;
 		}
 
-			public static void ConfigureSerilog(this IHostBuilder hostBuilder)
+		public static void ConfigureSerilog(this IHostBuilder hostBuilder)
 		{
 			hostBuilder.UseSerilog((context, configuration) =>
 				configuration
