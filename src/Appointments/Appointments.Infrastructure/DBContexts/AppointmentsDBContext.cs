@@ -1,4 +1,5 @@
 ﻿using Appointments.Domain.Entities;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 namespace Appointments.Infrastructure.DBContexts
@@ -13,6 +14,10 @@ namespace Appointments.Infrastructure.DBContexts
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.AddInboxStateEntity();
+			modelBuilder.AddOutboxMessageEntity();
+			modelBuilder.AddOutboxStateEntity();
 
 			modelBuilder.Entity<Appointment>(entity =>
 			{

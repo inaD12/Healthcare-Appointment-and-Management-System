@@ -1,11 +1,12 @@
 ﻿using Contracts.Enums;
+using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
 using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Xunit;
 
 namespace Users.Application.UnitTests.Services.EmailServiceTests
@@ -38,14 +39,14 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 		{
 			// Arrange
 			_mockRepositoryManager.EmailVerificationToken.GetTokenByIdAsync("invalidToken")
-				.Returns(Result<EmailVerificationToken>.Failure(Response.InvalidVerificationToken));
+				.Returns(Result<EmailVerificationToken>.Failure(Responses.InvalidVerificationToken));
 
 			// Act
 			var result = await _emailService.HandleAsync("invalidToken");
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InvalidVerificationToken);
+			result.Response.Should().BeEquivalentTo(Responses.InvalidVerificationToken);
 		}
 
 		[Fact]
@@ -69,7 +70,7 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InvalidVerificationToken);
+			result.Response.Should().BeEquivalentTo(Responses.InvalidVerificationToken);
 		}
 
 		[Fact]
@@ -86,7 +87,7 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InvalidVerificationToken);
+			result.Response.Should().BeEquivalentTo(Responses.InvalidVerificationToken);
 		}
 
 		[Fact]

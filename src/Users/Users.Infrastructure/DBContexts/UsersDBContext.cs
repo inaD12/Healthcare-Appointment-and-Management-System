@@ -1,4 +1,4 @@
-﻿using Contracts.Enums;
+﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
@@ -15,6 +15,10 @@ namespace Users.Infrastructure.UsersDBContexts
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.AddInboxStateEntity();
+			modelBuilder.AddOutboxMessageEntity();
+			modelBuilder.AddOutboxStateEntity();
 
 			modelBuilder.Entity<User>()
 				.HasIndex(u => u.Email)

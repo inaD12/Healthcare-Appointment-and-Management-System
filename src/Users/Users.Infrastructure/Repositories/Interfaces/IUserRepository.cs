@@ -13,6 +13,8 @@ namespace Users.Infrastructure.Repositories.Interfaces
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(string id);
         Task VerifyEmailAsync(User user);
-    }
+        Task SaveChangesAsync();
+
+	}
 
 }

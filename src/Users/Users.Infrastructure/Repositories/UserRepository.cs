@@ -102,7 +102,6 @@ namespace Users.Infrastructure.Repositories
 			try
 			{
 				await _context.Users.AddAsync(user);
-				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -144,6 +143,11 @@ namespace Users.Infrastructure.Repositories
 		{
 			user.EmailVerified = true;
 			await UpdateUserAsync(user);
+		}
+
+		public async Task SaveChangesAsync()
+		{
+			await _context.SaveChangesAsync();
 		}
 	}
 }

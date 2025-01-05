@@ -1,4 +1,5 @@
 ﻿using Contracts.Enums;
+using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -8,9 +9,8 @@ using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
 using Users.Domain.DTOs.Requests;
-using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.MessageBroker;
 using Xunit;
 
@@ -70,14 +70,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			// Arrange
 			_mockRepositoryManager.User.GetUserByEmailAsync(_registerReqDTO.Email)
-				.Returns(Result<User>.Failure(Response.UserNotFound));
+				.Returns(Result<User>.Failure(Responses.UserNotFound));
 
 			_mockPasswordManager.HashPassword(_registerReqDTO.Password, out _salt).Returns(_hashedPassword);
 
 			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Roles>())
 				.Returns(_user);
 
-			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Success(Response.RegistrationSuccessful));
+			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Success(Responses.RegistrationSuccessful));
 
 			// Act
 			var result = await _userService.RegisterAsync(_registerReqDTO);
@@ -98,7 +98,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.EmailTaken);
+			result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
 		}
 
 		[Fact]
@@ -106,21 +106,21 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			// Arrange
 			_mockRepositoryManager.User.GetUserByEmailAsync(_registerReqDTO.Email)
-				.Returns(Result<User>.Failure(Response.UserNotFound)); // Email is not taken
+				.Returns(Result<User>.Failure(Responses.UserNotFound)); // Email is not taken
 
 			_mockPasswordManager.HashPassword(_registerReqDTO.Password, out _salt).Returns(_hashedPassword);
 
 			_mockFactoryManager.UserFactory.CreateUser(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Roles>())
 				.Returns(_user);
 
-			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Failure(Response.InternalError));
+			_mockEmailVerificationSender.SendEmailAsync(_user).Returns(Result.Failure(Responses.InternalError));
 
 			// Act
 			var result = await _userService.RegisterAsync(_registerReqDTO);
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InternalError);
+			result.Response.Should().BeEquivalentTo(Responses.InternalError);
 		}
 
 		[Fact]
@@ -135,7 +135,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InternalError);
+			result.Response.Should().BeEquivalentTo(Responses.InternalError);
 		}
 	}
 }

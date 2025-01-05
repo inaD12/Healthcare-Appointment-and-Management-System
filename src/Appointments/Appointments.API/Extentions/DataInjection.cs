@@ -46,6 +46,12 @@ namespace Appointments.API.Extentions
 		{
 			services.AddMassTransit(busConfiguratior =>
 			{
+				busConfiguratior.AddEntityFrameworkOutbox<AppointmentsDBContext>(o =>
+				{
+					o.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
+					o.UsePostgres();
+				});
+
 				busConfiguratior.SetKebabCaseEndpointNameFormatter();
 
 				busConfiguratior.AddConsumer<UserCreatedConsumer>();
@@ -75,7 +81,7 @@ namespace Appointments.API.Extentions
 			);
 		}
 
-		public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection ConfigureHangFire(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddHangfire(config =>
 			{
@@ -89,7 +95,7 @@ namespace Appointments.API.Extentions
 			return services;
 		}
 
-		public static IServiceCollection ConfigureHangFire(this IServiceCollection services, IConfiguration configuration)
+		public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<MessageBrokerSettings>(
 				configuration.GetSection("MessageBroker"));

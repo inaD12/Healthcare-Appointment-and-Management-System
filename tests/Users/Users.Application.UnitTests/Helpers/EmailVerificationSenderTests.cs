@@ -1,7 +1,6 @@
 ﻿using FluentEmail.Core;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
-using Users.Domain.Result;
 using FluentAssertions;
 using NSubstitute;
 using Users.Application.Helpers;
@@ -11,6 +10,8 @@ using Users.Domain.EmailVerification;
 using FluentEmail.Core.Models;
 using NSubstitute.ExceptionExtensions;
 using Contracts.Enums;
+using Contracts.Results;
+using Users.Domain.Responses;
 
 namespace Users.Application.UnitTests.Helpers
 {
@@ -102,7 +103,7 @@ namespace Users.Application.UnitTests.Helpers
 			var result = await _emailVerificationSender.SendEmailAsync(_mockUser);
 
 			// Assert
-			result.Should().BeEquivalentTo(Result.Failure(Response.EmailNotSent));
+			result.Should().BeEquivalentTo(Result.Failure(Responses.EmailNotSent));
 			await _mockFluentEmail.Received(1).SendAsync();
 			await _mockRepositoryManager.EmailVerificationToken.DidNotReceive().AddTokenAsync(emailVerificationToken);
 		}
@@ -118,7 +119,7 @@ namespace Users.Application.UnitTests.Helpers
 			var result = await _emailVerificationSender.SendEmailAsync(_mockUser);
 
 			// Assert
-			result.Should().BeEquivalentTo(Result.Failure(Response.InternalError));
+			result.Should().BeEquivalentTo(Result.Failure(Responses.InternalError));
 			await _mockFluentEmail.DidNotReceive().SendAsync();
 			await _mockRepositoryManager.EmailVerificationToken.DidNotReceive().AddTokenAsync(Arg.Any<EmailVerificationToken>());
 		}

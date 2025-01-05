@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 using Users.Application.Settings;
+using Users.Infrastructure.UsersDBContexts;
 
 namespace UsersAPI.Extentions
 {
@@ -39,6 +40,12 @@ namespace UsersAPI.Extentions
 		{
 			services.AddMassTransit(busConfiguratior =>
 			{
+				busConfiguratior.AddEntityFrameworkOutbox<UsersDBContext>(o =>
+				{
+					o.QueryDelay = TimeSpan.FromSeconds(1);
+					o.UsePostgres().UseBusOutbox();
+				});
+
 				busConfiguratior.SetKebabCaseEndpointNameFormatter();
 
 				busConfiguratior.UsingRabbitMq((context, configurator) =>

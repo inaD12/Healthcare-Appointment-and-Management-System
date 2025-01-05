@@ -1,4 +1,5 @@
 ﻿using Contracts.Enums;
+using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -8,7 +9,7 @@ using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.MessageBroker;
 using Xunit;
 
@@ -58,14 +59,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			// Arrange
 			_mockRepositoryManager.User.GetUserByIdAsync(_nonExistentUserId)
-				.Returns(Result<User>.Failure(Response.UserNotFound));
+				.Returns(Result<User>.Failure(Responses.UserNotFound));
 
 			// Act
 			var result = await _userService.DeleteUserAsync(_nonExistentUserId);
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.UserNotFound);
+			result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
 			_mockRepositoryManager.User.DidNotReceive().DeleteUserAsync(Arg.Any<string>());
 		}
 
@@ -84,7 +85,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.InternalError);
+			result.Response.Should().BeEquivalentTo(Responses.InternalError);
 		}
 
 	}

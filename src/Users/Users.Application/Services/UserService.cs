@@ -87,6 +87,8 @@ namespace Users.Application.Services
 						user.Role
 					));
 
+				await _repositotyManager.User.SaveChangesAsync();
+
 				//Result emailSenderResult = await _emailVerificationSender.SendEmailAsync(user);
 
 				//if (emailSenderResult.IsFailure)

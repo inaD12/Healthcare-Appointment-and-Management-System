@@ -8,11 +8,12 @@ using Users.Application.Services;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.Entities;
 using Users.Domain.DTOs.Responses;
-using Users.Domain.Result;
 using FluentAssertions;
 using NSubstitute.ExceptionExtensions;
 using Users.Infrastructure.MessageBroker;
 using Contracts.Enums;
+using Contracts.Results;
+using Users.Domain.Responses;
 
 namespace Users.Application.UnitTests.Services.UserServiceTests
 {
@@ -90,7 +91,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Response.Should().BeEquivalentTo(Response.IncorrectPassword);
+            result.Response.Should().BeEquivalentTo(Responses.IncorrectPassword);
         }
 
         [Fact]
@@ -98,14 +99,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
         {
             // Arrange
             _mockRepositoryManager.User.GetUserByEmailAsync(_loginReqDTO.Email)
-                .Returns(Result<User>.Failure(Response.UserNotFound));
+                .Returns(Result<User>.Failure(Responses.UserNotFound));
 
             // Act
             var result = await _userService.LoginAsync(_loginReqDTO);
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Response.Should().BeEquivalentTo(Response.UserNotFound);
+            result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
         }
 
         [Fact]
@@ -120,7 +121,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Response.Should().BeEquivalentTo(Response.InternalError);
+            result.Response.Should().BeEquivalentTo(Responses.InternalError);
         }
     }
 }

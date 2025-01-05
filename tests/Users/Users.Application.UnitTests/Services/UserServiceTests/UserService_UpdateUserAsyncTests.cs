@@ -1,4 +1,5 @@
 ﻿using Contracts.Enums;
+using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
 using Users.Application.Auth.PasswordManager;
@@ -8,7 +9,7 @@ using Users.Application.Managers.Interfaces;
 using Users.Application.Services;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.Entities;
-using Users.Domain.Result;
+using Users.Domain.Responses;
 using Users.Infrastructure.MessageBroker;
 using Xunit;
 
@@ -50,14 +51,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 				.Returns(Result<User>.Success(_testUser));
 
 			_mockRepositoryManager.User.GetUserByEmailAsync(_updateUserDTO.NewEmail)
-			.Returns(Result<User>.Failure(Response.UserNotFound));
+			.Returns(Result<User>.Failure(Responses.UserNotFound));
 
 			// Act
 			var result = await _userService.UpdateUserAsync(_updateUserDTO, _id);
 
 			// Assert
 			result.IsSuccess.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.UpdateSuccessful);
+			result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 		}
 
 		[Fact]
@@ -65,14 +66,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 		{
 			// Arrange
 			_mockRepositoryManager.User.GetUserByIdAsync(_id)
-				.Returns(Result<User>.Failure(Response.UserNotFound));
+				.Returns(Result<User>.Failure(Responses.UserNotFound));
 
 			// Act
 			var result = await _userService.UpdateUserAsync(_updateUserDTO, _id);
 
 			// Assert
 			result.IsSuccess.Should().BeFalse();
-			result.Response.Should().BeEquivalentTo(Response.UserNotFound);
+			result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
 		}
 
 		[Fact]
@@ -90,7 +91,7 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 
 			// Assert
 			result.IsSuccess.Should().BeFalse();
-			result.Response.Should().BeEquivalentTo(Response.EmailTaken);
+			result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
 		}
 
 		[Fact]
@@ -104,14 +105,14 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 				.Returns(Result<User>.Success(existingUser));
 
 			_mockRepositoryManager.User.GetUserByEmailAsync(updateDTO.NewEmail)
-			.Returns(Result<User>.Failure(Response.UserNotFound));
+			.Returns(Result<User>.Failure(Responses.UserNotFound));
 
 			// Act
 			var result = await _userService.UpdateUserAsync(updateDTO, _id);
 
 			// Assert
 			result.IsSuccess.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Response.UpdateSuccessful);
+			result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 			existingUser.FirstName.Should().Be("John"); // Should remain unchanged
 			existingUser.LastName.Should().Be(updateDTO.LastName); // Updated
 			existingUser.Email.Should().Be("user@example.com"); // Should remain unchanged
