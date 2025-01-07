@@ -24,7 +24,6 @@ namespace Users.Application
 	{
 		public static IServiceCollection AddApplicationLayer(this IServiceCollection services, IConfiguration configuration )
 		{
-			services.AddScoped<IUserService, UserService>();
 			services.AddTransient<IJwtParser, JwtParser>();
 			services.AddTransient<IPasswordManager, PasswordManager>();
 			services.AddTransient<ITokenManager, TokenManager>();

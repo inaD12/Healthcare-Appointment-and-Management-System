@@ -4,6 +4,12 @@ using Users.Application.Helpers.Interfaces;
 using Users.Application.Services.Interfaces;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
+using Users.Application.Commands.Users.LoginUser;
+using System.Threading;
+using MediatR;
+using Users.Application.Commands.Users.RegisterUser;
+using Users.Application.Commands.Users.UpdateUser;
+using Users.Application.Commands.Users.DeleteUser;
 
 namespace UsersAPI.EndPoints
 {
@@ -65,37 +71,54 @@ namespace UsersAPI.EndPoints
 
 		public async Task<IResult> Login(
 			LoginReqDTO loginReqDTO,
-			IUserService userService,
-			IValidator<LoginReqDTO> validator)
+			ISender sender,
+			IValidator<LoginReqDTO> validator,
+			CancellationToken cancellationToken)
 		{
 			var validationResponse = await ValidateAndReturnResponse(loginReqDTO, validator);
 			if (validationResponse != null)
 				return validationResponse;
 
-			var res = await userService.LoginAsync(loginReqDTO);
+			var command = new LoginUserCommand<TokenDTO>(
+				loginReqDTO.Email,
+				loginReqDTO.Password);
 
-			return ControllerResponse.ParseAndReturnMessage(res);
+			var res = await sender.Send(command, cancellationToken);
+
+			return ControllerResponse.ParseAndReturnMessage<TokenDTO>(res);
 		}
 
 		public async Task<IResult> Register(
 			RegisterReqDTO registerReqDTO,
-			IUserService userService,
-			IValidator<RegisterReqDTO> validator)
+			ISender sender,
+			IValidator<RegisterReqDTO> validator,
+			CancellationToken cancellationToken)
 		{
 			var validationResponse = await ValidateAndReturnResponse(registerReqDTO, validator);
 			if (validationResponse != null)
 				return validationResponse;
 
-			var res = await userService.RegisterAsync(registerReqDTO);
+			var command = new RegisterUserCommand(
+				registerReqDTO.Email,
+				registerReqDTO.Password,
+				registerReqDTO.FirstName,
+				registerReqDTO.LastName,
+				registerReqDTO.DateOfBirth,
+				registerReqDTO.PhoneNumber,
+				registerReqDTO.Address,
+				registerReqDTO.Role);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
 		public async Task<IResult> Update(
 			UpdateUserReqDTO updateUserReqDTO,
-			IUserService userService,
+			ISender sender,
 			IJwtParser jwtParser,
-			IValidator<UpdateUserReqDTO> validator)
+			IValidator<UpdateUserReqDTO> validator,
+			CancellationToken cancellationToken)
 		{
 			var validationResponse = await ValidateAndReturnResponse(updateUserReqDTO, validator);
 			if (validationResponse != null)
@@ -103,18 +126,27 @@ namespace UsersAPI.EndPoints
 
 			string id = jwtParser.GetIdFromToken();
 
-			var res = await userService.UpdateUserAsync(updateUserReqDTO, id);
+			var command = new UpdateUserCommand(
+				id,
+				updateUserReqDTO.NewEmail,
+				updateUserReqDTO.FirstName,
+				updateUserReqDTO.LastName);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
 		public async Task<IResult> Delete(
-			IUserService userService,
-			IJwtParser jwtParser)
+			ISender sender,
+			IJwtParser jwtParser,
+			CancellationToken cancellationToken)
 		{
 			string id = jwtParser.GetIdFromToken();
 
-			var res = await userService.DeleteUserAsync(id);
+			var command = new DeleteUserCommand(id);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

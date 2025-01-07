@@ -26,7 +26,7 @@ namespace Appointments.API.Extentions
 		{
 			if (result.IsSuccess)
 			{
-				return Results.Json(new { message = result.Response?.Message, data = result.Object },
+				return Results.Json(new { message = result.Response?.Message},
 									statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 			}
 

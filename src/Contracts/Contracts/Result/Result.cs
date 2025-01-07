@@ -20,12 +20,12 @@
 	}
 	public class Result
 	{
-		private Result(bool isSuccess, Response? response, object? obj)
+		private Result(bool isSuccess, Response? response)
 		{
 
 			IsSuccess = isSuccess;
 			Response = response;
-			Object = obj;
+			//Object = obj;
 		}
 		public bool IsSuccess { get; }
 
@@ -33,10 +33,10 @@
 
 		public Response Response { get; }
 
-		public object Object { get; }
+		//public object Object { get; }
 
-		public static Result Success(Response response, object? obj = null) => new(true, response, obj);
-		public static Result Success(object? obj = null) => new(true, Response.Ok, obj);
-		public static Result Failure(Response response) => new(false, response, null);
+		public static Result Success(Response response) => new(true, response);
+		public static Result Success() => new(true, Response.Ok);
+		public static Result Failure(Response response) => new(false, response);
 	}
 }
