@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
 using UsersAPI.Extentions;
 using Users.Application.Helpers.Interfaces;
-using Users.Application.Services.Interfaces;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 using Users.Application.Commands.Users.LoginUser;
-using System.Threading;
 using MediatR;
 using Users.Application.Commands.Users.RegisterUser;
 using Users.Application.Commands.Users.UpdateUser;
 using Users.Application.Commands.Users.DeleteUser;
+using System.Threading;
+using Users.Application.Commands.Email.HandleEmail;
 
 namespace UsersAPI.EndPoints
 {
@@ -85,7 +85,7 @@ namespace UsersAPI.EndPoints
 
 			var res = await sender.Send(command, cancellationToken);
 
-			return ControllerResponse.ParseAndReturnMessage<TokenDTO>(res);
+			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
 		public async Task<IResult> Register(
@@ -151,9 +151,14 @@ namespace UsersAPI.EndPoints
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}
 
-		public async Task<IResult> VerifyEmails(string token, IEmailService emailService)
+		public async Task<IResult> VerifyEmails(
+			string token,
+			ISender sender,
+			CancellationToken cancellationToken)
 		{
-			var res = await emailService.HandleAsync(token);
+			var command = new HandleEmailCommand(token);
+
+			var res = await sender.Send(command, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		} 

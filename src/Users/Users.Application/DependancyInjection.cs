@@ -12,8 +12,6 @@ using Users.Application.Helpers;
 using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers;
 using Users.Application.Managers.Interfaces;
-using Users.Application.Services;
-using Users.Application.Services.Interfaces;
 using Users.Application.Settings;
 using Users.Application.Validators;
 using Users.Domain.DTOs.Requests;
@@ -32,7 +30,6 @@ namespace Users.Application
 			services.AddTransient<IValidator<LoginReqDTO>, LoginReqDTOValidator>();
 			services.AddTransient<IValidator<RegisterReqDTO>, RegisterReqDTOValidator>();
 			services.AddTransient<IValidator<UpdateUserReqDTO>, UpdateUserReqDTOValidator>();
-			services.AddTransient<IEmailService, EmailService>();
 			services.AddSingleton<IUserFactory, UserFactory>();
 			services.AddSingleton<IUserCreatedEventFactory, UserCreatedEventFactory>();
 			services.AddSingleton<IEmailVerificationTokenFactory, EmailVerificationTokenFactory>();
