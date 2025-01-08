@@ -6,7 +6,7 @@ using Users.Domain.Responses;
 
 namespace Users.Application.Commands.Users.UpdateUser
 {
-	internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
+	public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 	{
 		private readonly IRepositoryManager _repositotyManager;
 

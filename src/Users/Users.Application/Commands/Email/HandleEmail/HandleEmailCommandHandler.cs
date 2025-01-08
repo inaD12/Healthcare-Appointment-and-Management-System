@@ -5,7 +5,7 @@ using Users.Domain.Responses;
 
 namespace Users.Application.Commands.Email.HandleEmail
 {
-	internal sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailCommand>
+	public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailCommand>
 	{
 		private readonly IRepositoryManager _repositoryManager;
 

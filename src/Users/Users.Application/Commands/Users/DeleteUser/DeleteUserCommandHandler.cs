@@ -4,7 +4,7 @@ using Users.Application.Managers.Interfaces;
 
 namespace Users.Application.Commands.Users.DeleteUser
 {
-	internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
+	public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
 	{
 		private readonly IRepositoryManager _repositotyManager;
 

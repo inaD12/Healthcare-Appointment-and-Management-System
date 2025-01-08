@@ -9,7 +9,7 @@ using Users.Domain.Responses;
 
 namespace Users.Application.Commands.Users.LoginUser
 {
-	internal sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand<TokenDTO>, TokenDTO>
+	public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand<TokenDTO>, TokenDTO>
 	{
 		private readonly IRepositoryManager _repositotyManager;
 		private readonly IPasswordManager _passwordManager;

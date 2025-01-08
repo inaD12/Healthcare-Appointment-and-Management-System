@@ -9,7 +9,7 @@ using Users.Infrastructure.MessageBroker;
 
 namespace Users.Application.Commands.Users.RegisterUser
 {
-	internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
+	public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 	{
 		private readonly IRepositoryManager _repositotyManager;
 		private readonly IEmailVerificationSender _emailVerificationSender;

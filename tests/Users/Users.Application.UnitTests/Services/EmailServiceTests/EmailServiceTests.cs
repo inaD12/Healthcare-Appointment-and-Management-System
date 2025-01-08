@@ -2,8 +2,8 @@
 using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
+using Users.Application.Commands.Email.HandleEmail;
 using Users.Application.Managers.Interfaces;
-using Users.Application.Services;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
@@ -14,14 +14,14 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 	public class EmailServiceTests
 	{
 		private readonly IRepositoryManager _mockRepositoryManager;
-		private readonly EmailService _emailService;
+		private readonly HandleEmailCommandHandler _commandHandler;
 		private readonly EmailVerificationToken _validToken;
 		private readonly User _user;
 
 		public EmailServiceTests()
 		{
 			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
-			_emailService = new EmailService(_mockRepositoryManager);
+			_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager);
 
 			_user = new User("123", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 			_validToken = new EmailVerificationToken
@@ -38,11 +38,12 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 		public async Task HandleAsync_ShouldReturnFailure_WhenTokenIsInvalid()
 		{
 			// Arrange
+			var command = new HandleEmailCommand("invalidToken");
 			_mockRepositoryManager.EmailVerificationToken.GetTokenByIdAsync("invalidToken")
 				.Returns(Result<EmailVerificationToken>.Failure(Responses.InvalidVerificationToken));
 
 			// Act
-			var result = await _emailService.HandleAsync("invalidToken");
+			var result = await _commandHandler.Handle(command, CancellationToken.None);
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
@@ -62,11 +63,13 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 				 _user
 			);
 
+			var command = new HandleEmailCommand(expiredToken.Id);
+
 			_mockRepositoryManager.EmailVerificationToken.GetTokenByIdAsync(expiredToken.Id)
 				.Returns(Result<EmailVerificationToken>.Success(expiredToken));
 
 			// Act
-			var result = await _emailService.HandleAsync(expiredToken.Id);
+			var result = await _commandHandler.Handle(command, CancellationToken.None);
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
@@ -81,9 +84,10 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 			verifiedUserToken.User.EmailVerified = true;
 			_mockRepositoryManager.EmailVerificationToken.GetTokenByIdAsync(verifiedUserToken.Id)
 				.Returns(Result<EmailVerificationToken>.Success(verifiedUserToken));
+			var command = new HandleEmailCommand(verifiedUserToken.Id);
 
 			// Act
-			var result = await _emailService.HandleAsync(verifiedUserToken.Id);
+			var result = await _commandHandler.Handle(command, CancellationToken.None);
 
 			// Assert
 			result.IsFailure.Should().BeTrue();
@@ -94,6 +98,8 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 		public async Task HandleAsync_ShouldReturnSuccess_WhenTokenIsValidAndEmailNotVerified()
 		{
 			// Arrange
+			var command = new HandleEmailCommand(_validToken.Id);
+
 			_mockRepositoryManager.EmailVerificationToken.GetTokenByIdAsync(_validToken.Id)
 				.Returns(Result<EmailVerificationToken>.Success(_validToken));
 
@@ -101,7 +107,7 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 				.Returns(Task.CompletedTask);
 
 			// Act
-			var result = await _emailService.HandleAsync(_validToken.Id);
+			var result = await _commandHandler.Handle(command, CancellationToken.None);
 
 			// Assert
 			result.IsSuccess.Should().BeTrue();
