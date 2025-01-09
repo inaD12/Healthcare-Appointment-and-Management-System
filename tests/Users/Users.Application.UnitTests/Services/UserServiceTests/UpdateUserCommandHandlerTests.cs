@@ -2,7 +2,6 @@
 using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Users.Application.Commands.Users.UpdateUser;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
