@@ -28,7 +28,11 @@ internal sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAp
 		var doctorData = doctorDataRes.Value;
 		var patientData = patientDataRes.Value;
 
-		var helperResult = await _helper.CreateAppointment(doctorData.UserId, patientData.UserId, request.ScheduledStartTime, request.Duration);
+		var helperResult = await _helper.CreateAppointment(
+			doctorData.UserId,
+			patientData.UserId,
+			request.ScheduledStartTime.ToUniversalTime(),
+			request.Duration);
 
 		return helperResult;
 	}

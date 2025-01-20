@@ -39,7 +39,11 @@ internal sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resc
 		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
 			return Result.Failure(Responses.CannotRescheduleOthersAppointment);
 
-		var helperResult = await _helper.CreateAppointment(appointmentWithDetails.DoctorEmail, appointmentWithDetails.PatientEmail, request.ScheduledStartTime, request.Duration);
+		var helperResult = await _helper.CreateAppointment
+			(appointmentWithDetails.DoctorEmail,
+			appointmentWithDetails.PatientEmail,
+			request.ScheduledStartTime.ToUniversalTime(),
+			request.Duration);
 
 		if (helperResult.IsFailure)
 			return Result.Failure(helperResult.Response);

@@ -9,13 +9,13 @@ namespace Appointments.API.Extentions
 		{
 			if (result.IsSuccess)
 			{
-				return Results.Json(new { message = result.Response?.Message, data = result.Value },
+				return Results.Json(new { message = result.Response?.Message.Message, data = result.Value },
 									statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 			}
 
 			if (result.IsFailure)
 			{
-				return Results.Json(new { message = result.Response.Message },
+				return Results.Json(new { message = result.Response.Message.Message },
 									statusCode: (int)result.Response.StatusCode);
 			}
 
@@ -26,13 +26,13 @@ namespace Appointments.API.Extentions
 		{
 			if (result.IsSuccess)
 			{
-				return Results.Json(new { message = result.Response?.Message},
+				return Results.Json(new { message = result.Response?.Message.Message },
 									statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 			}
 
 			if (result.IsFailure)
 			{
-				return Results.Json(new { message = result.Response.Message },
+				return Results.Json(new { message = result.Response.Message.Message },
 									statusCode: (int)result.Response.StatusCode);
 			}
 

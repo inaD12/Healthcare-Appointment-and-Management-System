@@ -49,8 +49,8 @@ namespace Appointments.API.EndPoints
 
 			if (!valResult.IsValid)
 			{
-				var errors = valResult.Errors.Select(e => e.ErrorMessage).ToList();
-				return Results.BadRequest(new { Errors = errors });
+				var error = valResult.Errors.First();
+				return Results.BadRequest(new { message = error.ErrorMessage });
 			}
 
 			return null;

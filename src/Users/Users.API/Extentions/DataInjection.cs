@@ -38,6 +38,20 @@ namespace UsersAPI.Extentions
 			return services;
 		}
 
+		public static IServiceCollection ConfigureCors(this IServiceCollection services)
+		{
+			services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAllOrigins", builder =>
+				{
+					builder.AllowAnyOrigin()  // Allow all origins (you can restrict this to a specific origin if needed)
+						   .AllowAnyMethod()  // Allow any method (GET, POST, etc.)
+						   .AllowAnyHeader(); // Allow any header (this includes Content-Type: application/json)
+				});
+			});
+
+			return services;
+		}
 		public static IServiceCollection InjectMassTransit(this IServiceCollection services)
 		{
 			services.AddMassTransit(busConfiguratior =>

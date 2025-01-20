@@ -39,7 +39,7 @@ namespace Users.Application.Commands.Users.RegisterUser
 				salt,
 				request.FirstName,
 				request.LastName,
-				request.DateOfBirth,
+				request.DateOfBirth.ToUniversalTime(),
 				request.PhoneNumber,
 				request.Address,
 				request.Role

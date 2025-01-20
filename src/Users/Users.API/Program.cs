@@ -22,6 +22,7 @@ builder.Services.AddSwagger();
 builder.Services.AddHttpContextAccessor();
 builder.Services.InjectMassTransit();
 builder.Services.AddFluentEmail(config);
+builder.Services.ConfigureCors();
 
 builder.Services
 	.AddApplicationLayer(config)
@@ -45,6 +46,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 
