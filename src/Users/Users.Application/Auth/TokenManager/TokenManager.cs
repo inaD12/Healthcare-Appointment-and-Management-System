@@ -2,42 +2,44 @@
 using JWT.Builder;
 using Microsoft.Extensions.Options;
 using Serilog;
-using System.Security.Claims;
+using Users.Application.Factories.Interfaces;
 using Users.Application.Settings;
+using Users.Domain.DTOs.Responses;
 
 namespace Users.Application.Auth.TokenManager
 {
 	public class TokenManager : ITokenManager
 	{
 		private readonly IOptionsMonitor<AuthValues> _jwtOptions;
+		private readonly ITokenDTOFactory _tokenDTOfactory;
 
-		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions)
+		public TokenManager(IOptionsMonitor<AuthValues> jwtOptions, ITokenDTOFactory tokenDTOfactory)
 		{
 			_jwtOptions = jwtOptions;
+			_tokenDTOfactory = tokenDTOfactory;
 		}
 
-		public string CreateToken(string username, string role, int secondsValid)
+		public TokenDTO CreateToken(string id)
 		{
 			try
 			{
 				string token = JwtBuilder.Create()
 					.WithAlgorithm(new HMACSHA256Algorithm())
 					.WithSecret(_jwtOptions.CurrentValue.SecretKey)
-					.AddClaim("username", username)
-					.AddClaim(ClaimTypes.Role, role)
-					.AddClaim("exp", DateTimeOffset.UtcNow.AddSeconds(secondsValid).ToUnixTimeSeconds())
+					.AddClaim("id", id)
+					//.AddClaim(ClaimTypes.Role, role)
+					.AddClaim("exp", DateTimeOffset.UtcNow.AddSeconds(_jwtOptions.CurrentValue.SecondsValid).ToUnixTimeSeconds())
 					.AddClaim("iss", _jwtOptions.CurrentValue.Issuer)
 					.AddClaim("aud", _jwtOptions.CurrentValue.Audience)
 					.Encode();
 
-				return token;
+				return _tokenDTOfactory.CreateToken(token);
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex.Message, ex);
+				Log.Error($"Error in CreateToken() in TokenManager: {ex.Message} {ex.Source} {ex.InnerException}");
+				return null;
 			}
-
-			return null;
 		}
 	}
 }

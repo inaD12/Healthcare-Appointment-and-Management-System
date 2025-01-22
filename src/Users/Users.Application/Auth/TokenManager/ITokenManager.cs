@@ -1,7 +1,9 @@
-﻿namespace Users.Application.Auth.TokenManager
+﻿using Users.Domain.DTOs.Responses;
+
+namespace Users.Application.Auth.TokenManager
 {
 	public interface ITokenManager
 	{
-		string CreateToken(string username, string role, int secondsValid);
+		TokenDTO CreateToken(string id);
 	}
 }
