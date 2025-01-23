@@ -10,6 +10,7 @@ using Users.Application.Commands.Users.UpdateUser;
 using Users.Application.Commands.Users.DeleteUser;
 using System.Threading;
 using Users.Application.Commands.Email.HandleEmail;
+using Users.Application.Queries.Users.GetAllDoctors;
 
 namespace UsersAPI.EndPoints
 {
@@ -41,6 +42,13 @@ namespace UsersAPI.EndPoints
 				.Produces<MessageDTO>(StatusCodes.Status409Conflict)
 				.Produces(StatusCodes.Status500InternalServerError)
 				.RequireAuthorization();
+
+			group.MapGet("get-all-doctors", GetAllDoctors)
+				.Produces<IEnumerable<UserResponseDTO>>(StatusCodes.Status200OK)
+				.Produces(StatusCodes.Status401Unauthorized)
+				.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+				.Produces(StatusCodes.Status500InternalServerError);
+				//.RequireAuthorization();
 
 			group.MapDelete("delete", Delete)
 				.Produces<MessageDTO>(StatusCodes.Status200OK)
@@ -133,6 +141,17 @@ namespace UsersAPI.EndPoints
 				updateUserReqDTO.LastName);
 
 			var res = await sender.Send(command, cancellationToken);
+
+			return ControllerResponse.ParseAndReturnMessage(res);
+		}
+
+		public async Task<IResult> GetAllDoctors(
+			ISender sender,
+			CancellationToken cancellationToken)
+		{
+			var query = new GetAllDoctorsQuery();
+
+			var res = await sender.Send(query, cancellationToken);
 
 			return ControllerResponse.ParseAndReturnMessage(res);
 		}

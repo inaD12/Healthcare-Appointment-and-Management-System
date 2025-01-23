@@ -6,7 +6,8 @@ namespace Users.Infrastructure.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<Result<IEnumerable<User>>> GetAllUsersAsync();
-        Task<Result<User>> GetUserByIdAsync(string id);
+		Task<Result<IEnumerable<User>>> GetAllDoctorsAsync();
+		Task<Result<User>> GetUserByIdAsync(string id);
         Task<Result<User>> GetUserByEmailAsync(string email);
         Task<Result<User>> GetUserByFirstNameAsync(string firstName);
         Task AddUserAsync(User user);

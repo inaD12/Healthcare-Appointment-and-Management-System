@@ -37,6 +37,26 @@ namespace Users.Infrastructure.Repositories
 			}
 		}
 
+		public async Task<Result<IEnumerable<User>>> GetAllDoctorsAsync()
+		{
+			try
+			{
+				var users = await _context.Users.Where(e => e.Role == Contracts.Enums.Roles.Doctor).ToListAsync();
+
+				if (!users.Any())
+				{
+					return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
+				}
+
+				return Result<IEnumerable<User>>.Success(users);
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in GetAllDoctorsAsync() in UserRepository: {ex.Message}");
+				return Result<IEnumerable<User>>.Failure(Responses.InternalError);
+			}
+		}
+
 		public async Task<Result<User>> GetUserByIdAsync(string id)
 		{
 			try
