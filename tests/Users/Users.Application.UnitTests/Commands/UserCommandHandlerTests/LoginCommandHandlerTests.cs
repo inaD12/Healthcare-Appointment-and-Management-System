@@ -6,7 +6,6 @@ using Users.Application.Auth.TokenManager;
 using Users.Domain.Entities;
 using Users.Domain.DTOs.Responses;
 using FluentAssertions;
-using NSubstitute.ExceptionExtensions;
 using Contracts.Enums;
 using Contracts.Results;
 using Users.Domain.Responses;

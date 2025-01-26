@@ -6,7 +6,7 @@ using Users.Domain.DTOs.Responses;
 
 namespace Users.Application.Queries.Users.GetAllDoctors;
 
-internal sealed class GetAllDoctorsQueryHandler
+public sealed class GetAllDoctorsQueryHandler
 	: IQueryHandler<GetAllDoctorsQuery, IEnumerable<UserResponseDTO>>
 {
 	private readonly IRepositoryManager _repositoryManager;
