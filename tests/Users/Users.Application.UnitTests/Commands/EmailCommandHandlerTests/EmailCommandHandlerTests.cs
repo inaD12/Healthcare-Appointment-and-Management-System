@@ -11,14 +11,14 @@ using Xunit;
 
 namespace Users.Application.UnitTests.Services.EmailServiceTests
 {
-	public class EmailServiceTests
+	public class EmailCommandHandlerTests
 	{
 		private readonly IRepositoryManager _mockRepositoryManager;
 		private readonly HandleEmailCommandHandler _commandHandler;
 		private readonly EmailVerificationToken _validToken;
 		private readonly User _user;
 
-		public EmailServiceTests()
+		public EmailCommandHandlerTests()
 		{
 			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
 			_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager);
