@@ -98,5 +98,4 @@ namespace Users.Application.UnitTests.Services.UserServiceTests
 			result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
 		}
 	}
-
 }

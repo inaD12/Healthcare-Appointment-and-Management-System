@@ -8,7 +8,7 @@ using Contracts.Results;
 
 namespace Appointments.Application.Appoints.Commands.CancelAppointment;
 
-internal sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
+public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IJWTUserExtractor _jwtUserExtractor;
