@@ -6,7 +6,7 @@ using Contracts.Results;
 
 namespace Appointments.Application.Appoints.Commands.CreateAppointment;
 
-internal sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand>
+public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IAppointmentCommandHandlerHelper _helper;
