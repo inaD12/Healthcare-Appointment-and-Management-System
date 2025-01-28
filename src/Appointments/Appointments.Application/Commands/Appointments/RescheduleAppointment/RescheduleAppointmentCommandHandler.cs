@@ -10,7 +10,7 @@ using Appointments.Application.Appoints.Commands.Shared;
 
 namespace Appointments.Application.Appoints.Commands.RescheduleAppointment;
 
-internal sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
+public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IJWTUserExtractor _jwtUserExtractor;
