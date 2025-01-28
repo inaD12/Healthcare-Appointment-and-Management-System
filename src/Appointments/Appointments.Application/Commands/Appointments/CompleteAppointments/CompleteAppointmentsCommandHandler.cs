@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Appointments.Application.Appointments.Commands.CompleteAppointments
 {
-	internal sealed class CompleteAppointmentsCommandHandler : ICommandHandler<CompleteAppointmentsCommand>
+	public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<CompleteAppointmentsCommand>
 	{
 		private readonly IRepositoryManager _repositoryManager;
 
@@ -25,6 +25,9 @@ namespace Appointments.Application.Appointments.Commands.CompleteAppointments
 			{
 				return Result.Failure(appointmentsToCompleteRes.Response);
 			}
+
+			if (appointmentsToCompleteRes.Value.Count == 0)
+				return Result.Success();
 
 			var appointmentsToComplete = appointmentsToCompleteRes.Value;
 

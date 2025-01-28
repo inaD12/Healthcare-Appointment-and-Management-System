@@ -99,11 +99,6 @@ namespace Appointments.Infrastructure.Repositories
 				.Where(a => a.ScheduledEndTime <= currentTime && a.Status == AppointmentStatus.Scheduled)
 				.ToListAsync();
 
-				if (res == null)
-				{
-					return Result<List<Appointment>>.Failure(Responses.AppointmentNotFound);
-				}
-
 				return Result<List<Appointment>>.Success(res);
 			}
 			catch (Exception ex)
