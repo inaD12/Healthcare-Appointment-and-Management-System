@@ -1,5 +1,4 @@
 ﻿using Contracts.Enums;
-using Users.Domain.Enums;
 
 namespace Users.Domain.Entities
 {

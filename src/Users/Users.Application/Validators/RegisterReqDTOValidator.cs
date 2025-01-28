@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Users.Domain.DTOs.Requests;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Validators
 {
@@ -13,13 +14,18 @@ namespace Users.Application.Validators
 
 			RuleFor(x => x.Password)
 				.NotEmpty().WithMessage("Password is required.")
-				.MinimumLength(6).WithMessage("Password must be at least 6 characters long.");
+				.MinimumLength(UsersBusinessConfiguration.PASSWORD_MIN_LENGTH).WithMessage("Password must be at least 6 characters long.")
+				.MaximumLength(UsersBusinessConfiguration.PASSWORD_MAX_LENGTH).WithMessage("Password musn't be more than 30 charecters long.");
 
 			RuleFor(x => x.FirstName)
-				.NotEmpty().WithMessage("First Name is required.");
+				.NotEmpty().WithMessage("First Name is required.")
+				.MinimumLength(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH).WithMessage("First name must be at least 3 characters long.")
+				.MaximumLength(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH).WithMessage("First name musn't be more than 30 charecters long.");
 
 			RuleFor(x => x.LastName)
-				.NotEmpty().WithMessage("Last Name is required.");
+				.NotEmpty().WithMessage("Last Name is required.")
+				.MinimumLength(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH).WithMessage("Last name must be at least 3 characters long.")
+				.MaximumLength(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH).WithMessage("Last name musn't be more than 30 charecters long.");
 
 			RuleFor(x => x.DateOfBirth)
 				.NotEmpty().WithMessage("Date of Birth is required.")

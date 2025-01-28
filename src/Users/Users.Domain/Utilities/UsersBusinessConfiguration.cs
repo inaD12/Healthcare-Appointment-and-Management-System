@@ -10,4 +10,7 @@ public class UsersBusinessConfiguration
 
 	public const int LASTTNAME_MIN_LENGTH = 3;
 	public const int LASTNAME_MAX_LENGTH = 30;
+
+	public const int PASSWORD_MIN_LENGTH = 6;
+	public const int PASSWORD_MAX_LENGTH = 30;
 }

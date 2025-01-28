@@ -2,6 +2,9 @@
 
 public class AppointmentsBusinessConfiguration
 {
+	public const int ID_MIN_LENGTH = 7;
+	public const int ID_MAX_LENGTH = 100;
+
 	public const int PATIENTID_MIN_LENGTH = 7;
 	public const int PATIENTID_MAX_LENGTH = 100;
 
