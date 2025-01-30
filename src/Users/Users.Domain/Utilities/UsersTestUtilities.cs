@@ -26,8 +26,8 @@ public class UsersTestUtilities : SharedTestUtilities
 
 
 
-	public static readonly int ValidPhoneNumber = GetAverageNumber(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
-	public static readonly int InvalidPhoneNumber = GetAverageNumber(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
+	public static readonly string ValidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
+	public static readonly string InvalidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
 
 	public static readonly string ValidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
 	public static readonly string InvalidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);

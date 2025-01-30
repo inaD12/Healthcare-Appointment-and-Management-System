@@ -23,7 +23,7 @@ namespace Users.Application.UnitTests.Services.EmailServiceTests
 			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
 			_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager);
 
-			_user = new User("123", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, 1234567890, "Address", false);
+			_user = new User("123", "test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 			_validToken = new EmailVerificationToken
 			(
 				"token123",

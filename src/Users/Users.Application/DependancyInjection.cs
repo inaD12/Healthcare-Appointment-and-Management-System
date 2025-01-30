@@ -33,7 +33,6 @@ namespace Users.Application
 			services.AddSingleton<IUserFactory, UserFactory>();
 			services.AddSingleton<IUserCreatedEventFactory, UserCreatedEventFactory>();
 			services.AddSingleton<IEmailVerificationTokenFactory, EmailVerificationTokenFactory>();
-			services.AddTransient<IEmailVerificationSender, EmailVerificationSender>();
 			services.AddSingleton<IFactoryManager, FactoryManager>();
 			services.AddScoped<IRepositoryManager, RepositoryManager>();
 			services.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();

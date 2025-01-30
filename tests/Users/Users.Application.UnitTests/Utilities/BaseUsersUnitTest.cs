@@ -19,7 +19,6 @@ public abstract class BaseUsersUnitTest
 	protected IFactoryManager FactoryManager { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenManager TokenManager { get; }
-	protected IEmailVerificationSender EmailVerificationSender { get; }
 	protected IFluentEmail FluentEmail { get; }
 	protected IEventBus EventBus { get; }
 
@@ -29,7 +28,6 @@ public abstract class BaseUsersUnitTest
 		FactoryManager = Substitute.For<IFactoryManager>();
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenManager = Substitute.For<ITokenManager>();
-		EmailVerificationSender = Substitute.For<IEmailVerificationSender>();
 		FluentEmail = Substitute.For<IFluentEmail>();
 		EventBus = Substitute.For<IEventBus>();
 
@@ -96,7 +94,7 @@ public abstract class BaseUsersUnitTest
 			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<DateTime>(),
-			Arg.Any<int>(),
+			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<Roles>()
 			).Returns(user);
@@ -108,7 +106,7 @@ public abstract class BaseUsersUnitTest
 			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<DateTime>(),
-			Arg.Any<int>(),
+			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<Roles>()
 			).Returns(emailErrorUser);
@@ -147,11 +145,11 @@ public abstract class BaseUsersUnitTest
 				 .Returns(true);
 
 
-		EmailVerificationSender.SendEmailAsync(user)
-				.Returns(Result.Success(Responses.RegistrationSuccessful));
+		//EmailVerificationSender.SendEmailAsync(user)
+		//		.Returns(Result.Success(Responses.RegistrationSuccessful));
 
-		EmailVerificationSender.SendEmailAsync(emailErrorUser)
-				.Returns(Result.Failure(Responses.InternalError));
+		//EmailVerificationSender.SendEmailAsync(emailErrorUser)
+		//		.Returns(Result.Failure(Responses.InternalError));
 
 
 		EventBus.PublishAsync(eveent, CancellationToken.None)
@@ -160,6 +158,7 @@ public abstract class BaseUsersUnitTest
 
 		TokenManager.CreateToken(Arg.Any<string>())
 			.Returns(UsersTestUtilities.TokenDTO);
+
 
 		FactoryManager.EmailTokenFactory.CreateToken(
 			Arg.Any<string>(),

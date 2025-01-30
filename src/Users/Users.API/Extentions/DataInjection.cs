@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
+using Users.Application.Consumers;
 using Users.Application.Settings;
 using Users.Infrastructure.UsersDBContexts;
 
@@ -61,6 +62,8 @@ namespace UsersAPI.Extentions
 					o.QueryDelay = TimeSpan.FromSeconds(1);
 					o.UsePostgres().UseBusOutbox();
 				});
+
+				busConfiguratior.AddConsumer<UserCreatedConsumer>();
 
 				busConfiguratior.SetKebabCaseEndpointNameFormatter();
 
