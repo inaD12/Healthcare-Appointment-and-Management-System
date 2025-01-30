@@ -1,124 +1,112 @@
-﻿using Contracts.Enums;
-using Contracts.Results;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NSubstitute;
 using Users.Application.Commands.Users.UpdateUser;
-using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
+using Users.Domain.Utilities;
 using Xunit;
 
-namespace Users.Application.UnitTests.Services.UserServiceTests
+namespace Users.Application.UnitTests.Commands.UserCommandHandlerTests;
+
+public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 {
-	public class UpdateUserCommandHandlerTests
+	private readonly UpdateUserCommandHandler _commandHandler;
+
+	public UpdateUserCommandHandlerTests()
 	{
-		private readonly IRepositoryManager _mockRepositoryManager;
-		private readonly UpdateUserCommandHandler _commandHandler;
+		_commandHandler = new UpdateUserCommandHandler(RepositoryManager);
+	}
 
-		private readonly string _id = "1";
-		private readonly User _testUser;
-
-		public UpdateUserCommandHandlerTests()
-		{
-			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
-			_commandHandler = new UpdateUserCommandHandler(_mockRepositoryManager);
-
-			_testUser = new User(
-				_id,
-				"test@example.com",
-				"hashedPassword",
-				"salt",
-				Roles.Patient,
-				"John",
-				"Doe",
-				DateTime.UtcNow,
-				"1234567890",
-				"Address",
-				true
+	[Fact]
+	public async Task Handle_ShouldReturnSuccess_WhenUpdateIsSuccessful()
+	{
+		// Arrange
+		var command = new UpdateUserCommand(
+			UsersTestUtilities.ValidId,
+			UsersTestUtilities.ValidEmail,
+			UsersTestUtilities.ValidFirstName,
+			UsersTestUtilities.ValidLastName
 			);
-		}
 
-		[Fact]
-		public async Task Handle_ShouldReturnSuccess_WhenUpdateIsSuccessful()
-		{
-			// Arrange
-			var command = new UpdateUserCommand(_id, "newemail@example.com", "NewFirstName", "NewLastName");
+		// Act
+		var result = await _commandHandler.Handle(command, CancellationToken.None);
 
-			_mockRepositoryManager.User.GetUserByIdAsync(_id)
-				.Returns(Result<User>.Success(_testUser));
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 
-			_mockRepositoryManager.User.GetUserByEmailAsync(command.NewEmail)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
+		await RepositoryManager.User.Received(1).UpdateUserAsync(
+		Arg.Is<User>(user =>
+			user.Id == command.Id &&
+			user.Email == command.NewEmail &&
+			user.FirstName == command.FirstName &&
+			user.LastName == command.LastName
+			)
+		);
+	}
 
-			// Act
-			var result = await _commandHandler.Handle(command, CancellationToken.None);
+	[Fact]
+	public async Task Handle_ShouldReturnFailure_WhenUserDoesNotExist()
+	{
+		// Arrange
+		var command = new UpdateUserCommand(
+			UsersTestUtilities.InvalidId,
+			UsersTestUtilities.ValidEmail,
+			UsersTestUtilities.ValidFirstName,
+			UsersTestUtilities.ValidLastName
+			);
 
-			// Assert
-			result.IsSuccess.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
-			_testUser.Email.Should().Be(command.NewEmail);
-			_testUser.FirstName.Should().Be(command.FirstName);
-			_testUser.LastName.Should().Be(command.LastName);
-		}
+		// Act
+		var result = await _commandHandler.Handle(command, CancellationToken.None);
 
-		[Fact]
-		public async Task Handle_ShouldReturnFailure_WhenUserDoesNotExist()
-		{
-			// Arrange
-			var command = new UpdateUserCommand(_id, null, "NewFirstName", "NewLastName");
+		// Assert
+		result.IsFailure.Should().BeTrue();
+		result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
+	}
 
-			_mockRepositoryManager.User.GetUserByIdAsync(_id)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
+	[Fact]
+	public async Task Handle_ShouldReturnFailure_WhenNewEmailIsTaken()
+	{
+		// Arrange
+		var command = new UpdateUserCommand(
+			UsersTestUtilities.ValidId,
+			UsersTestUtilities.TakenEmail,
+			UsersTestUtilities.ValidFirstName,
+			UsersTestUtilities.ValidLastName
+			);
+		// Act
+		var result = await _commandHandler.Handle(command, CancellationToken.None);
 
-			// Act
-			var result = await _commandHandler.Handle(command, CancellationToken.None);
+		// Assert
+		result.IsFailure.Should().BeTrue();
+		result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
+	}
 
-			// Assert
-			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
-		}
+	[Fact]
+	public async Task Handle_ShouldUpdateOnlyNonNullFields()
+	{
+		// Arrange
+		var command = new UpdateUserCommand(
+			UsersTestUtilities.ValidId,
+			null,
+			null,
+			UsersTestUtilities.InvalidLastName
+			);
 
-		[Fact]
-		public async Task Handle_ShouldReturnFailure_WhenNewEmailIsTaken()
-		{
-			// Arrange
-			var command = new UpdateUserCommand(_id, "newemail@example.com", "NewFirstName", "NewLastName");
+		// Act
+		var result = await _commandHandler.Handle(command, CancellationToken.None);
 
-			_mockRepositoryManager.User.GetUserByIdAsync(_id)
-				.Returns(Result<User>.Success(_testUser));
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 
-			_mockRepositoryManager.User.GetUserByEmailAsync(command.NewEmail)
-				.Returns(Result<User>.Success(_testUser));
-
-			// Act
-			var result = await _commandHandler.Handle(command, CancellationToken.None);
-
-			// Assert
-			result.IsFailure.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
-		}
-
-		[Fact]
-		public async Task Handle_ShouldUpdateOnlyNonNullFields()
-		{
-			// Arrange
-			var command = new UpdateUserCommand(_id, null, null, "UpdatedLastName");
-
-			_mockRepositoryManager.User.GetUserByIdAsync(_id)
-				.Returns(Result<User>.Success(_testUser));
-
-			_mockRepositoryManager.User.GetUserByEmailAsync(command.NewEmail)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
-
-			// Act
-			var result = await _commandHandler.Handle(command, CancellationToken.None);
-
-			// Assert
-			result.IsSuccess.Should().BeTrue();
-			result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
-			_testUser.FirstName.Should().Be("John"); // Unchanged
-			_testUser.LastName.Should().Be(command.LastName); // Updated
-			_testUser.Email.Should().Be("test@example.com"); // Unchanged
-		}
+		await RepositoryManager.User.Received(1).UpdateUserAsync(
+		Arg.Is<User>(user =>
+			user.Id == command.Id &&
+			user.Email != command.NewEmail &&
+			user.FirstName != command.FirstName &&
+			user.LastName == command.LastName
+			)
+		);
 	}
 }

@@ -48,4 +48,25 @@ public class SharedTestUtilities
 
 		return result;
 	}
+
+	public static DateTime GetDate()
+	{
+		var result = _faker.Date.Soon();
+
+		return result;
+	}
+
+	public static DateTime GetDatePast()
+	{
+		var result = _faker.Date.Past();
+
+		return result;
+	}
+
+	public static DateTime GetDateSoon()
+	{
+		var result = _faker.Date.Soon();
+
+		return result;
+	}
 }

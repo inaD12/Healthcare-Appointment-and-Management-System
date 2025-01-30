@@ -9,6 +9,6 @@ public sealed record RegisterUserCommand(
 	string FirstName,
 	string LastName,
 	DateTime DateOfBirth,
-	string PhoneNumber,
+	int PhoneNumber,
 	string Address,
 	Roles Role) : ICommand;

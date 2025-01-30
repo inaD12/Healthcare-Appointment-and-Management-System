@@ -71,6 +71,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Appointments", "Appointment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.Application.UnitTests", "tests\Appointments\Appointments.Application.UnitTests\Appointments.Application.UnitTests.csproj", "{22044D58-CBD2-443C-8A5D-35AA1C3DE3D0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E0D814AA-4F90-49E5-AC6A-A5B4D73332C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application.UnitTests", "tests\Shared\Shared.Application.UnitTests\Shared.Application.UnitTests.csproj", "{70320507-A166-4F4D-82A1-B91B457B7D57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +133,10 @@ Global
 		{22044D58-CBD2-443C-8A5D-35AA1C3DE3D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22044D58-CBD2-443C-8A5D-35AA1C3DE3D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22044D58-CBD2-443C-8A5D-35AA1C3DE3D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70320507-A166-4F4D-82A1-B91B457B7D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70320507-A166-4F4D-82A1-B91B457B7D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70320507-A166-4F4D-82A1-B91B457B7D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70320507-A166-4F4D-82A1-B91B457B7D57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +160,8 @@ Global
 		{73A2EBA2-0466-4DD6-8653-4DC3B1381C4E} = {558B1292-4B6C-470E-8C55-764312F2AC31}
 		{D905681D-E8DF-4A19-A4E0-3429A1DA1F1B} = {C86658F2-7641-475C-9DCE-7E5F0F764E52}
 		{22044D58-CBD2-443C-8A5D-35AA1C3DE3D0} = {D905681D-E8DF-4A19-A4E0-3429A1DA1F1B}
+		{E0D814AA-4F90-49E5-AC6A-A5B4D73332C7} = {C86658F2-7641-475C-9DCE-7E5F0F764E52}
+		{70320507-A166-4F4D-82A1-B91B457B7D57} = {E0D814AA-4F90-49E5-AC6A-A5B4D73332C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B125A6E-E48E-43DC-A6A5-52495A64B42D}

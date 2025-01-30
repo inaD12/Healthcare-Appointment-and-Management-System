@@ -13,7 +13,7 @@ namespace Users.Application.Factories
 			string FirstName,
 			string LastName,
 			DateTime DateOfBirth,
-			string PhoneNumber,
+			int PhoneNumber,
 			string Address,
 			Roles Role,
 			string? Id = null,

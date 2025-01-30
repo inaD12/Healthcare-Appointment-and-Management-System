@@ -12,7 +12,7 @@ namespace Users.Domain.Entities
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public DateTime DateOfBirth { get; set; }
-		public string PhoneNumber { get; set; }
+		public int PhoneNumber { get; set; }
 		public string Address { get; set; }
 		public bool EmailVerified { get; set; }
 
@@ -25,7 +25,7 @@ namespace Users.Domain.Entities
 			string firstName,
 			string lastName,
 			DateTime dateOfBirth,
-			string phoneNumber,
+			int phoneNumber,
 			string address,
 			bool emailVerified)
 		{
