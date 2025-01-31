@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using Users.Application.Auth.PasswordManager;
+using Users.Domain.Utilities;
 using Xunit;
 
 namespace Users.Application.UnitTests.Auth
 {
-	public class PasswordManagerTests
+	public class PasswordManagerTests : BaseUsersUnitTest
 	{
 		private readonly PasswordManager _passwordManager;
 
@@ -17,12 +18,11 @@ namespace Users.Application.UnitTests.Auth
 		public void HashPassword_ShouldGenerateUniqueHashAndSalt()
 		{
 			// Arrange
-			string password = "MySecurePassword";
 
 			// Act
 			string salt1, salt2;
-			string hash1 = _passwordManager.HashPassword(password, out salt1);
-			string hash2 = _passwordManager.HashPassword(password, out salt2);
+			string hash1 = _passwordManager.HashPassword(UsersTestUtilities.ValidPassword, out salt1);
+			string hash2 = _passwordManager.HashPassword(UsersTestUtilities.ValidPassword, out salt2);
 
 			// Assert
 			hash1.Should().NotBe(hash2, "Hashes should be unique for each hashing attempt.");
@@ -33,12 +33,11 @@ namespace Users.Application.UnitTests.Auth
 		public void VerifyPassword_ShouldReturnTrue_ForCorrectPassword()
 		{
 			// Arrange
-			string password = "MySecurePassword";
 			string salt;
-			string hash = _passwordManager.HashPassword(password, out salt);
+			string hash = _passwordManager.HashPassword(UsersTestUtilities.ValidPassword, out salt);
 
 			// Act
-			bool isPasswordValid = _passwordManager.VerifyPassword(password, hash, salt);
+			bool isPasswordValid = _passwordManager.VerifyPassword(UsersTestUtilities.ValidPassword, hash, salt);
 
 			// Assert
 			isPasswordValid.Should().BeTrue("The password should be verified successfully.");
@@ -48,13 +47,11 @@ namespace Users.Application.UnitTests.Auth
 		public void VerifyPassword_ShouldReturnFalse_ForIncorrectPassword()
 		{
 			// Arrange
-			string correctPassword = "MySecurePassword";
-			string incorrectPassword = "WrongPassword";
 			string salt;
-			string hash = _passwordManager.HashPassword(correctPassword, out salt);
+			string hash = _passwordManager.HashPassword(UsersTestUtilities.ValidPassword, out salt);
 
 			// Act
-			bool isPasswordValid = _passwordManager.VerifyPassword(incorrectPassword, hash, salt);
+			bool isPasswordValid = _passwordManager.VerifyPassword(UsersTestUtilities.InvalidPassword, hash, salt);
 
 			// Assert
 			isPasswordValid.Should().BeFalse("The password verification should fail for an incorrect password.");

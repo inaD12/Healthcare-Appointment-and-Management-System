@@ -131,6 +131,9 @@ public abstract class BaseUsersUnitTest
 						return Result<User>.Failure(Responses.UserNotFound);
 				});
 
+		RepositoryManager.User.GetAllDoctorsAsync()
+			.Returns(Result<IEnumerable<User>>.Success(_users));
+
 
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword, out Arg.Any<string>())
 				.Returns(UsersTestUtilities.ValidPasswordHash);
@@ -171,5 +174,6 @@ public abstract class BaseUsersUnitTest
 
 				  return Task.FromResult(new SendResponse());
 			  });
+
 	}
 }

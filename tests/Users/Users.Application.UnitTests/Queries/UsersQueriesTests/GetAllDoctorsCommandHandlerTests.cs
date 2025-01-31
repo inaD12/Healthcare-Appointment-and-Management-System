@@ -1,9 +1,7 @@
 ﻿using Contracts.Enums;
 using Contracts.Results;
 using FluentAssertions;
-using MassTransit.SagaStateMachine;
 using NSubstitute;
-using System.Collections.Generic;
 using Users.Application.Managers.Interfaces;
 using Users.Application.Queries.Users.GetAllDoctors;
 using Users.Domain.Entities;
