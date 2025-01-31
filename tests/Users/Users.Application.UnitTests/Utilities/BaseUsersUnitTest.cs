@@ -6,7 +6,6 @@ using FluentEmail.Core.Models;
 using NSubstitute;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
-using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
@@ -89,19 +88,7 @@ public abstract class BaseUsersUnitTest
 					);
 
 		FactoryManager.UserFactory.CreateUser(
-			UsersTestUtilities.UnusedEmail,
 			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<DateTime>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<Roles>()
-			).Returns(user);
-
-		FactoryManager.UserFactory.CreateUser(
-			UsersTestUtilities.EmailSendingErrorEmail,
 			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<string>(),
@@ -110,56 +97,56 @@ public abstract class BaseUsersUnitTest
 			Arg.Any<string>(),
 			Arg.Any<string>(),
 			Arg.Any<Roles>()
-			).Returns(emailErrorUser);
+			).Returns(callInfo =>
+			{
+				var email = callInfo.ArgAt<string>(0);
 
+				if (email == UsersTestUtilities.UnusedEmail)
+					return user;
+				return emailErrorUser; //if UsersTestUtilities.EmailSendingErrorEmail,
+
+			});
 
 		RepositoryManager.User.GetUserByEmailAsync(
-			UsersTestUtilities.TakenEmail)
-				.Returns(Result<User>.Success(takenUser));
+			Arg.Any<string>())
+				.Returns(callInfo =>
+				{
+					var email = callInfo.ArgAt<string>(0);
 
-		RepositoryManager.User.GetUserByEmailAsync(
-			UsersTestUtilities.EmailSendingErrorEmail)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
+					if(email == UsersTestUtilities.TakenEmail)
+						return Result<User>.Success(takenUser);
+					return Result<User>.Failure(Responses.UserNotFound);
 
-		RepositoryManager.User.GetUserByEmailAsync(
-			UsersTestUtilities.UnusedEmail)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
-
+				});
 
 		RepositoryManager.User.GetUserByIdAsync(
-			UsersTestUtilities.ValidId)
-				.Returns(Result<User>.Success(user));
+			Arg.Any<string>())
+				.Returns(callInfo =>
+				{
+					var id = callInfo.ArgAt<string>(0);
 
-		RepositoryManager.User.GetUserByIdAsync(
-			UsersTestUtilities.InvalidId)
-				.Returns(Result<User>.Failure(Responses.UserNotFound));
+					if (id == UsersTestUtilities.ValidId)
+						return Result<User>.Success(user);
+					else
+						return Result<User>.Failure(Responses.UserNotFound);
+				});
 
 
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword, out Arg.Any<string>())
 				.Returns(UsersTestUtilities.ValidPasswordHash);
 
-
-		PasswordManager.VerifyPassword(UsersTestUtilities.InvalidPassword, Arg.Any<string>(), Arg.Any<string>())
-				 .Returns(false);
-
-		PasswordManager.VerifyPassword(UsersTestUtilities.ValidPassword, Arg.Any<string>(), Arg.Any<string>())
-				 .Returns(true);
-
-
-		//EmailVerificationSender.SendEmailAsync(user)
-		//		.Returns(Result.Success(Responses.RegistrationSuccessful));
-
-		//EmailVerificationSender.SendEmailAsync(emailErrorUser)
-		//		.Returns(Result.Failure(Responses.InternalError));
-
+		PasswordManager.VerifyPassword(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+			.Returns(callInfo =>
+			{
+				var password = callInfo.ArgAt<string>(0);
+				return password == UsersTestUtilities.ValidPassword;
+			});
 
 		EventBus.PublishAsync(eveent, CancellationToken.None)
 			.Returns(Task.CompletedTask);
 
-
 		TokenManager.CreateToken(Arg.Any<string>())
 			.Returns(UsersTestUtilities.TokenDTO);
-
 
 		FactoryManager.EmailTokenFactory.CreateToken(
 			Arg.Any<string>(),
@@ -169,11 +156,10 @@ public abstract class BaseUsersUnitTest
 			)
 		  .Returns(emailVerificationToken);
 
-
-		FactoryManager.EmailLinkFactory.Create(emailVerificationToken).Returns(UsersTestUtilities.Link);
+		FactoryManager.EmailLinkFactory.Create(emailVerificationToken)
+			.Returns(UsersTestUtilities.Link);
 
 		string recipientEmail = "";
-
 		FluentEmail.To(Arg.Do<string>(email => recipientEmail = email)).Returns(FluentEmail);
 		FluentEmail.Subject(Arg.Any<string>()).Returns(FluentEmail);
 		FluentEmail.Body(Arg.Any<string>(), true).Returns(FluentEmail);
