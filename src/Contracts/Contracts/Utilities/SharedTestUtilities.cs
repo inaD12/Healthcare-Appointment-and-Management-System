@@ -69,4 +69,11 @@ public class SharedTestUtilities
 
 		return result;
 	}
+
+	public static DateTime GetDateFuture()
+	{
+		var result = _faker.Date.Future();
+
+		return result;
+	}
 }

@@ -46,7 +46,7 @@ namespace Appointments.Infrastructure.Repositories
 
 				_context.SaveChanges();
 
-				return Result.Success(Responses.Ok);
+				return Result.Success();
 			}
 			catch (Exception ex)
 			{
