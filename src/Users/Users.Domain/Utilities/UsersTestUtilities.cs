@@ -24,8 +24,6 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string EmailSendingErrorEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH);
 	public static readonly string UnusedEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH);
 
-
-
 	public static readonly string ValidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
 	public static readonly string InvalidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
 
@@ -37,6 +35,8 @@ public class UsersTestUtilities : SharedTestUtilities
 
 	public static readonly string ValidSalt = GetString();
 	public static readonly string IvalidSalt = GetString();
+
+	public static readonly string Link = GetString();
 
 	public static readonly TokenDTO TokenDTO = new TokenDTO("Token");
 

@@ -1,7 +1,6 @@
 ﻿using Contracts.Abstractions.Messaging;
 using Contracts.Results;
 using FluentEmail.Core;
-using Serilog;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.EmailVerification;
 using Users.Domain.Responses;
@@ -23,36 +22,28 @@ public sealed class SendEmailCommandHandler : ICommandHandler<SendEmailCommand>
 
 	public async Task<Result> Handle(SendEmailCommand request, CancellationToken cancellationToken)
 	{
-		try
-		{
-			DateTime utcNow = DateTime.UtcNow;
+		DateTime utcNow = DateTime.UtcNow;
 
-			EmailVerificationToken emailVerificationToken = _factoryManager.EmailTokenFactory.CreateToken(
-				Guid.NewGuid().ToString(),
-				request.userId,
-				utcNow,
-				utcNow.AddDays(1));
+		EmailVerificationToken emailVerificationToken = _factoryManager.EmailTokenFactory.CreateToken(
+			Guid.NewGuid().ToString(),
+			request.userId,
+			utcNow,
+			utcNow.AddDays(1));
 
 
-			string verificationLink = _factoryManager.EmailLinkFactory.Create(emailVerificationToken);
+		string verificationLink = _factoryManager.EmailLinkFactory.Create(emailVerificationToken);
 
-			var response = await _fluentEmail
-			   .To(request.userEmail)
-			   .Subject("Email verifivation for HAMS")
-			   .Body($"To verify your email <a href='{verificationLink}'>click here</a>", isHtml: true)
-			   .SendAsync();
+		var response = await _fluentEmail
+		   .To(request.userEmail)
+		   .Subject("Email verifivation for HAMS")
+		   .Body($"To verify your email <a href='{verificationLink}'>click here</a>", isHtml: true)
+		   .SendAsync();
 
-			if (!response.Successful)
-				return Result.Failure(Responses.EmailNotSent);
+		if (!response.Successful)
+			return Result.Failure(Responses.EmailNotSent);
 
-			await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
+		await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
 
-			return Result.Success();
-		}
-		catch (Exception ex)
-		{
-			Log.Error($"Error in SendEmailCommandHandler: {ex.Message} {ex.StackTrace}");
-			return Result.Failure(Responses.InternalError);
-		}
+		return Result.Success();
 	}
 }

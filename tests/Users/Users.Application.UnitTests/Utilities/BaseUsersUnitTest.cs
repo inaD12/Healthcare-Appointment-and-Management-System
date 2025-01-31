@@ -2,6 +2,7 @@
 using Contracts.Events;
 using Contracts.Results;
 using FluentEmail.Core;
+using FluentEmail.Core.Models;
 using NSubstitute;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
@@ -167,5 +168,22 @@ public abstract class BaseUsersUnitTest
 			Arg.Any<DateTime>()
 			)
 		  .Returns(emailVerificationToken);
+
+
+		FactoryManager.EmailLinkFactory.Create(emailVerificationToken).Returns(UsersTestUtilities.Link);
+
+		string recipientEmail = "";
+
+		FluentEmail.To(Arg.Do<string>(email => recipientEmail = email)).Returns(FluentEmail);
+		FluentEmail.Subject(Arg.Any<string>()).Returns(FluentEmail);
+		FluentEmail.Body(Arg.Any<string>(), true).Returns(FluentEmail);
+		FluentEmail.SendAsync()
+			  .Returns(callInfo =>
+			  {
+				  if (recipientEmail == UsersTestUtilities.EmailSendingErrorEmail)
+					  return Task.FromResult(new SendResponse { ErrorMessages = new List<string> { "Email sending failed" } });
+
+				  return Task.FromResult(new SendResponse());
+			  });
 	}
 }
