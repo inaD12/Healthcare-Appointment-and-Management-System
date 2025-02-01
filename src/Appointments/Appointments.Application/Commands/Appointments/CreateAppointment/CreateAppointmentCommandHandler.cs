@@ -18,10 +18,14 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 	public async Task<Result> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
 		var doctorDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.DoctorEmail);
+
 		if (doctorDataRes.IsFailure)
 			return Result.Failure(Responses.DoctorNotFound);
+		if (doctorDataRes.Value.Role != Contracts.Enums.Roles.Doctor)
+			return Result.Failure(Responses.UserIsNotADoctor);
 
 		var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.PatientEmail);
+
 		if (patientDataRes.IsFailure)
 			return Result.Failure(Responses.PatientNotFound);
 

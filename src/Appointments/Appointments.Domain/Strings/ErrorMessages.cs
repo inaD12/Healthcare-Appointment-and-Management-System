@@ -12,5 +12,6 @@
 		public const string JWTokenNotFound = "No JWToken found";
 		public const string CannotCancelOthersAppointment = "You cannot cancel someone else's appointment";
 		public const string CannotRescheduleOthersAppointment = "You cannot reschedule someone else's appointment";
+		public const string UserIsNotADoctor = "The user you selected is not a doctor. Please choose a valid doctor.";
 	}
 }

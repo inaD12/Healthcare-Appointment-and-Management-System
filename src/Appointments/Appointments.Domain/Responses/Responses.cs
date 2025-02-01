@@ -21,5 +21,6 @@ namespace Appointments.Domain.Responses
 		public static Response JWTNotFound => Response.Create(ErrorMessages.JWTokenNotFound, HttpStatusCode.NotFound);
 		public static Response CannotCancelOthersAppointment => Response.Create(ErrorMessages.CannotCancelOthersAppointment, HttpStatusCode.Unauthorized);
 		public static Response CannotRescheduleOthersAppointment => Response.Create(ErrorMessages.CannotRescheduleOthersAppointment, HttpStatusCode.Unauthorized);
+		public static Response UserIsNotADoctor => Response.Create(ErrorMessages.UserIsNotADoctor, HttpStatusCode.Conflict);
 	}
 }
