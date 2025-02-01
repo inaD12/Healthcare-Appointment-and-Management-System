@@ -1,123 +1,119 @@
 ﻿using Appointments.Application.Appoints.Commands.CreateAppointment;
-using Appointments.Application.Appoints.Commands.Shared;
-using Appointments.Application.Managers.Interfaces;
-using Appointments.Domain.Entities;
+using Appointments.Application.UnitTests.Utilities;
+using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
-using Contracts.Results;
+using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests
+namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
+
+public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 {
-	public class CreateAppointmentCommandHandlerTests
+	private readonly CreateAppointmentCommandHandler _handler;
+
+	public CreateAppointmentCommandHandlerTests()
 	{
-		private readonly IRepositoryManager _mockRepositoryManager;
-		private readonly IAppointmentCommandHandlerHelper _mockHelper;
-		private readonly CreateAppointmentCommandHandler _handler;
+		_handler = new CreateAppointmentCommandHandler(RepositoryMagager, AppointmentCommandHandlerHelper);
+	}
 
-		private readonly string DoctorEmai;
-		private readonly string PatientEmal;
-		private readonly CreateAppointmentCommand Command;
-		private readonly UserData PatientData;
-		private readonly UserData DoctorData;
-		public CreateAppointmentCommandHandlerTests()
-		{
-			_mockRepositoryManager = Substitute.For<IRepositoryManager>();
-			_mockHelper = Substitute.For<IAppointmentCommandHandlerHelper>();
+	[Fact]
+	public async Task Handle_ShouldReturnFailure_WhenDoctorNotFound()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.InvalidEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
 
-			_handler = new CreateAppointmentCommandHandler(_mockRepositoryManager, _mockHelper);
+		var cancellationToken = CancellationToken.None;
 
-			DoctorEmai = "doctor@example.com";
-			PatientEmal = "patient@example.com";
-			DoctorData = new UserData { UserId = Guid.NewGuid().ToString(), Email = "doctor@example.com" };
-			PatientData = new UserData { UserId = Guid.NewGuid().ToString(), Email = "patient@example.com" };
+		// Act
+		var result = await _handler.Handle(command, cancellationToken);
 
-			Command = new CreateAppointmentCommand
-			(
-				PatientEmal,
-				DoctorEmai,
-				DateTime.UtcNow,
-				Domain.Enums.AppointmentDuration.OneHour
-			);
-		}
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(Responses.DoctorNotFound);
 
-		[Fact]
-		public async Task Handle_ShouldReturnFailure_WhenDoctorNotFound()
-		{
-			// Arrange
+		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+	}
 
-			_mockRepositoryManager.UserData
-				.GetUserDataByEmailAsync(Command.DoctorEmail)
-				.Returns(Result<UserData>.Failure(Responses.UserDataNotFound));
+	[Fact]
+	public async Task Handle_ShouldReturnFailure_WhenUserIsNotADoctor()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
 
-			var cancellationToken = CancellationToken.None;
+		var cancellationToken = CancellationToken.None;
 
-			// Act
-			var result = await _handler.Handle(Command, cancellationToken);
+		// Act
+		var result = await _handler.Handle(command, cancellationToken);
 
-			// Assert
-			result.IsSuccess.Should().BeFalse();
-			result.Response.Should().BeEquivalentTo(Responses.DoctorNotFound);
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(Responses.UserIsNotADoctor);
 
-			await _mockRepositoryManager.UserData.DidNotReceive().GetUserDataByEmailAsync(Command.PatientEmail);
-		}
+		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+	}
 
-		[Fact]
-		public async Task Handle_ShouldReturnFailure_WhenPatientNotFound()
-		{
-			// Arrange
-			_mockRepositoryManager.UserData
-				.GetUserDataByEmailAsync(Command.DoctorEmail)
-				.Returns(Result<UserData>.Success(DoctorData));
+	[Fact]
+	public async Task Handle_ShouldReturnFailure_WhenPatientNotFound()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.InvalidEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
 
-			_mockRepositoryManager.UserData
-				.GetUserDataByEmailAsync(Command.PatientEmail)
-				.Returns(Result<UserData>.Failure(Responses.UserDataNotFound));
+		var cancellationToken = CancellationToken.None;
 
-			var cancellationToken = CancellationToken.None;
+		// Act
+		var result = await _handler.Handle(command, cancellationToken);
 
-			// Act
-			var result = await _handler.Handle(Command, cancellationToken);
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(Responses.PatientNotFound);
 
-			// Assert
-			result.IsSuccess.Should().BeFalse();
-			result.Response.Should().BeEquivalentTo(Responses.PatientNotFound);
+		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+	}
 
-			await _mockHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
-		}
+	[Fact]
+	public async Task Handle_ShouldCallHelperAndReturnResult_WhenDoctorAndPatientExist()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
 
-		[Fact]
-		public async Task Handle_ShouldCallHelperAndReturnResult_WhenDoctorAndPatientExist()
-		{
-			// Arrange
-			_mockRepositoryManager.UserData
-				.GetUserDataByEmailAsync(Command.DoctorEmail)
-				.Returns(Result<UserData>.Success(DoctorData));
+		var cancellationToken = CancellationToken.None;
 
-			_mockRepositoryManager.UserData
-				.GetUserDataByEmailAsync(Command.PatientEmail)
-				.Returns(Result<UserData>.Success(PatientData));
+		// Act
+		var result = await _handler.Handle(command, cancellationToken);
 
-			_mockHelper.CreateAppointment(
-				DoctorData.UserId,
-				PatientData.UserId,
-				Command.ScheduledStartTime.ToUniversalTime(),
-				Command.Duration)
-				.Returns(Result.Success());
+		// Assert
+		result.IsSuccess.Should().BeTrue();
 
-			var cancellationToken = CancellationToken.None;
-
-			// Act
-			var result = await _handler.Handle(Command, cancellationToken);
-
-			// Assert
-			result.IsSuccess.Should().BeTrue();
-
-			await _mockHelper.Received(1).CreateAppointment(
-				DoctorData.UserId,
-				PatientData.UserId,
-				Command.ScheduledStartTime.ToUniversalTime(),
-				Command.Duration);
-		}
+		await AppointmentCommandHandlerHelper.Received(1).CreateAppointment(
+			AppointmentsTestUtilities.DoctorId,
+			AppointmentsTestUtilities.PatientId,
+			Arg.Any<DateTime>(),
+			Arg.Any<AppointmentDuration>()
+		);
 	}
 }

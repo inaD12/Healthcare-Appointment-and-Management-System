@@ -20,8 +20,6 @@ namespace Appointments.Infrastructure.Repositories
 
 		public async Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime)
 		{
-			try
-			{
 				bool isSlotTaken = await _context.Appointments
 					.AnyAsync(appointment =>
 						appointment.DoctorId == doctorId &&
@@ -30,12 +28,6 @@ namespace Appointments.Infrastructure.Repositories
 						appointment.ScheduledEndTime >= requestedStartTime);
 
 				return Result<bool>.Success(!isSlotTaken);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in IsTimeSlotAvailableAsync() in AppointmentRepository: {ex.Message} {ex.Source} {ex.InnerException}");
-				return Result<bool>.Failure(Responses.InternalError);
-			}
 		}
 
 		public async Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)

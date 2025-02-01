@@ -22,6 +22,8 @@ public abstract class BaseUsersUnitTest
 	protected IFluentEmail FluentEmail { get; }
 	protected IEventBus EventBus { get; }
 
+	protected readonly List<User> Doctors;
+
 	public BaseUsersUnitTest()
 	{
 		RepositoryManager = Substitute.For<IRepositoryManager>();
@@ -37,6 +39,20 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
 			Roles.Patient,
+			UsersTestUtilities.ValidFirstName,
+			UsersTestUtilities.ValidLastName,
+			UsersTestUtilities.PastDate,
+			UsersTestUtilities.ValidPhoneNumber,
+			UsersTestUtilities.ValidAdress,
+			false
+			);
+
+		var doctor = new User(
+			UsersTestUtilities.ValidId,
+			UsersTestUtilities.ValidEmail,
+			UsersTestUtilities.ValidPasswordHash,
+			UsersTestUtilities.ValidSalt,
+			Roles.Doctor,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
@@ -80,6 +96,8 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.SoonDate,
 			takenUser
 			);
+
+		Doctors = new List<User> { doctor};
 
 		UserCreatedEvent eveent = FactoryManager.UserCreatedEventFactory.CreateUserCreatedEvent(
 					UsersTestUtilities.ValidId,
@@ -172,5 +190,12 @@ public abstract class BaseUsersUnitTest
 				  return Task.FromResult(new SendResponse());
 			  });
 
+		RepositoryManager.User.GetAllDoctorsAsync()
+		   .Returns(Result<IEnumerable<User>>.Success(Doctors));
+	}
+
+	protected void SetupDoctorsResult(Result<IEnumerable<User>> result)
+	{
+		RepositoryManager.User.GetAllDoctorsAsync().Returns(result);
 	}
 }

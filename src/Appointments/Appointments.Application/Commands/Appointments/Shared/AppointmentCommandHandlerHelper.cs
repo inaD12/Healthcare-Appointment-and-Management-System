@@ -24,9 +24,6 @@ namespace Appointments.Application.Appoints.Commands.Shared
 						startTime,
 						EndTime);
 
-			if (isTimeSlotAvailableRes.IsFailure)
-				return Result.Failure(Responses.InternalError);
-
 			bool isTimeSlotAvailable = isTimeSlotAvailableRes.Value;
 
 			if (!isTimeSlotAvailable)

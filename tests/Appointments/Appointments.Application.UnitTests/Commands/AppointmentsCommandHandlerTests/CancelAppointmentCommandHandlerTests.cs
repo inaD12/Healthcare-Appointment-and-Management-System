@@ -39,7 +39,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFaliure_WhenAppointmentDoesntExist()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.IdForWrontIdFromToken);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.WrongIdFromTokenId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -75,7 +75,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenJWTExtractorError()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.IdForJWTExtractorInternalError);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.JWTExtractorInternalErrorId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken.None);
@@ -93,7 +93,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenStatusChangingFails()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.IdForChangeStatusInternalError);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ChangeStatusInternalErrorId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken.None);

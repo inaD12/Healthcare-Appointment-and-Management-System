@@ -33,14 +33,14 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value;
 
 		var userIdRes = await _jwtUserExtractor.GetUserIdFromTokenAsync();
+
 		if (userIdRes.IsFailure)
 			return Result.Failure(userIdRes.Response);
-
 		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
 			return Result.Failure(Responses.CannotRescheduleOthersAppointment);
 
-		var helperResult = await _helper.CreateAppointment
-			(appointmentWithDetails.DoctorEmail,
+		var helperResult = await _helper.CreateAppointment(
+			appointmentWithDetails.DoctorEmail,
 			appointmentWithDetails.PatientEmail,
 			request.ScheduledStartTime.ToUniversalTime(),
 			request.Duration);
