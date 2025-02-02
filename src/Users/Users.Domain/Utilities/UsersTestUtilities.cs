@@ -10,8 +10,6 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string TakenId = GetAverageString(UsersBusinessConfiguration.ID_MAX_LENGTH, UsersBusinessConfiguration.ID_MIN_LENGTH);
 
 	public static readonly string ValidFirstName = GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH);
-	public static readonly string InalidFirstName = GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH);
-
 	public static readonly string ValidLastName = GetAverageString(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH, UsersBusinessConfiguration.LASTNAME_MAX_LENGTH);
 	public static readonly string InvalidLastName = GetAverageString(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH, UsersBusinessConfiguration.LASTNAME_MAX_LENGTH);
 
@@ -25,16 +23,10 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string UnusedEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH);
 
 	public static readonly string ValidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
-	public static readonly string InvalidPhoneNumber = GetAverageString(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
-
 	public static readonly string ValidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
-	public static readonly string InvalidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
-
 	public static readonly string ValidPasswordHash = GetString();
-	public static readonly string InalidPasswordHash = GetString();
-
+	public static readonly string InvalidPasswordHash = GetString();
 	public static readonly string ValidSalt = GetString();
-	public static readonly string IvalidSalt = GetString();
 
 	public static readonly string Link = GetString();
 

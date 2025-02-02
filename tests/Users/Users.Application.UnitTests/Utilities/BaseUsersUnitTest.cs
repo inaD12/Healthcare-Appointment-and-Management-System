@@ -119,10 +119,9 @@ public abstract class BaseUsersUnitTest
 			{
 				var email = callInfo.ArgAt<string>(0);
 
-				if (email == UsersTestUtilities.UnusedEmail)
-					return user;
-				return emailErrorUser; //if UsersTestUtilities.EmailSendingErrorEmail,
-
+				if (email == UsersTestUtilities.EmailSendingErrorEmail)
+					return emailErrorUser;
+				return user;
 			});
 
 		RepositoryManager.User.GetUserByEmailAsync(
@@ -145,15 +144,16 @@ public abstract class BaseUsersUnitTest
 
 					if (id == UsersTestUtilities.ValidId)
 						return Result<User>.Success(user);
-					else
-						return Result<User>.Failure(Responses.UserNotFound);
+					return Result<User>.Failure(Responses.UserNotFound);
 				});
-
 
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword, out Arg.Any<string>())
 				.Returns(UsersTestUtilities.ValidPasswordHash);
 
-		PasswordManager.VerifyPassword(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+		PasswordManager.VerifyPassword(
+			Arg.Any<string>(),
+			Arg.Any<string>(),
+			Arg.Any<string>())
 			.Returns(callInfo =>
 			{
 				var password = callInfo.ArgAt<string>(0);
