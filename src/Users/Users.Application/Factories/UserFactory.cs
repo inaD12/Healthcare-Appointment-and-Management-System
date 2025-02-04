@@ -13,13 +13,13 @@ namespace Users.Application.Factories
 			string FirstName,
 			string LastName,
 			DateTime DateOfBirth,
-			string PhoneNumber,
-			string Address,
+			string? PhoneNumber,
+			string? Address,
 			Roles Role,
 			string? Id = null,
 			bool EmailVerified = false)
 		{
-			return new User(Id ?? Guid.NewGuid().ToString(), Email, PasswordHash, Salt, Role, FirstName, LastName, DateOfBirth, PhoneNumber, Address, EmailVerified);
+			return new User(Id ?? Guid.NewGuid().ToString(), Email, PasswordHash, Salt, Role, FirstName, LastName, DateOfBirth.ToUniversalTime(), PhoneNumber, Address, EmailVerified);
 		}
 	}
 }

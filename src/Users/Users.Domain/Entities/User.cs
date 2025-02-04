@@ -12,8 +12,8 @@ namespace Users.Domain.Entities
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public DateTime DateOfBirth { get; set; }
-		public string PhoneNumber { get; set; }
-		public string Address { get; set; }
+		public string? PhoneNumber { get; set; }
+		public string? Address { get; set; }
 		public bool EmailVerified { get; set; }
 
 		public User(
@@ -25,8 +25,8 @@ namespace Users.Domain.Entities
 			string firstName,
 			string lastName,
 			DateTime dateOfBirth,
-			string phoneNumber,
-			string address,
+			string? phoneNumber,
+			string? address,
 			bool emailVerified)
 		{
 			Id = id;
