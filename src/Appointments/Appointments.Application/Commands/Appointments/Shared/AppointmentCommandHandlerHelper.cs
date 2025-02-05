@@ -2,6 +2,7 @@
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Contracts.Results;
+using Shared.Responses;
 
 namespace Appointments.Application.Appoints.Commands.Shared
 {

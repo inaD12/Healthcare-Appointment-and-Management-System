@@ -7,6 +7,7 @@ using Appointments.Application.Managers.Interfaces;
 using Appointments.Application.Helpers;
 using Appointments.Domain.Responses;
 using Appointments.Application.Appoints.Commands.Shared;
+using Shared.Responses;
 
 namespace Appointments.Application.Appoints.Commands.RescheduleAppointment;
 

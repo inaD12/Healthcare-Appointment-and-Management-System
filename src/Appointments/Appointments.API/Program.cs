@@ -4,6 +4,8 @@ using Appointments.Application.DependancyInjection;
 using Appointments.Infrastructure.DependancyInjection;
 using Hangfire;
 using Serilog;
+using Shared.Application.Extensions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +16,9 @@ builder.Services.ConfigureDBs(config);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.InjectAuthentication(config);
+builder.Services.InjectAuthentication(config);//Assembly.GetExecutingAssembly()
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddSwagger();
 builder.Services.ConfigureAppSettings(config);
 builder.Services.InjectMassTransit();

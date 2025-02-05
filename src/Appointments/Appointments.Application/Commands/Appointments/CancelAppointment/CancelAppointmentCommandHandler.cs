@@ -5,6 +5,7 @@ using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Contracts.Abstractions.Messaging;
 using Contracts.Results;
+using Shared.Responses;
 
 namespace Appointments.Application.Appoints.Commands.CancelAppointment;
 
@@ -19,7 +20,7 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(request.appointmentId);
+		var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(request.AppointmentId);
 
 		if (appointmentRes.IsFailure)
 			return Result.Failure(appointmentRes.Response);

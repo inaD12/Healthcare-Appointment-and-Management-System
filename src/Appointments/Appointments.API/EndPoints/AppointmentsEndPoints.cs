@@ -4,7 +4,6 @@ using Appointments.Application.Appoints.Commands.CreateAppointment;
 using Appointments.Application.Appoints.Commands.RescheduleAppointment;
 using Appointments.Domain.DTOS.Request;
 using Contracts.Results;
-using FluentValidation;
 using MediatR;
 
 namespace Appointments.API.EndPoints
@@ -43,28 +42,11 @@ namespace Appointments.API.EndPoints
 			//.RequireAuthorization();
 		}
 
-		private async Task<IResult?> ValidateAndReturnResponse<T>(T dto, IValidator<T> validator)
-		{
-			var valResult = await validator.ValidateAsync(dto);
-
-			if (!valResult.IsValid)
-			{
-				var error = valResult.Errors.First();
-				return Results.BadRequest(new { message = error.ErrorMessage });
-			}
-
-			return null;
-		}
 		public async Task<IResult> Create(
 			CreateAppointmentDTO appointmentDTO,
 			ISender sender,
-			IValidator<CreateAppointmentDTO> validator,
 			CancellationToken cancellationToken)
 		{
-			var validationResponse = await ValidateAndReturnResponse(appointmentDTO, validator);
-			if (validationResponse != null)
-				return validationResponse;
-
 			var command = new CreateAppointmentCommand(
 				appointmentDTO.PatientEmail,
 				appointmentDTO.DoctorEmail,
@@ -91,13 +73,8 @@ namespace Appointments.API.EndPoints
 		public async Task<IResult> RescheduleAppointment(
 			RescheduleAppointmentDTO appointmentDTO,
 			ISender sender,
-			IValidator<RescheduleAppointmentDTO> validator,
 			CancellationToken cancellationToken)
 		{
-			var validationResponse = await ValidateAndReturnResponse(appointmentDTO, validator);
-			if (validationResponse != null)
-				return validationResponse;
-
 			var command = new RescheduleAppointmentCommand(appointmentDTO.AppointmentID, appointmentDTO.ScheduledStartTime, appointmentDTO.Duration);
 
 			var res = await sender.Send(command, cancellationToken);

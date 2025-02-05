@@ -24,14 +24,14 @@ namespace Users.Application.Commands.Users.LoginUser
 
 		public async Task<Result<TokenDTO>> Handle(LoginUserCommand<TokenDTO> request, CancellationToken cancellationToken)
 		{
-			var res = await _repositotyManager.User.GetUserByEmailAsync(request.email);
+			var res = await _repositotyManager.User.GetUserByEmailAsync(request.Email);
 
 			if (res.IsFailure)
 				return Result<TokenDTO>.Failure(res.Response);
 
 			User user = res.Value;
 
-			if (!_passwordManager.VerifyPassword(request.password, user.PasswordHash, user.Salt))
+			if (!_passwordManager.VerifyPassword(request.Password, user.PasswordHash, user.Salt))
 				return Result<TokenDTO>.Failure(Responses.IncorrectPassword);
 
 			TokenDTO token = _tokenManager.CreateToken(user.Id);

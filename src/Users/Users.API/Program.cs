@@ -4,6 +4,8 @@ using UsersAPI.Extentions;
 using Serilog;
 using UsersAPI.Middlewares;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
+using Shared.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.ConfigureAppSettings(config);
 builder.Services.InjectAuthentication(config);
 builder.Services.AddSwagger();
@@ -41,7 +43,7 @@ if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-	app.ApplyMigrations();
+	await app.ApplyMigrations();
 }
 
 app.UseSerilogRequestLogging();
@@ -57,3 +59,5 @@ EndpointMapper.MapAllEndpoints(app);
 //app.UseHttpsRedirection();
 
 app.Run();
+
+public partial class Program { }
