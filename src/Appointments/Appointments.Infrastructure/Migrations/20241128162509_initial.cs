@@ -1,5 +1,4 @@
-﻿using System;
-using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Enums;
 using Contracts.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -7,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Appointments.Infrastructure.Migrations
 {
-    /// <inheritdoc />
-    public partial class initial : Migration
+	/// <inheritdoc />
+	public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

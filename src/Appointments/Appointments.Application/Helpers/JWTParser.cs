@@ -2,6 +2,7 @@
 using Contracts.Results;
 using Microsoft.AspNetCore.Http;
 using Serilog;
+using Shared.Responses;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Appointments.Application.Helpers

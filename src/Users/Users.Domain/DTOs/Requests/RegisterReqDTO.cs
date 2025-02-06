@@ -1,4 +1,5 @@
-﻿using Contracts.Enums;
+﻿
+using Contracts.Enums;
 
 namespace Users.Domain.DTOs.Requests
 {
