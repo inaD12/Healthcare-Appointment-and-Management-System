@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Enums;
-using Contracts.Results;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appoints.Commands.Shared
 {

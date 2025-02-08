@@ -1,5 +1,5 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Enums;
+﻿using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Enums;
 
 namespace Users.Application.Commands.Users.RegisterUser;
 

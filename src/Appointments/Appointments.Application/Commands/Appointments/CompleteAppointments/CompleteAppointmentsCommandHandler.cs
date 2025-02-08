@@ -1,8 +1,7 @@
 ﻿using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.Enums;
-using Contracts.Abstractions.Messaging;
-using Contracts.Results;
-using Serilog;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appointments.Commands.CompleteAppointments
 {

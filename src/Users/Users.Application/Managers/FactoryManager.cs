@@ -2,8 +2,8 @@
 using Users.Application.Factories.Interfaces;
 using Users.Application.Managers.Interfaces;
 
-namespace Users.Application.Managers
-{
+namespace Users.Application.Managers;
+
     internal class FactoryManager : IFactoryManager
     {
         private readonly IServiceProvider _serviceProvider;
@@ -18,6 +18,5 @@ namespace Users.Application.Managers
         public IEmailVerificationTokenFactory EmailTokenFactory => _serviceProvider.GetRequiredService<IEmailVerificationTokenFactory>();
         public ITokenDTOFactory TokenDTOFactory => _serviceProvider.GetRequiredService<ITokenDTOFactory>();
         public IEmailVerificationLinkFactory EmailLinkFactory => _serviceProvider.GetRequiredService<IEmailVerificationLinkFactory>();
-		public IUserCreatedEventFactory UserCreatedEventFactory => _serviceProvider.GetRequiredService<IUserCreatedEventFactory>();
-	}
+	public IUserCreatedEventFactory UserCreatedEventFactory => _serviceProvider.GetRequiredService<IUserCreatedEventFactory>();
 }

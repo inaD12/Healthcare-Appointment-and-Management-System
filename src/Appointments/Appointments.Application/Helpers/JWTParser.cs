@@ -1,8 +1,7 @@
 ﻿using Appointments.Domain.Responses;
-using Contracts.Results;
+using Shared.Domain.Results;
 using Microsoft.AspNetCore.Http;
 using Serilog;
-using Shared.Responses;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Appointments.Application.Helpers

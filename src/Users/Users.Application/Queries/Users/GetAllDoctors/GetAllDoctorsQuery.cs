@@ -1,4 +1,4 @@
-﻿using Contracts.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Users.Domain.DTOs.Responses;
 
 namespace Users.Application.Queries.Users.GetAllDoctors;

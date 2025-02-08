@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Enums;
-using Contracts.Enums;
+using Shared.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

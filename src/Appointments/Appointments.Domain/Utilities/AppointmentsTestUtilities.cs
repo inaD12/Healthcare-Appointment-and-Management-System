@@ -1,4 +1,4 @@
-﻿using Contracts.Utilities;
+﻿using Shared.Domain.Utilities;
 
 namespace Appointments.Domain.Utilities;
 

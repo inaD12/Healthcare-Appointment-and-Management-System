@@ -35,7 +35,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 		result.IsSuccess.Should().BeTrue();
 		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 
-		await RepositoryManager.User.Received(1).UpdateUserAsync(
+		await RepositoryManager.User.Received(1).UpdateAsync(
 		Arg.Is<User>(user =>
 			user.Id == command.Id &&
 			user.Email == command.NewEmail &&
@@ -100,7 +100,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 		result.IsSuccess.Should().BeTrue();
 		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
 
-		await RepositoryManager.User.Received(1).UpdateUserAsync(
+		await RepositoryManager.User.Received(1).UpdateAsync(
 		Arg.Is<User>(user =>
 			user.Id == command.Id &&
 			user.Email != command.NewEmail &&

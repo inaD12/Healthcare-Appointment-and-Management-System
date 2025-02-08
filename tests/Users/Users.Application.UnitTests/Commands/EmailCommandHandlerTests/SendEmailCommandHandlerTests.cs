@@ -1,6 +1,6 @@
-﻿using Contracts.Results;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Results;
 using Users.Application.Commands.Email.SendEmail;
 using Users.Domain.EmailVerification;
 using Users.Domain.Responses;
@@ -35,7 +35,7 @@ namespace Users.Application.UnitTests.Commands.EmailCommandHandlerTests
 			result.Should().BeEquivalentTo(Result.Success());
 
 			await FluentEmail.Received(1).SendAsync();
-			await RepositoryManager.EmailVerificationToken.Received(1).AddTokenAsync(
+			await RepositoryManager.EmailVerificationToken.Received(1).AddAsync(
 				Arg.Is<EmailVerificationToken>(token =>
 					token.User.Email == UsersTestUtilities.TakenEmail)
 				);
@@ -57,7 +57,7 @@ namespace Users.Application.UnitTests.Commands.EmailCommandHandlerTests
 			result.Should().BeEquivalentTo(Result.Failure(Responses.EmailNotSent));
 
 			await FluentEmail.Received(1).SendAsync();
-			await RepositoryManager.EmailVerificationToken.DidNotReceive().AddTokenAsync(
+			await RepositoryManager.EmailVerificationToken.DidNotReceive().AddAsync(
 				Arg.Is<EmailVerificationToken>(token =>
 					token.User.Email == UsersTestUtilities.TakenEmail)
 				);

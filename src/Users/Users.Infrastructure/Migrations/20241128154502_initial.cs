@@ -1,6 +1,5 @@
-﻿using System;
-using Contracts.Enums;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Shared.Domain.Enums;
 
 #nullable disable
 

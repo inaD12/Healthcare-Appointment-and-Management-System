@@ -1,4 +1,4 @@
-﻿using Contracts.Results;
+﻿using Shared.Domain.Results;
 using System.Net;
 
 namespace Appointments.API.Extentions

@@ -1,4 +1,4 @@
-﻿using Contracts.Events;
+﻿using Shared.Domain.Events;
 using MassTransit;
 using MediatR;
 using Users.Application.Commands.Email.SendEmail;

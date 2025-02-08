@@ -1,4 +1,4 @@
-﻿using Contracts.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Appoints.Commands.CancelAppointment;
 

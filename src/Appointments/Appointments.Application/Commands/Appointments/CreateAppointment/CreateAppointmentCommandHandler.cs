@@ -1,9 +1,9 @@
 ﻿using Appointments.Application.Appoints.Commands.Shared;
 using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.Responses;
-using Contracts.Abstractions.Messaging;
-using Contracts.Results;
-using Shared.Responses;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Enums;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appoints.Commands.CreateAppointment;
 
@@ -22,7 +22,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 
 		if (doctorDataRes.IsFailure)
 			return Result.Failure(Responses.DoctorNotFound);
-		if (doctorDataRes.Value.Role != Contracts.Enums.Roles.Doctor)
+		if (doctorDataRes.Value.Role != Roles.Doctor)
 			return Result.Failure(Responses.UserIsNotADoctor);
 
 		var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.PatientEmail);

@@ -1,11 +1,11 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
+using Shared.Domain.Results;
 
 namespace Users.Application.Commands.Users.LoginUser
 {
@@ -24,7 +24,7 @@ namespace Users.Application.Commands.Users.LoginUser
 
 		public async Task<Result<TokenDTO>> Handle(LoginUserCommand<TokenDTO> request, CancellationToken cancellationToken)
 		{
-			var res = await _repositotyManager.User.GetUserByEmailAsync(request.Email);
+			var res = await _repositotyManager.User.GetByEmailAsync(request.Email);
 
 			if (res.IsFailure)
 				return Result<TokenDTO>.Failure(res.Response);

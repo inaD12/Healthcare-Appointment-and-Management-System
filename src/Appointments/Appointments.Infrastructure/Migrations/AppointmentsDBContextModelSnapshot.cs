@@ -2,11 +2,9 @@
 using System;
 using Appointments.Domain.Enums;
 using Appointments.Infrastructure.DBContexts;
-using Contracts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Shared.Domain.Enums;
 
 #nullable disable
 

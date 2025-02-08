@@ -1,10 +1,11 @@
 ﻿using Appointments.Application.Managers.Interfaces;
+using Appointments.Domain.Abstractions.Repository;
 using Appointments.Domain.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Appointments.Application.Managers
 {
-    internal class RepositoryManager : IRepositoryManager
+	internal class RepositoryManager : IRepositoryManager
 	{
 		private readonly IServiceProvider _serviceProvider;
 

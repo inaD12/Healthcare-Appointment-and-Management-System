@@ -1,6 +1,6 @@
-﻿using Contracts.Results;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Results;
 using Users.Application.Queries.Users.GetAllDoctors;
 using Users.Domain.Entities;
 using Users.Domain.Responses;

@@ -1,173 +1,76 @@
-﻿using Contracts.Results;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Enums;
+using Shared.Domain.Results;
+using Shared.Infrastructure.Repositories;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
-using Users.Infrastructure.Repositories.Interfaces;
 using Users.Infrastructure.UsersDBContexts;
 
-namespace Users.Infrastructure.Repositories
+namespace Users.Infrastructure.Repositories;
+
+internal class UserRepository : GenericRepository<User>, IUserRepository
 {
-    public class UserRepository : IUserRepository
+	private readonly UsersDBContext _context;
+
+	public UserRepository(UsersDBContext context) : base(context)
 	{
-		private readonly UsersDBContext _context;
+		_context = context;
+	}
 
-		public UserRepository(UsersDBContext context)
-		{
-			_context = context;
-		}
+	public async Task<Result<IEnumerable<User>>> GetAllDoctorsAsync()
+	{
+		var users = await _context.Users.Where(e => e.Role == Roles.Doctor).ToListAsync();
 
-		public async Task<Result<IEnumerable<User>>> GetAllUsersAsync()
-		{
-			try
-			{
-				var users = await _context.Users.ToListAsync();
+		if (!users.Any())
+			return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
 
-				if (!users.Any())
-				{
-					return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
-				}
+		return Result<IEnumerable<User>>.Success(users);
+	}
 
-				return Result<IEnumerable<User>>.Success(users);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetAllUsersAsync() in UserRepository: {ex.Message}");
-				return Result<IEnumerable<User>>.Failure(Responses.InternalError);
-			}
-		}
+	public async Task<Result<User>> GetByEmailAsync(string email)
+	{
+		var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-		public async Task<Result<IEnumerable<User>>> GetAllDoctorsAsync()
-		{
-			try
-			{
-				var users = await _context.Users.Where(e => e.Role == Contracts.Enums.Roles.Doctor).ToListAsync();
+		if (user == null)
+			return Result<User>.Failure(Responses.UserNotFound);
 
-				if (!users.Any())
-				{
-					return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
-				}
+		return Result<User>.Success(user);
+	}
 
-				return Result<IEnumerable<User>>.Success(users);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetAllDoctorsAsync() in UserRepository: {ex.Message}");
-				return Result<IEnumerable<User>>.Failure(Responses.InternalError);
-			}
-		}
+	public async Task<Result<User>> GetByFirstNameAsync(string firstName)
+	{
+		var user = await _context.Users.FirstOrDefaultAsync(u => u.FirstName == firstName);
 
-		public async Task<Result<User>> GetUserByIdAsync(string id)
-		{
-			try
-			{
-				var user = await _context.Users.FindAsync(id);
+		if (user == null)
+			return Result<User>.Failure(Responses.UserNotFound);
 
-				if (user == null)
-				{
-					return Result<User>.Failure(Responses.UserNotFound);
-				}
+		return Result<User>.Success(user);
+	}
 
-				return Result<User>.Success(user);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetUserByIdAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Responses.InternalError);
-			}
-		}
+	public async Task<Result> DeleteByIdAsync(string id)
+	{
+		var res = await GetByIdAsync(id);
 
-		public async Task<Result<User>> GetUserByEmailAsync(string email)
-		{
-			try
-			{
-				var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+		if (res.IsSuccess)
+			await DeleteAsync(res.Value);
 
-				if (user == null)
-				{
-					return Result<User>.Failure(Responses.UserNotFound);
-				}
+		return Result.Failure(res.Response);
+	}
 
-				return Result<User>.Success(user);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetUserByEmailAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Responses.InternalError);
-			}
-		}
+	public override async Task AddAsync(User user)
+	{
+		await _context.Users.AddAsync(user);
+	}
 
-		public async Task<Result<User>> GetUserByFirstNameAsync(string firstName)
-		{
-			try
-			{
-				var user = await _context.Users.FirstOrDefaultAsync(u => u.FirstName == firstName);
+	public async Task VerifyEmailAsync(User user)
+	{
+		user.EmailVerified = true;
+		await base.UpdateAsync(user);
+	}
 
-				if (user == null)
-				{
-					return Result<User>.Failure(Responses.UserNotFound);
-				}
-
-				return Result<User>.Success(user);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetUserByFirstNameAsync() in UserRepository: {ex.Message}");
-				return Result<User>.Failure(Responses.InternalError);
-			}
-		}
-
-		public async Task AddUserAsync(User user)
-		{
-			try
-			{
-				await _context.Users.AddAsync(user);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in AddUserAsync() in UserRepository: {ex.Message}");
-			}
-		}
-
-		public async Task UpdateUserAsync(User user)
-		{
-			try
-			{
-				_context.Users.Update(user);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in UpdateUserAsync() in UserRepository: {ex.Message}");
-			}
-		}
-
-		public async Task DeleteUserAsync(string id)
-		{
-			try
-			{
-				var user = await _context.Users.FindAsync(id);
-				if (user != null)
-				{
-					_context.Users.Remove(user);
-					await _context.SaveChangesAsync();
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in DeleteUserAsync() in UserRepository: {ex.Message}");
-			}
-		}
-
-		public async Task VerifyEmailAsync(User user)
-		{
-			user.EmailVerified = true;
-			await UpdateUserAsync(user);
-		}
-
-		public async Task SaveChangesAsync()
-		{
-			await _context.SaveChangesAsync();
-		}
+	public async Task SaveChangesAsync()
+	{
+		await _context.SaveChangesAsync();
 	}
 }

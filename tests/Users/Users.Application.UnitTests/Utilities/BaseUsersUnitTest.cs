@@ -1,9 +1,9 @@
-﻿using Contracts.Enums;
-using Contracts.Events;
-using Contracts.Results;
-using FluentEmail.Core;
+﻿using FluentEmail.Core;
 using FluentEmail.Core.Models;
 using NSubstitute;
+using Shared.Domain.Enums;
+using Shared.Domain.Events;
+using Shared.Domain.Results;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Managers.Interfaces;
@@ -124,7 +124,7 @@ public abstract class BaseUsersUnitTest
 				return user;
 			});
 
-		RepositoryManager.User.GetUserByEmailAsync(
+		RepositoryManager.User.GetByEmailAsync(
 			Arg.Any<string>())
 				.Returns(callInfo =>
 				{
@@ -136,7 +136,7 @@ public abstract class BaseUsersUnitTest
 
 				});
 
-		RepositoryManager.User.GetUserByIdAsync(
+		RepositoryManager.User.GetByIdAsync(
 			Arg.Any<string>())
 				.Returns(callInfo =>
 				{

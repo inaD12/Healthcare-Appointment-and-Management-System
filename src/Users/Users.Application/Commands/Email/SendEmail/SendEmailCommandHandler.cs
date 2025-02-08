@@ -1,6 +1,6 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
-using FluentEmail.Core;
+﻿using FluentEmail.Core;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.EmailVerification;
 using Users.Domain.Responses;
@@ -42,7 +42,7 @@ public sealed class SendEmailCommandHandler : ICommandHandler<SendEmailCommand>
 		if (!response.Successful)
 			return Result.Failure(Responses.EmailNotSent);
 
-		await _repositoryManager.EmailVerificationToken.AddTokenAsync(emailVerificationToken);
+		await _repositoryManager.EmailVerificationToken.AddAsync(emailVerificationToken);
 
 		return Result.Success();
 	}

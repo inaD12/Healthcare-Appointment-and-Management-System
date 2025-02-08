@@ -1,10 +1,10 @@
-﻿using Contracts.Enums;
+﻿using Shared.Domain.Entities.Base;
+using Shared.Domain.Enums;
 
 namespace Users.Domain.Entities
 {
-	public class User
+	public class User : BaseEntity
 	{
-		public string Id { get; set; }
 		public string Email { get; set; }
 		public string PasswordHash { get; set; }
 		public string Salt { get; set; }

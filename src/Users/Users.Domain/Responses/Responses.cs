@@ -1,4 +1,4 @@
-﻿using Contracts.Results;
+﻿using Shared.Domain.Results;
 using System.Net;
 using Users.Domain.Strings;
 

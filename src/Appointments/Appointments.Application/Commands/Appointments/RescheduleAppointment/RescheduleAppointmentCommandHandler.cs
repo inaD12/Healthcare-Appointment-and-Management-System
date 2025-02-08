@@ -1,13 +1,12 @@
 ﻿using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
-using Contracts.Abstractions.Messaging;
-using Contracts.Results;
 using Appointments.Application.Managers.Interfaces;
 using Appointments.Application.Helpers;
 using Appointments.Domain.Responses;
 using Appointments.Application.Appoints.Commands.Shared;
-using Shared.Responses;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appoints.Commands.RescheduleAppointment;
 

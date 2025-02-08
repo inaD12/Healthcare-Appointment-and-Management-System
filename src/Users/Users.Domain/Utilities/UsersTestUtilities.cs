@@ -1,4 +1,4 @@
-﻿using Contracts.Utilities;
+﻿using Shared.Domain.Utilities;
 using Users.Domain.DTOs.Responses;
 
 namespace Users.Domain.Utilities;

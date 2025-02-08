@@ -1,5 +1,5 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
+﻿using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
@@ -25,7 +25,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 
 	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 	{
-		var res = await _repositotyManager.User.GetUserByEmailAsync(request.Email);
+		var res = await _repositotyManager.User.GetByEmailAsync(request.Email);
 
 		if (res.IsSuccess)
 			return Result.Failure(Responses.EmailTaken);
@@ -42,7 +42,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 			request.Role
 			);
 
-		await _repositotyManager.User.AddUserAsync(user);
+		await _repositotyManager.User.AddAsync(user);
 
 		await _eventBus.PublishAsync(
 			_factoryManager.UserCreatedEventFactory.CreateUserCreatedEvent(

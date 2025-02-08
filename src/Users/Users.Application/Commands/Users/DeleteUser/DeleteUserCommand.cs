@@ -1,4 +1,4 @@
-﻿using Contracts.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 
 namespace Users.Application.Commands.Users.DeleteUser;
 

@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Managers.Interfaces;
-using Contracts.Events;
 using MassTransit;
+using Shared.Domain.Events;
 
 namespace Appointments.Application.Consumers
 {

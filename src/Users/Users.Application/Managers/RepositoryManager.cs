@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Users.Application.Managers.Interfaces;
-using Users.Infrastructure.Repositories.Interfaces;
+using Users.Domain.Abstractions.Repositories;
 
-namespace Users.Application.Managers
+namespace Users.Application.Managers;
+
+internal class RepositoryManager : IRepositoryManager
 {
-    internal class RepositoryManager : IRepositoryManager
-    {
-        private readonly IServiceProvider _serviceProvider;
+	private readonly IServiceProvider _serviceProvider;
 
-        public RepositoryManager(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+	public RepositoryManager(IServiceProvider serviceProvider)
+	{
+		_serviceProvider = serviceProvider;
+	}
 
-        public IUserRepository User => _serviceProvider.GetRequiredService<IUserRepository>();
-        public IEmailVerificationTokenRepository EmailVerificationToken => _serviceProvider.GetRequiredService<IEmailVerificationTokenRepository>();
-    }
+	public IUserRepository User => _serviceProvider.GetRequiredService<IUserRepository>();
+	public IEmailVerificationTokenRepository EmailVerificationToken => _serviceProvider.GetRequiredService<IEmailVerificationTokenRepository>();
 }

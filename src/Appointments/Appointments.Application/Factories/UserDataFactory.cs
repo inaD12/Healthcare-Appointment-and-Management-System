@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Entities;
-using Contracts.Enums;
+using Shared.Domain.Enums;
 
 namespace Appointments.Application.Factories
 {

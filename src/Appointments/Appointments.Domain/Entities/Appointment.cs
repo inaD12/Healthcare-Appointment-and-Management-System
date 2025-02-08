@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Entities.Base;
-using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Enums;
+using Shared.Domain.Entities.Base;
 
 namespace Appointments.Domain.Entities
 {

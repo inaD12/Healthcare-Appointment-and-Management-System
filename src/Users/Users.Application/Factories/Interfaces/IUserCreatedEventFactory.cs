@@ -1,5 +1,5 @@
-﻿using Contracts.Enums;
-using Contracts.Events;
+﻿using Shared.Domain.Enums;
+using Shared.Domain.Events;
 
 namespace Users.Application.Factories.Interfaces
 {

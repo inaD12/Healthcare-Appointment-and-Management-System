@@ -1,4 +1,4 @@
-﻿using Contracts.Results;
+﻿using Shared.Domain.Results;
 
 namespace Appointments.Application.Helpers
 {

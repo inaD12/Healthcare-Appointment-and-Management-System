@@ -11,7 +11,7 @@ namespace Appointments.Infrastructure.Schedulers
 			RecurringJob.AddOrUpdate<UseCaseExecutor>(
 				"MarkAppointmentsAsCompleted",
 				job => job.ExecuteAsync(),
-				Cron.Hourly); // Adjust schedule as needed
+				Cron.Hourly);
 		}
 	}
 }

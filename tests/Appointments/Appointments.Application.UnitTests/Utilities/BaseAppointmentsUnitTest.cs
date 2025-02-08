@@ -6,8 +6,9 @@ using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
-using Contracts.Results;
 using NSubstitute;
+using Shared.Domain.Enums;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
@@ -42,14 +43,14 @@ public abstract class BaseAppointmentsUnitTest
 		{
 			UserId = AppointmentsTestUtilities.DoctorId,
 			Email = AppointmentsTestUtilities.DoctorEmail,
-			Role = Contracts.Enums.Roles.Doctor
+			Role = Roles.Doctor
 		};
 
 		var patientData = new UserData
 		{
 			UserId = AppointmentsTestUtilities.PatientId,
 			Email = AppointmentsTestUtilities.PatientEmail,
-			Role = Contracts.Enums.Roles.Patient
+			Role = Roles.Patient
 		};
 
 		var appointmentWithDetailsDTO = new AppointmentWithDetailsDTO

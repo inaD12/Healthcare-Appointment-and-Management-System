@@ -3,9 +3,8 @@ using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
-using Contracts.Abstractions.Messaging;
-using Contracts.Results;
-using Shared.Responses;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appoints.Commands.CancelAppointment;
 

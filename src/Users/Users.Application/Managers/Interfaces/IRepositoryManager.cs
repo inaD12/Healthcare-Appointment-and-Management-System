@@ -1,4 +1,4 @@
-﻿using Users.Infrastructure.Repositories.Interfaces;
+﻿using Users.Domain.Abstractions.Repositories;
 
 namespace Users.Application.Managers.Interfaces
 {

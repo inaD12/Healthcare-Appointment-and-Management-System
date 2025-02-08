@@ -3,9 +3,9 @@ using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
-using Contracts.Results;
 using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
 

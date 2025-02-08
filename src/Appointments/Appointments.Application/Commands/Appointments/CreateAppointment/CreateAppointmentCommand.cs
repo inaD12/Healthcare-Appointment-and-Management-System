@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Enums;
-using Contracts.Abstractions.Messaging;
+using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Appoints.Commands.CreateAppointment
 {

@@ -1,45 +1,35 @@
 using Appointments.API.Extentions;
-using Appointments.API.Middlewares;
-using Appointments.Application.DependancyInjection;
-using Appointments.Infrastructure.DependancyInjection;
+using Appointments.Application.Extensions;
+using Appointments.Infrastructure.Extensions;
 using Hangfire;
 using Serilog;
-using Shared.Application.Extensions;
-using System.Reflection;
+using Shared.API.Extensions;
+using Shared.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-builder.Services.ConfigureDBs(config);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.InjectAuthentication(config);//Assembly.GetExecutingAssembly()
-
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-builder.Services.AddSwagger();
-builder.Services.ConfigureAppSettings(config);
-builder.Services.InjectMassTransit();
-builder.Services.ConfigureHangFire(config);
+builder.Host.ConfigureSerilog();
 
 builder.Services
 	.AddApplicationLayer(config)
-	.AddInfrastructureLayer(config);
-
-builder.Host.ConfigureSerilog();
+	.AddInfrastructureLayer(config)
+	.AddAPILayer(config);
 
 var app = builder.Build();
+
+await app.SetUpDatabaseAsync();
 
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-	app.ApplyMigrations();
 }
 
 app.UseSerilogRequestLogging();
+
+app.UseCors("AllowAllOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -54,3 +44,4 @@ EndpointMapper.MapAllEndpoints(app);
 
 app.Run();
 
+public partial class Program { }

@@ -1,4 +1,4 @@
-﻿using Contracts.Enums;
+﻿using Shared.Domain.Enums;
 using Users.Application.Factories.Interfaces;
 using Users.Domain.Entities;
 

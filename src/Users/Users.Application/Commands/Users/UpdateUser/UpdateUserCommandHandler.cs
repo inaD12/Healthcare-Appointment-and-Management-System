@@ -1,8 +1,8 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
+using Shared.Domain.Results;
 
 namespace Users.Application.Commands.Users.UpdateUser
 {
@@ -17,7 +17,7 @@ namespace Users.Application.Commands.Users.UpdateUser
 
 		public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 		{
-			var userResult = await _repositotyManager.User.GetUserByIdAsync(request.Id);
+			var userResult = await _repositotyManager.User.GetByIdAsync(request.Id);
 			if (userResult.IsFailure)
 				return Result.Failure(userResult.Response);
 
@@ -25,7 +25,7 @@ namespace Users.Application.Commands.Users.UpdateUser
 
 			if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
 			{
-				var emailCheckResult = await _repositotyManager.User.GetUserByEmailAsync(request.NewEmail);
+				var emailCheckResult = await _repositotyManager.User.GetByEmailAsync(request.NewEmail);
 				if (emailCheckResult.IsSuccess)
 					return Result.Failure(Responses.EmailTaken);
 
@@ -35,7 +35,7 @@ namespace Users.Application.Commands.Users.UpdateUser
 			user.FirstName = request.FirstName ?? user.FirstName;
 			user.LastName = request.LastName ?? user.LastName;
 
-			await _repositotyManager.User.UpdateUserAsync(user);
+			await _repositotyManager.User.UpdateAsync(user);
 
 			return Result.Success(Responses.UpdateSuccessful);
 		}

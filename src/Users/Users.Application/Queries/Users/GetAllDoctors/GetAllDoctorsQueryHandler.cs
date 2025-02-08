@@ -1,6 +1,6 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
-using Mapster;
+﻿using Mapster;
+using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.DTOs.Responses;
 

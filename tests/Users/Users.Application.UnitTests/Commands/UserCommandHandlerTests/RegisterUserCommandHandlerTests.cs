@@ -1,5 +1,5 @@
-﻿using Contracts.Enums;
-using FluentAssertions;
+﻿using FluentAssertions;
+using Shared.Domain.Enums;
 using Users.Application.Commands.Users.RegisterUser;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;

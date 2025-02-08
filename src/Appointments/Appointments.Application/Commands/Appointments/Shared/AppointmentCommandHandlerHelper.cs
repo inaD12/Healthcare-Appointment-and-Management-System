@@ -1,8 +1,7 @@
 ﻿using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
-using Contracts.Results;
-using Shared.Responses;
+using Shared.Domain.Results;
 
 namespace Appointments.Application.Appoints.Commands.Shared
 {

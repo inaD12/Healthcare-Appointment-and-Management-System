@@ -1,54 +1,36 @@
-using Users.Application;
-using Users.Infrastructure;
 using UsersAPI.Extentions;
 using Serilog;
-using UsersAPI.Middlewares;
-using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-using Shared.Application.Extensions;
+using Shared.API.Extensions;
+using Users.Extensions;
+using Users.Application.Extensions;
+using Users.Infrastructure.Extensions;
+using Shared.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var config = builder.Configuration;
 
-builder.Services.ConfigureDBs(config);
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-builder.Services.ConfigureAppSettings(config);
-builder.Services.InjectAuthentication(config);
-builder.Services.AddSwagger();
-builder.Services.AddHttpContextAccessor();
-builder.Services.InjectMassTransit();
-builder.Services.AddFluentEmail(config);
-builder.Services.ConfigureCors();
+builder.Host.ConfigureSerilog();
 
 builder.Services
 	.AddApplicationLayer(config)
-	.AddInfrastructureLayer();
-
-builder.Host.ConfigureSerilog();
-
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-	options.SuppressModelStateInvalidFilter = false;
-});
+	.AddInfrastructureLayer()
+	.AddAPILayer(config);
 
 var app = builder.Build();
+
+await app.SetUpDatabaseAsync();
 
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-	await app.ApplyMigrations();
 }
 
 app.UseSerilogRequestLogging();
 
 app.UseCors("AllowAllOrigins");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

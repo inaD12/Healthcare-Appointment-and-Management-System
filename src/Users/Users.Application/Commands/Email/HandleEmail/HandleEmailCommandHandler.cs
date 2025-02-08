@@ -1,5 +1,5 @@
-﻿using Contracts.Abstractions.Messaging;
-using Contracts.Results;
+﻿using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Responses;
 
@@ -16,7 +16,7 @@ namespace Users.Application.Commands.Email.HandleEmail
 
 		public async Task<Result> Handle(HandleEmailCommand request, CancellationToken cancellationToken)
 		{
-			var tokenResult = await _repositoryManager.EmailVerificationToken.GetTokenByIdAsync(request.tokenId);
+			var tokenResult = await _repositoryManager.EmailVerificationToken.GetByIdAsync(request.tokenId);
 
 			if (tokenResult.IsFailure ||
 				tokenResult.Value.ExpiresOnUtc < DateTime.UtcNow ||
