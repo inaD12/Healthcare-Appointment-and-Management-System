@@ -1,5 +1,4 @@
-﻿using Appointments.Application.Appoints.Commands.CreateAppointment;
-using Appointments.Domain.Utilities;
+﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
 namespace Appointments.Application.Commands.Appointments.CreateAppointment;

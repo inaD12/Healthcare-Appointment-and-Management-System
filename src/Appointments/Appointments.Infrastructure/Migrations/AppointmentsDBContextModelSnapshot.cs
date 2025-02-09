@@ -8,8 +8,8 @@ using Shared.Domain.Enums;
 
 #nullable disable
 
-namespace Appointments.Infrastructure.Migrations
-{
+namespace Appointments.Infrastructure.Migrations;
+
     [DbContext(typeof(AppointmentsDBContext))]
     partial class AppointmentsDBContextModelSnapshot : ModelSnapshot
     {
@@ -260,4 +260,3 @@ namespace Appointments.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

@@ -1,9 +1,10 @@
-﻿using Appointments.API.Extentions;
-using Appointments.Application.Appoints.Commands.CancelAppointment;
-using Appointments.Application.Appoints.Commands.CreateAppointment;
-using Appointments.Application.Appoints.Commands.RescheduleAppointment;
+﻿using Appointments.Application.Commands.Appointments.CancelAppointment;
+using Appointments.Application.Commands.Appointments.CreateAppointment;
+using Appointments.Application.Commands.Appointments.RescheduleAppointment;
 using Appointments.Domain.DTOS.Request;
 using MediatR;
+using Shared.API.Abstractions;
+using Shared.API.Extensions;
 using Shared.Domain.Results;
 
 namespace Appointments.API.EndPoints;

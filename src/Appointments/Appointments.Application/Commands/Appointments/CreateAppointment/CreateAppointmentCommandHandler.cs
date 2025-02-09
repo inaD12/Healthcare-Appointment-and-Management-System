@@ -1,11 +1,11 @@
-﻿using Appointments.Application.Appoints.Commands.Shared;
+﻿using Appointments.Application.Commands.Appointments.Shared;
 using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.Responses;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Appoints.Commands.CreateAppointment;
+namespace Appointments.Application.Commands.Appointments.CreateAppointment;
 
 public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand>
 {

@@ -10,15 +10,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="4.1.0" />
-    <PackageReference Include="xunit" Version="2.5.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\..\..\src\Users\Users.API\Users.API.csproj" />
     <ProjectReference Include="..\..\..\src\Users\Users.Application\Users.Application.csproj" />
     <ProjectReference Include="..\..\..\src\Users\Users.Infrastructure\Users.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Application.IntegrationTests\Shared.Application.IntegrationTests.csproj" />

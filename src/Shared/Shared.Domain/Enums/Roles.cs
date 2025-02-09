@@ -1,9 +1,8 @@
-﻿namespace Shared.Domain.Enums
+﻿namespace Shared.Domain.Enums;
+
+public enum Roles
 {
-	public enum Roles
-	{
-		Patient,
-		Doctor,
-		Admin
-	}
+	Patient,
+	Doctor,
+	Admin
 }

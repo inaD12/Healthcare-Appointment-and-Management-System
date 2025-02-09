@@ -1,10 +1,9 @@
-﻿namespace Users.Application.Settings
+﻿namespace Users.Application.Settings;
+
+public class AuthValues
 {
-	public class AuthValues
-	{
-		public string SecretKey { get; set; }
-		public string Audience { get; set; }
-		public string Issuer { get; set; }
-		public int SecondsValid { get; set; }
-	}
+	public string SecretKey { get; set; }
+	public string Audience { get; set; }
+	public string Issuer { get; set; }
+	public int SecondsValid { get; set; }
 }

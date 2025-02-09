@@ -11,8 +11,8 @@ using Shared.Domain.Enums;
 
 #nullable disable
 
-namespace Appointments.Infrastructure.Migrations
-{
+namespace Appointments.Infrastructure.Migrations;
+
     [DbContext(typeof(AppointmentsDBContext))]
     [Migration("20250105100125_Outbox")]
     partial class Outbox
@@ -265,4 +265,3 @@ namespace Appointments.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

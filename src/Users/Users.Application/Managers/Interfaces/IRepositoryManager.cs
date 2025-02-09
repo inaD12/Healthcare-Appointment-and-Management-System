@@ -1,10 +1,9 @@
 ﻿using Users.Domain.Abstractions.Repositories;
 
-namespace Users.Application.Managers.Interfaces
+namespace Users.Application.Managers.Interfaces;
+
+public interface IRepositoryManager
 {
-    public interface IRepositoryManager
-    {
-        IUserRepository User { get; }
-        IEmailVerificationTokenRepository EmailVerificationToken { get; }
-    }
+	IUserRepository User { get; }
+	IEmailVerificationTokenRepository EmailVerificationToken { get; }
 }

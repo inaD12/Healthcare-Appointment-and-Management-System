@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
+using Shared.Domain.Enums;
+using Users.Application.Auth.PasswordManager;
 using Users.Application.Managers.Interfaces;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Domain.Entities;
+using Users.Domain.Utilities;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.IntegrationTests.Utilities;
 
@@ -11,17 +15,44 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 	protected BaseUsersIntegrationTest(IntegrationTestWebAppFactory integrationTestWebAppFactory)
 		: base(integrationTestWebAppFactory.Services.CreateScope())
 	{
+		PasswordManager = ServiceScope.ServiceProvider.GetRequiredService<IPasswordManager>();
 	}
+
+	protected IPasswordManager PasswordManager { get; }
+	private IRepositoryManager _repositoryManager;
 
 	protected IRepositoryManager RepositoryManager
 	{
 		get
 		{
-			var serviceScope = ServiceScope.ServiceProvider.CreateScope();
-			var repositoryManager = serviceScope.ServiceProvider.GetRequiredService<IRepositoryManager>();
-
-			return repositoryManager;
+			if (_repositoryManager == null)
+			{
+				_repositoryManager = ServiceScope.ServiceProvider.GetRequiredService<IRepositoryManager>();
+			}
+			return _repositoryManager;
 		}
+	}
+
+	protected async Task<string> CreateUserAsync()
+	{
+		var user = new User(
+				Guid.NewGuid().ToString(),
+				UsersTestUtilities.TakenEmail,
+				UsersTestUtilities.ValidPasswordHash,
+				UsersTestUtilities.ValidSalt,
+				Roles.Doctor,
+				UsersTestUtilities.ValidFirstName,
+				UsersTestUtilities.ValidLastName,
+				UsersTestUtilities.PastDate.ToUniversalTime(),
+				UsersTestUtilities.ValidPhoneNumber,
+				UsersTestUtilities.ValidAdress,
+				false
+			);
+
+		await RepositoryManager.User.AddAsync(user);
+		await RepositoryManager.User.SaveChangesAsync();
+
+		return user.Email;
 	}
 	public async Task DisposeAsync()
 	{

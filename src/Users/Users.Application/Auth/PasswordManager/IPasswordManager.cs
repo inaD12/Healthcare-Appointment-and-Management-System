@@ -1,8 +1,7 @@
-﻿namespace Users.Application.Auth.PasswordManager
+﻿namespace Users.Application.Auth.PasswordManager;
+
+public interface IPasswordManager
 {
-	public interface IPasswordManager
-	{
-		string HashPassword(string password, out string salt);
-		bool VerifyPassword(string password, string hash, string salt);
-	}
+	string HashPassword(string password, out string salt);
+	bool VerifyPassword(string password, string hash, string salt);
 }

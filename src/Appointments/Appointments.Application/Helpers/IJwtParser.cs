@@ -1,9 +1,8 @@
 ﻿using Shared.Domain.Results;
 
-namespace Appointments.Application.Helpers
+namespace Appointments.Application.Helpers;
+
+public interface IJwtParser
 {
-	public interface IJwtParser
-	{
-		Result<string> GetIdFromToken();
-	}
+	Result<string> GetIdFromToken();
 }

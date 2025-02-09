@@ -80,7 +80,7 @@ public static class ServiceCollectionExtensions
 			options.AddPolicy("AllowAllOrigins", builder =>
 			{
 				builder.AllowAnyOrigin()
-					   .AllowAnyMethod() 
+					   .AllowAnyMethod()
 					   .AllowAnyHeader();
 			});
 		});

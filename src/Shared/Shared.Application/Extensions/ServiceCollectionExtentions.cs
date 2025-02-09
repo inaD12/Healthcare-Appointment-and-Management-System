@@ -2,7 +2,6 @@
 using Hangfire.PostgreSql;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.PipelineBehaviors;
 using Shared.Application.Settings;

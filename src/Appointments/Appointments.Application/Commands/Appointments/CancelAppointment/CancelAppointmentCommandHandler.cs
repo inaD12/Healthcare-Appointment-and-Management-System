@@ -6,7 +6,7 @@ using Appointments.Domain.Responses;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Appoints.Commands.CancelAppointment;
+namespace Appointments.Application.Commands.Appointments.CancelAppointment;
 
 public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {

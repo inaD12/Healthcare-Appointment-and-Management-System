@@ -1,10 +1,10 @@
-﻿using Appointments.Application.Appoints.Commands.CancelAppointment;
-using Appointments.Domain.Entities;
-using NSubstitute;
-using FluentAssertions;
-using Appointments.Domain.Responses;
+﻿using Appointments.Application.Commands.Appointments.CancelAppointment;
 using Appointments.Application.UnitTests.Utilities;
+using Appointments.Domain.Entities;
+using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
+using FluentAssertions;
+using NSubstitute;
 
 namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
 

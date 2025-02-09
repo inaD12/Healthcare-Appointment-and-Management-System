@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Users.Application.Factories.Interfaces;
-using Users.Domain.EmailVerification;
+using Users.Domain.Entities;
 
 namespace Users.Application.Factories;
 

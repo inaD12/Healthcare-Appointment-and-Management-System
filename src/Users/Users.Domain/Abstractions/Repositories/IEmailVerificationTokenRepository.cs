@@ -1,5 +1,5 @@
 ﻿using Shared.Domain.Abstractions;
-using Users.Domain.EmailVerification;
+using Users.Domain.Entities;
 
 namespace Users.Domain.Abstractions.Repositories;
 

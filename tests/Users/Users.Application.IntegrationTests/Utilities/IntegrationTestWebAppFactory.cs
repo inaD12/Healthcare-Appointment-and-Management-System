@@ -2,21 +2,26 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Shared.Application.IntegrationTests.Extentensions;
 using Testcontainers.PostgreSql;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.IntegrationTests.Utilities;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
+
 {
-	private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder()
+	private readonly PostgreSqlContainer _dbContainer;
+
+	public IntegrationTestWebAppFactory()
+	{
+		_dbContainer = new PostgreSqlBuilder()
 		.WithImage("postgres:latest")
-		.WithDatabase("appointments.database")
-		.WithUsername("posgtres")
+		.WithDatabase("usersdb")
+		.WithUsername("postgres")
 		.WithPassword("postgres")
 		.Build();
+	}
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{
 		builder.ConfigureTestServices(serviceCollection =>
@@ -26,7 +31,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 	}
 	public new Task DisposeAsync()
 	{
-		return _dbContainer.StopAsync();
+		return _dbContainer.DisposeAsync().AsTask();
 	}
 
 	public Task InitializeAsync()

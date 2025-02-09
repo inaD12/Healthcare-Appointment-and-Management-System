@@ -1,4 +1,3 @@
-﻿namespace Users.Domain.DTOs.Responses
-{
-	public record MessageDTO(string Message);
-}
+﻿namespace Users.Domain.DTOs.Responses;
+
+public record MessageDTO(string Message);

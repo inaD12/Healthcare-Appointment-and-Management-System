@@ -1,4 +1,4 @@
-﻿namespace Shared.Strings;
+﻿namespace Shared.Domain.Strings;
 
 public static class ErrorMessages
 {

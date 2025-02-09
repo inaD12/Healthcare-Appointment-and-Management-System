@@ -2,7 +2,7 @@
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Managers.Interfaces;
-using Users.Domain.EmailVerification;
+using Users.Domain.Entities;
 using Users.Domain.Responses;
 
 namespace Users.Application.Commands.Email.SendEmail;

@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 
-namespace Appointments.Application.Appoints.Commands.CancelAppointment;
+namespace Appointments.Application.Commands.Appointments.CancelAppointment;
 
 public sealed record CancelAppointmentCommand(
 	string AppointmentId) : ICommand;

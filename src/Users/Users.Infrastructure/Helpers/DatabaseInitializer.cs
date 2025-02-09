@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Infrastructure.Helpers;
 

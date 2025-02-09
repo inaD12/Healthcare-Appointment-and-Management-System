@@ -1,39 +1,37 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 
-namespace Users.Infrastructure.UsersDBContexts
+namespace Users.Infrastructure.DBContexts;
+
+public class UsersDBContext : DbContext
 {
-	public class UsersDBContext : DbContext
+	public DbSet<User> Users { get; set; }
+	public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
+
+	public UsersDBContext(DbContextOptions<UsersDBContext> options) : base(options) { }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		public DbSet<User> Users { get; set; }
-		public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
+		base.OnModelCreating(modelBuilder);
 
-		public UsersDBContext(DbContextOptions<UsersDBContext> options) : base(options) { }
+		modelBuilder.AddInboxStateEntity();
+		modelBuilder.AddOutboxMessageEntity();
+		modelBuilder.AddOutboxStateEntity();
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		modelBuilder.Entity<User>()
+			.HasIndex(u => u.Email)
+			.IsUnique();
+
+		modelBuilder.Entity<EmailVerificationToken>(entity =>
 		{
-			base.OnModelCreating(modelBuilder);
+			entity.HasKey(e => e.Id);
+			entity.Property(e => e.UserId).IsRequired();
 
-			modelBuilder.AddInboxStateEntity();
-			modelBuilder.AddOutboxMessageEntity();
-			modelBuilder.AddOutboxStateEntity();
-
-			modelBuilder.Entity<User>()
-				.HasIndex(u => u.Email)
-				.IsUnique();
-
-			modelBuilder.Entity<EmailVerificationToken>(entity =>
-			{
-				entity.HasKey(e => e.Id);
-				entity.Property(e => e.UserId).IsRequired();
-
-				entity.HasOne(e => e.User)
-					.WithMany()
-					.HasForeignKey(e => e.UserId)
-					.OnDelete(DeleteBehavior.Cascade);
-			});
-		}
+			entity.HasOne(e => e.User)
+				.WithMany()
+				.HasForeignKey(e => e.UserId)
+				.OnDelete(DeleteBehavior.Cascade);
+		});
 	}
 }

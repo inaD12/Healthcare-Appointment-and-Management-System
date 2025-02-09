@@ -7,7 +7,6 @@ using Shared.Domain.Results;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Managers.Interfaces;
-using Users.Domain.EmailVerification;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
@@ -97,7 +96,7 @@ public abstract class BaseUsersUnitTest
 			takenUser
 			);
 
-		Doctors = new List<User> { doctor};
+		Doctors = new List<User> { doctor };
 
 		UserCreatedEvent eveent = FactoryManager.UserCreatedEventFactory.CreateUserCreatedEvent(
 					UsersTestUtilities.ValidId,
@@ -130,7 +129,7 @@ public abstract class BaseUsersUnitTest
 				{
 					var email = callInfo.ArgAt<string>(0);
 
-					if(email == UsersTestUtilities.TakenEmail)
+					if (email == UsersTestUtilities.TakenEmail)
 						return Result<User>.Success(takenUser);
 					return Result<User>.Failure(Responses.UserNotFound);
 

@@ -30,7 +30,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 
 	public virtual async Task<Result<IEnumerable<T>>> GetAllAsync()
 	{
-		var entities =  await Entities.ToListAsync();
+		var entities = await Entities.ToListAsync();
 
 		if (!entities.Any())
 			return Result<IEnumerable<T>>.Failure(SharedResponses.EntityNotFound);

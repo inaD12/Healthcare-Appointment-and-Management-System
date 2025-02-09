@@ -1,9 +1,8 @@
-﻿using Users.Domain.EmailVerification;
+﻿using Users.Domain.Entities;
 
-namespace Users.Application.Factories.Interfaces
+namespace Users.Application.Factories.Interfaces;
+
+public interface IEmailVerificationLinkFactory
 {
-    public interface IEmailVerificationLinkFactory
-    {
-        string Create(EmailVerificationToken token);
-    }
+	string Create(EmailVerificationToken token);
 }

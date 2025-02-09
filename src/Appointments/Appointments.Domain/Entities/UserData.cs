@@ -1,12 +1,11 @@
 ﻿using Shared.Domain.Entities.Base;
 using Shared.Domain.Enums;
 
-namespace Appointments.Domain.Entities
+namespace Appointments.Domain.Entities;
+
+public class UserData : BaseEntity
 {
-	public class UserData : BaseEntity
-	{
-		public string UserId { get; set; }
-		public string Email { get; set; }
-		public Roles Role { get; set; }
-	}
+	public string UserId { get; set; }
+	public string Email { get; set; }
+	public Roles Role { get; set; }
 }

@@ -2,9 +2,9 @@
 using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
 using Users.Domain.Abstractions.Repositories;
-using Users.Domain.EmailVerification;
+using Users.Domain.Entities;
 using Users.Domain.Responses;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Infrastructure.Repositories;
 

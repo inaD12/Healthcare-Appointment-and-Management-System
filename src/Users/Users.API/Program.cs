@@ -1,10 +1,9 @@
-using UsersAPI.Extentions;
 using Serilog;
 using Shared.API.Extensions;
-using Users.Extensions;
-using Users.Application.Extensions;
-using Users.Infrastructure.Extensions;
 using Shared.API.Middlewares;
+using Users.Application.Extensions;
+using Users.Extensions;
+using Users.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

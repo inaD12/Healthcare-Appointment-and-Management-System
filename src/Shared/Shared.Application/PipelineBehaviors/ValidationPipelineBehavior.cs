@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Serilog;
 
 namespace Shared.Application.PipelineBehaviors;
 
@@ -33,7 +32,6 @@ public sealed class ValidationPipelineBehavior<TRequest, TResponse>
 		if (validationFailures.Any())
 		{
 			var errorMessage = string.Join(",\n", validationFailures);
-			Log.Error($"ValidationPipelineBehavior Error :{ errorMessage}");
 
 			throw new ValidationException(errorMessage);
 		}

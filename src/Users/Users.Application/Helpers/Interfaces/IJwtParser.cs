@@ -1,7 +1,6 @@
-﻿namespace Users.Application.Helpers.Interfaces
+﻿namespace Users.Application.Helpers.Interfaces;
+
+public interface IJwtParser
 {
-    public interface IJwtParser
-    {
-        string GetIdFromToken();
-    }
+	string GetIdFromToken();
 }

@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Appoints.Commands.Shared;
+﻿using Appointments.Application.Commands.Appointments.Shared;
 using Appointments.Application.Helpers;
 using Appointments.Application.Managers.Interfaces;
 using Appointments.Domain.DTOS;
@@ -133,7 +133,7 @@ public abstract class BaseAppointmentsUnitTest
 
 				 if (id == AppointmentsTestUtilities.InvalidId)
 					 return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
-				 if(id == AppointmentsTestUtilities.UnauthUserId)
+				 if (id == AppointmentsTestUtilities.UnauthUserId)
 					 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTONotMatching);
 
 				 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTO);

@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Appoints.Commands.CreateAppointment;
+﻿using Appointments.Application.Commands.Appointments.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;

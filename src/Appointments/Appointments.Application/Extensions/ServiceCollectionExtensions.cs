@@ -1,18 +1,18 @@
-﻿using Appointments.Application.Factories;
+﻿using Appointments.Application.Commands.Appointments.Shared;
+using Appointments.Application.Consumers;
+using Appointments.Application.Factories;
+using Appointments.Application.Helpers;
+using Appointments.Application.Jobs;
 using Appointments.Application.Managers;
 using Appointments.Application.Managers.Interfaces;
+using Appointments.Infrastructure.DBContexts;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using FluentValidation;
-using Appointments.Application.Helpers;
-using Microsoft.AspNetCore.Http;
-using Appointments.Application.Appoints.Commands.Shared;
-using Appointments.Application.Jobs;
-using Shared.Application.Settings;
 using Shared.Application.Extensions;
-using Appointments.Infrastructure.DBContexts;
-using Appointments.Application.Consumers;
+using Shared.Application.Settings;
 
 namespace Appointments.Application.Extensions;
 

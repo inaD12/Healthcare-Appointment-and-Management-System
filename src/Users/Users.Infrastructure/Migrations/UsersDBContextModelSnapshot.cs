@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Shared.Domain.Enums;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 #nullable disable
 
-namespace Users.Infrastructure.Migrations
-{
-	[DbContext(typeof(UsersDBContext))]
+namespace Users.Infrastructure.Migrations;
+
+[DbContext(typeof(UsersDBContext))]
     partial class UsersDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -284,4 +284,3 @@ namespace Users.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

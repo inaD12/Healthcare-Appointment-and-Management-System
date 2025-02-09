@@ -4,14 +4,13 @@ using Appointments.Domain.Enums;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Results;
 
-namespace Appointments.Domain.Repositories
+namespace Appointments.Domain.Abstractions.Repository;
+
+public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
-	public interface IAppointmentRepository : IGenericRepository<Appointment>
-	{
-		Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime);
-		Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus);
-		Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId);
-		Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime);
-		Task SaveChangesAsync();
-	}
+	Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime);
+	Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus);
+	Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId);
+	Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime);
+	Task SaveChangesAsync();
 }

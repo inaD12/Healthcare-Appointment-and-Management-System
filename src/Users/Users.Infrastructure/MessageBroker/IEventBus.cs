@@ -1,7 +1,6 @@
-﻿namespace Users.Infrastructure.MessageBroker
+﻿namespace Users.Infrastructure.MessageBroker;
+
+public interface IEventBus
 {
-	public interface IEventBus
-	{
-		Task PublishAsync<T>(T message, CancellationToken cancellationToken = default) where T : class;
-	}
+	Task PublishAsync<T>(T message, CancellationToken cancellationToken = default) where T : class;
 }

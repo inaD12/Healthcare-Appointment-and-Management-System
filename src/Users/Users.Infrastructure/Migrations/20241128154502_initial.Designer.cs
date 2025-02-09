@@ -2,16 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Shared.Domain.Enums;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 #nullable disable
 
-namespace Users.Infrastructure.Migrations
-{
-    [DbContext(typeof(UsersDBContext))]
+namespace Users.Infrastructure.Migrations;
+
+[DbContext(typeof(UsersDBContext))]
     [Migration("20241128154502_initial")]
     partial class initial
     {
@@ -111,4 +109,3 @@ namespace Users.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

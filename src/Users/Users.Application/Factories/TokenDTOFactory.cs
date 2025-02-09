@@ -1,13 +1,12 @@
 ﻿using Users.Application.Factories.Interfaces;
 using Users.Domain.DTOs.Responses;
 
-namespace Users.Application.Factories
+namespace Users.Application.Factories;
+
+public class TokenDTOFactory : ITokenDTOFactory
 {
-    public class TokenDTOFactory : ITokenDTOFactory
+	public TokenDTO CreateToken(string token)
 	{
-		public TokenDTO CreateToken(string token)
-		{
-			return new TokenDTO(token);
-		}
+		return new TokenDTO(token);
 	}
 }

@@ -1,9 +1,8 @@
 ﻿using Appointments.Domain.Entities;
 
-namespace Appointments.Application.Factories
+namespace Appointments.Application.Factories;
+
+public interface IAppointmentFactory
 {
-	public interface IAppointmentFactory
-	{
-		Appointment Create(string patientId, string doctorId, DateTime scheduledStartTime, DateTime ScheduledEndTime);
-	}
+	Appointment Create(string patientId, string doctorId, DateTime scheduledStartTime, DateTime ScheduledEndTime);
 }

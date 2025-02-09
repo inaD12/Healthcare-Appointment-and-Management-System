@@ -1,10 +1,9 @@
 ﻿using Appointments.Domain.Entities;
 using Shared.Domain.Enums;
 
-namespace Appointments.Application.Factories
+namespace Appointments.Application.Factories;
+
+public interface IUserDataFactory
 {
-	public interface IUserDataFactory
-	{
-		UserData Create(string userId, string email, Roles role);
-	}
+	UserData Create(string userId, string email, Roles role);
 }

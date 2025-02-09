@@ -3,7 +3,7 @@ using Users.Domain.Utilities;
 
 namespace Users.Application.Commands.Users.RegisterUser;
 
-public class RegisterUserCommandValidator: AbstractValidator<RegisterUserCommand>
+public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
 	public RegisterUserCommandValidator()
 	{

@@ -1,14 +1,14 @@
-﻿using Appointments.Domain.DTOS;
+﻿using Appointments.Application.Commands.Appointments.Shared;
+using Appointments.Application.Helpers;
+using Appointments.Application.Managers.Interfaces;
+using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
-using Appointments.Application.Managers.Interfaces;
-using Appointments.Application.Helpers;
 using Appointments.Domain.Responses;
-using Appointments.Application.Appoints.Commands.Shared;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Appoints.Commands.RescheduleAppointment;
+namespace Appointments.Application.Commands.Appointments.RescheduleAppointment;
 
 public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
 {

@@ -1,22 +1,21 @@
-﻿using Appointments.Application.Appointments.Commands.CompleteAppointments;
+﻿using Appointments.Application.Commands.Appointments.CompleteAppointments;
 using MediatR;
 
-namespace Appointments.Application.Jobs
+namespace Appointments.Application.Jobs;
+
+public class CompleteAppointmentsJob
 {
-	public class CompleteAppointmentsJob
+	private readonly ISender _sender;
+
+	public CompleteAppointmentsJob(ISender sender)
 	{
-		private readonly ISender _sender;
+		_sender = sender;
+	}
 
-		public CompleteAppointmentsJob(ISender sender)
-		{
-			_sender = sender;
-		}
+	public async Task Execute(CancellationToken cancellationToken)
+	{
+		var command = new CompleteAppointmentsCommand();
 
-		public async Task Execute(CancellationToken cancellationToken)
-		{
-			var command = new CompleteAppointmentsCommand();
-
-			await _sender.Send(command, cancellationToken);
-		}
+		await _sender.Send(command, cancellationToken);
 	}
 }

@@ -1,8 +1,7 @@
-﻿namespace Users.Domain.DTOs.Requests
+﻿namespace Users.Domain.DTOs.Requests;
+
+public class LoginReqDTO
 {
-	public class LoginReqDTO
-	{
-		public string Email { get; set; }
-		public string Password { get; set; }
-	}
+	public string Email { get; set; }
+	public string Password { get; set; }
 }

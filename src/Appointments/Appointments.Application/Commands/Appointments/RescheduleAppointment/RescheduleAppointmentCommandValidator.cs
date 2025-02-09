@@ -1,5 +1,4 @@
-﻿using Appointments.Application.Appoints.Commands.RescheduleAppointment;
-using Appointments.Domain.Utilities;
+﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
 namespace Appointments.Application.Commands.Appointments.RescheduleAppointment;

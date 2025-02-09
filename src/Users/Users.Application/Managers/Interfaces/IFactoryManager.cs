@@ -1,16 +1,15 @@
 ﻿using Users.Application.Factories.Interfaces;
 
-namespace Users.Application.Managers.Interfaces
+namespace Users.Application.Managers.Interfaces;
+
+public interface IFactoryManager
 {
-    public interface IFactoryManager
-    {
-        IEmailVerificationTokenFactory EmailTokenFactory { get; }
-        IMessageDTOFactory MessageDTOFactory { get; }
-        ITokenDTOFactory TokenDTOFactory { get; }
-        IUserFactory UserFactory { get; }
-        IEmailVerificationLinkFactory EmailLinkFactory { get; }
-		IUserCreatedEventFactory UserCreatedEventFactory {  get; }
+	IEmailVerificationTokenFactory EmailTokenFactory { get; }
+	IMessageDTOFactory MessageDTOFactory { get; }
+	ITokenDTOFactory TokenDTOFactory { get; }
+	IUserFactory UserFactory { get; }
+	IEmailVerificationLinkFactory EmailLinkFactory { get; }
+	IUserCreatedEventFactory UserCreatedEventFactory { get; }
 
 
-	}
 }

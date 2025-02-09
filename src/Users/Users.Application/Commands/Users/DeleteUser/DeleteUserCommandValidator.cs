@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Users.Application.Commands.Users.DeleteUser;
 using Users.Domain.Utilities;
 
-namespace Users.Application.Commands.Users.UpdateUser;
+namespace Users.Application.Commands.Users.DeleteUser;
 
 public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 {

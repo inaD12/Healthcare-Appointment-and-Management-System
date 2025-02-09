@@ -16,7 +16,7 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string ValidPassword = GetAverageString(UsersBusinessConfiguration.PASSWORD_MIN_LENGTH, UsersBusinessConfiguration.PASSWORD_MAX_LENGTH);
 	public static readonly string InvalidPassword = GetAverageString(UsersBusinessConfiguration.PASSWORD_MIN_LENGTH, UsersBusinessConfiguration.PASSWORD_MAX_LENGTH);
 
-	public static readonly string ValidEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH-12) + "@gmail.com";
+	public static readonly string ValidEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
 	public static readonly string InvalidEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
 	public static readonly string TakenEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
 	public static readonly string EmailSendingErrorEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";

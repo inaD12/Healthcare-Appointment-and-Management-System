@@ -8,9 +8,9 @@ using Shared.Domain.Enums;
 
 #nullable disable
 
-namespace Appointments.Infrastructure.Migrations
-{
-	[DbContext(typeof(AppointmentsDBContext))]
+namespace Appointments.Infrastructure.Migrations;
+
+[DbContext(typeof(AppointmentsDBContext))]
     [Migration("20241128162509_initial")]
     partial class initial
     {
@@ -82,4 +82,3 @@ namespace Appointments.Infrastructure.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

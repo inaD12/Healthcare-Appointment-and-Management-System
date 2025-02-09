@@ -1,9 +1,8 @@
 ﻿using Users.Domain.DTOs.Responses;
 
-namespace Users.Application.Auth.TokenManager
+namespace Users.Application.Auth.TokenManager;
+
+public interface ITokenManager
 {
-	public interface ITokenManager
-	{
-		TokenDTO CreateToken(string id);
-	}
+	TokenDTO CreateToken(string id);
 }

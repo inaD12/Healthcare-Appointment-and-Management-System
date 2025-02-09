@@ -1,7 +1,7 @@
-﻿using Appointments.Domain.DTOS;
+﻿using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
-using Appointments.Domain.Repositories;
 using Appointments.Domain.Responses;
 using Appointments.Infrastructure.DBContexts;
 using Microsoft.EntityFrameworkCore;

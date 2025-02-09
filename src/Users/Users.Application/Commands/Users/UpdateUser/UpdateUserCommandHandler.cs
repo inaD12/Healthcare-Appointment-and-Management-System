@@ -1,43 +1,42 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Results;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
-using Shared.Domain.Results;
 
-namespace Users.Application.Commands.Users.UpdateUser
+namespace Users.Application.Commands.Users.UpdateUser;
+
+public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
-	public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
+	private readonly IRepositoryManager _repositotyManager;
+
+	public UpdateUserCommandHandler(IRepositoryManager repositotyManager)
 	{
-		private readonly IRepositoryManager _repositotyManager;
+		_repositotyManager = repositotyManager;
+	}
 
-		public UpdateUserCommandHandler(IRepositoryManager repositotyManager)
+	public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+	{
+		var userResult = await _repositotyManager.User.GetByIdAsync(request.Id);
+		if (userResult.IsFailure)
+			return Result.Failure(userResult.Response);
+
+		User user = userResult.Value;
+
+		if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
 		{
-			_repositotyManager = repositotyManager;
+			var emailCheckResult = await _repositotyManager.User.GetByEmailAsync(request.NewEmail);
+			if (emailCheckResult.IsSuccess)
+				return Result.Failure(Responses.EmailTaken);
+
+			user.Email = request.NewEmail;
 		}
 
-		public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
-		{
-			var userResult = await _repositotyManager.User.GetByIdAsync(request.Id);
-			if (userResult.IsFailure)
-				return Result.Failure(userResult.Response);
+		user.FirstName = request.FirstName ?? user.FirstName;
+		user.LastName = request.LastName ?? user.LastName;
 
-			User user = userResult.Value;
+		await _repositotyManager.User.UpdateAsync(user);
 
-			if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
-			{
-				var emailCheckResult = await _repositotyManager.User.GetByEmailAsync(request.NewEmail);
-				if (emailCheckResult.IsSuccess)
-					return Result.Failure(Responses.EmailTaken);
-
-				user.Email = request.NewEmail;
-			}
-
-			user.FirstName = request.FirstName ?? user.FirstName;
-			user.LastName = request.LastName ?? user.LastName;
-
-			await _repositotyManager.User.UpdateAsync(user);
-
-			return Result.Success(Responses.UpdateSuccessful);
-		}
+		return Result.Success(Responses.UpdateSuccessful);
 	}
 }

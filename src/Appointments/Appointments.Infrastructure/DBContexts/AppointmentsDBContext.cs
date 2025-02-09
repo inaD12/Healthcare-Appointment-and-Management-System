@@ -2,34 +2,33 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace Appointments.Infrastructure.DBContexts
+namespace Appointments.Infrastructure.DBContexts;
+
+public class AppointmentsDBContext : DbContext
 {
-	public class AppointmentsDBContext : DbContext
+	public DbSet<Appointment> Appointments { get; set; }
+	public DbSet<UserData> UserData { get; set; }
+
+	public AppointmentsDBContext(DbContextOptions<AppointmentsDBContext> options) : base(options) { }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		public DbSet<Appointment> Appointments { get; set; }
-		public DbSet<UserData> UserData { get; set; }
+		base.OnModelCreating(modelBuilder);
 
-		public AppointmentsDBContext(DbContextOptions<AppointmentsDBContext> options) : base(options) { }
+		modelBuilder.AddInboxStateEntity();
+		modelBuilder.AddOutboxMessageEntity();
+		modelBuilder.AddOutboxStateEntity();
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		modelBuilder.Entity<Appointment>(entity =>
 		{
-			base.OnModelCreating(modelBuilder);
+			entity.HasIndex(a => a.Id).IsUnique();
 
-			modelBuilder.AddInboxStateEntity();
-			modelBuilder.AddOutboxMessageEntity();
-			modelBuilder.AddOutboxStateEntity();
+		});
 
-			modelBuilder.Entity<Appointment>(entity =>
-			{
-				entity.HasIndex(a => a.Id).IsUnique();
-
-			});
-
-			modelBuilder.Entity<UserData>(entity =>
-			{
-				entity.HasIndex(u => u.Id).IsUnique();
-			});
-		}
-
+		modelBuilder.Entity<UserData>(entity =>
+		{
+			entity.HasIndex(u => u.Id).IsUnique();
+		});
 	}
+
 }

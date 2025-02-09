@@ -1,6 +1,6 @@
-﻿using Shared.Domain.Events;
-using MassTransit;
+﻿using MassTransit;
 using MediatR;
+using Shared.Domain.Events;
 using Users.Application.Commands.Email.SendEmail;
 
 namespace Users.Application.Consumers;

@@ -1,8 +1,6 @@
-﻿
-namespace Appointments.Domain.UseCases
+﻿namespace Appointments.Domain.Abstractions.UseCase;
+
+public interface IUseCase
 {
-	public interface IUseCase
-	{
-		Task ExecuteAsync();
-	}
+	Task ExecuteAsync();
 }

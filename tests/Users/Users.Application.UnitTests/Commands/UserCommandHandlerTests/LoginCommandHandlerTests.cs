@@ -1,9 +1,9 @@
-﻿using Xunit;
-using Users.Domain.DTOs.Responses;
-using FluentAssertions;
-using Users.Domain.Responses;
+﻿using FluentAssertions;
 using Users.Application.Commands.Users.LoginUser;
+using Users.Domain.DTOs.Responses;
+using Users.Domain.Responses;
 using Users.Domain.Utilities;
+using Xunit;
 
 namespace Users.Application.UnitTests.Commands.UserCommandHandlerTests;
 

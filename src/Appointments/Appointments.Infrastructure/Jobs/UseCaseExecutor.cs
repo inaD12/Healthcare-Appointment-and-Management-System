@@ -1,20 +1,18 @@
-﻿using Appointments.Domain.UseCases;
+﻿using Appointments.Domain.Abstractions.UseCase;
 
-namespace Appointments.Infrastructure.Jobs
+namespace Appointments.Infrastructure.Jobs;
+
+public class UseCaseExecutor
 {
-	public class UseCaseExecutor
+	private readonly IUseCase _useCase;
+
+	public UseCaseExecutor(IUseCase useCase)
 	{
-		private readonly IUseCase _useCase;
-
-		public UseCaseExecutor(IUseCase useCase)
-		{
-			_useCase = useCase;
-		}
-
-		public async Task ExecuteAsync()
-		{
-			await _useCase.ExecuteAsync();
-		}
+		_useCase = useCase;
 	}
 
+	public async Task ExecuteAsync()
+	{
+		await _useCase.ExecuteAsync();
+	}
 }

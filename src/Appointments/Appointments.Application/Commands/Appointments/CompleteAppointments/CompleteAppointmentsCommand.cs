@@ -1,5 +1,5 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 
-namespace Appointments.Application.Appointments.Commands.CompleteAppointments;
+namespace Appointments.Application.Commands.Appointments.CompleteAppointments;
 
 public sealed record CompleteAppointmentsCommand() : ICommand;

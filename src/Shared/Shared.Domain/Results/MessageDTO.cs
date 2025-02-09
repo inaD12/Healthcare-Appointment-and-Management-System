@@ -1,4 +1,3 @@
-﻿namespace Shared.Domain.Results
-{
-	public record MessageDTO(string Message);
-}
+﻿namespace Shared.Domain.Results;
+
+public record MessageDTO(string Message);

@@ -1,19 +1,18 @@
 ﻿using Appointments.Domain.Entities;
 using Shared.Domain.Enums;
 
-namespace Appointments.Application.Factories
+namespace Appointments.Application.Factories;
+
+public class UserDataFactory : IUserDataFactory
 {
-	public class UserDataFactory : IUserDataFactory
+	public UserData Create(string userId, string email, Roles role)
 	{
-		public UserData Create(string userId, string email, Roles role)
+		return new UserData
 		{
-			return new UserData
-			{
-				Id = Guid.NewGuid().ToString(),
-				Email = email,
-				Role = role,
-				UserId = userId,
-			};
-		}
+			Id = Guid.NewGuid().ToString(),
+			Email = email,
+			Role = role,
+			UserId = userId,
+		};
 	}
 }

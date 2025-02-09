@@ -1,7 +1,6 @@
-﻿namespace Users.Application.Settings
+﻿namespace Users.Application.Settings;
+
+public class ConnectionStrings
 {
-	public class ConnectionStrings
-	{
-		public string UsersDBConnection { get; set; }
-	}
+	public string UsersDBConnection { get; set; }
 }

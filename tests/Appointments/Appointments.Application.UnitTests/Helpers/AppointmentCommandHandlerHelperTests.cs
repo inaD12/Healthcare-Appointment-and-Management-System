@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Appoints.Commands.Shared;
+﻿using Appointments.Application.Commands.Appointments.Shared;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
@@ -15,8 +15,8 @@ public class AppointmentCommandHandlerHelperTests : BaseAppointmentsUnitTest
 
 	public AppointmentCommandHandlerHelperTests()
 	{
-		_helper = new AppointmentCommandHandlerHelper(RepositoryMagager, FactoryMagager); 
-	
+		_helper = new AppointmentCommandHandlerHelper(RepositoryMagager, FactoryMagager);
+
 	}
 	[Fact]
 	public async Task CreateAppointment_ShouldReturnFailure_WhenTimeSlotNotAvailable()

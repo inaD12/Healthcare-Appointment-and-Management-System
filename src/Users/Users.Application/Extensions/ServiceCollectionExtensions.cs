@@ -13,7 +13,7 @@ using Users.Application.Helpers;
 using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers;
 using Users.Application.Managers.Interfaces;
-using Users.Infrastructure.UsersDBContexts;
+using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.Extensions;
 

@@ -1,9 +1,8 @@
 ﻿using Users.Domain.DTOs.Responses;
 
-namespace Users.Application.Factories.Interfaces
+namespace Users.Application.Factories.Interfaces;
+
+public interface ITokenDTOFactory
 {
-    public interface ITokenDTOFactory
-    {
-        TokenDTO CreateToken(string token);
-    }
+	TokenDTO CreateToken(string token);
 }

@@ -1,9 +1,8 @@
 ﻿using Users.Domain.DTOs.Responses;
 
-namespace Users.Application.Factories.Interfaces
+namespace Users.Application.Factories.Interfaces;
+
+public interface IMessageDTOFactory
 {
-    public interface IMessageDTOFactory
-    {
-        MessageDTO CreateMessage(string message);
-    }
+	MessageDTO CreateMessage(string message);
 }
