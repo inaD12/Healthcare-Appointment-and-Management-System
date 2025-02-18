@@ -146,6 +146,10 @@ public abstract class BaseUsersUnitTest
 					return Result<User>.Failure(Responses.UserNotFound);
 				});
 
+		RepositoryManager.User.DeleteByIdAsync(
+			Arg.Any<string>())
+				.Returns(Result.Success());
+
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword, out Arg.Any<string>())
 				.Returns(UsersTestUtilities.ValidPasswordHash);
 

@@ -18,9 +18,7 @@ public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand
 		var res = await _repositotyManager.User.GetByIdAsync(request.Id);
 
 		if (res.IsFailure)
-		{
 			return Result.Failure(res.Response);
-		}
 
 		var result = await _repositotyManager.User.DeleteByIdAsync(request.Id);
 

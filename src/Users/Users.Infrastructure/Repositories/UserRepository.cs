@@ -53,7 +53,10 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		var res = await GetByIdAsync(id);
 
 		if (res.IsSuccess)
+		{
 			await DeleteAsync(res.Value);
+			return Result.Success();
+		}
 
 		return Result.Failure(res.Response);
 	}
