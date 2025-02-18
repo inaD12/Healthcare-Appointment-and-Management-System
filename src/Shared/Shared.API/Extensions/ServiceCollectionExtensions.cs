@@ -5,6 +5,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Shared.API.Options;
+using Shared.API.Utilities;
 using Shared.Domain.Options;
 using System.Text;
 
@@ -80,16 +82,31 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	public static IServiceCollection ConfigureCors(this IServiceCollection services)
+	public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
 	{
+		services
+		   .AddOptions<CorsOptions>()
+		   .BindConfiguration(nameof(CorsOptions))
+		   .ValidateDataAnnotations()
+		   .ValidateOnStart();
+
+		var corsOptions = configuration
+			.GetSection(nameof(CorsOptions))
+			.Get<CorsOptions>()!;
+
 		services.AddCors(options =>
 		{
-			options.AddPolicy("AllowAllOrigins", builder =>
+			options.AddDefaultPolicy(builder =>
 			{
 				builder.AllowAnyOrigin()
 					   .AllowAnyMethod()
 					   .AllowAnyHeader();
 			});
+
+			options.AddPolicy(AppPolicies.CorsPolicy, builder =>
+			   builder.WithOrigins(corsOptions.AllowedOrigins.Split(", "))
+					  .AllowAnyHeader()
+					  .AllowAnyMethod());
 		});
 
 		return services;

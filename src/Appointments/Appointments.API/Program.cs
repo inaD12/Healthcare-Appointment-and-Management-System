@@ -5,6 +5,7 @@ using Hangfire;
 using Serilog;
 using Shared.API.Extensions;
 using Shared.API.Middlewares;
+using Shared.API.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-app.UseCors("AllowAllOrigins");
+//app.UseCors(AppPolicies.CorsPolicy); add to appsettings
 
 app.UseAuthentication();
 app.UseAuthorization();
