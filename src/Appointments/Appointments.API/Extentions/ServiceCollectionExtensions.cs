@@ -17,21 +17,7 @@ public static class ServiceCollectionExtensions
 			.AddSwagger()
 			.ConfigureCors()
 			.AddEndpointsApiExplorer()
-			.AddHttpContextAccessor()
-			.ConfigureDBs(configuration);
-
-		return services;
-	}
-
-	public static IServiceCollection ConfigureDBs(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddDbContext<AppointmentsDBContext>(options =>
-		options.UseNpgsql(configuration.GetConnectionString("AppointmentsDBConnection"), o =>
-		{
-			o.MapEnum<Roles>("roles");
-
-			o.MapEnum<AppointmentStatus>("appointmentstatus");
-		}));
+			.AddHttpContextAccessor();
 
 		return services;
 	}

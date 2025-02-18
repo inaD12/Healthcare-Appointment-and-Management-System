@@ -2,7 +2,7 @@
 
 namespace Shared.Domain.Options;
 
-public class AuthOptions
+public sealed class AuthOptions
 {
 	[Required]
 	public string SecretKey { get; set; }

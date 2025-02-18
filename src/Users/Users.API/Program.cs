@@ -13,7 +13,7 @@ builder.Host.ConfigureSerilog();
 
 builder.Services
 	.AddApplicationLayer(config)
-	.AddInfrastructureLayer()
+	.AddInfrastructureLayer(config)
 	.AddAPILayer(config);
 
 var app = builder.Build();
