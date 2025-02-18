@@ -33,8 +33,9 @@ public static class ServiceCollectionExtentions
 		{
 			busConfigurator.AddEntityFrameworkOutbox<TDbContext>(o =>
 			{
+				o.QueryDelay = TimeSpan.FromSeconds(1);
 				o.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
-				o.UsePostgres();
+				o.UsePostgres().UseBusOutbox();
 			});
 
 			busConfigurator.SetKebabCaseEndpointNameFormatter();
