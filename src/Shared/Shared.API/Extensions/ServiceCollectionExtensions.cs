@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Shared.Domain.Options;
 using System.Text;
 
 namespace Shared.API.Extensions;
@@ -13,21 +14,27 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
+		services
+			.AddOptions<AuthOptions>()
+			.BindConfiguration(nameof(AuthOptions))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		var tokenOptions = configuration
+			.GetSection(nameof(AuthOptions))
+			.Get<AuthOptions>()!;
+
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer(opts =>
 			{
 				byte[] signingKeyBytes = Encoding.UTF8
-					.GetBytes(configuration["Auth:SecretKey"]);
+					.GetBytes(tokenOptions.SecretKey);
 
 				opts.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateLifetime = true,
-					ValidateIssuerSigningKey = true,
-					ValidIssuer = configuration["Auth:Issuer"],
-					ValidAudience = configuration["Auth:Audience"],
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Auth:SecretKey"]))
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
 				};
 			});
 

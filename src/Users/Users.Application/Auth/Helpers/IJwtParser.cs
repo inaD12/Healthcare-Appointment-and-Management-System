@@ -1,4 +1,4 @@
-﻿namespace Users.Application.Helpers.Interfaces;
+﻿namespace Users.Application.Auth.Helpers;
 
 public interface IJwtParser
 {

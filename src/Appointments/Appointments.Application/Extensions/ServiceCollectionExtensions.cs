@@ -5,14 +5,11 @@ using Appointments.Application.Helpers;
 using Appointments.Application.Jobs;
 using Appointments.Application.Managers;
 using Appointments.Application.Managers.Interfaces;
-using Appointments.Infrastructure.DBContexts;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shared.Application.Extensions;
-using Shared.Application.Settings;
 
 namespace Appointments.Application.Extensions;
 

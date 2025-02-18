@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shared.Application.Settings;
+namespace Shared.Domain.Options;
 
 public sealed class MessageBrokerOptions
 {

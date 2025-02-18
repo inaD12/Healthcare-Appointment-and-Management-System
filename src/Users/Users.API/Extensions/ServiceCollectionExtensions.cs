@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.API.Extensions;
 using Shared.Application.Extensions;
-using Shared.Application.Settings;
 using Shared.Domain.Enums;
-using Users.Application.Settings;
+using Shared.Domain.Options;
 using Users.Infrastructure.DBContexts;
 
 namespace Users.Extensions;
@@ -20,7 +19,6 @@ public static class ServiceCollectionExtensions
 			.ConfigureCors()
 			.AddMediatR(currentAssembly)
 			.AddEndpointsApiExplorer()
-			.ConfigureAppSettings(configuration)
 			.AddHttpContextAccessor()
 			.ConfigureDBs(configuration)
 			.AddFluentEmail(configuration);
@@ -40,13 +38,6 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddFluentEmail(configuration["Email:SenderEmail"], configuration["Email:Sender"])
 				.AddSmtpSender(configuration["Email:Host"], configuration.GetValue<int>("Email:Port"));
-
-		return services;
-	}
-	public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.Configure<AuthValues>(
-			configuration.GetSection("Auth"));
 
 		return services;
 	}

@@ -2,13 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
+using Users.Application.Auth.Helpers;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Consumers;
 using Users.Application.Factories;
 using Users.Application.Factories.Interfaces;
-using Users.Application.Helpers;
-using Users.Application.Helpers.Interfaces;
 using Users.Application.Managers;
 using Users.Application.Managers.Interfaces;
 using Users.Infrastructure.DBContexts;
