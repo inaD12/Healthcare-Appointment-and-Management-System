@@ -18,17 +18,8 @@ public static class ServiceCollectionExtensions
 			.AddSwagger()
 			.ConfigureCors()
 			.AddEndpointsApiExplorer()
-			.ConfigureAppSettings(configuration)
 			.AddHttpContextAccessor()
 			.ConfigureDBs(configuration);
-
-		return services;
-	}
-
-	public static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.Configure<MessageBrokerSettings>(
-			configuration.GetSection("MessageBroker"));
 
 		return services;
 	}

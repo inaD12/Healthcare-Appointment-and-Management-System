@@ -32,16 +32,14 @@ public static class ServiceCollectionExtensions
 			.AddTransient<IJWTUserExtractor, JWTUserExtractor>()
 			.AddTransient<IAppointmentCommandHandlerHelper, AppointmentCommandHandlerHelper>()
 			.AddScoped<CompleteAppointmentsJob>()
-			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-			.AddSingleton(sp =>
-				sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(configuration.GetConnectionString("AppointmentsDBConnection"))
 			.AddHostedService<HangfireHostedService>()
-			.AddMassTransit<AppointmentsDBContext>(busConfigurator =>
+			.AddMessageBroker(configuration, busConfigurator =>
 			{
 				busConfigurator.AddConsumer<UserCreatedConsumer>();
 			});

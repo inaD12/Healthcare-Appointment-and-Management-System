@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 
-namespace Users.Infrastructure.MessageBroker;
+namespace Shared.Infrastructure.MessageBroker;
 
 public sealed class EventBus : IEventBus
 {

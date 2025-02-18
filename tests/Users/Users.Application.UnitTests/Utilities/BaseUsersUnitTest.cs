@@ -4,13 +4,13 @@ using NSubstitute;
 using Shared.Domain.Enums;
 using Shared.Domain.Events;
 using Shared.Domain.Results;
+using Shared.Infrastructure.MessageBroker;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
-using Users.Infrastructure.MessageBroker;
 
 public abstract class BaseUsersUnitTest
 {

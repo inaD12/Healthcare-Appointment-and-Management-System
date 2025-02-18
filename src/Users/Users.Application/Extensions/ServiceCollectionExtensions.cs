@@ -1,9 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Shared.Application.Extensions;
-using Shared.Application.Settings;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
 using Users.Application.Consumers;
@@ -34,16 +32,15 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IEmailVerificationTokenFactory, EmailVerificationTokenFactory>()
 			.AddSingleton<IFactoryManager, FactoryManager>()
 			.AddScoped<IRepositoryManager, RepositoryManager>()
-			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
-			.AddSingleton(sp =>
-				sp.GetRequiredService<IOptions<MessageBrokerSettings>>().Value);
+			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
 
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
-			.AddMassTransit<UsersDBContext>(busConfigurator =>
+			.AddMessageBroker(configuration, busConfigurator =>
 			{
 				busConfigurator.AddConsumer<UserCreatedConsumer>();
+				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
 			});
 
 

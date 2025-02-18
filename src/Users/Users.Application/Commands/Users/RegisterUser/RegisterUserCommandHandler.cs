@@ -1,10 +1,10 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.MessageBroker;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
-using Users.Infrastructure.MessageBroker;
 
 namespace Users.Application.Commands.Users.RegisterUser;
 

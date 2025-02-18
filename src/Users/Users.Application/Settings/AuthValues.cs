@@ -7,3 +7,4 @@ public class AuthValues
 	public string Issuer { get; set; }
 	public int SecondsValid { get; set; }
 }
+	

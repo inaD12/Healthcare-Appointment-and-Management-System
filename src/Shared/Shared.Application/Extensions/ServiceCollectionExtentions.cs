@@ -2,9 +2,12 @@
 using Hangfire.PostgreSql;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.PipelineBehaviors;
 using Shared.Application.Settings;
+using Shared.Infrastructure.MessageBroker;
+using System.Configuration;
 using System.Reflection;
 
 namespace Shared.Application.Extensions;
@@ -24,28 +27,30 @@ public static class ServiceCollectionExtentions
 		return serviceCollection;
 	}
 
-	public static IServiceCollection AddMassTransit<TDbContext>(
+	public static IServiceCollection AddMessageBroker(
 	   this IServiceCollection services,
-	   Action<IBusRegistrationConfigurator>? configureConsumers = null
-	) where TDbContext : DbContext
+	   IConfiguration configuration,
+	   Action<IBusRegistrationConfigurator>? configure = null
+	)
 	{
+		services
+			.AddOptions<MessageBrokerOptions>()
+			.BindConfiguration(nameof(MessageBrokerOptions))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		var settings = configuration
+			.GetSection(nameof(MessageBrokerOptions))
+			.Get<MessageBrokerOptions>()!;
+
 		services.AddMassTransit(busConfigurator =>
 		{
-			busConfigurator.AddEntityFrameworkOutbox<TDbContext>(o =>
-			{
-				o.QueryDelay = TimeSpan.FromSeconds(1);
-				o.DuplicateDetectionWindow = TimeSpan.FromSeconds(30);
-				o.UsePostgres().UseBusOutbox();
-			});
-
 			busConfigurator.SetKebabCaseEndpointNameFormatter();
 
-			configureConsumers?.Invoke(busConfigurator);
+			configure?.Invoke(busConfigurator);
 
 			busConfigurator.UsingRabbitMq((context, configurator) =>
 			{
-				var settings = context.GetRequiredService<MessageBrokerSettings>();
-
 				configurator.Host(new Uri(settings.Host), h =>
 				{
 					h.Username(settings.Username);
@@ -55,6 +60,9 @@ public static class ServiceCollectionExtentions
 				configurator.ConfigureEndpoints(context);
 			});
 		});
+
+		services
+		   .AddScoped<IEventBus, EventBus>();
 
 		return services;
 	}

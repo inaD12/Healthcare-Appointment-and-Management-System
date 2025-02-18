@@ -47,10 +47,6 @@ public static class ServiceCollectionExtensions
 	{
 		services.Configure<AuthValues>(
 			configuration.GetSection("Auth"));
-		services.Configure<ConnectionStrings>(
-			configuration.GetSection("ConnectionStrings"));
-		services.Configure<MessageBrokerSettings>(
-			configuration.GetSection("MessageBroker"));
 
 		return services;
 	}
