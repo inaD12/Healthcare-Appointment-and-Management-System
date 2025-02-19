@@ -6,10 +6,12 @@ using Appointments.Application.Jobs;
 using Appointments.Application.Managers;
 using Appointments.Application.Managers.Interfaces;
 using FluentValidation;
+using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
+using Shared.Domain.Options;
 
 namespace Appointments.Application.Extensions;
 
@@ -31,15 +33,16 @@ public static class ServiceCollectionExtensions
 			.AddScoped<CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+		var dbOptions = configuration
+			.GetSection(nameof(DatabaseOptions))
+			.Get<DatabaseOptions>()!;
+
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
-			.AddHangFire(configuration.GetConnectionString("AppointmentsDBConnection"))
+			.AddHangFire(dbOptions.ConnectionString)
 			.AddHostedService<HangfireHostedService>()
-			.AddMessageBroker(configuration, busConfigurator =>
-			{
-				busConfigurator.AddConsumer<UserCreatedConsumer>();
-			});
+			.AddMessageBroker(configuration, currentAssembly);
 
 
 		return services;

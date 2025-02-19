@@ -2,6 +2,7 @@
 using Shared.Domain.Results;
 using Shared.Infrastructure.MessageBroker;
 using Users.Application.Auth.PasswordManager;
+using Users.Application.Helpers;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
@@ -14,13 +15,15 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 	private readonly IFactoryManager _factoryManager;
 	private readonly IPasswordManager _passwordManager;
 	private readonly IEventBus _eventBus;
+	private readonly IEmailConfirmationTokenPublisher _emailConfirmationTokenPublisher;
 
-	public RegisterUserCommandHandler(IRepositoryManager repositotyManager, IFactoryManager factoryManager, IPasswordManager passwordManager, IEventBus eventBus)
+	public RegisterUserCommandHandler(IRepositoryManager repositotyManager, IFactoryManager factoryManager, IPasswordManager passwordManager, IEventBus eventBus, IEmailConfirmationTokenPublisher emailConfirmationTokenPublisher)
 	{
 		_repositotyManager = repositotyManager;
 		_factoryManager = factoryManager;
 		_passwordManager = passwordManager;
 		_eventBus = eventBus;
+		_emailConfirmationTokenPublisher = emailConfirmationTokenPublisher;
 	}
 
 	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -50,6 +53,8 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 				user.Email,
 				user.Role
 			));
+
+		await _emailConfirmationTokenPublisher.PublishEmailConfirmationTokenAsync(user.Email, user.Id);
 
 		await _repositotyManager.User.SaveChangesAsync();
 

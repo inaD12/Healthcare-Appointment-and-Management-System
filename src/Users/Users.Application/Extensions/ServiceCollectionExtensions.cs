@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
 using Users.Application.Auth.Helpers;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
-using Users.Application.Consumers;
 using Users.Application.Factories;
 using Users.Application.Factories.Interfaces;
+using Users.Application.Helpers;
 using Users.Application.Managers;
 using Users.Application.Managers.Interfaces;
 using Users.Infrastructure.DBContexts;
@@ -31,14 +32,16 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IEmailVerificationTokenFactory, EmailVerificationTokenFactory>()
 			.AddSingleton<IFactoryManager, FactoryManager>()
 			.AddScoped<IRepositoryManager, RepositoryManager>()
-			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
+			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
+			.AddTransient<IUserConfirmEmailEventFactory, UserConfirmEmailEventFactory>()
+			.AddTransient<IEmailConfirmationTokenPublisher, EmailConfirmationTokenPublisher>()
+			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
-			.AddMessageBroker(configuration, busConfigurator =>
+			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
 			{
-				busConfigurator.AddConsumer<UserCreatedConsumer>();
 				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
 			});
 

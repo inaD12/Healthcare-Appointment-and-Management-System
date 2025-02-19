@@ -1,10 +1,6 @@
-﻿using Appointments.Domain.Enums;
-using Appointments.Infrastructure.DBContexts;
-using Microsoft.EntityFrameworkCore;
-using Shared.API.Extensions;
-using Shared.Domain.Enums;
+﻿using Shared.API.Extensions;
 
-namespace Appointments.API.Extentions;
+namespace Emails.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -13,11 +9,9 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddAuthentication(configuration)
 			.AddSwagger()
 			.ConfigureCors(configuration)
-			.AddEndpointsApiExplorer()
-			.AddHttpContextAccessor();
+			.AddEndpointsApiExplorer();
 
 		return services;
 	}

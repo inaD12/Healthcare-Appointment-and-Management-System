@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Users.Application.Factories;
 using Users.Application.Factories.Interfaces;
 using Users.Application.Managers.Interfaces;
 
@@ -19,4 +20,5 @@ internal class FactoryManager : IFactoryManager
 	public ITokenDTOFactory TokenDTOFactory => _serviceProvider.GetRequiredService<ITokenDTOFactory>();
 	public IEmailVerificationLinkFactory EmailLinkFactory => _serviceProvider.GetRequiredService<IEmailVerificationLinkFactory>();
 	public IUserCreatedEventFactory UserCreatedEventFactory => _serviceProvider.GetRequiredService<IUserCreatedEventFactory>();
+	public IUserConfirmEmailEventFactory UserConfirmEmailEventFactory => _serviceProvider.GetRequiredService<IUserConfirmEmailEventFactory>();
 }

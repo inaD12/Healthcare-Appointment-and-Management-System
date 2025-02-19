@@ -6,7 +6,8 @@
       "serviceActions": {
         "users.api": "StartDebugging",
         "gateway.api": "StartDebugging",
-        "appointments.api": "StartDebugging"
+        "appointments.api": "StartDebugging",
+        "emails.api": "StartDebugging"
       }
     }
   }

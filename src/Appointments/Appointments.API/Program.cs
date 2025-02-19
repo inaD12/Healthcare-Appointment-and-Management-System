@@ -30,7 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 
-//app.UseCors(AppPolicies.CorsPolicy); add to appsettings
+app.UseCors(AppPolicies.CorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();

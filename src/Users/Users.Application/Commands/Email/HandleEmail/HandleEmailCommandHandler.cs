@@ -27,6 +27,6 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 
 		await _repositoryManager.User.VerifyEmailAsync(tokenResult.Value.User);
 
-		return Result.Success(Response.Ok);
+		return Result.Success();
 	}
 }

@@ -1,12 +1,11 @@
-﻿using FluentEmail.Core;
-using FluentEmail.Core.Models;
-using NSubstitute;
+﻿using NSubstitute;
 using Shared.Domain.Enums;
 using Shared.Domain.Events;
 using Shared.Domain.Results;
 using Shared.Infrastructure.MessageBroker;
 using Users.Application.Auth.PasswordManager;
 using Users.Application.Auth.TokenManager;
+using Users.Application.Helpers;
 using Users.Application.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
@@ -18,8 +17,8 @@ public abstract class BaseUsersUnitTest
 	protected IFactoryManager FactoryManager { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenManager TokenManager { get; }
-	protected IFluentEmail FluentEmail { get; }
 	protected IEventBus EventBus { get; }
+	protected IEmailConfirmationTokenPublisher EmailConfirmationTokenPublisher { get; }
 
 	protected readonly List<User> Doctors;
 
@@ -29,8 +28,8 @@ public abstract class BaseUsersUnitTest
 		FactoryManager = Substitute.For<IFactoryManager>();
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenManager = Substitute.For<ITokenManager>();
-		FluentEmail = Substitute.For<IFluentEmail>();
 		EventBus = Substitute.For<IEventBus>();
+		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
 
 		var user = new User(
 			UsersTestUtilities.ValidId,
@@ -181,17 +180,17 @@ public abstract class BaseUsersUnitTest
 			.Returns(UsersTestUtilities.Link);
 
 		string recipientEmail = "";
-		FluentEmail.To(Arg.Do<string>(email => recipientEmail = email)).Returns(FluentEmail);
-		FluentEmail.Subject(Arg.Any<string>()).Returns(FluentEmail);
-		FluentEmail.Body(Arg.Any<string>(), true).Returns(FluentEmail);
-		FluentEmail.SendAsync()
-			  .Returns(callInfo =>
-			  {
-				  if (recipientEmail == UsersTestUtilities.EmailSendingErrorEmail)
-					  return Task.FromResult(new SendResponse { ErrorMessages = new List<string> { "Email sending failed" } });
+		//FluentEmail.To(Arg.Do<string>(email => recipientEmail = email)).Returns(FluentEmail);
+		//FluentEmail.Subject(Arg.Any<string>()).Returns(FluentEmail);
+		//FluentEmail.Body(Arg.Any<string>(), true).Returns(FluentEmail);
+		//FluentEmail.SendAsync()
+		//	  .Returns(callInfo =>
+		//	  {
+		//		  if (recipientEmail == UsersTestUtilities.EmailSendingErrorEmail)
+		//			  return Task.FromResult(new SendResponse { ErrorMessages = new List<string> { "Email sending failed" } });
 
-				  return Task.FromResult(new SendResponse());
-			  });
+		//		  return Task.FromResult(new SendResponse());
+		//	  });
 
 		RepositoryManager.User.GetAllDoctorsAsync()
 		   .Returns(Result<IEnumerable<User>>.Success(Doctors));

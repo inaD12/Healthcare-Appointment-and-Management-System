@@ -28,6 +28,7 @@ public static class ServiceCollectionExtentions
 	public static IServiceCollection AddMessageBroker(
 	   this IServiceCollection services,
 	   IConfiguration configuration,
+		Assembly assembly,
 	   Action<IBusRegistrationConfigurator>? configure = null
 	)
 	{
@@ -44,6 +45,8 @@ public static class ServiceCollectionExtentions
 		services.AddMassTransit(busConfigurator =>
 		{
 			busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+			busConfigurator.AddConsumers(assembly);
 
 			configure?.Invoke(busConfigurator);
 

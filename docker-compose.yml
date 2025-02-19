@@ -38,6 +38,17 @@ services:
     networks:
       - my_network
 
+  emails.api:
+    image: ${DOCKER_REGISTRY-}emailsapi
+    build:
+      context: .
+      dockerfile: src/Emails/Emails.API/Dockerfile
+    ports:
+      - "5300:5300"
+      - "5301:5301"
+    networks:
+      - my_network
+
   appointments.database:
     image: postgres:latest
     container_name: appointments.database
@@ -97,3 +108,4 @@ services:
 networks:
   my_network:
     driver: bridge
+

@@ -17,7 +17,8 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			RepositoryManager,
 			FactoryManager,
 			PasswordManager,
-			EventBus
+			EventBus,
+			EmailConfirmationTokenPublisher
 			);
 	}
 

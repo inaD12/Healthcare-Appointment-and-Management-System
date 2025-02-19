@@ -10,6 +10,5 @@ public interface IFactoryManager
 	IUserFactory UserFactory { get; }
 	IEmailVerificationLinkFactory EmailLinkFactory { get; }
 	IUserCreatedEventFactory UserCreatedEventFactory { get; }
-
-
+	IUserConfirmEmailEventFactory UserConfirmEmailEventFactory { get; }
 }
