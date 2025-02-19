@@ -4,6 +4,7 @@ using Appointments.Infrastructure.Extensions;
 using Hangfire;
 using Serilog;
 using Shared.API.Extensions;
+using Shared.API.Helpers;
 using Shared.API.Middlewares;
 using Shared.API.Utilities;
 

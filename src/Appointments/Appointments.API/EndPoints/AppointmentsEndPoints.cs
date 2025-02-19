@@ -4,7 +4,7 @@ using Appointments.Application.Commands.Appointments.RescheduleAppointment;
 using Appointments.Domain.DTOS.Request;
 using MediatR;
 using Shared.API.Abstractions;
-using Shared.API.Extensions;
+using Shared.API.Helpers;
 using Shared.Domain.Results;
 
 namespace Appointments.API.EndPoints;

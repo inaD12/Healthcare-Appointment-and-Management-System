@@ -2,7 +2,7 @@
 using Shared.Domain.Results;
 using System.Net;
 
-namespace Shared.API.Extensions;
+namespace Shared.API.Helpers;
 
 public static class ControllerResponse
 {

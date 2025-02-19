@@ -1,5 +1,6 @@
 using Serilog;
 using Shared.API.Extensions;
+using Shared.API.Helpers;
 using Shared.API.Middlewares;
 using Shared.API.Utilities;
 using Users.Application.Extensions;

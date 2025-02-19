@@ -1,6 +1,7 @@
-﻿using Shared.API.Abstractions;
+﻿using Microsoft.AspNetCore.Routing;
+using Shared.API.Abstractions;
 
-namespace Users.Extensions;
+namespace Shared.API.Helpers;
 
 public static class EndpointMapper
 {

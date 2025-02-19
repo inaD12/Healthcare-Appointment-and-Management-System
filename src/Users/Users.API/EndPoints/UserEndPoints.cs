@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Shared.API.Abstractions;
-using Shared.API.Extensions;
+using Shared.API.Helpers;
 using Users.Application.Auth.Helpers;
 using Users.Application.Commands.Email.HandleEmail;
 using Users.Application.Commands.Users.DeleteUser;
