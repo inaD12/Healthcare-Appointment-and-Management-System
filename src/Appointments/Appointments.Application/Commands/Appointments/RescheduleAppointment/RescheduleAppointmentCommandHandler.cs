@@ -13,13 +13,13 @@ namespace Appointments.Application.Commands.Appointments.RescheduleAppointment;
 public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
-	private readonly IJWTUserExtractor _jwtUserExtractor;
+	private readonly IJwtParser _jwtParser;
 	private readonly IAppointmentCommandHandlerHelper _helper;
 
-	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJWTUserExtractor jwtUserExtractor, IAppointmentCommandHandlerHelper helper)
+	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IAppointmentCommandHandlerHelper helper)
 	{
 		_repositoryManager = repositoryManager;
-		_jwtUserExtractor = jwtUserExtractor;
+		_jwtParser = jwtParser;
 		_helper = helper;
 	}
 
@@ -30,9 +30,9 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		if (detailedAppointmentRes.IsFailure)
 			return Result.Failure(detailedAppointmentRes.Response);
 
-		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value;
+		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value!;
 
-		var userIdRes = await _jwtUserExtractor.GetUserIdFromTokenAsync();
+		var userIdRes = _jwtParser.GetIdFromToken();
 
 		if (userIdRes.IsFailure)
 			return Result.Failure(userIdRes.Response);

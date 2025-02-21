@@ -15,7 +15,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 	public CancelAppointmentCommandHandlerTests()
 	{
-		_handler = new CancelAppointmentCommandHandler(RepositoryMagager, JWTUserExtractor);
+		_handler = new CancelAppointmentCommandHandler(RepositoryMagager, JWTParser);
 	}
 
 	[Fact]
@@ -31,7 +31,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeTrue();
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(AppointmentsTestUtilities.ValidId);
-		await JWTUserExtractor.Received(1).GetUserIdFromTokenAsync();
+		JWTParser.Received(1).GetIdFromToken();
 		await RepositoryMagager.Appointment.Received(1).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), Domain.Enums.AppointmentStatus.Cancelled);
 	}
 
@@ -49,7 +49,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(Responses.CannotCancelOthersAppointment);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
-		await JWTUserExtractor.Received(1).GetUserIdFromTokenAsync();
+		JWTParser.Received(1).GetIdFromToken();
 		await RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), Domain.Enums.AppointmentStatus.Cancelled);
 	}
 
@@ -67,7 +67,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(Responses.AppointmentNotFound);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
-		await JWTUserExtractor.Received(0).GetUserIdFromTokenAsync();
+		JWTParser.Received(0).GetIdFromToken();
 		await RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), Domain.Enums.AppointmentStatus.Cancelled);
 	}
 
@@ -85,7 +85,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(Responses.InternalError);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
-		await JWTUserExtractor.Received(1).GetUserIdFromTokenAsync();
+		JWTParser.Received(1).GetIdFromToken();
 		await RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Any<Appointment>(), Domain.Enums.AppointmentStatus.Cancelled);
 	}
 
@@ -103,7 +103,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(Responses.InternalError);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
-		await JWTUserExtractor.Received(1).GetUserIdFromTokenAsync();
+		JWTParser.Received(1).GetIdFromToken();
 		await RepositoryMagager.Appointment.Received(1).ChangeStatusAsync(Arg.Any<Appointment>(), Domain.Enums.AppointmentStatus.Cancelled);
 	}
 }

@@ -16,7 +16,7 @@ public abstract class BaseAppointmentsUnitTest
 {
 	protected IRepositoryManager RepositoryMagager { get; }
 	protected IFactoryManager FactoryMagager { get; }
-	protected IJWTUserExtractor JWTUserExtractor { get; }
+	protected IJwtParser JWTParser { get; }
 	protected IAppointmentCommandHandlerHelper AppointmentCommandHandlerHelper { get; }
 
 	protected readonly List<Appointment> SceduledAppointmentList;
@@ -25,7 +25,7 @@ public abstract class BaseAppointmentsUnitTest
 	{
 		RepositoryMagager = Substitute.For<IRepositoryManager>();
 		FactoryMagager = Substitute.For<IFactoryManager>();
-		JWTUserExtractor = Substitute.For<IJWTUserExtractor>();
+		JWTParser = Substitute.For<IJwtParser>();
 		AppointmentCommandHandlerHelper = Substitute.For<IAppointmentCommandHandlerHelper>();
 
 		var appointment = new Appointment(
@@ -71,7 +71,7 @@ public abstract class BaseAppointmentsUnitTest
 					return (Result<Appointment>.Success(appointment));
 				});
 
-		JWTUserExtractor.GetUserIdFromTokenAsync()
+		JWTParser.GetIdFromToken()
 			.Returns(callInfo =>
 			{
 				if (id == AppointmentsTestUtilities.WrongIdFromTokenId)

@@ -1,12 +1,10 @@
 ﻿using Appointments.Application.Commands.Appointments.Shared;
-using Appointments.Application.Consumers;
 using Appointments.Application.Factories;
 using Appointments.Application.Helpers;
 using Appointments.Application.Jobs;
 using Appointments.Application.Managers;
 using Appointments.Application.Managers.Interfaces;
 using FluentValidation;
-using Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +26,6 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IUserDataFactory, UserDataFactory>()
 			.AddSingleton<ICreateAppointmentDTOFactory, CreateAppointmentDTOFactory>()
 			.AddTransient<IJwtParser, JwtParser>()
-			.AddTransient<IJWTUserExtractor, JWTUserExtractor>()
 			.AddTransient<IAppointmentCommandHandlerHelper, AppointmentCommandHandlerHelper>()
 			.AddScoped<CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

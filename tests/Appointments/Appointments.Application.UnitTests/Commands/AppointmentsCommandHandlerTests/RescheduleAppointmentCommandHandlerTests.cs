@@ -16,7 +16,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
 			RepositoryMagager,
-			JWTUserExtractor,
+			JWTParser,
 			AppointmentCommandHandlerHelper);
 	}
 
@@ -40,7 +40,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.AppointmentNotFound);
 
-		await JWTUserExtractor.DidNotReceiveWithAnyArgs().GetUserIdFromTokenAsync();
+		JWTParser.DidNotReceiveWithAnyArgs().GetIdFromToken();
 		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
 	}
 

@@ -11,11 +11,11 @@ namespace Appointments.Application.Commands.Appointments.CancelAppointment;
 public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
-	private readonly IJWTUserExtractor _jwtUserExtractor;
-	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJWTUserExtractor jwtUserExtractor)
+	private readonly IJwtParser _jwtParser;
+	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser)
 	{
 		_repositoryManager = repositoryManager;
-		_jwtUserExtractor = jwtUserExtractor;
+		_jwtParser = jwtParser;
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
@@ -24,9 +24,9 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 		if (appointmentRes.IsFailure)
 			return Result.Failure(appointmentRes.Response);
 
-		Appointment appointment = appointmentRes.Value;
+		Appointment appointment = appointmentRes.Value!;
 
-		var userIdRes = await _jwtUserExtractor.GetUserIdFromTokenAsync();
+		var userIdRes = _jwtParser.GetIdFromToken();
 		if (userIdRes.IsFailure)
 			return Result.Failure(userIdRes.Response);
 
