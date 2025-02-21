@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Users.Application.Factories;
 using Users.Application.Features.Email.Factories.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Application.Features.Users.Factories.Abstractions;

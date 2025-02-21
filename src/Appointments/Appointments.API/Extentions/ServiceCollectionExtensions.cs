@@ -1,8 +1,4 @@
-﻿using Appointments.Domain.Enums;
-using Appointments.Infrastructure.DBContexts;
-using Microsoft.EntityFrameworkCore;
-using Shared.API.Extensions;
-using Shared.Domain.Enums;
+﻿using Shared.API.Extensions;
 
 namespace Appointments.API.Extentions;
 

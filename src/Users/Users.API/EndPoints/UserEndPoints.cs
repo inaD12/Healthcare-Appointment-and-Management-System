@@ -3,13 +3,12 @@ using MediatR;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Helpers.Abstractions;
-using Users.Application.Commands.Email.HandleEmail;
-using Users.Application.Commands.Users.DeleteUser;
-using Users.Application.Commands.Users.LoginUser;
-using Users.Application.Commands.Users.RegisterUser;
-using Users.Application.Commands.Users.UpdateUser;
-using Users.Application.Features.Auth.Helpers;
-using Users.Application.Queries.Users.GetAllDoctors;
+using Users.Application.Features.Email.Commands.HandleEmail;
+using Users.Application.Features.Users.Commands.DeleteUser;
+using Users.Application.Features.Users.Commands.RegisterUser;
+using Users.Application.Features.Users.LoginUser;
+using Users.Application.Features.Users.Queries.GetAllDoctors;
+using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;
 
@@ -105,7 +104,11 @@ internal class UserEndPoints : IEndPoints
 		IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		string id = jwtParser.GetIdFromToken();
+		var parserRes = jwtParser.GetIdFromToken();
+		if (parserRes.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(parserRes);
+
+		string id = parserRes.Value!;
 
 		var command = new UpdateUserCommand(
 			id,
@@ -134,7 +137,11 @@ internal class UserEndPoints : IEndPoints
 		IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		string id = jwtParser.GetIdFromToken();
+		var parserRes = jwtParser.GetIdFromToken();
+		if (parserRes.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(parserRes);
+
+		string id = parserRes.Value!;
 
 		var command = new DeleteUserCommand(id);
 

@@ -4,9 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
 using Users.Application.Features.Auth;
-using Users.Application.Features.Auth.Helpers;
-using Users.Application.Features.Auth.PasswordManager;
-using Users.Application.Features.Auth.TokenManager;
+using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Email.Factories;
 using Users.Application.Features.Email.Factories.Abstractions;
 using Users.Application.Features.Email.Helpers;
@@ -26,7 +24,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddTransient<IJwtParser, JwtParser>()
 			.AddTransient<IPasswordManager, PasswordManager>()
 			.AddTransient<ITokenManager, TokenManager>()
 			.AddSingleton<ITokenDTOFactory, TokenDTOFactory>()

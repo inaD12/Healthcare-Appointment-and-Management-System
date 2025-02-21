@@ -1,8 +1,8 @@
-﻿using Appointments.Application.Features.Helpers.Abstractions;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
+﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
+using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 

@@ -1,7 +1,7 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.MessageBroker;
-using Users.Application.Features.Auth.PasswordManager;
+using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;

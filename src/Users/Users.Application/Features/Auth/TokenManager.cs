@@ -2,7 +2,7 @@
 using JWT.Builder;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Options;
-using Users.Application.Features.Auth.TokenManager;
+using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Users.Factories.Abstractions;
 using Users.Domain.DTOs.Responses;
 

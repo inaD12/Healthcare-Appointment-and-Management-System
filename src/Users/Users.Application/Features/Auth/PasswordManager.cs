@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography;
-using Users.Application.Features.Auth.PasswordManager;
+using Users.Application.Features.Auth.Abstractions;
 
 namespace Users.Application.Features.Auth;
 

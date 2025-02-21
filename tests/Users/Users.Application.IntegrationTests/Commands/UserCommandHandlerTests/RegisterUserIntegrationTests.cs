@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Shared.Domain.Enums;
-using Users.Application.Commands.Users.RegisterUser;
+using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.IntegrationTests.Utilities;
 using Users.Domain.Entities;
 using Users.Domain.Responses;

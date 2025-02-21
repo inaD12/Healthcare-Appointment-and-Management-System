@@ -1,7 +1,6 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Users.Application.Features.Auth.PasswordManager;
-using Users.Application.Features.Auth.TokenManager;
+using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Entities;

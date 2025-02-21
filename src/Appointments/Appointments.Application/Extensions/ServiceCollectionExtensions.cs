@@ -2,7 +2,6 @@
 using Appointments.Application.Features.Appointments.Factories.Abstractions;
 using Appointments.Application.Features.Commands.Appointments.Shared;
 using Appointments.Application.Features.Helpers;
-using Appointments.Application.Features.Helpers.Abstractions;
 using Appointments.Application.Features.Jobs;
 using Appointments.Application.Features.Jobs.Managers;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
