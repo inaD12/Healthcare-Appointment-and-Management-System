@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Shared.Domain.Results;
-using Users.Application.Queries.Users.GetAllDoctors;
+using Users.Application.Features.Users.Queries.GetAllDoctors;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Xunit;

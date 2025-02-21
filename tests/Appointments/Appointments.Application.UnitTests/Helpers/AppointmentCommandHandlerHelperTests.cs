@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Commands.Appointments.Shared;
+﻿using Appointments.Application.Features.Commands.Appointments.Shared;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;

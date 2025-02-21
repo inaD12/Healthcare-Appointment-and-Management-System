@@ -1,6 +1,6 @@
-﻿using Appointments.Application.Commands.Appointments.Shared;
-using Appointments.Application.Helpers;
-using Appointments.Application.Managers.Interfaces;
+﻿using Appointments.Application.Features.Commands.Appointments.Shared;
+using Appointments.Application.Features.Helpers.Abstractions;
+using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;

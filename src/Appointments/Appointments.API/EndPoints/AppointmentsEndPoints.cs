@@ -1,6 +1,6 @@
-﻿using Appointments.Application.Commands.Appointments.CancelAppointment;
-using Appointments.Application.Commands.Appointments.CreateAppointment;
-using Appointments.Application.Commands.Appointments.RescheduleAppointment;
+﻿using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
+using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Domain.DTOS.Request;
 using MediatR;
 using Shared.API.Abstractions;

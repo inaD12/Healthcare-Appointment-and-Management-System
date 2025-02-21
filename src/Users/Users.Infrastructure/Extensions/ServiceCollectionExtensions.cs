@@ -5,8 +5,8 @@ using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 using Users.Domain.Abstractions.Repositories;
 using Users.Infrastructure.DBContexts;
-using Users.Infrastructure.Helpers;
-using Users.Infrastructure.Repositories;
+using Users.Infrastructure.Features.Helpers;
+using Users.Infrastructure.Features.Repositories;
 
 namespace Users.Infrastructure.Extensions;
 

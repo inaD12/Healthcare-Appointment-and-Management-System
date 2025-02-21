@@ -2,12 +2,13 @@
 using MediatR;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
-using Users.Application.Auth.Helpers;
+using Shared.Application.Helpers.Abstractions;
 using Users.Application.Commands.Email.HandleEmail;
 using Users.Application.Commands.Users.DeleteUser;
 using Users.Application.Commands.Users.LoginUser;
 using Users.Application.Commands.Users.RegisterUser;
 using Users.Application.Commands.Users.UpdateUser;
+using Users.Application.Features.Auth.Helpers;
 using Users.Application.Queries.Users.GetAllDoctors;
 using Users.Domain.DTOs.Requests;
 using Users.Domain.DTOs.Responses;

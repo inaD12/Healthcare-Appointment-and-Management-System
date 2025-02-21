@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Shared.API.Options;
 using Shared.API.Utilities;
+using Shared.Application.Helpers;
+using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Options;
 using System.Text;
 
@@ -40,7 +42,10 @@ public static class ServiceCollectionExtensions
 				};
 			});
 
-		services.AddAuthorization();
+		services
+			.AddAuthorization()
+			.AddTransient<IJwtParser, JwtParser>();
+
 
 		return services;
 	}

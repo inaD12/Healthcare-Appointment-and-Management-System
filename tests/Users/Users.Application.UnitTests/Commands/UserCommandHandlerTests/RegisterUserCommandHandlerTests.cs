@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Shared.Domain.Enums;
-using Users.Application.Commands.Users.RegisterUser;
+using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;

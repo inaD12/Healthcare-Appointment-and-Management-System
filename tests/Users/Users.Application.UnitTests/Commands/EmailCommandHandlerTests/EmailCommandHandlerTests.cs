@@ -2,8 +2,8 @@
 using NSubstitute;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Users.Application.Commands.Email.HandleEmail;
-using Users.Application.Managers.Interfaces;
+using Users.Application.Features.Email.Commands.HandleEmail;
+using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Xunit;

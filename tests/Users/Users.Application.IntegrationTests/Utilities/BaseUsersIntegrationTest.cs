@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Enums;
-using Users.Application.Auth.PasswordManager;
-using Users.Application.Managers.Interfaces;
+using Users.Application.Features.Auth.PasswordManager;
+using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Utilities;
 using Users.Infrastructure.DBContexts;

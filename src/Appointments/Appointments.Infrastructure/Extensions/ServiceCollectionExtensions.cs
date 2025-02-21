@@ -1,8 +1,8 @@
 ﻿using Appointments.Domain.Abstractions.Repository;
 using Appointments.Domain.Enums;
-using Appointments.Infrastructure.DBContexts;
-using Appointments.Infrastructure.Helpers;
-using Appointments.Infrastructure.Repositories;
+using Appointments.Infrastructure.Features.DBContexts;
+using Appointments.Infrastructure.Features.Helpers;
+using Appointments.Infrastructure.Features.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;

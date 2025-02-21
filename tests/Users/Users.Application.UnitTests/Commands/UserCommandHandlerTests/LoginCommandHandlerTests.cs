@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Users.Application.Commands.Users.LoginUser;
+using Users.Application.Features.Users.LoginUser;
 using Users.Domain.DTOs.Responses;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;

@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+    <Compile Remove="DTOS\Response\**" />
+    <EmbeddedResource Remove="DTOS\Response\**" />
+    <None Remove="DTOS\Response\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOS\Response\" />
+    <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Users.Application.Auth.PasswordManager;
+using Users.Application.Features.Auth;
 using Users.Domain.Utilities;
 using Xunit;
 

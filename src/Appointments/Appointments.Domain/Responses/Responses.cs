@@ -18,7 +18,6 @@ public static class Responses
 	public static Response TimeSlotNotAvailable => Response.Create(ErrorMessages.TimeSlotNotAvailable, HttpStatusCode.Conflict);
 	public static Response InternalError => Response.Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 	public static Response UserDataNotFound => Response.Create(ErrorMessages.UserDataNotFound, HttpStatusCode.NotFound);
-	public static Response JWTNotFound => Response.Create(ErrorMessages.JWTokenNotFound, HttpStatusCode.NotFound);
 	public static Response CannotCancelOthersAppointment => Response.Create(ErrorMessages.CannotCancelOthersAppointment, HttpStatusCode.Unauthorized);
 	public static Response CannotRescheduleOthersAppointment => Response.Create(ErrorMessages.CannotRescheduleOthersAppointment, HttpStatusCode.Unauthorized);
 	public static Response UserIsNotADoctor => Response.Create(ErrorMessages.UserIsNotADoctor, HttpStatusCode.Conflict);

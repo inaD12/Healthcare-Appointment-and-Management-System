@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
-using Users.Application.Commands.Users.DeleteUser;
+using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;

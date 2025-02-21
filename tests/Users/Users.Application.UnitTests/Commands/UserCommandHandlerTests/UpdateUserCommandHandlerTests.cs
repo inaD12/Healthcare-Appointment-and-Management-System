@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
-using Users.Application.Commands.Users.UpdateUser;
+using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
