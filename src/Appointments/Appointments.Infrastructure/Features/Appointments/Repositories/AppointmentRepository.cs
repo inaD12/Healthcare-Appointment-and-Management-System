@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
 
-namespace Appointments.Infrastructure.Features.Repositories;
+namespace Appointments.Infrastructure.Features.Appointments.Repositories;
 
 internal class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
 {

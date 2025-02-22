@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
 
-namespace Appointments.Infrastructure.Features.Repositories;
+namespace Appointments.Infrastructure.Features.UsersData.Repositories;
 
 internal class UserDataRepository : GenericRepository<UserData>, IUserDataRepository
 {

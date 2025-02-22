@@ -3,6 +3,8 @@ using Hangfire.PostgreSql;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Abstractions;
+using Shared.Application.Helpers;
 using Shared.Application.PipelineBehaviors;
 using Shared.Domain.Options;
 using Shared.Infrastructure.MessageBroker;
@@ -66,6 +68,15 @@ public static class ServiceCollectionExtentions
 		   .AddScoped<IEventBus, EventBus>();
 
 		return services;
+	}
+
+	public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
+	{
+		serviceCollection.AddAutoMapper(assembly);
+
+		serviceCollection.AddScoped<IHAMSMapper, HAMSMapper>();
+
+		return serviceCollection;
 	}
 
 	public static IServiceCollection AddHangFire(this IServiceCollection services, string connectionString)

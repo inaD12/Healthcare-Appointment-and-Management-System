@@ -41,6 +41,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
+			.AddMapper(currentAssembly)
 			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
 			{
 				busConfigurator.AddTransactionalOutbox<UsersDBContext>();

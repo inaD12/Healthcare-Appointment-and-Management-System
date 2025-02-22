@@ -39,7 +39,8 @@ public static class ServiceCollectionExtensions
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(dbOptions.ConnectionString)
 			.AddHostedService<HangfireHostedService>()
-			.AddMessageBroker(configuration, currentAssembly);
+			.AddMessageBroker(configuration, currentAssembly)
+			.AddMapper(currentAssembly);
 
 
 		return services;
