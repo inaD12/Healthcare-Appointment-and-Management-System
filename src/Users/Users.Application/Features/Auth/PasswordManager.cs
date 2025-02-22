@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Users.Application.Features.Auth.Abstractions;
+using Users.Application.Features.Auth.Models;
 
 namespace Users.Application.Features.Auth;
 
@@ -9,10 +10,10 @@ public class PasswordManager : IPasswordManager
 	private const int _iterations = 1000;
 	private HashAlgorithmName _hashAlgorithm = HashAlgorithmName.SHA512;
 
-	public string HashPassword(string password, out string salt)
+	public PasswordHashResult HashPassword(string password)
 	{
 		byte[] saltByteArray = RandomNumberGenerator.GetBytes(_keySize);
-		salt = Convert.ToHexString(saltByteArray);
+		string salt = Convert.ToHexString(saltByteArray);
 
 		byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
 			password,
@@ -21,7 +22,9 @@ public class PasswordManager : IPasswordManager
 			_hashAlgorithm,
 			_keySize);
 
-		return Convert.ToHexString(hash);
+		string stringHash = Convert.ToHexString(hash);
+
+		return new PasswordHashResult(stringHash, salt);
 	}
 
 	public bool VerifyPassword(string password, string hash, string salt)

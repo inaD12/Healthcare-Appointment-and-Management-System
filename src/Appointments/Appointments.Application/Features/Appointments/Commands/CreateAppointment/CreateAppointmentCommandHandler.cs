@@ -22,7 +22,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 
 		if (doctorDataRes.IsFailure)
 			return Result.Failure(Responses.DoctorNotFound);
-		if (doctorDataRes.Value.Role != Roles.Doctor)
+		if (doctorDataRes.Value!.Role != Roles.Doctor)
 			return Result.Failure(Responses.UserIsNotADoctor);
 
 		var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.PatientEmail);
@@ -31,7 +31,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 			return Result.Failure(Responses.PatientNotFound);
 
 		var doctorData = doctorDataRes.Value;
-		var patientData = patientDataRes.Value;
+		var patientData = patientDataRes.Value!;
 
 		var helperResult = await _helper.CreateAppointment(
 			doctorData.UserId,

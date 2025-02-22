@@ -4,6 +4,7 @@ using Shared.Domain.Events;
 using Shared.Domain.Results;
 using Shared.Infrastructure.MessageBroker;
 using Users.Application.Features.Auth.Abstractions;
+using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
@@ -148,8 +149,8 @@ public abstract class BaseUsersUnitTest
 			Arg.Any<string>())
 				.Returns(Result.Success());
 
-		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword, out Arg.Any<string>())
-				.Returns(UsersTestUtilities.ValidPasswordHash);
+		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword)
+				.Returns(new PasswordHashResult(UsersTestUtilities.ValidPasswordHash, UsersTestUtilities.ValidSalt));
 
 		PasswordManager.VerifyPassword(
 			Arg.Any<string>(),

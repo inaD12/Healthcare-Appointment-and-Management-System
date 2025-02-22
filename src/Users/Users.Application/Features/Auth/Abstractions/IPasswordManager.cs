@@ -1,7 +1,9 @@
-﻿namespace Users.Application.Features.Auth.Abstractions;
+﻿using Users.Application.Features.Auth.Models;
+
+namespace Users.Application.Features.Auth.Abstractions;
 
 public interface IPasswordManager
 {
-	string HashPassword(string password, out string salt);
+	PasswordHashResult HashPassword(string password);
 	bool VerifyPassword(string password, string hash, string salt);
 }

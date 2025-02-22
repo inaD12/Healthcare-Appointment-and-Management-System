@@ -2,6 +2,7 @@
 using Shared.Domain.Results;
 using Shared.Infrastructure.MessageBroker;
 using Users.Application.Features.Auth.Abstractions;
+using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
@@ -33,10 +34,12 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		if (res.IsSuccess)
 			return Result.Failure(Responses.EmailTaken);
 
+		PasswordHashResult passwordHashResult = _passwordManager.HashPassword(request.Password);
+
 		User user = _factoryManager.UserFactory.CreateUser(
 			request.Email,
-			_passwordManager.HashPassword(request.Password, out string salt),
-			salt,
+			passwordHashResult.PasswordHash,
+			passwordHashResult.Salt,
 			request.FirstName,
 			request.LastName,
 			request.DateOfBirth.ToUniversalTime(),
