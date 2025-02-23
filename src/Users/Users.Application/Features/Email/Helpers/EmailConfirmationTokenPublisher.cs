@@ -1,5 +1,7 @@
-﻿using Shared.Infrastructure.MessageBroker;
+﻿using Shared.Domain.Events;
+using Shared.Infrastructure.MessageBroker;
 using Users.Application.Features.Email.Helpers.Abstractions;
+using Users.Application.Features.Email.Models;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
 
@@ -17,21 +19,19 @@ internal class EmailConfirmationTokenPublisher : IEmailConfirmationTokenPublishe
 		_eventBus = eventBus;
 	}
 
-	public async Task PublishEmailConfirmationTokenAsync(string email, string userId)
+	public async Task PublishEmailConfirmationTokenAsync(PublishEmailConfirmationTokenModel model)
 	{
 		DateTime utcNow = DateTime.UtcNow;
 
 		EmailVerificationToken emailVerificationToken = _factoryManager.EmailTokenFactory.CreateToken(
-			Guid.NewGuid().ToString(),
-			userId,
-			utcNow,
-			utcNow.AddDays(1));
+			model.UserId,
+			utcNow);
 
 		await _repositoryManager.EmailVerificationToken.AddAsync(emailVerificationToken);
 
 		string verificationLink = _factoryManager.EmailLinkFactory.Create(emailVerificationToken);
 
-		var userConfirmEmailEvent = _factoryManager.UserConfirmEmailEventFactory.CreateUserConfirmEmailEvent(email, verificationLink);
+		var userConfirmEmailEvent = new EmailConfirmationRequestedEvent(model.Email, verificationLink);
 
 		await _eventBus.PublishAsync(userConfirmEmailEvent);
 	}

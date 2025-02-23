@@ -36,7 +36,6 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 	protected async Task<string> CreateUserAsync()
 	{
 		var user = new User(
-				Guid.NewGuid().ToString(),
 				UsersTestUtilities.TakenEmail,
 				UsersTestUtilities.ValidPasswordHash,
 				UsersTestUtilities.ValidSalt,

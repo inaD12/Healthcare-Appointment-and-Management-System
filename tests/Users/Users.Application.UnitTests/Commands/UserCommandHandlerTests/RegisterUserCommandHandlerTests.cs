@@ -15,10 +15,10 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	{
 		_commandHandler = new RegisterUserCommandHandler(
 			RepositoryManager,
-			FactoryManager,
 			PasswordManager,
 			EventBus,
-			EmailConfirmationTokenPublisher
+			EmailConfirmationTokenPublisher,
+			HAMSMapper
 			);
 	}
 

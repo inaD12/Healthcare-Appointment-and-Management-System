@@ -18,14 +18,16 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 	{
 		var tokenResult = await _repositoryManager.EmailVerificationToken.GetByIdAsync(request.tokenId);
 
+		var token = tokenResult.Value!;
+
 		if (tokenResult.IsFailure ||
-			tokenResult.Value.ExpiresOnUtc < DateTime.UtcNow ||
-			tokenResult.Value.User.EmailVerified)
+			token.ExpiresOnUtc < DateTime.UtcNow ||
+			token.User.EmailVerified)
 		{
 			return Result.Failure(Responses.InvalidVerificationToken);
 		}
 
-		await _repositoryManager.User.VerifyEmailAsync(tokenResult.Value.User);
+		await _repositoryManager.User.VerifyEmailAsync(token.User);
 
 		return Result.Success();
 	}

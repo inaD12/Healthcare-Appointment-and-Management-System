@@ -10,9 +10,8 @@ public class EmailVerificationToken : BaseEntity
 	public User User { get; set; }
 
 	public EmailVerificationToken() { }
-	public EmailVerificationToken(string id, string userId, DateTime createdOnUtc, DateTime expiresOnUtc, User user)
+	public EmailVerificationToken(string userId, DateTime createdOnUtc, DateTime expiresOnUtc, User user)
 	{
-		Id = id;
 		UserId = userId;
 		CreatedOnUtc = createdOnUtc;
 		ExpiresOnUtc = expiresOnUtc;

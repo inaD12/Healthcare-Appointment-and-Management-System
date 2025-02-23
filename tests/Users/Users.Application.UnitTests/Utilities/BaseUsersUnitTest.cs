@@ -1,4 +1,7 @@
-﻿using NSubstitute;
+﻿using AutoMapper;
+using NSubstitute;
+using Shared.Application.Helpers;
+using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Domain.Events;
 using Shared.Domain.Results;
@@ -7,32 +10,38 @@ using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
+using Users.Application.Features.Users.Mappings;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
-public abstract class BaseUsersUnitTest
+public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 {
 	protected IRepositoryManager RepositoryManager { get; }
 	protected IFactoryManager FactoryManager { get; }
 	protected IPasswordManager PasswordManager { get; }
-	protected ITokenManager TokenManager { get; }
+	protected ITokenFactory TokenManager { get; }
 	protected IEventBus EventBus { get; }
 	protected IEmailConfirmationTokenPublisher EmailConfirmationTokenPublisher { get; }
 
 	protected readonly List<User> Doctors;
 
-	public BaseUsersUnitTest()
+	public BaseUsersUnitTest() : base(
+		new HAMSMapper(
+			new Mapper(
+				new MapperConfiguration(cfg =>
+				{
+					cfg.AddProfile<UserCommandProfile>();
+				}))))
 	{
 		RepositoryManager = Substitute.For<IRepositoryManager>();
 		FactoryManager = Substitute.For<IFactoryManager>();
 		PasswordManager = Substitute.For<IPasswordManager>();
-		TokenManager = Substitute.For<ITokenManager>();
+		TokenManager = Substitute.For<ITokenFactory>();
 		EventBus = Substitute.For<IEventBus>();
 		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
 
 		var user = new User(
-			UsersTestUtilities.ValidId,
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -43,10 +52,12 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
 			false
-			);
+			)
+		{
+			Id = UsersTestUtilities.ValidId
+		};
 
 		var doctor = new User(
-			UsersTestUtilities.ValidId,
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -57,10 +68,13 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
 			false
-			);
+			)
+		{
+			Id = UsersTestUtilities.ValidId
+		};
+
 
 		var takenUser = new User(
-			UsersTestUtilities.TakenId,
 			UsersTestUtilities.TakenEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -71,10 +85,12 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
 			false
-			);
+			)
+		{
+			Id = UsersTestUtilities.TakenId
+		};
 
 		var emailErrorUser = new User(
-			UsersTestUtilities.ValidId,
 			UsersTestUtilities.EmailSendingErrorEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -85,42 +101,42 @@ public abstract class BaseUsersUnitTest
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
 			false
-			);
+					)
+		{
+			Id = UsersTestUtilities.ValidId
+		};
+
 
 		var emailVerificationToken = new EmailVerificationToken(
-			UsersTestUtilities.ValidId,
 			UsersTestUtilities.TakenId,
 			UsersTestUtilities.CurrentDate,
 			UsersTestUtilities.SoonDate,
 			takenUser
-			);
+			)
+		{
+			Id = UsersTestUtilities.ValidId
+		};
 
 		Doctors = new List<User> { doctor };
 
-		UserCreatedEvent eveent = FactoryManager.UserCreatedEventFactory.CreateUserCreatedEvent(
-					UsersTestUtilities.ValidId,
-					UsersTestUtilities.ValidEmail,
-					Roles.Patient
-					);
+		//FactoryManager.UserFactory.CreateUser(
+		//	Arg.Any<string>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<DateTime>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<string>(),
+		//	Arg.Any<Roles>()
+		//	).Returns(callInfo =>
+		//	{
+		//		var email = callInfo.ArgAt<string>(0);
 
-		FactoryManager.UserFactory.CreateUser(
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<DateTime>(),
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<Roles>()
-			).Returns(callInfo =>
-			{
-				var email = callInfo.ArgAt<string>(0);
-
-				if (email == UsersTestUtilities.EmailSendingErrorEmail)
-					return emailErrorUser;
-				return user;
-			});
+		//		if (email == UsersTestUtilities.EmailSendingErrorEmail)
+		//			return emailErrorUser;
+		//		return user;
+		//	});
 
 		RepositoryManager.User.GetByEmailAsync(
 			Arg.Any<string>())
@@ -162,14 +178,13 @@ public abstract class BaseUsersUnitTest
 				return password == UsersTestUtilities.ValidPassword;
 			});
 
-		EventBus.PublishAsync(eveent, CancellationToken.None)
+		EventBus.PublishAsync(Arg.Any<string>, CancellationToken.None)
 			.Returns(Task.CompletedTask);
 
 		TokenManager.CreateToken(Arg.Any<string>())
-			.Returns(UsersTestUtilities.TokenDTO);
+			.Returns(new TokenResult(UsersTestUtilities.ValidId));
 
 		FactoryManager.EmailTokenFactory.CreateToken(
-			Arg.Any<string>(),
 			UsersTestUtilities.TakenId,
 			Arg.Any<DateTime>(),
 			Arg.Any<DateTime>()

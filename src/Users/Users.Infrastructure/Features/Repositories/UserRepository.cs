@@ -54,7 +54,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		if (res.IsSuccess)
 		{
-			await DeleteAsync(res.Value);
+			await DeleteAsync(res.Value!);
 			return Result.Success();
 		}
 

@@ -1,5 +1,4 @@
 ﻿using Shared.Domain.Utilities;
-using Users.Domain.DTOs.Responses;
 
 namespace Users.Domain.Utilities;
 
@@ -30,7 +29,6 @@ public class UsersTestUtilities : SharedTestUtilities
 
 	public static readonly string Link = GetString();
 
-	public static readonly TokenDTO TokenDTO = new TokenDTO("Token");
 
 	public static readonly DateTime PastDate = GetDatePast().ToUniversalTime();
 	public static readonly DateTime CurrentDate = GetDate().ToUniversalTime();

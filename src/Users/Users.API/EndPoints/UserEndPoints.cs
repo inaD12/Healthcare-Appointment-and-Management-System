@@ -3,6 +3,7 @@ using MediatR;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Helpers.Abstractions;
+using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -10,7 +11,7 @@ using Users.Application.Features.Users.LoginUser;
 using Users.Application.Features.Users.Queries.GetAllDoctors;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.DTOs.Requests;
-using Users.Domain.DTOs.Responses;
+using Users.Domain.Entities;
 
 namespace Users.EndPoints;
 
@@ -21,44 +22,44 @@ internal class UserEndPoints : IEndPoints
 		var group = app.MapGroup("api/users");
 
 		group.MapPost("login", Login)
-			.Produces<TokenDTO>(StatusCodes.Status200OK)
+			.Produces<TokenResult>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
-			.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.AllowAnonymous();
 
 		group.MapPost("register", Register)
-			.Produces<MessageDTO>(StatusCodes.Status201Created)
+			.Produces(StatusCodes.Status201Created)
 			.Produces(StatusCodes.Status400BadRequest)
-			.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.AllowAnonymous();
 
 		group.MapPut("update", Update)
-			.Produces<MessageDTO>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces<MessageDTO>(StatusCodes.Status404NotFound)
-			.Produces<MessageDTO>(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
 
 		group.MapGet("get-all-doctors", GetAllDoctors)
-			.Produces<IEnumerable<UserResponseDTO>>(StatusCodes.Status200OK)
+			.Produces<IEnumerable<User>>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError);
 		//.RequireAuthorization();
 
 		group.MapDelete("delete", Delete)
-			.Produces<MessageDTO>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces<MessageDTO>(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
 
 		group.MapGet("verify-email", VerifyEmails)
-			.Produces<MessageDTO>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.WithName("VerifyEmail");
@@ -69,7 +70,7 @@ internal class UserEndPoints : IEndPoints
 		ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var command = new LoginUserCommand<TokenDTO>(
+		var command = new LoginUserCommand<TokenResult>(
 			loginReqDTO.Email,
 			loginReqDTO.Password);
 

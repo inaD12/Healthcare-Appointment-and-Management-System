@@ -1,13 +1,12 @@
-﻿using Mapster;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Managers.Interfaces;
-using Users.Domain.DTOs.Responses;
+using Users.Domain.Entities;
 
 namespace Users.Application.Features.Users.Queries.GetAllDoctors;
 
 public sealed class GetAllDoctorsQueryHandler
-	: IQueryHandler<GetAllDoctorsQuery, IEnumerable<UserResponseDTO>>
+	: IQueryHandler<GetAllDoctorsQuery, IEnumerable<User>>
 {
 	private readonly IRepositoryManager _repositoryManager;
 
@@ -16,17 +15,13 @@ public sealed class GetAllDoctorsQueryHandler
 		_repositoryManager = repositoryManager;
 	}
 
-	public async Task<Result<IEnumerable<UserResponseDTO>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
+	public async Task<Result<IEnumerable<User>>> Handle(GetAllDoctorsQuery request, CancellationToken cancellationToken)
 	{
 		var res = await _repositoryManager.User.GetAllDoctorsAsync();
 
 		if (res.IsFailure)
-			return Result<IEnumerable<UserResponseDTO>>.Failure(res.Response);
+			return Result<IEnumerable<User>>.Failure(res.Response);
 
-		var doctors = res.Value;
-
-		var dtos = doctors.AsQueryable().ProjectToType<UserResponseDTO>();
-
-		return Result<IEnumerable<UserResponseDTO>>.Success(dtos);
+		return Result<IEnumerable<User>>.Success(res.Value!);
 	}
 }

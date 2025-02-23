@@ -1,6 +1,6 @@
 ﻿using Users.Domain.Entities;
 
-namespace Users.Application.Features.Email.Factories.Abstractions;
+namespace Users.Application.Features.Email.Helpers.Abstractions;
 
 public interface IEmailVerificationLinkFactory
 {

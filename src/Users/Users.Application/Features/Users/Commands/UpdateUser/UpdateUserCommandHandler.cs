@@ -21,7 +21,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 		if (userResult.IsFailure)
 			return Result.Failure(userResult.Response);
 
-		User user = userResult.Value;
+		User user = userResult.Value!;
 
 		if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
 		{

@@ -3,23 +3,20 @@ using JWT.Builder;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Options;
 using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Users.Factories.Abstractions;
-using Users.Domain.DTOs.Responses;
+using Users.Application.Features.Auth.Models;
 
 namespace Users.Application.Features.Auth;
 
-public class TokenManager : ITokenManager
+public class TokenFactory : ITokenFactory
 {
 	private readonly AuthOptions _jwtOptions;
-	private readonly ITokenDTOFactory _tokenDTOfactory;
 
-	public TokenManager(IOptionsMonitor<AuthOptions> jwtOptions, ITokenDTOFactory tokenDTOfactory)
+	public TokenFactory(IOptionsMonitor<AuthOptions> jwtOptions)
 	{
 		_jwtOptions = jwtOptions.CurrentValue;
-		_tokenDTOfactory = tokenDTOfactory;
 	}
 
-	public TokenDTO CreateToken(string id)
+	public TokenResult CreateToken(string id)
 	{
 		string token = JwtBuilder.Create()
 			.WithAlgorithm(new HMACSHA256Algorithm())
@@ -31,6 +28,6 @@ public class TokenManager : ITokenManager
 			.AddClaim("aud", _jwtOptions.Audience)
 			.Encode();
 
-		return _tokenDTOfactory.CreateToken(token);
+		return new TokenResult(token);
 	}
 }

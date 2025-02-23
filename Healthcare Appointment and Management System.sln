@@ -71,6 +71,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E0D814AA-4F90-49E5-AC6A-A5B4D73332C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Application.UnitTests", "tests\Shared\Shared.Application.UnitTests\Shared.Application.UnitTests.csproj", "{70320507-A166-4F4D-82A1-B91B457B7D57}"
+	ProjectSection(ProjectDependencies) = postProject
+		{860DBD5D-1709-489E-B3B6-DEF886A6F1F4} = {860DBD5D-1709-489E-B3B6-DEF886A6F1F4}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Users.Application.IntegrationTests", "tests\Users\Users.Application.IntegrationTests\Users.Application.IntegrationTests.csproj", "{2F48DAEF-F9D1-47B6-BFA5-C2822815EA6F}"
 	ProjectSection(ProjectDependencies) = postProject

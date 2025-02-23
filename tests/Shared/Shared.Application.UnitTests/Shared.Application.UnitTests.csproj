@@ -19,7 +19,11 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\src\Shared\Shared.Application\Shared.Application.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

@@ -18,7 +18,7 @@ public sealed class UserCreatedConsumer : IConsumer<UserCreatedEvent>
 	public async Task Consume(ConsumeContext<UserCreatedEvent> context)
 	{
 		var UserData = _factoryManager.UserData.Create(
-			context.Message.UserId,
+			context.Message.Id,
 			context.Message.Email,
 			context.Message.Role);
 

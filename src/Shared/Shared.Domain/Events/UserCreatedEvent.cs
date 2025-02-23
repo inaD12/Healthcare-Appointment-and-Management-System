@@ -2,4 +2,4 @@
 
 namespace Shared.Domain.Events;
 
-public record UserCreatedEvent(string UserId, string Email, Roles Role);
+public record UserCreatedEvent(string Id, string Email, Roles Role);

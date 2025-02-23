@@ -17,7 +17,6 @@ public class User : BaseEntity
 	public bool EmailVerified { get; set; }
 
 	public User(
-		string id,
 		string email,
 		string passwordHash,
 		string salt,
@@ -29,7 +28,6 @@ public class User : BaseEntity
 		string? address,
 		bool emailVerified)
 	{
-		Id = id;
 		Email = email;
 		PasswordHash = passwordHash;
 		Salt = salt;

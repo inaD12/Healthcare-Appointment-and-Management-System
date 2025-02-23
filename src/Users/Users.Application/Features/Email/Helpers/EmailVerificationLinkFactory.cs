@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Users.Application.Features.Email.Factories.Abstractions;
+using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Domain.Entities;
 
-namespace Users.Application.Features.Email.Factories;
+namespace Users.Application.Features.Email.Helpers;
 
 internal class EmailVerificationLinkFactory(IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator) : IEmailVerificationLinkFactory
 {
@@ -14,6 +14,9 @@ internal class EmailVerificationLinkFactory(IHttpContextAccessor httpContextAcce
 			"VerifyEmail",
 			new { token = token.Id });
 
-		return verificationLink;
+		if (verificationLink == null)
+			throw new InvalidOperationException("Failed to create email verification link.");
+
+		return verificationLink!;
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Users.LoginUser;
-using Users.Domain.DTOs.Responses;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;
@@ -20,7 +20,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 	public async Task Handle_ShouldReturnSuccess_WhenLoginIsSuccessful()
 	{
 		// Arrange
-		var command = new LoginUserCommand<TokenDTO>(UsersTestUtilities.TakenEmail, UsersTestUtilities.ValidPassword);
+		var command = new LoginUserCommand<TokenResult>(UsersTestUtilities.TakenEmail, UsersTestUtilities.ValidPassword);
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);
@@ -34,7 +34,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenPasswordIsIncorrect()
 	{
 		// Arrange
-		var command = new LoginUserCommand<TokenDTO>(UsersTestUtilities.TakenEmail, UsersTestUtilities.InvalidPassword);
+		var command = new LoginUserCommand<TokenResult>(UsersTestUtilities.TakenEmail, UsersTestUtilities.InvalidPassword);
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);
@@ -48,7 +48,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenUserNotFound()
 	{
 		// Arrange
-		var command = new LoginUserCommand<TokenDTO>(UsersTestUtilities.UnusedEmail, UsersTestUtilities.ValidPassword);
+		var command = new LoginUserCommand<TokenResult>(UsersTestUtilities.UnusedEmail, UsersTestUtilities.ValidPassword);
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);

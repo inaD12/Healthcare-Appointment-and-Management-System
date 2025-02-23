@@ -5,7 +5,7 @@ using Shared.Domain.Events;
 
 namespace Emails.Application.Features.Emails.Consumers
 {
-	public sealed class UserConfirmEmailEventConsumer: IConsumer<UserConfirmEmailEvent>
+	public sealed class UserConfirmEmailEventConsumer: IConsumer<EmailConfirmationRequestedEvent>
 	{
 		private readonly IEmailSender _emailSender;
 
@@ -14,7 +14,7 @@ namespace Emails.Application.Features.Emails.Consumers
 			_emailSender = emailSender;
 		}
 
-		public async Task Consume(ConsumeContext<UserConfirmEmailEvent> context)
+		public async Task Consume(ConsumeContext<EmailConfirmationRequestedEvent> context)
 		{
 			var message = context.Message;
 
