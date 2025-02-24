@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
@@ -17,7 +18,8 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		_handler = new RescheduleAppointmentCommandHandler(
 			RepositoryMagager,
 			JWTParser,
-			AppointmentCommandHandlerHelper);
+			AppointmentService,
+			HAMSMapper);
 	}
 
 	[Fact]
@@ -41,7 +43,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(Responses.AppointmentNotFound);
 
 		JWTParser.DidNotReceiveWithAnyArgs().GetIdFromToken();
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -64,7 +66,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.InternalError);
 
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -87,7 +89,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.CannotRescheduleOthersAppointment);
 
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -130,7 +132,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		await AppointmentCommandHandlerHelper.Received(1).CreateAppointment(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<AppointmentDuration>());
+		await AppointmentService.Received(1).CreateAppointment(Arg.Any<CreateAppointmentModel>());
 
 		await RepositoryMagager.Appointment.Received(1)
 			.ChangeStatusAsync(default, AppointmentStatus.Rescheduled);

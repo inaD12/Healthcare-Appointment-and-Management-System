@@ -27,7 +27,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		result.Value.Should().BeEquivalentTo(UsersTestUtilities.TokenDTO);
+		result.Value!.Token.Should().BeEquivalentTo(UsersTestUtilities.ValidId);
 	}
 
 	[Fact]

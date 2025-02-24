@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
@@ -14,7 +15,10 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 	public CreateAppointmentCommandHandlerTests()
 	{
-		_handler = new CreateAppointmentCommandHandler(RepositoryMagager, AppointmentCommandHandlerHelper);
+		_handler = new CreateAppointmentCommandHandler(
+			RepositoryMagager,
+			AppointmentService,
+			HAMSMapper);
 	}
 
 	[Fact]
@@ -38,7 +42,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.DoctorNotFound);
 
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -62,7 +66,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.UserIsNotADoctor);
 
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -86,7 +90,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.PatientNotFound);
 
-		await AppointmentCommandHandlerHelper.DidNotReceiveWithAnyArgs().CreateAppointment(default, default, default, default);
+		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -109,11 +113,8 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		await AppointmentCommandHandlerHelper.Received(1).CreateAppointment(
-			AppointmentsTestUtilities.DoctorId,
-			AppointmentsTestUtilities.PatientId,
-			Arg.Any<DateTime>(),
-			Arg.Any<AppointmentDuration>()
-		);
+		await AppointmentService.Received(1).CreateAppointment(Arg.Is<CreateAppointmentModel>(uc => 
+			uc.DoctorId == AppointmentsTestUtilities.DoctorId &&
+			uc.PatientId == AppointmentsTestUtilities.PatientId));
 	}
 }

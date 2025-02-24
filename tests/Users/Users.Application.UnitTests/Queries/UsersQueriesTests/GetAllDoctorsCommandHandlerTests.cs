@@ -29,7 +29,7 @@ public class GetAllDoctorsCommandHandlerTests : BaseUsersUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 		result.Value.Should().HaveCount(Doctors.Count);
-		result.Value.Select(d => d.email).Should().BeEquivalentTo(Doctors.Select(d => d.Email));
+		result.Value!.Select(d => d.Email).Should().BeEquivalentTo(Doctors.Select(d => d.Email));
 
 		await RepositoryManager.User.Received(1).GetAllDoctorsAsync();
 	}

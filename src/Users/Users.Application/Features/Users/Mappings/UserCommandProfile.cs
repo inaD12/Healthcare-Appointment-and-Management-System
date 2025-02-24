@@ -28,6 +28,9 @@ public class UserCommandProfile : Profile
 		CreateMap<User, UserCreatedEvent>();
 
 		CreateMap<User, PublishEmailConfirmationTokenModel>()
-			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id));
+		.ConstructUsing(src => new(
+			src.Email,
+			src.Id));
+
 	}
 }

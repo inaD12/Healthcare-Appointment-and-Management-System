@@ -29,7 +29,6 @@ public class UsersTestUtilities : SharedTestUtilities
 
 	public static readonly string Link = GetString();
 
-
 	public static readonly DateTime PastDate = GetDatePast().ToUniversalTime();
 	public static readonly DateTime CurrentDate = GetDate().ToUniversalTime();
 	public static readonly DateTime SoonDate = GetDateSoon().ToUniversalTime();

@@ -23,7 +23,7 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 		if (appointmentsToCompleteRes.IsFailure)
 			return Result.Failure(appointmentsToCompleteRes.Response);
 
-		if (appointmentsToCompleteRes.Value.Count == 0)
+		if (appointmentsToCompleteRes.Value!.Count == 0)
 			return Result.Success();
 
 		var appointmentsToComplete = appointmentsToCompleteRes.Value;

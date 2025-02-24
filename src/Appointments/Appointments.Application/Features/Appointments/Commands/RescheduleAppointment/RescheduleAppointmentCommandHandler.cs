@@ -1,9 +1,11 @@
-﻿using Appointments.Application.Features.Commands.Appointments.Shared;
+﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
+using Shared.Application.Abstractions;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -14,13 +16,15 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IJwtParser _jwtParser;
-	private readonly IAppointmentCommandHandlerHelper _helper;
+	private readonly IAppointmentService _appointmentService;
+	private readonly IHAMSMapper _mapper;
 
-	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IAppointmentCommandHandlerHelper helper)
+	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IAppointmentService appointmentServuce, IHAMSMapper mapper)
 	{
 		_repositoryManager = repositoryManager;
 		_jwtParser = jwtParser;
-		_helper = helper;
+		_appointmentService = appointmentServuce;
+		_mapper = mapper;
 	}
 
 	public async Task<Result> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
@@ -39,18 +43,12 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
 			return Result.Failure(Responses.CannotRescheduleOthersAppointment);
 
-		var helperResult = await _helper.CreateAppointment(
-			appointmentWithDetails.DoctorEmail,
-			appointmentWithDetails.PatientEmail,
-			request.ScheduledStartTime.ToUniversalTime(),
-			request.Duration);
-
+		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((appointmentWithDetails, request));
+		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
 		if (helperResult.IsFailure)
 			return Result.Failure(helperResult.Response);
 
-		Appointment appointment = appointmentWithDetails.Appointment;
-
-		var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Rescheduled);
+		var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointmentWithDetails.Appointment, AppointmentStatus.Rescheduled);
 
 		return changeStatusRes;
 	}

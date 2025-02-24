@@ -1,57 +1,71 @@
-﻿using Appointments.Application.Features.Commands.Appointments.Shared;
+﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
+using Appointments.Application.Features.Appointments.Mappings;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
+using Appointments.Application.Features.Mappings;
 using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
+using AutoMapper;
 using NSubstitute;
+using Shared.Application.Helpers;
 using Shared.Application.Helpers.Abstractions;
+using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
-public abstract class BaseAppointmentsUnitTest
+public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 {
 	protected IRepositoryManager RepositoryMagager { get; }
-	protected IFactoryManager FactoryMagager { get; }
 	protected IJwtParser JWTParser { get; }
-	protected IAppointmentCommandHandlerHelper AppointmentCommandHandlerHelper { get; }
+	protected IAppointmentService AppointmentService { get; }
 
 	protected readonly List<Appointment> SceduledAppointmentList;
 
-	protected BaseAppointmentsUnitTest()
+	protected BaseAppointmentsUnitTest() : base(
+		new HAMSMapper(
+			new Mapper(
+				new MapperConfiguration(cfg =>
+				{
+					cfg.AddProfile<AppointmentCommandProfile>();
+					cfg.AddProfile<AppointmentProfile>();
+				}))))
 	{
+		
 		RepositoryMagager = Substitute.For<IRepositoryManager>();
-		FactoryMagager = Substitute.For<IFactoryManager>();
 		JWTParser = Substitute.For<IJwtParser>();
-		AppointmentCommandHandlerHelper = Substitute.For<IAppointmentCommandHandlerHelper>();
+		AppointmentService = Substitute.For<IAppointmentService>();
 
 		var appointment = new Appointment(
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.SoonDate,
 			AppointmentsTestUtilities.FutureDate,
 			AppointmentStatus.Scheduled
-			);
+			)
+		{
+			Id = AppointmentsTestUtilities.ValidId
+		};
 
 		SceduledAppointmentList = new List<Appointment> { appointment };
 
 		var doctorData = new UserData
-		{
-			UserId = AppointmentsTestUtilities.DoctorId,
-			Email = AppointmentsTestUtilities.DoctorEmail,
-			Role = Roles.Doctor
-		};
+		(
+			AppointmentsTestUtilities.DoctorId,
+			AppointmentsTestUtilities.DoctorEmail,
+			Roles.Doctor
+		);
 
 		var patientData = new UserData
-		{
-			UserId = AppointmentsTestUtilities.PatientId,
-			Email = AppointmentsTestUtilities.PatientEmail,
-			Role = Roles.Patient
-		};
+		(
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.PatientEmail,
+			Roles.Patient
+		);
 
 		var appointmentWithDetailsDTO = new AppointmentWithDetailsDTO
 		{
@@ -110,14 +124,11 @@ public abstract class BaseAppointmentsUnitTest
 				 return Result<UserData>.Failure(Responses.UserDataNotFound);
 			 });
 
-		AppointmentCommandHandlerHelper.CreateAppointment(
-			Arg.Any<string>(),
-			Arg.Any<string>(),
-			Arg.Any<DateTime>(),
-			Arg.Any<AppointmentDuration>())
+		AppointmentService.CreateAppointment(
+			Arg.Any<CreateAppointmentModel>())
 			.Returns(callInfo =>
 			{
-				string doctorid = callInfo.ArgAt<string>(0);
+				string doctorid = callInfo.ArgAt<CreateAppointmentModel>(0).DoctorId;
 
 				if (id == AppointmentsTestUtilities.HelperInternalErrorId)
 					return Result.Failure(Responses.InternalError);
@@ -150,13 +161,6 @@ public abstract class BaseAppointmentsUnitTest
 
 				return Result<bool>.Success(true);
 			});
-
-		FactoryMagager.Appointment.Create(
-				Arg.Any<string>(),
-				Arg.Any<string>(),
-				Arg.Any<DateTime>(),
-				Arg.Any<DateTime>())
-			.Returns(appointment);
 	}
 
 

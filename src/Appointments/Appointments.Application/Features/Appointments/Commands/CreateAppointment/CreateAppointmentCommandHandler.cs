@@ -1,6 +1,8 @@
-﻿using Appointments.Application.Features.Commands.Appointments.Shared;
+﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.Responses;
+using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
@@ -10,11 +12,13 @@ namespace Appointments.Application.Features.Commands.Appointments.CreateAppointm
 public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
-	private readonly IAppointmentCommandHandlerHelper _helper;
-	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentCommandHandlerHelper helper)
+	private readonly IAppointmentService _appointmentService;
+	private readonly IHAMSMapper _mapper;
+	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentService appointmentServuce, IHAMSMapper mapper)
 	{
 		_repositoryManager = repositoryManager;
-		_helper = helper;
+		_appointmentService = appointmentServuce;
+		_mapper = mapper;
 	}
 	public async Task<Result> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
@@ -30,14 +34,9 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 		if (patientDataRes.IsFailure)
 			return Result.Failure(Responses.PatientNotFound);
 
-		var doctorData = doctorDataRes.Value;
-		var patientData = patientDataRes.Value!;
-
-		var helperResult = await _helper.CreateAppointment(
-			doctorData.UserId,
-			patientData.UserId,
-			request.ScheduledStartTime.ToUniversalTime(),
-			request.Duration);
+		var doctorPatientIdModel = new DoctorPatientIdModel(doctorDataRes.Value.UserId, patientDataRes.Value!.UserId);
+		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((doctorPatientIdModel, request));
+		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
 
 		return helperResult;
 	}

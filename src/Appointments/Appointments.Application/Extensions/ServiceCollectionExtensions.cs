@@ -1,6 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Factories;
-using Appointments.Application.Features.Appointments.Factories.Abstractions;
-using Appointments.Application.Features.Commands.Appointments.Shared;
+﻿using Appointments.Application.Features.Appointments.Helpers;
+using Appointments.Application.Features.Appointments.Helpers.Abstractions;
 using Appointments.Application.Features.Helpers;
 using Appointments.Application.Features.Jobs;
 using Appointments.Application.Features.Jobs.Managers;
@@ -21,12 +20,8 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddSingleton<IFactoryManager, FactoryManager>()
 			.AddScoped<IRepositoryManager, RepositoryManager>()
-			.AddSingleton<IAppointmentFactory, AppointmentFactory>()
-			.AddSingleton<IUserDataFactory, UserDataFactory>()
-			.AddSingleton<ICreateAppointmentDTOFactory, CreateAppointmentDTOFactory>()
-			.AddTransient<IAppointmentCommandHandlerHelper, AppointmentCommandHandlerHelper>()
+			.AddTransient<IAppointmentService, AppointmentService>()
 			.AddScoped<CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

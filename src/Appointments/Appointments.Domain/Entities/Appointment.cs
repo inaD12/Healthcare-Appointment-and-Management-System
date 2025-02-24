@@ -5,9 +5,8 @@ namespace Appointments.Domain.Entities;
 
 public class Appointment : BaseEntity
 {
-	public Appointment(string id, string patientId, string doctorId, DateTime scheduledStartTime, DateTime scheduledEndTime, AppointmentStatus status)
+	public Appointment(string patientId, string doctorId, DateTime scheduledStartTime, DateTime scheduledEndTime, AppointmentStatus status)
 	{
-		Id = id;
 		PatientId = patientId;
 		DoctorId = doctorId;
 		ScheduledStartTime = scheduledStartTime;

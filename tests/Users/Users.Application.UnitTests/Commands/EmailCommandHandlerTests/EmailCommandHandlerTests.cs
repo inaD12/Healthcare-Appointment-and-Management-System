@@ -25,7 +25,6 @@ public class EmailCommandHandlerTests
 		_user = new User("test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 		_validToken = new EmailVerificationToken
 		(
-			"token123",
 			 _user.Id,
 			DateTime.UtcNow,
 			DateTime.UtcNow.AddHours(1),
@@ -55,7 +54,6 @@ public class EmailCommandHandlerTests
 		// Arrange
 		var expiredToken = new EmailVerificationToken
 		(
-			"token123",
 			 _user.Id,
 			DateTime.UtcNow,
 			DateTime.UtcNow.AddHours(-1),
