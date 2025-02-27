@@ -1,9 +1,8 @@
-﻿
-using Shared.Domain.Enums;
+﻿using Shared.Domain.Enums;
 
-namespace Users.Domain.DTOs.Requests;
+namespace Users.Users.Models.Requests;
 
-public class RegisterReqDTO
+public class RegisterUserRequest
 {
 	public string Email { get; set; }
 	public string Password { get; set; }
