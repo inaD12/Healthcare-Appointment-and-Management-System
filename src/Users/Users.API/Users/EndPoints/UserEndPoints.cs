@@ -75,9 +75,7 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = hamsMapper.Map<LoginUserCommand<TokenResult>>(request);
-
 		var res = await sender.Send(command, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
@@ -88,9 +86,7 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = hamsMapper.Map<RegisterUserCommand>(request);
-
 		var res = await sender.Send(command, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
@@ -104,12 +100,10 @@ internal class UserEndPoints : IEndPoints
 		var parserRes = jwtParser.GetIdFromToken();
 		if (parserRes.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(parserRes);
-
 		string id = parserRes.Value!;
+
 		var command = hamsMapper.Map<UpdateUserCommand>((id,request));
-
 		var res = await sender.Send(command, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
@@ -118,9 +112,7 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var query = new GetAllDoctorsQuery();
-
 		var res = await sender.Send(query, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
@@ -132,13 +124,10 @@ internal class UserEndPoints : IEndPoints
 		var parserRes = jwtParser.GetIdFromToken();
 		if (parserRes.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(parserRes);
-
 		string id = parserRes.Value!;
 
 		var command = new DeleteUserCommand(id);
-
 		var res = await sender.Send(command, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
@@ -149,9 +138,7 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = hamsMapper.Map<HandleEmailCommand>(request);
-
 		var res = await sender.Send(command, cancellationToken);
-
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 }

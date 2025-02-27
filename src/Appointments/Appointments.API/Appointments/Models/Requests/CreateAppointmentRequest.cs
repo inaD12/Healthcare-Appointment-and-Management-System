@@ -1,8 +1,8 @@
 ﻿using Appointments.Domain.Enums;
 
-namespace Appointments.Domain.DTOS.Request;
+namespace Appointments.API.Appointments.Models.Requests;
 
-public class CreateAppointmentDTO
+public class CreateAppointmentRequest
 {
 	public string PatientEmail { get; set; }
 	public string DoctorEmail { get; set; }
