@@ -2,7 +2,6 @@
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.DTOS;
-using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
@@ -18,7 +17,6 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 	private readonly IJwtParser _jwtParser;
 	private readonly IAppointmentService _appointmentService;
 	private readonly IHAMSMapper _mapper;
-
 	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IAppointmentService appointmentServuce, IHAMSMapper mapper)
 	{
 		_repositoryManager = repositoryManager;

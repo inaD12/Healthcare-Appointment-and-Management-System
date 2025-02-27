@@ -1,5 +1,5 @@
 ﻿using Shared.Domain.Events;
-using Shared.Infrastructure.MessageBroker;
+using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Email.Models;
 using Users.Application.Features.Managers.Interfaces;

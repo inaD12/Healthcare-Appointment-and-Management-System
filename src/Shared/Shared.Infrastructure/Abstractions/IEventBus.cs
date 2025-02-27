@@ -1,4 +1,4 @@
-﻿namespace Shared.Infrastructure.MessageBroker;
+﻿namespace Shared.Infrastructure.Abstractions;
 
 public interface IEventBus
 {
