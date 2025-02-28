@@ -30,7 +30,7 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 			return Result.Failure(Responses.InvalidVerificationToken);
 		}
 
-		await _repositoryManager.User.VerifyEmailAsync(token.User);
+		_repositoryManager.User.VerifyEmailAsync(token.User);
 
 		await _unitOfWork.SaveChangesAsync();
 		return Result.Success();

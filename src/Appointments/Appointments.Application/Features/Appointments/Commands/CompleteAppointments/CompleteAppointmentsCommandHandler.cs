@@ -2,16 +2,19 @@
 using Appointments.Domain.Enums;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Abstractions;
 
 namespace Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
 
 public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<CompleteAppointmentsCommand>
 {
 	private readonly IRepositoryManager _repositoryManager;
+	private readonly IUnitOfWork _unitOfWork;
 
-	public CompleteAppointmentsCommandHandler(IRepositoryManager repositoryManager)
+	public CompleteAppointmentsCommandHandler(IRepositoryManager repositoryManager, IUnitOfWork unitOfWork)
 	{
 		_repositoryManager = repositoryManager;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
@@ -33,8 +36,7 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 			appointment.Status = AppointmentStatus.Completed;
 		}
 
-		await _repositoryManager.Appointment.SaveChangesAsync();
-
+		await _unitOfWork.SaveChangesAsync();
 		return Result.Success();
 	}
 }

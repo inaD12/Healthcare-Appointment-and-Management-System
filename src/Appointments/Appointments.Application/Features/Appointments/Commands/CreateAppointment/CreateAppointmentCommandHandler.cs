@@ -6,6 +6,7 @@ using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Abstractions;
 
 namespace Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 
@@ -14,11 +15,13 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IAppointmentService _appointmentService;
 	private readonly IHAMSMapper _mapper;
-	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentService appointmentServuce, IHAMSMapper mapper)
+	private readonly IUnitOfWork _unitOfWork;
+	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentService appointmentServuce, IHAMSMapper mapper, IUnitOfWork unitOfWork)
 	{
 		_repositoryManager = repositoryManager;
 		_appointmentService = appointmentServuce;
 		_mapper = mapper;
+		_unitOfWork = unitOfWork;
 	}
 	public async Task<Result> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
@@ -38,6 +41,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((doctorPatientIdModel, request));
 		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
 
+		await _unitOfWork.SaveChangesAsync();
 		return helperResult;
 	}
 }

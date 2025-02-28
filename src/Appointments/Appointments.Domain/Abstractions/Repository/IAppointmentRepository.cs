@@ -9,8 +9,7 @@ namespace Appointments.Domain.Abstractions.Repository;
 public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
 	Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime);
-	Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus);
+	void ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus);
 	Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId);
 	Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime);
-	Task SaveChangesAsync();
 }

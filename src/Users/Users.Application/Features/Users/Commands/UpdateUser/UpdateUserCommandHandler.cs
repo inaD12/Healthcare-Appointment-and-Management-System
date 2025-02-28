@@ -37,7 +37,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 		user.FirstName = request.FirstName ?? user.FirstName;
 		user.LastName = request.LastName ?? user.LastName;
 
-		await _repositotyManager.User.UpdateAsync(user);
+		_repositotyManager.User.UpdateAsync(user);
 
 		await _unitOfWork.SaveChangesAsync();
 		return Result.Success(Responses.UpdateSuccessful);
