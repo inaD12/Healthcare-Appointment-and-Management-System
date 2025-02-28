@@ -1,5 +1,6 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
@@ -9,10 +10,11 @@ namespace Users.Application.Features.Users.UpdateUser;
 public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
 	private readonly IRepositoryManager _repositotyManager;
-
-	public UpdateUserCommandHandler(IRepositoryManager repositotyManager)
+	private readonly IUnitOfWork _unitOfWork;
+	public UpdateUserCommandHandler(IRepositoryManager repositotyManager, IUnitOfWork unitOfWork)
 	{
 		_repositotyManager = repositotyManager;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -37,6 +39,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 
 		await _repositotyManager.User.UpdateAsync(user);
 
+		await _unitOfWork.SaveChangesAsync();
 		return Result.Success(Responses.UpdateSuccessful);
 	}
 }

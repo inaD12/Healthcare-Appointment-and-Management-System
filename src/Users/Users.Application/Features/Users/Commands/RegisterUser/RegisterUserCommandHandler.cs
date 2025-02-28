@@ -20,14 +20,16 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 	private readonly IEventBus _eventBus;
 	private readonly IEmailConfirmationTokenPublisher _emailConfirmationTokenPublisher;
 	private readonly IHAMSMapper _hamsMapper;
+	private readonly IUnitOfWork _unitOfWork;
 
-	public RegisterUserCommandHandler(IRepositoryManager repositotyManager, IPasswordManager passwordManager, IEventBus eventBus, IEmailConfirmationTokenPublisher emailConfirmationTokenPublisher, IHAMSMapper hamsMapper)
+	public RegisterUserCommandHandler(IRepositoryManager repositotyManager, IPasswordManager passwordManager, IEventBus eventBus, IEmailConfirmationTokenPublisher emailConfirmationTokenPublisher, IHAMSMapper hamsMapper, IUnitOfWork unitOfWork)
 	{
 		_repositotyManager = repositotyManager;
 		_passwordManager = passwordManager;
 		_eventBus = eventBus;
 		_emailConfirmationTokenPublisher = emailConfirmationTokenPublisher;
 		_hamsMapper = hamsMapper;
+		_unitOfWork = unitOfWork;
 	}
 
 	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -47,8 +49,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		var publishEmailConfirmationTokenModel = _hamsMapper.Map<PublishEmailConfirmationTokenModel>(user);
 		await _emailConfirmationTokenPublisher.PublishEmailConfirmationTokenAsync(publishEmailConfirmationTokenModel);
 
-		await _repositotyManager.User.SaveChangesAsync();
-
+		await _unitOfWork.SaveChangesAsync();
 		return Result.Success(Responses.RegistrationSuccessful);
 	}
 }

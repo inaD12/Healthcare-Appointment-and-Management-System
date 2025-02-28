@@ -11,5 +11,4 @@ public interface IUserRepository : IGenericRepository<User>
 	Task<Result<User>> GetByFirstNameAsync(string firstName);
 	Task<Result> DeleteByIdAsync(string id);
 	Task VerifyEmailAsync(User user);
-	Task SaveChangesAsync();
 }

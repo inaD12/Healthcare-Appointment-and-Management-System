@@ -1,7 +1,6 @@
-﻿namespace Shared.Infrastructure.Abstractions
+﻿namespace Shared.Infrastructure.Abstractions;
+
+public interface IUnitOfWork
 {
-	internal interface IUnitOfWork
-	{
-		Task SaveChangesAsync(CancellationToken cancellationToken = default);
-	}
+	Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

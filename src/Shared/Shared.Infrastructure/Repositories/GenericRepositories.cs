@@ -19,13 +19,11 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 	public virtual async Task AddAsync(T entity)
 	{
 		await Entities.AddAsync(entity);
-		await _context.SaveChangesAsync();
 	}
 
 	public virtual async Task DeleteAsync(T entity)
 	{
 		Entities.Remove(entity);
-		await _context.SaveChangesAsync();
 	}
 
 	public virtual async Task<Result<IEnumerable<T>>> GetAllAsync()
@@ -51,6 +49,5 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 	public virtual async Task UpdateAsync(T entity)
 	{
 		Entities.Update(entity);
-		await _context.SaveChangesAsync();
 	}
 }

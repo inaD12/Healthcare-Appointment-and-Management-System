@@ -71,9 +71,4 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		user.EmailVerified = true;
 		await base.UpdateAsync(user);
 	}
-
-	public async Task SaveChangesAsync()
-	{
-		await _context.SaveChangesAsync();
-	}
 }
