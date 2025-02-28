@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
+			.AddUnitOfWork<UsersDBContext>()
 			.AddDatabaseContext<UsersDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<Roles>("roles");

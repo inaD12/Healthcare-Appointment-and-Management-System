@@ -54,7 +54,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		if (res.IsSuccess)
 		{
-			await DeleteAsync(res.Value!);
+			DeleteAsync(res.Value!);
 			return Result.Success();
 		}
 
@@ -66,14 +66,9 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		await _context.Users.AddAsync(user);
 	}
 
-	public async Task VerifyEmailAsync(User user)
+	public void VerifyEmailAsync(User user)
 	{
 		user.EmailVerified = true;
-		await base.UpdateAsync(user);
-	}
-
-	public async Task SaveChangesAsync()
-	{
-		await _context.SaveChangesAsync();
+		base.UpdateAsync(user);
 	}
 }

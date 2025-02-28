@@ -15,6 +15,7 @@ using Shared.Application.Helpers.Abstractions;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Abstractions;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
@@ -33,7 +34,9 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				{
 					cfg.AddProfile<AppointmentCommandProfile>();
 					cfg.AddProfile<AppointmentProfile>();
-				}))))
+				}))),
+		Substitute.For<IUnitOfWork>()
+		)
 	{
 		
 		RepositoryMagager = Substitute.For<IRepositoryManager>();
@@ -96,19 +99,18 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				return Result<string>.Success(AppointmentsTestUtilities.ValidId);
 			});
 
-		RepositoryMagager.Appointment.ChangeStatusAsync(Arg.Any<Appointment>(), (Arg.Any<AppointmentStatus>()))
-			.Returns(callInfo =>
-			{
-				if (id == AppointmentsTestUtilities.ChangeStatusInternalErrorId)
-					return (Result.Failure(Responses.InternalError));
+		//RepositoryMagager.Appointment.ChangeStatusAsync(Arg.Any<Appointment>(), (Arg.Any<AppointmentStatus>()))
+		//	.Returns(callInfo =>
+		//	{
+		//		if (id == AppointmentsTestUtilities.ChangeStatusInternalErrorId)
+		//			return (Result.Failure(Responses.InternalError));
 
-				return Result.Success();
-			});
+		//		return Result.Success();
+		//	});
 
 		RepositoryMagager.Appointment.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
 		   .Returns(Result<List<Appointment>>.Success(SceduledAppointmentList));
 
-		RepositoryMagager.Appointment.SaveChangesAsync().Returns(Task.CompletedTask);
 
 		RepositoryMagager.UserData
 			.GetUserDataByEmailAsync(Arg.Any<string>())

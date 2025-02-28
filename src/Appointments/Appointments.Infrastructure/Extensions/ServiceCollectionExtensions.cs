@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
+			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<Roles>("roles");

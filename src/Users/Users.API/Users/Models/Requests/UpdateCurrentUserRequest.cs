@@ -1,6 +1,6 @@
-﻿namespace Users.Domain.DTOs.Requests;
+﻿namespace Users.Users.Models.Requests;
 
-public class UpdateUserReqDTO
+public class UpdateCurrentUserRequest
 {
 	public string? NewEmail { get; set; }
 	public string? FirstName { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Enums;
+using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
@@ -35,6 +36,8 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 
 	protected async Task<string> CreateUserAsync()
 	{
+		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
 		var user = new User(
 				UsersTestUtilities.TakenEmail,
 				UsersTestUtilities.ValidPasswordHash,
@@ -49,7 +52,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 			);
 
 		await RepositoryManager.User.AddAsync(user);
-		await RepositoryManager.User.SaveChangesAsync();
+		await unitOfWork.SaveChangesAsync();
 
 		return user.Email;
 	}

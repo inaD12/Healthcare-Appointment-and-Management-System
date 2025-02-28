@@ -16,7 +16,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 
 	public CompleteAppointmentsCommandHandlerTests()
 	{
-		_handler = new CompleteAppointmentsCommandHandler(RepositoryMagager);
+		_handler = new CompleteAppointmentsCommandHandler(RepositoryMagager, UnitOfWork);
 	}
 
 	[Fact]
@@ -33,7 +33,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeTrue();
 		SceduledAppointmentList.Select(d => d.Status).Should().AllBeEquivalentTo(AppointmentStatus.Completed);
 		await RepositoryMagager.Appointment.Received(1).GetAppointmentsToCompleteAsync(Arg.Any<DateTime>());
-		await RepositoryMagager.Appointment.Received(1).SaveChangesAsync();
+		await UnitOfWork.Received(1).SaveChangesAsync();
 	}
 
 	[Fact]
@@ -50,7 +50,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(Responses.InternalError);
-		await RepositoryMagager.Appointment.DidNotReceive().SaveChangesAsync();
+		await UnitOfWork.DidNotReceive().SaveChangesAsync();
 	}
 
 	[Fact]
@@ -66,7 +66,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		await RepositoryMagager.Appointment.DidNotReceive().SaveChangesAsync();
+		await UnitOfWork.DidNotReceive().SaveChangesAsync();
 	}
 }
 

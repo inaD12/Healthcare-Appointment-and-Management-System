@@ -3,11 +3,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Shared.Domain.Options;
+using Shared.Infrastructure.Abstractions;
 
 namespace Shared.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtentions
 {
+	public static IServiceCollection AddUnitOfWork<TContext>(this IServiceCollection services)
+	where TContext : DbContext
+	{
+		services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
+
+		return services;
+	}
+
 	public static IServiceCollection AddDatabaseContext<TContext>(
 	   this IServiceCollection services,
 	   IConfiguration configuration,

@@ -19,7 +19,8 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 			RepositoryMagager,
 			JWTParser,
 			AppointmentService,
-			HAMSMapper);
+			HAMSMapper,
+			UnitOfWork);
 	}
 
 	[Fact]
@@ -134,7 +135,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		await AppointmentService.Received(1).CreateAppointment(Arg.Any<CreateAppointmentModel>());
 
-		await RepositoryMagager.Appointment.Received(1)
+		RepositoryMagager.Appointment.Received(1)
 			.ChangeStatusAsync(default, AppointmentStatus.Rescheduled);
 	}
 }

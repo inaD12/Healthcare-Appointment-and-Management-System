@@ -5,7 +5,7 @@ using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Domain.Events;
 using Shared.Domain.Results;
-using Shared.Infrastructure.MessageBroker;
+using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
@@ -32,7 +32,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				new MapperConfiguration(cfg =>
 				{
 					cfg.AddProfile<UserCommandProfile>();
-				}))))
+				}))),
+		Substitute.For<IUnitOfWork>())
 	{
 		RepositoryManager = Substitute.For<IRepositoryManager>();
 		FactoryManager = Substitute.For<IFactoryManager>();

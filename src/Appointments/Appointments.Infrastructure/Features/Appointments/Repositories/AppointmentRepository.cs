@@ -30,13 +30,9 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		return Result<bool>.Success(!isSlotTaken);
 	}
 
-	public async Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)
+	public void ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)
 	{
 		appointment.Status = newStatus;
-
-		_context.SaveChanges();
-
-		return Result.Success();
 	}
 
 	public async Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId)
@@ -74,10 +70,5 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		.ToListAsync();
 
 		return Result<List<Appointment>>.Success(res);
-	}
-
-	public async Task SaveChangesAsync()
-	{
-		await _context.SaveChangesAsync();
 	}
 }
