@@ -13,7 +13,7 @@ public class DeleteUserCommandHandlerTests : BaseUsersUnitTest
 
 	public DeleteUserCommandHandlerTests()
 	{
-		_commandHandler = new DeleteUserCommandHandler(RepositoryManager);
+		_commandHandler = new DeleteUserCommandHandler(RepositoryManager, UnitOfWork);
 	}
 
 	[Fact]

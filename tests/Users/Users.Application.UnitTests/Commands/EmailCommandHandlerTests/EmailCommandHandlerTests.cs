@@ -2,6 +2,7 @@
 using NSubstitute;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Managers.Interfaces;
 using Users.Domain.Entities;
@@ -16,11 +17,13 @@ public class EmailCommandHandlerTests
 	private readonly HandleEmailCommandHandler _commandHandler;
 	private readonly EmailVerificationToken _validToken;
 	private readonly User _user;
+	private readonly IUnitOfWork _unitOfWork;
 
 	public EmailCommandHandlerTests()
 	{
 		_mockRepositoryManager = Substitute.For<IRepositoryManager>();
-		_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager);
+		_unitOfWork = Substitute.For<IUnitOfWork>();
+		_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager, _unitOfWork);
 
 		_user = new User("test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 		_validToken = new EmailVerificationToken
@@ -100,8 +103,6 @@ public class EmailCommandHandlerTests
 		_mockRepositoryManager.EmailVerificationToken.GetByIdAsync(_validToken.Id)
 			.Returns(Result<EmailVerificationToken>.Success(_validToken));
 
-		_mockRepositoryManager.User.VerifyEmailAsync(_validToken.User)
-			.Returns(Task.CompletedTask);
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);
@@ -109,6 +110,6 @@ public class EmailCommandHandlerTests
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 		result.Response.Should().BeEquivalentTo(Response.Ok);
-		await _mockRepositoryManager.User.Received(1).VerifyEmailAsync(_validToken.User);
+		_mockRepositoryManager.User.Received(1).VerifyEmailAsync(_validToken.User);
 	}
 }

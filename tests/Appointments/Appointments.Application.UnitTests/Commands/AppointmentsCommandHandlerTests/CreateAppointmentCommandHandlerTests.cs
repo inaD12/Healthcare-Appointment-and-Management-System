@@ -18,7 +18,8 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		_handler = new CreateAppointmentCommandHandler(
 			RepositoryMagager,
 			AppointmentService,
-			HAMSMapper);
+			HAMSMapper,
+			UnitOfWork);
 	}
 
 	[Fact]

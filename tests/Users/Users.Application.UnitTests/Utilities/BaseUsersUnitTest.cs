@@ -32,7 +32,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				new MapperConfiguration(cfg =>
 				{
 					cfg.AddProfile<UserCommandProfile>();
-				}))))
+				}))),
+		Substitute.For<IUnitOfWork>())
 	{
 		RepositoryManager = Substitute.For<IRepositoryManager>();
 		FactoryManager = Substitute.For<IFactoryManager>();

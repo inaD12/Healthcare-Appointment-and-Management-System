@@ -18,7 +18,8 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			PasswordManager,
 			EventBus,
 			EmailConfirmationTokenPublisher,
-			HAMSMapper
+			HAMSMapper,
+			UnitOfWork
 			);
 	}
 
