@@ -1,4 +1,5 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
+using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
@@ -42,6 +43,14 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
 		//.RequireAuthorization();
+
+		group.MapGet("getById/{id}", GetById)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError);
+		//.RequireAuthorization();
 	}
 
 	public async Task<IResult> Create(
@@ -74,6 +83,17 @@ internal class AppointmentsEndPoints : IEndPoints
 	{
 		var command = mapper.Map<RescheduleAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+
+	public async Task<IResult> GetById(
+		[FromRoute] string id,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		CancellationToken cancellationToken)
+	{
+		var query = mapper.Map<GetAppointmentByIdQuery>(id);
+		var res = await sender.Send(query, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 }
