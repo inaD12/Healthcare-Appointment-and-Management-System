@@ -42,6 +42,8 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		RepositoryMagager = Substitute.For<IRepositoryManager>();
 		JWTParser = Substitute.For<IJwtParser>();
 		AppointmentService = Substitute.For<IAppointmentService>();
+		
+		var AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
 
 		var appointment = new Appointment(
 			AppointmentsTestUtilities.ValidId,
@@ -130,13 +132,14 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			Arg.Any<CreateAppointmentModel>())
 			.Returns(callInfo =>
 			{
-				string doctorid = callInfo.ArgAt<CreateAppointmentModel>(0).DoctorId;
+				var model = callInfo.ArgAt<CreateAppointmentModel>(0);
 
-				if (id == AppointmentsTestUtilities.HelperInternalErrorId)
-					return Result.Failure(Responses.InternalError);
+				if (model.DoctorId == AppointmentsTestUtilities.HelperInternalErrorId)
+					return Task.FromResult(Result<AppointmentCommandViewModel>.Failure(Responses.InternalError));
 
-				return Result.Success();
+				return Task.FromResult(Result<AppointmentCommandViewModel>.Success(AppointmentCommandViewModel));
 			});
+
 
 		RepositoryMagager.Appointment
 			.GetAppointmentWithUserDetailsAsync(Arg.Do<string>(a => id = a))

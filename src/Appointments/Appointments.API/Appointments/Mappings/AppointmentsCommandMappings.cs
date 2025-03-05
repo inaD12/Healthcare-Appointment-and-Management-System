@@ -1,4 +1,6 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
+using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
@@ -15,5 +17,7 @@ public class AppointmentsCommandMappings : Profile
 		CreateMap<CancelAppointmentRequest, CancelAppointmentCommand>();
 
 		CreateMap<RescheduleAppointmentRequest, RescheduleAppointmentCommand>();
+
+		CreateMap<AppointmentCommandViewModel, AppointmentCommandResponse>();
 	}
 }

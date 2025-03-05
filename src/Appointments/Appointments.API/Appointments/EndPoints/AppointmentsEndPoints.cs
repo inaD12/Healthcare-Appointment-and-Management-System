@@ -1,5 +1,5 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
-using Appointments.Application.Features.Appointments.Models;
+using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
@@ -19,7 +19,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		var group = app.MapGroup("api/appointments");
 
 		group.MapPost("create", Create)
-			.Produces<AppointmentCommandViewModel>(StatusCodes.Status201Created)
+			.Produces<AppointmentCommandResponse>(StatusCodes.Status201Created)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -37,7 +37,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		//.RequireAuthorization();
 
 		group.MapPut("reschedule", Reschedule)
-			.Produces<AppointmentCommandViewModel>(StatusCodes.Status200OK)
+			.Produces<AppointmentCommandResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -46,7 +46,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		//.RequireAuthorization();
 
 		group.MapGet("getById/{id}", GetById)
-			.Produces<AppointmentQueryViewModel>(StatusCodes.Status200OK)
+			.Produces<AppointmentQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -62,7 +62,11 @@ internal class AppointmentsEndPoints : IEndPoints
 	{
 		var command = mapper.Map<CreateAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = mapper.Map<AppointmentCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
 	public async Task<IResult> Cancel(
@@ -84,7 +88,11 @@ internal class AppointmentsEndPoints : IEndPoints
 	{
 		var command = mapper.Map<RescheduleAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = mapper.Map<AppointmentCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
 	public async Task<IResult> GetById(
@@ -95,6 +103,10 @@ internal class AppointmentsEndPoints : IEndPoints
 	{
 		var query = mapper.Map<GetAppointmentByIdQuery>(id);
 		var res = await sender.Send(query, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = mapper.Map<AppointmentQueryResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 }
