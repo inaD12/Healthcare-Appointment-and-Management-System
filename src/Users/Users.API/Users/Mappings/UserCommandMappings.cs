@@ -25,6 +25,13 @@ public class UserCommandMappings : Profile
 				src.Item1.FirstName,
 				src.Item1.LastName));
 
+		CreateMap<(UpdateUserRequest, string id), UpdateUserCommand>()
+			.ConstructUsing(src => new(
+				src.Item2,
+				src.Item1.NewEmail,
+				src.Item1.FirstName,
+				src.Item1.LastName));
+
 		CreateMap<VerifyEmailRequest, HandleEmailCommand>();
 
 		CreateMap<LoginUserCommandViewModel, LoginUserResponse>();

@@ -40,13 +40,21 @@ internal class UserEndPoints : IEndPoints
 			.AllowAnonymous();
 
 		group.MapPut("update-current", UpdateCurrent)
-			.Produces<LoginUserResponse>(StatusCodes.Status200OK)
+			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
+
+		group.MapPut("update/{id}", Update)
+			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
 
 		group.MapGet("get-all-doctors", GetAllDoctors)
 			.Produces<IEnumerable<User>>(StatusCodes.Status200OK)
@@ -95,8 +103,8 @@ internal class UserEndPoints : IEndPoints
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
 
-		var loginUserResponse = mapper.Map<UserCommandResponse>(res.Value!);
-		return ControllerResponse.ParseAndReturnMessage(res, loginUserResponse);
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
 	public async Task<IResult> UpdateCurrent(
@@ -111,13 +119,30 @@ internal class UserEndPoints : IEndPoints
 			return ControllerResponse.ParseAndReturnMessage(parserRes);
 		string id = parserRes.Value!;
 
-		var command = mapper.Map<UpdateUserCommand>((id,request));
+		var command = mapper.Map<UpdateUserCommand>((request, id));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
 
-		var loginUserResponse = mapper.Map<UserCommandResponse>(res.Value!);
-		return ControllerResponse.ParseAndReturnMessage(res, loginUserResponse);
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
+	}
+
+	public async Task<IResult> Update(
+		[FromRoute] string id,
+		[FromBody] UpdateUserRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		[FromServices] IJwtParser jwtParser,
+		CancellationToken cancellationToken)
+	{
+		var command = mapper.Map<UpdateUserCommand>((request, id));
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
 	public async Task<IResult> GetAllDoctors(
