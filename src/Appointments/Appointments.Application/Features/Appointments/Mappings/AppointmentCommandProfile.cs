@@ -38,5 +38,7 @@ public class AppointmentCommandProfile : Profile
 					src.Item2.Duration,
 					AppointmentStatus.Scheduled
 					));
+
+		CreateMap<Appointment, AppointmentCommandViewModel>();
 	}
 }

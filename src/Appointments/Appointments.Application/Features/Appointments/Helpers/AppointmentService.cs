@@ -18,7 +18,7 @@ public class AppointmentService : IAppointmentService
 		_mapper = mapper;
 	}
 
-	public async Task<Result> CreateAppointment(CreateAppointmentModel model)
+	public async Task<Result<AppointmentCommandViewModel>> CreateAppointment(CreateAppointmentModel model)
 	{
 		DateTime EndTime = model.StartTime.AddMinutes((int)model.Duration).ToUniversalTime();
 
@@ -30,12 +30,14 @@ public class AppointmentService : IAppointmentService
 		bool isTimeSlotAvailable = isTimeSlotAvailableRes.Value;
 
 		if (!isTimeSlotAvailable)
-			return Result.Failure(Responses.TimeSlotNotAvailable);
+			return Result<AppointmentCommandViewModel>.Failure(Responses.TimeSlotNotAvailable);
 
 		var appointment = _mapper.Map<Appointment>(model);
 
 		await _repositoryManager.Appointment.AddAsync(appointment);
 
-		return Result.Success(Responses.AppointmentCreated);
+		var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+
+		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, Responses.AppointmentCreated);
 	}
 }
