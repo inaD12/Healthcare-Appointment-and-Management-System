@@ -1,4 +1,5 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
@@ -18,7 +19,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		var group = app.MapGroup("api/appointments");
 
 		group.MapPost("create", Create)
-			.Produces(StatusCodes.Status201Created)
+			.Produces<AppointmentCommandViewModel>(StatusCodes.Status201Created)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -45,7 +46,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		//.RequireAuthorization();
 
 		group.MapGet("getById/{id}", GetById)
-			.Produces(StatusCodes.Status200OK)
+			.Produces<AppointmentQueryViewModel>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
