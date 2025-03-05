@@ -1,27 +1,31 @@
-﻿using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions;
+using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Managers.Interfaces;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.UpdateUser;
 
-public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
+public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, UserCommandViewModel>
 {
 	private readonly IRepositoryManager _repositotyManager;
 	private readonly IUnitOfWork _unitOfWork;
-	public UpdateUserCommandHandler(IRepositoryManager repositotyManager, IUnitOfWork unitOfWork)
+	private readonly IHAMSMapper _mapper;
+	public UpdateUserCommandHandler(IRepositoryManager repositotyManager, IUnitOfWork unitOfWork, IHAMSMapper mapper)
 	{
 		_repositotyManager = repositotyManager;
 		_unitOfWork = unitOfWork;
+		_mapper = mapper;
 	}
 
-	public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+	public async Task<Result<UserCommandViewModel>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
 		var userResult = await _repositotyManager.User.GetByIdAsync(request.Id);
 		if (userResult.IsFailure)
-			return Result.Failure(userResult.Response);
+			return Result<UserCommandViewModel>.Failure(userResult.Response);
 
 		User user = userResult.Value!;
 
@@ -29,7 +33,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 		{
 			var emailCheckResult = await _repositotyManager.User.GetByEmailAsync(request.NewEmail);
 			if (emailCheckResult.IsSuccess)
-				return Result.Failure(Responses.EmailTaken);
+				return Result<UserCommandViewModel>.Failure(Responses.EmailTaken);
 
 			user.Email = request.NewEmail;
 		}
@@ -40,6 +44,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 		_repositotyManager.User.UpdateAsync(user);
 
 		await _unitOfWork.SaveChangesAsync();
-		return Result.Success(Responses.UpdateSuccessful);
+		var userCommandViewModel = _mapper.Map<UserCommandViewModel>(user);
+		return Result<UserCommandViewModel>.Success(userCommandViewModel, Responses.UpdateSuccessful);
 	}
 }

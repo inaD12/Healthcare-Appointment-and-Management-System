@@ -21,7 +21,7 @@ public class AppointmentCommandProfile : Profile
 					src.Status
 					));
 
-		CreateMap<(AppointmentWithDetailsDTO, RescheduleAppointmentCommand), CreateAppointmentModel>()
+		CreateMap<(AppointmentWithDetailsModel, RescheduleAppointmentCommand), CreateAppointmentModel>()
 				.ConstructUsing(src => new(
 					src.Item1.DoctorEmail,
 					src.Item1.PatientEmail,

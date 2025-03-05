@@ -14,7 +14,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 	public UpdateUserCommandHandlerTests()
 	{
-		_commandHandler = new UpdateUserCommandHandler(RepositoryManager, UnitOfWork);
+		_commandHandler = new UpdateUserCommandHandler(RepositoryManager, UnitOfWork, HAMSMapper);
 	}
 
 	[Fact]

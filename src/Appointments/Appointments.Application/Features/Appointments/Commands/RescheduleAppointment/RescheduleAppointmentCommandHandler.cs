@@ -35,7 +35,7 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		if (detailedAppointmentRes.IsFailure)
 			return Result<AppointmentCommandViewModel>.Failure(detailedAppointmentRes.Response);
 
-		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value!;
+		AppointmentWithDetailsModel appointmentWithDetails = detailedAppointmentRes.Value!;
 
 		var userIdRes = _jwtParser.GetIdFromToken();
 

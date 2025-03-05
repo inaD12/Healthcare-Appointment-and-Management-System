@@ -72,13 +72,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			Roles.Patient
 		);
 
-		var appointmentWithDetailsDTO = new AppointmentWithDetailsDTO
+		var appointmentWithDetailsDTO = new AppointmentWithDetailsModel
 		{
 			DoctorId = AppointmentsTestUtilities.ValidId,
 			PatientId = AppointmentsTestUtilities.ValidId,
 		};
 
-		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsDTO();
+		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsModel();
 
 		string id = "";
 		RepositoryMagager.Appointment.GetByIdAsync(Arg.Do<string>(a => id = a))
@@ -148,11 +148,11 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				 string id = callInfo.ArgAt<string>(0);
 
 				 if (id == AppointmentsTestUtilities.InvalidId)
-					 return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
+					 return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
 				 if (id == AppointmentsTestUtilities.UnauthUserId)
-					 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTONotMatching);
+					 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTONotMatching);
 
-				 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTO);
+				 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTO);
 			 });
 
 		RepositoryMagager.Appointment

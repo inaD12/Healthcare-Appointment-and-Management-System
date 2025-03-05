@@ -3,8 +3,10 @@ using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.LoginUser;
+using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Users.Models.Requests;
+using Users.Users.Models.Responses;
 
 namespace Users.Users.Mappings;
 
@@ -12,7 +14,7 @@ public class UserCommandMappings : Profile
 {
 	public UserCommandMappings()
 	{
-		CreateMap<LoginUserRequest, LoginUserCommand<TokenResult>>();
+		CreateMap<LoginUserRequest, LoginUserCommand>();
 
 		CreateMap<RegisterUserRequest, RegisterUserCommand>();
 
@@ -24,5 +26,9 @@ public class UserCommandMappings : Profile
 				src.Item1.LastName));
 
 		CreateMap<VerifyEmailRequest, HandleEmailCommand>();
+
+		CreateMap<LoginUserCommandViewModel, LoginUserResponse>();
+
+		CreateMap<UserCommandViewModel, UserCommandResponse>();
 	}
 }
