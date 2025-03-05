@@ -1,4 +1,5 @@
-﻿using Appointments.Domain.Enums;
+﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Domain.Enums;
 using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
@@ -6,5 +7,5 @@ namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppo
 public sealed record RescheduleAppointmentCommand(
 	 string AppointmentID,
 	 DateTime ScheduledStartTime,
-	 AppointmentDuration Duration) : ICommand;
+	 AppointmentDuration Duration) : ICommand<AppointmentCommandViewModel>;
 

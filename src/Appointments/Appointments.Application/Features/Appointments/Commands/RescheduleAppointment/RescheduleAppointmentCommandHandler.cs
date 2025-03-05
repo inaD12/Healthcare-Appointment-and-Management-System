@@ -12,7 +12,7 @@ using Shared.Infrastructure.Abstractions;
 
 namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 
-public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
+public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand, AppointmentCommandViewModel>
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IJwtParser _jwtParser;
@@ -28,30 +28,31 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
+	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
 	{
 		var detailedAppointmentRes = await _repositoryManager.Appointment.GetAppointmentWithUserDetailsAsync(request.AppointmentID);
 
 		if (detailedAppointmentRes.IsFailure)
-			return Result.Failure(detailedAppointmentRes.Response);
+			return Result<AppointmentCommandViewModel>.Failure(detailedAppointmentRes.Response);
 
 		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value!;
 
 		var userIdRes = _jwtParser.GetIdFromToken();
 
 		if (userIdRes.IsFailure)
-			return Result.Failure(userIdRes.Response);
+			return Result<AppointmentCommandViewModel>.Failure(userIdRes.Response);
 		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
-			return Result.Failure(Responses.CannotRescheduleOthersAppointment);
+			return Result<AppointmentCommandViewModel>.Failure(Responses.CannotRescheduleOthersAppointment);
 
 		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((appointmentWithDetails, request));
 		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
 		if (helperResult.IsFailure)
-			return Result.Failure(helperResult.Response);
+			return Result<AppointmentCommandViewModel>.Failure(helperResult.Response);
 
 		_repositoryManager.Appointment.ChangeStatusAsync(appointmentWithDetails.Appointment, AppointmentStatus.Rescheduled);
 
 		await _unitOfWork.SaveChangesAsync();
-		return Result.Success();
+		var appointmentCommandViewModel = helperResult.Value!;
+		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, Responses.AppointmentCreated);
 	}
 }
