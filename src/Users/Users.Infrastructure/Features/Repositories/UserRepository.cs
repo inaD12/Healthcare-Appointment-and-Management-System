@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Enums;
+using Shared.Domain.Models;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Models;
 using Users.Domain.Responses;
 using Users.Infrastructure.DBContexts;
 
@@ -27,6 +30,24 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		return Result<IEnumerable<User>>.Success(users);
 	}
+
+	public async Task<PagedList<User>> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
+	{
+		var entitiesQuery = _context.Users
+			.Where(u =>
+				(string.IsNullOrEmpty(query.FirstName) || u.FirstName.StartsWith(query.FirstName)) &&
+				(string.IsNullOrEmpty(query.LastName) || u.LastName.StartsWith(query.LastName)) &&
+				(string.IsNullOrEmpty(query.Email) || u.Email.StartsWith(query.Email)) &&
+				(!query.Role.HasValue || u.Role == query.Role!.Value) &&
+				(string.IsNullOrEmpty(query.PhoneNumber) || u.PhoneNumber!.StartsWith(query.PhoneNumber)) &&
+				(string.IsNullOrEmpty(query.Address) || u.Address!.StartsWith(query.Address)) &&
+				(!query.EmailVerified.HasValue || u.EmailVerified == query.EmailVerified!.Value)
+			).ApplySorting(query.SortPropertyName, query.SortOrder);
+
+		var users = await PagedList<User>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
+		return users;
+	}
+
 
 	public async Task<Result<User>> GetByEmailAsync(string email)
 	{
