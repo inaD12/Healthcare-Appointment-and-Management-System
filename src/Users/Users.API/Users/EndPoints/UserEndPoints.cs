@@ -11,6 +11,7 @@ using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.LoginUser;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllDoctors;
+using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.Entities;
 using Users.Users.Models.Requests;
@@ -58,6 +59,13 @@ internal class UserEndPoints : IEndPoints
 
 		group.MapGet("get-all-doctors", GetAllDoctors)
 			.Produces<IEnumerable<User>>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError);
+		//.RequireAuthorization();
+
+		group.MapGet("get-all", GetAll)
+			.Produces<UserPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError);
@@ -152,6 +160,21 @@ internal class UserEndPoints : IEndPoints
 		var query = new GetAllDoctorsQuery();
 		var res = await sender.Send(query, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+
+	public async Task<IResult> GetAll(
+		[AsParameters] GetAllUsersRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		CancellationToken cancellationToken)
+	{
+		var query = mapper.Map<GetAllUsersQuery>(request);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserPaginatedQueryResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
 	public async Task<IResult> DeleteCurrent(

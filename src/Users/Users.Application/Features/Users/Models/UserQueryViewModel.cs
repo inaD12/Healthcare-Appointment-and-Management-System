@@ -3,6 +3,7 @@
 namespace Users.Application.Features.Users.Models;
 
 public sealed record UserQueryViewModel(
+	string Id,
 	string Email,
 	Roles Role,
 	string FirstName,

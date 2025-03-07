@@ -5,14 +5,14 @@ using Users.Application.Features.Users.Models;
 namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
 public sealed record GetAllUsersQuery(
-	string Email,
+	string? Email,
 	Roles? Role,
-	string FirstName,
-	string LastName,
-	string PhoneNumber,
-	string Address,
+	string? FirstName,
+	string? LastName,
+	string? PhoneNumber,
+	string? Address,
 	bool? EmailVerified,
-	SortOrder SortOrder,
+	SortOrder? SortOrder,
 	string SortPropertyName,
 	int Page,
 	int PageSize) : IQuery<UserPaginatedQueryViewModel>;
