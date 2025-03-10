@@ -8,7 +8,7 @@ public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 	public GetAllUsersQueryValidator()
 	{
 		RuleFor(q => q.SortPropertyName)
-			.Must(BeAValidSortProperty);
+			.Must(BeAValidSortProperty).WithMessage("SortPropertyName must be a valid property");
 	}
 
 	private bool BeAValidSortProperty(string propertyName)

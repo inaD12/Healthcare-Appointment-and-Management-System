@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Serilog;
+using Shared.Domain.Exceptions;
 
 namespace Shared.API.Middlewares;
 
@@ -19,28 +20,32 @@ public class ErrorHandlingMiddleware
 		{
 			await _next(context);
 		}
+		catch(HAMSValidationException ex)
+		{
+			await HandleValidationExceptionAsync(context, ex);
+		}
 		catch (Exception ex)
 		{
 			Log.Error($"Unhandled exception caught: {ex.Message} {ex.Source} {ex.InnerException} {ex.StackTrace}");
-			await HandleValidationExceptionAsync(context, ex);
+			await HandleExceptionAsync(context, ex);
 		}
 	}
 
-	//private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-	//{
-	//	context.Response.ContentType = "application/json";
+	private Task HandleValidationExceptionAsync(HttpContext context, Exception exception)
+	{
+		context.Response.ContentType = "application/json";
 
-	//	context.Response.StatusCode = StatusCodes.Status400BadRequest;
+		context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-	//	var response = new
-	//	{
-	//		exception.Message
-	//	};
+		var response = new
+		{
+			exception.Message
+		};
 
-	//	return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
-	//}
+		return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+	}
 
-	private static Task HandleValidationExceptionAsync(HttpContext context, Exception exception)
+	private Task HandleExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.ContentType = "application/json";
 
