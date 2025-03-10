@@ -21,8 +21,11 @@ public class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, UserPagin
 	public async Task<Result<UserPaginatedQueryViewModel>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
 	{
 		var userPagedListQuery = _hamsMapper.Map<UserPagedListQuery>(request);
-		var usersPagedList = await _userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
+		var usersPagedListRes = await _userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
+		if (usersPagedListRes.IsFailure)
+			return Result<UserPaginatedQueryViewModel>.Failure(usersPagedListRes.Response);
 
+		var usersPagedList = usersPagedListRes.Value!;
 		var userPaginatedQueryViewModel = _hamsMapper.Map<UserPaginatedQueryViewModel>(usersPagedList);
 		return Result<UserPaginatedQueryViewModel>.Success(userPaginatedQueryViewModel);
 	}

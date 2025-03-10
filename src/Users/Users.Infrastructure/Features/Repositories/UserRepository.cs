@@ -21,17 +21,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		_context = context;
 	}
 
-	public async Task<Result<IEnumerable<User>>> GetAllDoctorsAsync()
-	{
-		var users = await _context.Users.Where(e => e.Role == Roles.Doctor).ToListAsync();
-
-		if (!users.Any())
-			return Result<IEnumerable<User>>.Failure(Responses.NoUsersFound);
-
-		return Result<IEnumerable<User>>.Success(users);
-	}
-
-	public async Task<PagedList<User>> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
+	public async Task<Result<PagedList<User>>> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
 	{
 		var entitiesQuery = _context.Users
 			.Where(u =>
@@ -44,8 +34,11 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 				(!query.EmailVerified.HasValue || u.EmailVerified == query.EmailVerified!.Value)
 			).ApplySorting(query.SortPropertyName, query.SortOrder);
 
+		if (entitiesQuery == null)
+			return Result<PagedList<User>>.Failure(Responses.NoUsersFound);
+
 		var users = await PagedList<User>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
-		return users;
+		return Result<PagedList<User>>.Success(users);
 	}
 
 
