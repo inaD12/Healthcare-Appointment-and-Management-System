@@ -3,7 +3,7 @@ using Users.Domain.Entities;
 
 namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
-internal class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
+public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 {
 	public GetAllUsersQueryValidator()
 	{
