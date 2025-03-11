@@ -41,7 +41,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.AppointmentNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
 
 		JWTParser.DidNotReceiveWithAnyArgs().GetIdFromToken();
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
@@ -65,7 +65,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.InternalError);
+		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
 
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
@@ -88,7 +88,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.CannotRescheduleOthersAppointment);
+		result.Response.Should().BeEquivalentTo(ResponseList.CannotRescheduleOthersAppointment);
 
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
@@ -111,7 +111,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.InternalError);
+		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
 	}
 
 	[Fact]

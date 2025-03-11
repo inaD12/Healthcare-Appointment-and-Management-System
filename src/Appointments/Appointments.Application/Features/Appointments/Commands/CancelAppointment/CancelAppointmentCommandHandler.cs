@@ -1,11 +1,11 @@
 ﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
+using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 
@@ -14,11 +14,13 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IJwtParser _jwtParser;
 	private readonly IUnitOfWork _unitOfWork;
-	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IUnitOfWork unitOfWork)
+	private readonly IDateTimeProvider _dateTimeProvider;
+	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
 	{
 		_repositoryManager = repositoryManager;
 		_jwtParser = jwtParser;
 		_unitOfWork = unitOfWork;
+		_dateTimeProvider = dateTimeProvider;
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
@@ -34,9 +36,11 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 			return Result.Failure(userIdRes.Response);
 
 		if (userIdRes.Value != appointment.PatientId && userIdRes.Value != appointment.DoctorId)
-			return Result.Failure(Responses.CannotCancelOthersAppointment);
+			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 
-		_repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Cancelled);
+		var res = appointment.Cancel(_dateTimeProvider.UtcNow);
+		if (res.IsFailure)
+			return res;
 
 		await _unitOfWork.SaveChangesAsync();
 		return Result.Success();

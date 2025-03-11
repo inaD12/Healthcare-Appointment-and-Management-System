@@ -1,6 +1,4 @@
-﻿using Appointments.Application.Features.Appointments.Helpers;
-using Appointments.Application.Features.Appointments.Helpers.Abstractions;
-using Appointments.Application.Features.Helpers;
+﻿using Appointments.Application.Features.Helpers;
 using Appointments.Application.Features.Jobs;
 using Appointments.Application.Features.Jobs.Managers;
 using Appointments.Application.Features.Jobs.Managers.Interfaces;
@@ -10,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
 using Shared.Domain.Options;
+using Shared.Infrastructure.Extensions;
 
 namespace Appointments.Application.Extensions;
 
@@ -21,7 +20,6 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddScoped<IRepositoryManager, RepositoryManager>()
-			.AddTransient<IAppointmentService, AppointmentService>()
 			.AddScoped<CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -35,7 +33,8 @@ public static class ServiceCollectionExtensions
 			.AddHangFire(dbOptions.ConnectionString)
 			.AddHostedService<HangfireHostedService>()
 			.AddMessageBroker(configuration, currentAssembly)
-			.AddMapper(currentAssembly);
+			.AddMapper(currentAssembly)
+			.AddDateTimeProvider();
 
 
 		return services;

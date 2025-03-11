@@ -12,33 +12,6 @@ public class AppointmentCommandProfile : Profile
 {
 	public AppointmentCommandProfile()
 	{
-		CreateMap<CreateAppointmentModel, Appointment>()
-				.ConstructUsing(src => new(
-					src.PatientId,
-					src.DoctorId,
-					src.StartTime,
-					src.StartTime.AddMinutes((int)src.Duration),
-					src.Status
-					));
-
-		CreateMap<(AppointmentWithDetailsModel, RescheduleAppointmentCommand), CreateAppointmentModel>()
-				.ConstructUsing(src => new(
-					src.Item1.DoctorEmail,
-					src.Item1.PatientEmail,
-					src.Item2.ScheduledStartTime.ToUniversalTime(),
-					src.Item2.Duration,
-					AppointmentStatus.Scheduled
-					));
-
-		CreateMap<(DoctorPatientIdModel, CreateAppointmentCommand), CreateAppointmentModel>()
-				.ConstructUsing(src => new(
-					src.Item1.DoctorId,
-					src.Item1.PatientId,
-					src.Item2.ScheduledStartTime.ToUniversalTime(),
-					src.Item2.Duration,
-					AppointmentStatus.Scheduled
-					));
-
 		CreateMap<Appointment, AppointmentCommandViewModel>();
 	}
 }

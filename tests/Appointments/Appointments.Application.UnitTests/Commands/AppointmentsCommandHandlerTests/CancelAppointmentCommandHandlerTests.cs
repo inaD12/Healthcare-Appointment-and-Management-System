@@ -47,7 +47,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		//Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.CannotCancelOthersAppointment);
+		result.Response.Should().BeEquivalentTo(ResponseList.CannotCancelOthersAppointment);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
 		JWTParser.Received(1).GetIdFromToken();
@@ -65,7 +65,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		//Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.AppointmentNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
 		JWTParser.Received(0).GetIdFromToken();
@@ -83,7 +83,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		//Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.InternalError);
+		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
 
 		await RepositoryMagager.Appointment.Received(1).GetByIdAsync(command.AppointmentId);
 		JWTParser.Received(1).GetIdFromToken();

@@ -1,7 +1,8 @@
-﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
-using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
+﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.Entities;
 using Appointments.Domain.Responses;
+using Appointments.Domain.ValueObjects;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
@@ -12,39 +13,42 @@ namespace Appointments.Application.Features.Commands.Appointments.CreateAppointm
 
 public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand, AppointmentCommandViewModel>
 {
-	private readonly IRepositoryManager _repositoryManager;
-	private readonly IAppointmentService _appointmentService;
+	private readonly IUserDataRepository _userDataRepository;
+	private readonly IAppointmentRepository _appointmentRepository;
 	private readonly IHAMSMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
-	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentService appointmentServuce, IHAMSMapper mapper, IUnitOfWork unitOfWork)
+	public CreateAppointmentCommandHandler(IHAMSMapper mapper, IUnitOfWork unitOfWork, IUserDataRepository userDataRepository, IAppointmentRepository appointmentRepository)
 	{
-		_repositoryManager = repositoryManager;
-		_appointmentService = appointmentServuce;
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
+		_userDataRepository = userDataRepository;
+		_appointmentRepository = appointmentRepository;
 	}
 	public async Task<Result<AppointmentCommandViewModel>> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var doctorDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.DoctorEmail);
+		var doctorDataRes = await _userDataRepository.GetUserDataByEmailAsync(request.DoctorEmail);
 
 		if (doctorDataRes.IsFailure)
-			return Result<AppointmentCommandViewModel>.Failure(Responses.DoctorNotFound);
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.DoctorNotFound);
 		if (doctorDataRes.Value!.Role != Roles.Doctor)
-			return Result<AppointmentCommandViewModel>.Failure(Responses.UserIsNotADoctor);
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.UserIsNotADoctor);
 
-		var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.PatientEmail);
+		var patientDataRes = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
 
 		if (patientDataRes.IsFailure)
-			return Result<AppointmentCommandViewModel>.Failure(Responses.PatientNotFound);
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.PatientNotFound);
 
-		var doctorPatientIdModel = new DoctorPatientIdModel(doctorDataRes.Value.UserId, patientDataRes.Value!.UserId);
-		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((doctorPatientIdModel, request));
-		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
-		if (helperResult.IsFailure)
-			return Result<AppointmentCommandViewModel>.Failure(helperResult.Response);
+		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
+		if(await _appointmentRepository.IsTimeSlotAvailableAsync(doctorDataRes.Value.Id, duration, cancellationToken))
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
+
+		var appointment = Appointment.Schedule(patientDataRes.Value!.UserId, doctorDataRes.Value.UserId, duration);
+
+		await _appointmentRepository.AddAsync(appointment);
 		await _unitOfWork.SaveChangesAsync();
-		var appointmentCommandViewModel = helperResult.Value!;
-		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, Responses.AppointmentCreated);
+
+		var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
 	}
 }

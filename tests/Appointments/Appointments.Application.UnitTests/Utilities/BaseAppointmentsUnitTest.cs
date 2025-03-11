@@ -85,7 +85,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				.Returns(callInfo =>
 				{
 					if (id == AppointmentsTestUtilities.InvalidId)
-						return (Result<Appointment>.Failure(Responses.AppointmentNotFound));
+						return (Result<Appointment>.Failure(ResponseList.AppointmentNotFound));
 
 					return (Result<Appointment>.Success(appointment));
 				});
@@ -96,7 +96,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				if (id == AppointmentsTestUtilities.WrongIdFromTokenId)
 					return Result<string>.Success(AppointmentsTestUtilities.InvalidId);
 				if (id == AppointmentsTestUtilities.JWTExtractorInternalErrorId)
-					return Result<string>.Failure(Responses.InternalError);
+					return Result<string>.Failure(ResponseList.InternalError);
 
 				return Result<string>.Success(AppointmentsTestUtilities.ValidId);
 			});
@@ -125,7 +125,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				 if (email == AppointmentsTestUtilities.DoctorEmail)
 					 return Result<UserData>.Success(doctorData);
 
-				 return Result<UserData>.Failure(Responses.UserDataNotFound);
+				 return Result<UserData>.Failure(ResponseList.UserDataNotFound);
 			 });
 
 		AppointmentService.CreateAppointment(
@@ -135,7 +135,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				var model = callInfo.ArgAt<CreateAppointmentModel>(0);
 
 				if (model.DoctorId == AppointmentsTestUtilities.HelperInternalErrorId)
-					return Task.FromResult(Result<AppointmentCommandViewModel>.Failure(Responses.InternalError));
+					return Task.FromResult(Result<AppointmentCommandViewModel>.Failure(ResponseList.InternalError));
 
 				return Task.FromResult(Result<AppointmentCommandViewModel>.Success(AppointmentCommandViewModel));
 			});
@@ -148,7 +148,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				 string id = callInfo.ArgAt<string>(0);
 
 				 if (id == AppointmentsTestUtilities.InvalidId)
-					 return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
+					 return Result<AppointmentWithDetailsModel>.Failure(ResponseList.AppointmentNotFound);
 				 if (id == AppointmentsTestUtilities.UnauthUserId)
 					 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTONotMatching);
 

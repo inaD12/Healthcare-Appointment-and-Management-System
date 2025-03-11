@@ -41,7 +41,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.DoctorNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.DoctorNotFound);
 
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
@@ -65,7 +65,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.UserIsNotADoctor);
+		result.Response.Should().BeEquivalentTo(ResponseList.UserIsNotADoctor);
 
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
@@ -89,7 +89,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.PatientNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.PatientNotFound);
 
 		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}

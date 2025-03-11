@@ -3,6 +3,7 @@ using Appointments.Domain.Enums;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
+using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
 
@@ -10,19 +11,19 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 {
 	private readonly IRepositoryManager _repositoryManager;
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IDateTimeProvider _dateTimeProvider;
 
-	public CompleteAppointmentsCommandHandler(IRepositoryManager repositoryManager, IUnitOfWork unitOfWork)
+	public CompleteAppointmentsCommandHandler(IRepositoryManager repositoryManager, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
 	{
 		_repositoryManager = repositoryManager;
 		_unitOfWork = unitOfWork;
+		_dateTimeProvider = dateTimeProvider;
 	}
 
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
 	{
-		var now = DateTime.UtcNow;
-
 		var appointmentsToCompleteRes = await _repositoryManager.Appointment
-			.GetAppointmentsToCompleteAsync(now);
+			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow);
 		if (appointmentsToCompleteRes.IsFailure)
 			return Result.Failure(appointmentsToCompleteRes.Response);
 
@@ -33,7 +34,7 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 
 		foreach (var appointment in appointmentsToComplete)
 		{
-			appointment.Status = AppointmentStatus.Completed;
+			var res = appointment.Complete();
 		}
 
 		await _unitOfWork.SaveChangesAsync();

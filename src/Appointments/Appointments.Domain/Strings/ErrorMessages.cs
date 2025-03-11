@@ -12,4 +12,6 @@ public static class ErrorMessages
 	public const string CannotCancelOthersAppointment = "You cannot cancel someone else's appointment";
 	public const string CannotRescheduleOthersAppointment = "You cannot reschedule someone else's appointment";
 	public const string UserIsNotADoctor = "The user you selected is not a doctor. Please choose a valid doctor.";
+	public const string AppointmentNotScheduled = "Appointment is not scheduled";
+	public const string AppointmentAlreadyStarted = "Appointment has already started";
 }

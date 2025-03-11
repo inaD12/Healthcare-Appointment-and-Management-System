@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Appointments.Domain.Responses;
 
-public static class Responses
+public static class ResponseList
 {
 	// Success Responses
 	public static Response Ok => Response.Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);
@@ -21,4 +21,6 @@ public static class Responses
 	public static Response CannotCancelOthersAppointment => Response.Create(ErrorMessages.CannotCancelOthersAppointment, HttpStatusCode.Unauthorized);
 	public static Response CannotRescheduleOthersAppointment => Response.Create(ErrorMessages.CannotRescheduleOthersAppointment, HttpStatusCode.Unauthorized);
 	public static Response UserIsNotADoctor => Response.Create(ErrorMessages.UserIsNotADoctor, HttpStatusCode.Conflict);
+	public static Response AppointmentNotScheduled => Response.Create(ErrorMessages.AppointmentNotScheduled, HttpStatusCode.Conflict);
+	public static Response AppointmentAlreadyStarted => Response.Create(ErrorMessages.AppointmentAlreadyStarted, HttpStatusCode.Conflict);
 }

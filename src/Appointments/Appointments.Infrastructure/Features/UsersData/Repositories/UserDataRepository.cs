@@ -22,7 +22,7 @@ internal class UserDataRepository : GenericRepository<UserData>, IUserDataReposi
 			.FirstOrDefaultAsync(u => u.Email == email);
 
 		if (user == null)
-			return Result<UserData>.Failure(Responses.UserDataNotFound);
+			return Result<UserData>.Failure(ResponseList.UserDataNotFound);
 
 		return Result<UserData>.Success(user);
 	}

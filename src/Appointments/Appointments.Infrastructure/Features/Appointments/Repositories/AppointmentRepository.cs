@@ -3,6 +3,7 @@ using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Enums;
 using Appointments.Domain.Responses;
+using Appointments.Domain.ValueObjects;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Results;
@@ -18,21 +19,17 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		_context = context;
 	}
 
-	public async Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime)
+	public async Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default)
 	{
 		bool isSlotTaken = await _context.Appointments
 			.AnyAsync(appointment =>
 				appointment.DoctorId == doctorId &&
 				appointment.Status == AppointmentStatus.Scheduled &&
-				appointment.ScheduledStartTime <= requestedEndTime &&
-				appointment.ScheduledEndTime >= requestedStartTime);
+				appointment.Duration.Start <= dateTimeRange.End &&
+				appointment.Duration.End >= dateTimeRange.Start,
+				cancellationToken);
 
-		return Result<bool>.Success(!isSlotTaken);
-	}
-
-	public void ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)
-	{
-		appointment.Status = newStatus;
+		return !isSlotTaken;
 	}
 
 	public async Task<Result<AppointmentWithDetailsModel>> GetAppointmentWithUserDetailsAsync(string appointmentId)
@@ -45,8 +42,8 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		select new AppointmentWithDetailsModel
 		{
 			AppointmentId = appointment.Id,
-			ScheduledStartTime = appointment.ScheduledStartTime,
-			ScheduledEndTime = appointment.ScheduledEndTime,
+			ScheduledStartTime = appointment.Duration.Start,
+			ScheduledEndTime = appointment.Duration.End,
 			Status = appointment.Status,
 			DoctorEmail = doctor.Email,
 			PatientEmail = patient.Email,
@@ -58,7 +55,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		).FirstOrDefaultAsync();
 
 		if (result == null)
-			return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
+			return Result<AppointmentWithDetailsModel>.Failure(ResponseList.AppointmentNotFound);
 
 		return Result<AppointmentWithDetailsModel>.Success(result);
 	}
@@ -66,7 +63,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 	public async Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime)
 	{
 		var res = await _context.Appointments
-		.Where(a => a.ScheduledEndTime <= currentTime && a.Status == AppointmentStatus.Scheduled)
+		.Where(a => a.Duration.End <= currentTime && a.Status == AppointmentStatus.Scheduled)
 		.ToListAsync();
 
 		return Result<List<Appointment>>.Success(res);

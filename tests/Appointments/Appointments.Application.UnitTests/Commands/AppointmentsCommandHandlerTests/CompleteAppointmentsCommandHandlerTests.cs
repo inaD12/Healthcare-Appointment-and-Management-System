@@ -40,7 +40,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenRepositoryFailsToFetchAppointments()
 	{
 		// Arrange
-		SetupGetAppointmentsToCompleteResult(Result<List<Appointment>>.Failure(Responses.InternalError));
+		SetupGetAppointmentsToCompleteResult(Result<List<Appointment>>.Failure(ResponseList.InternalError));
 		var command = new CompleteAppointmentsCommand();
 		var cancellationToken = CancellationToken.None;
 
@@ -49,7 +49,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(Responses.InternalError);
+		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
 		await UnitOfWork.DidNotReceive().SaveChangesAsync();
 	}
 

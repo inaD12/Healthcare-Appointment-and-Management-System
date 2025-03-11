@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
+using Shared.Infrastructure.Extensions;
 using Users.Application.Features.Auth;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Email.Helpers;
@@ -33,6 +34,7 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddMapper(currentAssembly)
+			.AddDateTimeProvider()
 			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
 			{
 				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
