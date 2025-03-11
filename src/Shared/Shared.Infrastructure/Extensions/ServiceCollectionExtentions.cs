@@ -4,11 +4,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Shared.Domain.Options;
 using Shared.Infrastructure.Abstractions;
+using Shared.Infrastructure.Clock;
 
 namespace Shared.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtentions
 {
+	public static IServiceCollection AddDateTimeProvider(this IServiceCollection services)
+	{
+		services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+
+		return services;
+	}
 	public static IServiceCollection AddUnitOfWork<TContext>(this IServiceCollection services)
 	where TContext : DbContext
 	{
