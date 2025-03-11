@@ -3,7 +3,7 @@ using Appointments.Domain.Enums;
 
 namespace Appointments.Domain.DTOS;
 
-public class AppointmentWithDetailsDTO
+public class AppointmentWithDetailsModel
 {
 	public string AppointmentId { get; set; }
 	public DateTime ScheduledStartTime { get; set; }

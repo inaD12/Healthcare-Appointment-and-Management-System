@@ -26,15 +26,15 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 		Entities.Remove(entity);
 	}
 
-	public virtual async Task<Result<IEnumerable<T>>> GetAllAsync()
-	{
-		var entities = await Entities.ToListAsync();
+	//public virtual async Task<Result<IEnumerable<T>>> GetAllAsync()
+	//{
+	//	var entities = await Entities.ToListAsync();
 
-		if (!entities.Any())
-			return Result<IEnumerable<T>>.Failure(SharedResponses.EntityNotFound);
+	//	if (!entities.Any())
+	//		return Result<IEnumerable<T>>.Failure(SharedResponses.EntityNotFound);
 
-		return Result<IEnumerable<T>>.Success(entities);
-	}
+	//	return Result<IEnumerable<T>>.Success(entities);
+	//}
 
 	public virtual async Task<Result<T>> GetByIdAsync(string id)
 	{

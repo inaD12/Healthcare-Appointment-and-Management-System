@@ -42,6 +42,8 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		RepositoryMagager = Substitute.For<IRepositoryManager>();
 		JWTParser = Substitute.For<IJwtParser>();
 		AppointmentService = Substitute.For<IAppointmentService>();
+		
+		var AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
 
 		var appointment = new Appointment(
 			AppointmentsTestUtilities.ValidId,
@@ -70,13 +72,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			Roles.Patient
 		);
 
-		var appointmentWithDetailsDTO = new AppointmentWithDetailsDTO
+		var appointmentWithDetailsDTO = new AppointmentWithDetailsModel
 		{
 			DoctorId = AppointmentsTestUtilities.ValidId,
 			PatientId = AppointmentsTestUtilities.ValidId,
 		};
 
-		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsDTO();
+		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsModel();
 
 		string id = "";
 		RepositoryMagager.Appointment.GetByIdAsync(Arg.Do<string>(a => id = a))
@@ -130,13 +132,14 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			Arg.Any<CreateAppointmentModel>())
 			.Returns(callInfo =>
 			{
-				string doctorid = callInfo.ArgAt<CreateAppointmentModel>(0).DoctorId;
+				var model = callInfo.ArgAt<CreateAppointmentModel>(0);
 
-				if (id == AppointmentsTestUtilities.HelperInternalErrorId)
-					return Result.Failure(Responses.InternalError);
+				if (model.DoctorId == AppointmentsTestUtilities.HelperInternalErrorId)
+					return Task.FromResult(Result<AppointmentCommandViewModel>.Failure(Responses.InternalError));
 
-				return Result.Success();
+				return Task.FromResult(Result<AppointmentCommandViewModel>.Success(AppointmentCommandViewModel));
 			});
+
 
 		RepositoryMagager.Appointment
 			.GetAppointmentWithUserDetailsAsync(Arg.Do<string>(a => id = a))
@@ -145,11 +148,11 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				 string id = callInfo.ArgAt<string>(0);
 
 				 if (id == AppointmentsTestUtilities.InvalidId)
-					 return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
+					 return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
 				 if (id == AppointmentsTestUtilities.UnauthUserId)
-					 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTONotMatching);
+					 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTONotMatching);
 
-				 return Result<AppointmentWithDetailsDTO>.Success(appointmentWithDetailsDTO);
+				 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTO);
 			 });
 
 		RepositoryMagager.Appointment

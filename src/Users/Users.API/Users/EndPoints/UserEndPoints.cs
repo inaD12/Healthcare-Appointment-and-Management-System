@@ -5,15 +5,14 @@ using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
 using Shared.Application.Helpers.Abstractions;
-using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.LoginUser;
-using Users.Application.Features.Users.Queries.GetAllDoctors;
+using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.Features.Users.UpdateUser;
-using Users.Domain.Entities;
 using Users.Users.Models.Requests;
+using Users.Users.Models.Responses;
 
 namespace Users.Users.EndPoints;
 
@@ -24,7 +23,7 @@ internal class UserEndPoints : IEndPoints
 		var group = app.MapGroup("api/users");
 
 		group.MapPost("login", Login)
-			.Produces<TokenResult>(StatusCodes.Status200OK)
+			.Produces<LoginUserResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -32,14 +31,14 @@ internal class UserEndPoints : IEndPoints
 			.AllowAnonymous();
 
 		group.MapPost("register", Register)
-			.Produces(StatusCodes.Status201Created)
+			.Produces<UserCommandResponse>(StatusCodes.Status201Created)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.AllowAnonymous();
 
 		group.MapPut("update-current", UpdateCurrent)
-			.Produces(StatusCodes.Status200OK)
+			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -47,8 +46,16 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
 
-		group.MapGet("get-all-doctors", GetAllDoctors)
-			.Produces<IEnumerable<User>>(StatusCodes.Status200OK)
+		group.MapPut("update/{id}", Update)
+			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+
+		group.MapGet("get-all", GetAll)
+			.Produces<UserPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError);
@@ -71,29 +78,37 @@ internal class UserEndPoints : IEndPoints
 	public async Task<IResult> Login(
 		[FromBody] LoginUserRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHAMSMapper hamsMapper,
+		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = hamsMapper.Map<LoginUserCommand<TokenResult>>(request);
+		var command = mapper.Map<LoginUserCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var loginUserResponse = mapper.Map<LoginUserResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, loginUserResponse);
 	}
 
 	public async Task<IResult> Register(
 		[FromBody] RegisterUserRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHAMSMapper hamsMapper,
+		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = hamsMapper.Map<RegisterUserCommand>(request);
+		var command = mapper.Map<RegisterUserCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHAMSMapper hamsMapper,
+		[FromServices] IHAMSMapper mapper,
 		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
@@ -102,18 +117,45 @@ internal class UserEndPoints : IEndPoints
 			return ControllerResponse.ParseAndReturnMessage(parserRes);
 		string id = parserRes.Value!;
 
-		var command = hamsMapper.Map<UpdateUserCommand>((id,request));
+		var command = mapper.Map<UpdateUserCommand>((request, id));
 		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> GetAllDoctors(
+	public async Task<IResult> Update(
+		[FromRoute] string id,
+		[FromBody] UpdateUserRequest request,
 		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var query = new GetAllDoctorsQuery();
+		var command = mapper.Map<UpdateUserCommand>((request, id));
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserCommandResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
+	}
+
+	public async Task<IResult> GetAll(
+		[AsParameters] GetAllUsersRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		CancellationToken cancellationToken)
+	{
+		var query = mapper.Map<GetAllUsersQuery>(request);
 		var res = await sender.Send(query, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = mapper.Map<UserPaginatedQueryResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
 	public async Task<IResult> DeleteCurrent(
@@ -134,10 +176,10 @@ internal class UserEndPoints : IEndPoints
 	public async Task<IResult> VerifyEmails(
 		[FromBody] VerifyEmailRequest request,
 		[FromServices] ISender sender,
-		[FromServices] IHAMSMapper hamsMapper,
+		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = hamsMapper.Map<HandleEmailCommand>(request);
+		var command = mapper.Map<HandleEmailCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

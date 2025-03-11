@@ -8,12 +8,13 @@ using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Email.Models;
 using Users.Application.Features.Managers.Interfaces;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;
 
-public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
+public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, UserCommandViewModel>
 {
 	private readonly IRepositoryManager _repositotyManager;
 	private readonly IPasswordManager _passwordManager;
@@ -32,12 +33,11 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+	public async Task<Result<UserCommandViewModel>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 	{
 		var res = await _repositotyManager.User.GetByEmailAsync(request.Email);
-
 		if (res.IsSuccess)
-			return Result.Failure(Responses.EmailTaken);
+			return Result<UserCommandViewModel>.Failure(Responses.EmailTaken);
 
 		PasswordHashResult passwordHashResult = _passwordManager.HashPassword(request.Password);
 		User user = _hamsMapper.Map<User>((passwordHashResult,request));
@@ -50,6 +50,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		await _emailConfirmationTokenPublisher.PublishEmailConfirmationTokenAsync(publishEmailConfirmationTokenModel);
 
 		await _unitOfWork.SaveChangesAsync();
-		return Result.Success(Responses.RegistrationSuccessful);
+		var userCommandViewModel = _hamsMapper.Map<UserCommandViewModel>(user);
+		return Result<UserCommandViewModel>.Success(userCommandViewModel, Responses.RegistrationSuccessful);
 	}
 }

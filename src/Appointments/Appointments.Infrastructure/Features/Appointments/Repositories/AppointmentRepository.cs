@@ -35,14 +35,14 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		appointment.Status = newStatus;
 	}
 
-	public async Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId)
+	public async Task<Result<AppointmentWithDetailsModel>> GetAppointmentWithUserDetailsAsync(string appointmentId)
 	{
 		var result = await (
 		from appointment in _context.Appointments
 		join doctor in _context.UserData on appointment.DoctorId equals doctor.UserId
 		join patient in _context.UserData on appointment.PatientId equals patient.UserId
 		where appointment.Id == appointmentId
-		select new AppointmentWithDetailsDTO
+		select new AppointmentWithDetailsModel
 		{
 			AppointmentId = appointment.Id,
 			ScheduledStartTime = appointment.ScheduledStartTime,
@@ -58,9 +58,9 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		).FirstOrDefaultAsync();
 
 		if (result == null)
-			return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
+			return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
 
-		return Result<AppointmentWithDetailsDTO>.Success(result);
+		return Result<AppointmentWithDetailsModel>.Success(result);
 	}
 
 	public async Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime)

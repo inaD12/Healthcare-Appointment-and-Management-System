@@ -10,6 +10,6 @@ public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
 	Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime);
 	void ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus);
-	Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId);
+	Task<Result<AppointmentWithDetailsModel>> GetAppointmentWithUserDetailsAsync(string appointmentId);
 	Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime);
 }
