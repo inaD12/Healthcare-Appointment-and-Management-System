@@ -8,13 +8,18 @@ namespace Appointments.Domain.Entities;
 
 public sealed class Appointment : BaseEntity
 {
-	public Appointment(string patientId, string doctorId, AppointmentStatus status, DateTimeRange duration)
+	private Appointment(string patientId, string doctorId, AppointmentStatus status, DateTimeRange duration)
 	{
 		PatientId = patientId;
 		DoctorId = doctorId;
 		Status = status;
 		Duration = duration;
 	}
+
+	private Appointment()
+	{
+	}
+
 	public string PatientId { get; private set; }
 	public string DoctorId { get; private set; }
 	public DateTimeRange Duration { get; private set; }
