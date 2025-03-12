@@ -1,25 +1,27 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
-using Users.Application.Features.Managers.Interfaces;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Email.Commands.HandleEmail;
 
 public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailCommand>
 {
-	private readonly IRepositoryManager _repositoryManager;
+	private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepository;
+	private readonly IUserRepository _userRepository;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public HandleEmailCommandHandler(IRepositoryManager repositoryManager, IUnitOfWork unitOfWork)
+	public HandleEmailCommandHandler(IUnitOfWork unitOfWork, IEmailVerificationTokenRepository emailVerificationTokenRepository, IUserRepository userRepository)
 	{
-		_repositoryManager = repositoryManager;
 		_unitOfWork = unitOfWork;
+		_emailVerificationTokenRepository = emailVerificationTokenRepository;
+		_userRepository = userRepository;
 	}
 
 	public async Task<Result> Handle(HandleEmailCommand request, CancellationToken cancellationToken)
 	{
-		var tokenResult = await _repositoryManager.EmailVerificationToken.GetByIdAsync(request.tokenId);
+		var tokenResult = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId);
 
 		var token = tokenResult.Value!;
 
@@ -30,7 +32,7 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 			return Result.Failure(Responses.InvalidVerificationToken);
 		}
 
-		_repositoryManager.User.VerifyEmailAsync(token.User);
+		_userRepository.VerifyEmailAsync(token.User);
 
 		await _unitOfWork.SaveChangesAsync();
 		return Result.Success();

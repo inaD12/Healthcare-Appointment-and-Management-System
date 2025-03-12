@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Extensions;

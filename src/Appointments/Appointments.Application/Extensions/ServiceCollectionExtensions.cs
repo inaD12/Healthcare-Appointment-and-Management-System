@@ -1,7 +1,5 @@
 ﻿using Appointments.Application.Features.Helpers;
 using Appointments.Application.Features.Jobs;
-using Appointments.Application.Features.Jobs.Managers;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +17,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddScoped<IRepositoryManager, RepositoryManager>()
 			.AddScoped<CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

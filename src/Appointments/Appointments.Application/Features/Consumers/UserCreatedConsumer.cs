@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
+﻿using Appointments.Domain.Abstractions.Repository;
 using Appointments.Domain.Entities;
 using MassTransit;
 using Shared.Application.Abstractions;
@@ -9,22 +9,22 @@ namespace Appointments.Application.Consumers;
 
 public sealed class UserCreatedConsumer : IConsumer<UserCreatedEvent>
 {
-	private readonly IRepositoryManager _repositoryManager;
+	private readonly IUserDataRepository _userDataRepository;
 	private readonly IHAMSMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public UserCreatedConsumer(IRepositoryManager repositoryManager, IHAMSMapper mapper, IUnitOfWork unitOfWork)
+	public UserCreatedConsumer(IHAMSMapper mapper, IUnitOfWork unitOfWork, IUserDataRepository userDataRepository)
 	{
-		_repositoryManager = repositoryManager;
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
+		_userDataRepository = userDataRepository;
 	}
 
 	public async Task Consume(ConsumeContext<UserCreatedEvent> context)
 	{
 		var userData = _mapper.Map<UserData>(context.Message);
 
-		await _repositoryManager.UserData.AddAsync(userData);
+		await _userDataRepository.AddAsync(userData);
 
 		await _unitOfWork.SaveChangesAsync();
 	}

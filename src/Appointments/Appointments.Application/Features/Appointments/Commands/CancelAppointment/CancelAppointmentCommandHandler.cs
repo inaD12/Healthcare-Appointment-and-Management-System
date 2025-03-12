@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
+﻿using Appointments.Domain.Abstractions.Repository;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Responses;
 using Shared.Application.Helpers.Abstractions;
@@ -11,20 +11,20 @@ namespace Appointments.Application.Features.Commands.Appointments.CancelAppointm
 
 public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {
-	private readonly IRepositoryManager _repositoryManager;
+	private readonly IAppointmentRepository _appointmentRepository;
 	private readonly IJwtParser _jwtParser;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDateTimeProvider _dateTimeProvider;
-	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
+	public CancelAppointmentCommandHandler(IJwtParser jwtParser, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager)
 	{
-		_repositoryManager = repositoryManager;
 		_jwtParser = jwtParser;
 		_unitOfWork = unitOfWork;
 		_dateTimeProvider = dateTimeProvider;
+		_appointmentRepository = repositoryManager;
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(request.AppointmentId);
+		var appointmentRes = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
 
 		if (appointmentRes.IsFailure)
 			return Result.Failure(appointmentRes.Response);
