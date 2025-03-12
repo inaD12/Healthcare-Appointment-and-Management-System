@@ -8,8 +8,8 @@ using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Email.Models;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;

@@ -1,9 +1,9 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Abstractions.Repository;
-using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
+using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
+using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
-using Appointments.Domain.ValueObjects;
 using Shared.Application.Abstractions;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

@@ -1,4 +1,4 @@
-﻿namespace Appointments.Domain.Enums;
+﻿namespace Appointments.Domain.Entities.Enums;
 
 public enum AppointmentDuration
 {

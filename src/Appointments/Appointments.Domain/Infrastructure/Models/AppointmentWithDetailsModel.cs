@@ -1,7 +1,7 @@
 ﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.Enums;
 
-namespace Appointments.Domain.DTOS;
+namespace Appointments.Domain.Infrastructure.Models;
 
 public class AppointmentWithDetailsModel
 {

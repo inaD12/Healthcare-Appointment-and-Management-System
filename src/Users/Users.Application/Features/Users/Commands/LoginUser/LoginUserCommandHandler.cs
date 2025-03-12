@@ -4,8 +4,8 @@ using Shared.Domain.Results;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.LoginUser;

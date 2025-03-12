@@ -1,5 +1,5 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.Enums;
 using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;

@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
-using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;

@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Abstractions.Repository;
-using Appointments.Domain.Entities;
+﻿using Appointments.Domain.Entities;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using MassTransit;
 using Shared.Application.Abstractions;
 using Shared.Domain.Events;

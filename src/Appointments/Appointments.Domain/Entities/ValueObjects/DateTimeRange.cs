@@ -1,6 +1,6 @@
-﻿using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Entities.Enums;
 
-namespace Appointments.Domain.ValueObjects;
+namespace Appointments.Domain.Entities.ValueObjects;
 
 public sealed record DateTimeRange
 {

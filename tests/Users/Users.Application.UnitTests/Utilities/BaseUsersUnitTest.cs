@@ -9,8 +9,8 @@ using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Users.Mappings;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 

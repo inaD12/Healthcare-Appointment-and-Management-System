@@ -1,7 +1,7 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;

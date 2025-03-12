@@ -3,7 +3,7 @@ using Shared.Domain.Models;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Domain.Entities;
-using Users.Domain.Models;
+using Users.Domain.Infrastructure.Models;
 
 namespace Users.Application.Features.Users.Mappings;
 

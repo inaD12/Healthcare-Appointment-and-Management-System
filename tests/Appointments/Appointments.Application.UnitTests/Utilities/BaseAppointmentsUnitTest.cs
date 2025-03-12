@@ -1,13 +1,13 @@
 ﻿using Appointments.Application.Features.Appointments.Mappings;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Mappings;
-using Appointments.Domain.Abstractions.Repository;
-using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
+using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
-using Appointments.Domain.ValueObjects;
 using AutoMapper;
 using NSubstitute;
 using Shared.Application.Helpers;

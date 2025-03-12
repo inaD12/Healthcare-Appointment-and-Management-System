@@ -4,8 +4,8 @@ using Shared.Domain.Enums;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 using Xunit;
 

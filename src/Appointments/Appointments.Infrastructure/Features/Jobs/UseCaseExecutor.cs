@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Abstractions.UseCase;
+﻿using Appointments.Domain.Infrastructure.Abstractions.UseCase;
 
 namespace Appointments.Infrastructure.Features.Jobs;
 

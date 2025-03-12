@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Strings;
+﻿using Appointments.Domain.Utilities.Strings;
 using Shared.Domain.Results;
 using System.Net;
 

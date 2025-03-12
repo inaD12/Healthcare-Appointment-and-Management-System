@@ -2,8 +2,8 @@
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Email.Models;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 
 namespace Users.Application.Features.Email.Helpers;
 

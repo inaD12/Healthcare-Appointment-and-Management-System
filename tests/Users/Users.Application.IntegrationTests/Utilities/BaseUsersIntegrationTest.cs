@@ -4,8 +4,8 @@ using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Utilities;
 using Users.Infrastructure.DBContexts;
 

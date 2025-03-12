@@ -3,9 +3,9 @@ using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
-using Users.Domain.Models;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Models;
 using Users.Domain.Responses;
 using Users.Infrastructure.DBContexts;
 

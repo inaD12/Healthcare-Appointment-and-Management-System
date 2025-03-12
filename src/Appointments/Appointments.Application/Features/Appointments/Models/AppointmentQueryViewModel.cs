@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Entities.Enums;
 
 namespace Appointments.Application.Features.Appointments.Models;
 

@@ -1,4 +1,4 @@
-﻿namespace Appointments.Domain.Strings;
+﻿namespace Appointments.Domain.Utilities.Strings;
 
 public static class SuccessMessages
 {

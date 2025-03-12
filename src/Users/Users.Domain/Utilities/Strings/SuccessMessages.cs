@@ -1,4 +1,4 @@
-﻿namespace Users.Domain.Strings;
+﻿namespace Users.Domain.Utilities.Strings;
 
 public static class SuccessMessages
 {

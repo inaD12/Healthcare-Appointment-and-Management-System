@@ -2,9 +2,9 @@
 using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Users.Domain.Entities;
-using Users.Domain.Models;
+using Users.Domain.Infrastructure.Models;
 
-namespace Users.Domain.Abstractions.Repositories;
+namespace Users.Domain.Infrastructure.Abstractions.Repositories;
 
 public interface IUserRepository : IGenericRepository<User>
 {

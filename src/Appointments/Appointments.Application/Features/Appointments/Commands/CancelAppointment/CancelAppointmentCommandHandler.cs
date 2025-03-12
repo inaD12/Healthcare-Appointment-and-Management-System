@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Abstractions.Repository;
-using Appointments.Domain.Entities;
+﻿using Appointments.Domain.Entities;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

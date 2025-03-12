@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Results;
 using System.Net;
-using Users.Domain.Strings;
+using Users.Domain.Utilities.Strings;
 
 namespace Users.Domain.Responses;
 

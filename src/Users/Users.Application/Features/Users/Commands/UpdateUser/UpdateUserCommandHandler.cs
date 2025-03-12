@@ -3,8 +3,8 @@ using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.UpdateUser;

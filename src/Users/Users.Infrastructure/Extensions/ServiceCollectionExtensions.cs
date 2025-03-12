@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
-using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Infrastructure.DBContexts;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
