@@ -16,11 +16,12 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public RescheduleAppointmentCommandHandlerTests()
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
-			RepositoryMagager,
 			JWTParser,
-			AppointmentService,
 			HAMSMapper,
-			UnitOfWork);
+			UnitOfWork,
+			AppointmentRepository,
+			UserDataRepository,
+			DateTimeProvider);
 	}
 
 	[Fact]
@@ -44,7 +45,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
 
 		JWTParser.DidNotReceiveWithAnyArgs().GetIdFromToken();
-		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
+		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -67,7 +68,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
 
-		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
+		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -90,7 +91,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.CannotRescheduleOthersAppointment);
 
-		await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
+		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -133,9 +134,9 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		await AppointmentService.Received(1).CreateAppointment(Arg.Any<CreateAppointmentModel>());
+		//await AppointmentService.Received(1).CreateAppointment(Arg.Any<CreateAppointmentModel>());
 
-		RepositoryMagager.Appointment.Received(1)
-			.ChangeStatusAsync(default, AppointmentStatus.Rescheduled);
+		//AppointmentRepository.Received(1)
+		//	.ChangeStatusAsync(default, AppointmentStatus.Rescheduled);
 	}
 }

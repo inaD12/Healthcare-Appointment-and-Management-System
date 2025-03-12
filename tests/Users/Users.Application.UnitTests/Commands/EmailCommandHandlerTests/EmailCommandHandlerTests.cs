@@ -4,7 +4,7 @@ using Shared.Domain.Enums;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
-using Users.Application.Features.Managers.Interfaces;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
 using Users.Domain.Responses;
 using Xunit;
@@ -13,7 +13,8 @@ namespace Users.Application.UnitTests.Commands.EmailCommandHandlerTests;
 
 public class EmailCommandHandlerTests
 {
-	private readonly IRepositoryManager _mockRepositoryManager;
+	private readonly IEmailVerificationTokenRepository _mockEmailVerificationTokenRepository;
+	private readonly IUserRepository _mockUserRepository;
 	private readonly HandleEmailCommandHandler _commandHandler;
 	private readonly EmailVerificationToken _validToken;
 	private readonly User _user;
@@ -21,9 +22,10 @@ public class EmailCommandHandlerTests
 
 	public EmailCommandHandlerTests()
 	{
-		_mockRepositoryManager = Substitute.For<IRepositoryManager>();
+		_mockEmailVerificationTokenRepository = Substitute.For<IEmailVerificationTokenRepository>();
+		_mockUserRepository = Substitute.For<IUserRepository>();
 		_unitOfWork = Substitute.For<IUnitOfWork>();
-		_commandHandler = new HandleEmailCommandHandler(_mockRepositoryManager, _unitOfWork);
+		_commandHandler = new HandleEmailCommandHandler(_unitOfWork, _mockEmailVerificationTokenRepository, _mockUserRepository);
 
 		_user = new User("test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address", false);
 		_validToken = new EmailVerificationToken
@@ -40,7 +42,7 @@ public class EmailCommandHandlerTests
 	{
 		// Arrange
 		var command = new HandleEmailCommand("invalidToken");
-		_mockRepositoryManager.EmailVerificationToken.GetByIdAsync("invalidToken")
+		_mockEmailVerificationTokenRepository.GetByIdAsync("invalidToken")
 			.Returns(Result<EmailVerificationToken>.Failure(Responses.InvalidVerificationToken));
 
 		// Act
@@ -65,7 +67,7 @@ public class EmailCommandHandlerTests
 
 		var command = new HandleEmailCommand(expiredToken.Id);
 
-		_mockRepositoryManager.EmailVerificationToken.GetByIdAsync(expiredToken.Id)
+		_mockEmailVerificationTokenRepository.GetByIdAsync(expiredToken.Id)
 			.Returns(Result<EmailVerificationToken>.Success(expiredToken));
 
 		// Act
@@ -82,7 +84,7 @@ public class EmailCommandHandlerTests
 		// Arrange
 		var verifiedUserToken = _validToken;
 		verifiedUserToken.User.EmailVerified = true;
-		_mockRepositoryManager.EmailVerificationToken.GetByIdAsync(verifiedUserToken.Id)
+		_mockEmailVerificationTokenRepository.GetByIdAsync(verifiedUserToken.Id)
 			.Returns(Result<EmailVerificationToken>.Success(verifiedUserToken));
 		var command = new HandleEmailCommand(verifiedUserToken.Id);
 
@@ -100,7 +102,7 @@ public class EmailCommandHandlerTests
 		// Arrange
 		var command = new HandleEmailCommand(_validToken.Id);
 
-		_mockRepositoryManager.EmailVerificationToken.GetByIdAsync(_validToken.Id)
+		_mockEmailVerificationTokenRepository.GetByIdAsync(_validToken.Id)
 			.Returns(Result<EmailVerificationToken>.Success(_validToken));
 
 
@@ -110,6 +112,6 @@ public class EmailCommandHandlerTests
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 		result.Response.Should().BeEquivalentTo(Response.Ok);
-		_mockRepositoryManager.User.Received(1).VerifyEmailAsync(_validToken.User);
+		_mockUserRepository.Received(1).VerifyEmailAsync(_validToken.User);
 	}
 }

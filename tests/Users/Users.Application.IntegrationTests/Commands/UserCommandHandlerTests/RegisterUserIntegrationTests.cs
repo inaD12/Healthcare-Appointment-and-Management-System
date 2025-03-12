@@ -56,7 +56,7 @@ public class RegisterUserIntegrationTests : BaseUsersIntegrationTest
 
 		// Act
 		var response = await Sender.Send(command, CancellationToken);
-		var res = await RepositoryManager.User.GetByEmailAsync(command.Email);
+		var res = await UserRepository.GetByEmailAsync(command.Email);
 		var user = res.Value;
 
 		// Assert

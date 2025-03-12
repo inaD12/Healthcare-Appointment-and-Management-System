@@ -13,7 +13,7 @@ public class DeleteUserCommandHandlerTests : BaseUsersUnitTest
 
 	public DeleteUserCommandHandlerTests()
 	{
-		_commandHandler = new DeleteUserCommandHandler(RepositoryManager, UnitOfWork);
+		_commandHandler = new DeleteUserCommandHandler(UnitOfWork, UserRepository);
 	}
 
 	[Fact]
@@ -27,7 +27,7 @@ public class DeleteUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		await RepositoryManager.User.Received(1).DeleteByIdAsync(UsersTestUtilities.ValidId);
+		await UserRepository.Received(1).DeleteByIdAsync(UsersTestUtilities.ValidId);
 	}
 
 	[Fact]
@@ -42,6 +42,6 @@ public class DeleteUserCommandHandlerTests : BaseUsersUnitTest
 		// Assert
 		result.IsFailure.Should().BeTrue();
 		result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
-		await RepositoryManager.User.DidNotReceive().DeleteByIdAsync(Arg.Any<string>());
+		await UserRepository.DidNotReceive().DeleteByIdAsync(Arg.Any<string>());
 	}
 }

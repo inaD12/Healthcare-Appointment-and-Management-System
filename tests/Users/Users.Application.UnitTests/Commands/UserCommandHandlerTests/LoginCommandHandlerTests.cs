@@ -14,7 +14,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 
 	public LoginCommandHandlerTests()
 	{
-		_commandHandler = new LoginUserCommandHandler(RepositoryManager, PasswordManager, TokenManager, HAMSMapper);
+		_commandHandler = new LoginUserCommandHandler(PasswordManager, TokenManager, HAMSMapper, UserRepository);
 	}
 
 	[Fact]

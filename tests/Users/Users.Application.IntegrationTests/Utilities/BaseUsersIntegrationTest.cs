@@ -4,7 +4,7 @@ using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Managers.Interfaces;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
 using Users.Domain.Utilities;
 using Users.Infrastructure.DBContexts;
@@ -17,22 +17,10 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		: base(integrationTestWebAppFactory.Services.CreateScope())
 	{
 		PasswordManager = ServiceScope.ServiceProvider.GetRequiredService<IPasswordManager>();
+		UserRepository = ServiceScope.ServiceProvider.GetRequiredService<IUserRepository>();
 	}
-
+	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
-	private IRepositoryManager _repositoryManager;
-
-	protected IRepositoryManager RepositoryManager
-	{
-		get
-		{
-			if (_repositoryManager == null)
-			{
-				_repositoryManager = ServiceScope.ServiceProvider.GetRequiredService<IRepositoryManager>();
-			}
-			return _repositoryManager;
-		}
-	}
 
 	protected async Task<string> CreateUserAsync()
 	{
@@ -51,7 +39,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 				false
 			);
 
-		await RepositoryManager.User.AddAsync(user);
+		await UserRepository.AddAsync(user);
 		await unitOfWork.SaveChangesAsync();
 
 		return user.Email;
