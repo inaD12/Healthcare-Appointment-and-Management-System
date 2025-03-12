@@ -49,15 +49,14 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		var AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
 		DateTimeRange = DateTimeRange.Create(AppointmentsTestUtilities.SoonDate, AppointmentsTestUtilities.FutureDate);
 
-		var appointment = new Appointment(
+		var appointment = Appointment.Schedule(
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
-			AppointmentStatus.Scheduled,
 			DateTimeRange
-			)
-		{
-			Id = AppointmentsTestUtilities.ValidId
-		};
+			);
+		//{
+		//	Id = AppointmentsTestUtilities.ValidId
+		//};
 
 		SceduledAppointmentList = new List<Appointment> { appointment };
 

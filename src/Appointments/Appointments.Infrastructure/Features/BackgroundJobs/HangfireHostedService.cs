@@ -1,11 +1,11 @@
-﻿using Appointments.Application.Features.Jobs;
+﻿using Appointments.Domain.Infrastructure.Abstractions;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Shared.Domain.Options;
 
-namespace Appointments.Application.Features.Helpers;
+namespace Appointments.Infrastructure.Features.BackgroundJobs;
 
 public class HangfireHostedService : IHostedService
 {
@@ -18,7 +18,7 @@ public class HangfireHostedService : IHostedService
 		this.configuration = configuration;
 	}
 
-	public async Task StartAsync(CancellationToken cancellationToken)
+	public Task StartAsync(CancellationToken cancellationToken)
 	{
 		var dbOptions = configuration
 			.GetSection(nameof(DatabaseOptions))
@@ -29,7 +29,9 @@ public class HangfireHostedService : IHostedService
 			.UseRecommendedSerializerSettings()
 			.UsePostgreSqlStorage(options => options.UseNpgsqlConnection(dbOptions.ConnectionString));
 
-		_recurringJobManager.AddOrUpdate<CompleteAppointmentsJob>("CompleteAppointmentsJob", job => job.Execute(cancellationToken), Cron.Minutely);
+		_recurringJobManager.AddOrUpdate<ICompleteAppointmentsJob>("CompleteAppointmentsJob", job => job.Execute(cancellationToken), Cron.Minutely);
+
+		return Task.CompletedTask;
 	}
 
 	public Task StopAsync(CancellationToken cancellationToken)

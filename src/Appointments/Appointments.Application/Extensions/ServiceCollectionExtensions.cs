@@ -1,5 +1,5 @@
-﻿using Appointments.Application.Features.Helpers;
-using Appointments.Application.Features.Jobs;
+﻿using Appointments.Application.Features.Jobs;
+using Appointments.Domain.Infrastructure.Abstractions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddScoped<CompleteAppointmentsJob>()
+			.AddScoped<ICompleteAppointmentsJob, CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 		var dbOptions = configuration
@@ -28,7 +28,6 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(dbOptions.ConnectionString)
-			.AddHostedService<HangfireHostedService>()
 			.AddMessageBroker(configuration, currentAssembly)
 			.AddMapper(currentAssembly)
 			.AddDateTimeProvider();
