@@ -41,7 +41,7 @@ public class DeleteUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.UserNotFound);
 		await UserRepository.DidNotReceive().DeleteByIdAsync(Arg.Any<string>());
 	}
 }

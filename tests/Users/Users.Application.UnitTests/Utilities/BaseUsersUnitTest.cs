@@ -43,7 +43,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		EventBus = Substitute.For<IEventBus>();
 		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
 
-		var user = new User(
+		var user = User.Create(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -52,14 +52,13 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
-		var doctor = new User(
+		var doctor = User.Create(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -68,15 +67,14 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
 
-		var takenUser = new User(
+		var takenUser =User.Create(
 			UsersTestUtilities.TakenEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -85,14 +83,13 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.TakenId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.TakenId
+		//};
 
-		var emailErrorUser = new User(
+		var emailErrorUser = User.Create(
 			UsersTestUtilities.EmailSendingErrorEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -101,12 +98,11 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-					)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
 
 		var emailVerificationToken = new EmailVerificationToken(
@@ -148,7 +144,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 					if (email == UsersTestUtilities.TakenEmail)
 						return Result<User>.Success(takenUser);
-					return Result<User>.Failure(Responses.UserNotFound);
+					return Result<User>.Failure(ResponseList.UserNotFound);
 
 				});
 
@@ -160,7 +156,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 					if (id == UsersTestUtilities.ValidId)
 						return Result<User>.Success(user);
-					return Result<User>.Failure(Responses.UserNotFound);
+					return Result<User>.Failure(ResponseList.UserNotFound);
 				});
 
 		UserRepository.DeleteByIdAsync(

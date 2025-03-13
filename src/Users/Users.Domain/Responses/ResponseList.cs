@@ -4,7 +4,7 @@ using Users.Domain.Utilities.Strings;
 
 namespace Users.Domain.Responses;
 
-public static class Responses
+public static class ResponseList
 {
 	// Success Responses
 	public static Response Ok => Response.Create(SuccessMessages.OperationSuccessful, HttpStatusCode.OK);
@@ -20,4 +20,5 @@ public static class Responses
 	public static Response TokenNotFound => Response.Create(ErrorMessages.TokenNotFound, HttpStatusCode.NotFound);
 	public static Response InvalidVerificationToken => Response.Create(ErrorMessages.InvalidVerificationToken, HttpStatusCode.BadRequest);
 	public static Response EmailNotSent => Response.Create(ErrorMessages.EmailNotSent, HttpStatusCode.InternalServerError);
+	public static Response EmailAlreadyVerified => Response.Create(ErrorMessages.EmailAlreadyVerified, HttpStatusCode.Conflict);
 }

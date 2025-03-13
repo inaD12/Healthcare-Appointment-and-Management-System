@@ -36,7 +36,7 @@ public class RegisterUserIntegrationTests : BaseUsersIntegrationTest
 
 		// Assert
 		res.IsFailure.Should().BeTrue();
-		res.Response.Should().BeEquivalentTo(Responses.EmailTaken);
+		res.Response.Should().BeEquivalentTo(ResponseList.EmailTaken);
 	}
 
 	[Fact]

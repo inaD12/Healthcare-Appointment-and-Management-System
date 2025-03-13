@@ -37,10 +37,10 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 	{
 		var res = await _userRepository.GetByEmailAsync(request.Email);
 		if (res.IsSuccess)
-			return Result<UserCommandViewModel>.Failure(Responses.EmailTaken);
+			return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
 
 		PasswordHashResult passwordHashResult = _passwordManager.HashPassword(request.Password);
-		User user = _hamsMapper.Map<User>((passwordHashResult,request));
+		var user = User.Create(request.Email, passwordHashResult.PasswordHash, passwordHashResult.Salt, request.Role, request.FirstName, request.LastName, request.DateOfBirth, request.PhoneNumber, request.Address);
 		await _userRepository.AddAsync(user);
 
 		var userCreatedEvent = _hamsMapper.Map<UserCreatedEvent>(user);
@@ -51,6 +51,6 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 
 		await _unitOfWork.SaveChangesAsync();
 		var userCommandViewModel = _hamsMapper.Map<UserCommandViewModel>(user);
-		return Result<UserCommandViewModel>.Success(userCommandViewModel, Responses.RegistrationSuccessful);
+		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.RegistrationSuccessful);
 	}
 }

@@ -26,7 +26,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 	{
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-		var user = new User(
+		var user = User.Create(
 				UsersTestUtilities.TakenEmail,
 				UsersTestUtilities.ValidPasswordHash,
 				UsersTestUtilities.ValidSalt,
@@ -35,8 +35,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
 				UsersTestUtilities.ValidPhoneNumber,
-				UsersTestUtilities.ValidAdress,
-				false
+				UsersTestUtilities.ValidAdress
 			);
 
 		await UserRepository.AddAsync(user);

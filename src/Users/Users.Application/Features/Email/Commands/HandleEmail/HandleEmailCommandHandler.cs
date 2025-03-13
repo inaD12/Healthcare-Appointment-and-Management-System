@@ -29,10 +29,11 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 			token.ExpiresOnUtc < DateTime.UtcNow ||
 			token.User.EmailVerified)
 		{
-			return Result.Failure(Responses.InvalidVerificationToken);
+			return Result.Failure(ResponseList.InvalidVerificationToken);
 		}
 
-		_userRepository.VerifyEmailAsync(token.User);
+		token.User.VerifyEmail();
+		 _userRepository.Update(token.User);
 
 		await _unitOfWork.SaveChangesAsync();
 		return Result.Success();

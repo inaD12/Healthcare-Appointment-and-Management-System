@@ -34,7 +34,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 			).ApplySorting(query.SortPropertyName, query.SortOrder);
 
 		if (entitiesQuery == null)
-			return Result<PagedList<User>>.Failure(Responses.NoUsersFound);
+			return Result<PagedList<User>>.Failure(ResponseList.NoUsersFound);
 
 		var users = await PagedList<User>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
 		return Result<PagedList<User>>.Success(users);
@@ -46,7 +46,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
 		if (user == null)
-			return Result<User>.Failure(Responses.UserNotFound);
+			return Result<User>.Failure(ResponseList.UserNotFound);
 
 		return Result<User>.Success(user);
 	}
@@ -56,7 +56,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		var user = await _context.Users.FirstOrDefaultAsync(u => u.FirstName == firstName);
 
 		if (user == null)
-			return Result<User>.Failure(Responses.UserNotFound);
+			return Result<User>.Failure(ResponseList.UserNotFound);
 
 		return Result<User>.Success(user);
 	}
@@ -67,7 +67,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		if (res.IsSuccess)
 		{
-			DeleteAsync(res.Value!);
+			Delete(res.Value!);
 			return Result.Success();
 		}
 
@@ -77,11 +77,5 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 	public override async Task AddAsync(User user)
 	{
 		await _context.Users.AddAsync(user);
-	}
-
-	public void VerifyEmailAsync(User user)
-	{
-		user.EmailVerified = true;
-		base.UpdateAsync(user);
 	}
 }

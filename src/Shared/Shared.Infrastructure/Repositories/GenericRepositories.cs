@@ -21,7 +21,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 		await Entities.AddAsync(entity);
 	}
 
-	public virtual void DeleteAsync(T entity)
+	public virtual void Delete(T entity)
 	{
 		Entities.Remove(entity);
 	}
@@ -46,7 +46,7 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 		return Result<T>.Success(res);
 	}
 
-	public virtual void UpdateAsync(T entity)
+	public virtual void Update(T entity)
 	{
 		Entities.Update(entity);
 	}

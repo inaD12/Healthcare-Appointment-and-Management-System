@@ -24,7 +24,7 @@ internal class EmailVerificationTokenRepository : GenericRepository<EmailVerific
 			.FirstOrDefaultAsync(x => x.Id == id);
 
 		if (token is null)
-			return Result<EmailVerificationToken>.Failure(Responses.TokenNotFound);
+			return Result<EmailVerificationToken>.Failure(ResponseList.TokenNotFound);
 
 		return Result<EmailVerificationToken>.Success(token);
 	}

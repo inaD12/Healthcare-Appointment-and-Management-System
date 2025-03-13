@@ -65,6 +65,6 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
+		result.Response.Should().BeEquivalentTo(ResponseList.EmailTaken);
 	}
 }

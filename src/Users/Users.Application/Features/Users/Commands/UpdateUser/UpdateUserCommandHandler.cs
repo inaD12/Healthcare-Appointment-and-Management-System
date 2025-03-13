@@ -33,18 +33,19 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 		{
 			var emailCheckResult = await _userRepository.GetByEmailAsync(request.NewEmail);
 			if (emailCheckResult.IsSuccess)
-				return Result<UserCommandViewModel>.Failure(Responses.EmailTaken);
+				return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
 
-			user.Email = request.NewEmail;
+			user.UpdateProfile(request.NewEmail, request.FirstName, request.LastName);
+		}
+		else
+		{
+			user.UpdateProfile(null, request.FirstName, request.LastName);
 		}
 
-		user.FirstName = request.FirstName ?? user.FirstName;
-		user.LastName = request.LastName ?? user.LastName;
-
-		_userRepository.UpdateAsync(user);
+		_userRepository.Update(user);
 
 		await _unitOfWork.SaveChangesAsync();
 		var userCommandViewModel = _mapper.Map<UserCommandViewModel>(user);
-		return Result<UserCommandViewModel>.Success(userCommandViewModel, Responses.UpdateSuccessful);
+		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.UpdateSuccessful);
 	}
 }
