@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using Shared.Domain.Events;
+using Shared.Application.IntegrationEvents;
 using Users.Application.Features.Auth.Models;
-using Users.Application.Features.Email.Models;
-using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
+using Users.Domain.Events;
 
 namespace Users.Application.Features.Users.Mappings;
 
@@ -12,12 +11,7 @@ public class UserCommandProfile : Profile
 {
 	public UserCommandProfile()
 	{
-		CreateMap<User, UserCreatedEvent>();
-
-		CreateMap<User, PublishEmailConfirmationTokenModel>()
-			.ConstructUsing(src => new(
-				src.Email,
-				src.Id));
+		CreateMap<User, UserCreatedIntegrationEvent>();
 
 		CreateMap<TokenResult, LoginUserCommandViewModel>();
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;

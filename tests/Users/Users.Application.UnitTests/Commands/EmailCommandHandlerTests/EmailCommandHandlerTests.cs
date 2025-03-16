@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;

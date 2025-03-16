@@ -1,6 +1,7 @@
 ﻿using Shared.Domain.Entities.Base;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
+using Users.Domain.Events;
 using Users.Domain.Responses;
 
 namespace Users.Domain.Entities;
@@ -68,6 +69,8 @@ public sealed class User : BaseEntity
 			false,
 			phoneNumber,
 			address);
+
+		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Role));
 
 		return user;
 	}

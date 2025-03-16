@@ -1,4 +1,4 @@
-﻿namespace Shared.Infrastructure.Abstractions;
+﻿namespace Shared.Domain.Abstractions;
 
 public interface IEventBus
 {

@@ -2,9 +2,9 @@
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Shared.Application.Helpers.Abstractions;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
 using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.CancelAppointment;

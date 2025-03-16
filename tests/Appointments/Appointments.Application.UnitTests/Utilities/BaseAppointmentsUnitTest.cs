@@ -13,9 +13,9 @@ using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Application.UnitTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
 using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.UnitTests.Utilities;

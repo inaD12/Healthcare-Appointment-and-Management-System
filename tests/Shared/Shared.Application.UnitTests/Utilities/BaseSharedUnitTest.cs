@@ -1,5 +1,5 @@
 ﻿using Shared.Application.Abstractions;
-using Shared.Infrastructure.Abstractions;
+using Shared.Domain.Abstractions;
 
 namespace Shared.Application.UnitTests.Utilities;
 

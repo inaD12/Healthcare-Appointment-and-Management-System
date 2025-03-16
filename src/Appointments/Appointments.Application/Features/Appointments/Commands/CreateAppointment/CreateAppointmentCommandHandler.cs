@@ -1,15 +1,17 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
+using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
 
-namespace Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 
 public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand, AppointmentCommandViewModel>
 {
@@ -40,15 +42,22 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 
 		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
-		if(await _appointmentRepository.IsTimeSlotAvailableAsync(doctorDataRes.Value.Id, duration, cancellationToken))
+		if (await _appointmentRepository.IsTimeSlotAvailableAsync(doctorDataRes.Value.Id, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
-		var appointment = Appointment.Schedule(patientDataRes.Value!.UserId, doctorDataRes.Value.UserId, duration);
+		try
+		{
+			var appointment = Appointment.Schedule(patientDataRes.Value!.UserId, doctorDataRes.Value.UserId, duration);
 
-		await _appointmentRepository.AddAsync(appointment);
-		await _unitOfWork.SaveChangesAsync();
+			await _appointmentRepository.AddAsync(appointment);
+			await _unitOfWork.SaveChangesAsync();
 
-		var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
-		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
+			var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+			return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
+		}
+		catch (ConcurrencyException)
+		{
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
+		}
 	}
 }

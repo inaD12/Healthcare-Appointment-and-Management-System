@@ -2,12 +2,13 @@
 using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
 using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
+using Users.Application.Features.Mappings;
 using Users.Application.Features.Users.Mappings;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
@@ -22,7 +23,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenFactory TokenManager { get; }
 	protected IEventBus EventBus { get; }
-	protected IEmailConfirmationTokenPublisher EmailConfirmationTokenPublisher { get; }
 
 	protected readonly List<User> Doctors;
 
@@ -41,7 +41,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenManager = Substitute.For<ITokenFactory>();
 		EventBus = Substitute.For<IEventBus>();
-		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
 
 		var user = User.Create(
 			UsersTestUtilities.ValidEmail,
