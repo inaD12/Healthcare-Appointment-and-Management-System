@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using MassTransit;
 using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Abstractions;
@@ -8,16 +8,22 @@ using Users.Domain.Entities;
 using Users.Domain.Events;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 
-namespace Users.Application.Features.EventHandlers;
+namespace Users.Application.Features.Users.Consumers;
 
-public sealed class UserCreatedDomainEventHandler: INotificationHandler<UserCreatedDomainEvent>
+public sealed class UserCreatedDomainEventConsumer : IConsumer<UserCreatedDomainEvent>
 {
 	private readonly IEventBus _eventBus;
 	private readonly IHAMSMapper _hamsMapper;
 	private readonly IEmailVerificationLinkFactory _emailVerificationLinkFactory;
 	private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepository;
 	private readonly IDateTimeProvider _dateTimeProvider;
-	public UserCreatedDomainEventHandler(IEventBus eventBus, IHAMSMapper hamsMapper, IEmailVerificationLinkFactory emailVerificationLinkFactory, IEmailVerificationTokenRepository emailVerificationTokenRepository, IDateTimeProvider dateTimeProvider)
+
+	public UserCreatedDomainEventConsumer(
+		IEventBus eventBus,
+		IHAMSMapper hamsMapper,
+		IEmailVerificationLinkFactory emailVerificationLinkFactory,
+		IEmailVerificationTokenRepository emailVerificationTokenRepository,
+		IDateTimeProvider dateTimeProvider)
 	{
 		_eventBus = eventBus;
 		_hamsMapper = hamsMapper;
@@ -26,12 +32,12 @@ public sealed class UserCreatedDomainEventHandler: INotificationHandler<UserCrea
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public async Task Handle(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
+	public async Task Consume(ConsumeContext<UserCreatedDomainEvent> context)
 	{
-		var msg = notification;
+		var msg = context.Message;
 
 		var userCreatedEvent = _hamsMapper.Map<UserCreatedIntegrationEvent>(msg);
-		await _eventBus.PublishAsync(userCreatedEvent, cancellationToken);
+		await _eventBus.PublishAsync(userCreatedEvent, context.CancellationToken);
 
 		var emailVerificationToken = EmailVerificationToken.Create(
 			msg.Id,
@@ -42,6 +48,6 @@ public sealed class UserCreatedDomainEventHandler: INotificationHandler<UserCrea
 		string verificationLink = _emailVerificationLinkFactory.Create(emailVerificationToken);
 
 		var userConfirmEmailEvent = new EmailConfirmationRequestedIntegrationEvent(verificationLink, msg.Email);
-		await _eventBus.PublishAsync(userConfirmEmailEvent, cancellationToken);
+		await _eventBus.PublishAsync(userConfirmEmailEvent, context.CancellationToken);
 	}
 }

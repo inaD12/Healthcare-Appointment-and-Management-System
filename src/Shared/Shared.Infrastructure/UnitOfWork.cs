@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities.Base;
-using Shared.Domain.Exceptions;
 
 namespace Shared.Infrastructure;
 
@@ -10,11 +10,13 @@ internal class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 {
 	private readonly TContext _dbContext;
 	private readonly IMediator _notificationPublisher;
+	private readonly IEventBus _eventBus;
 
-	public UnitOfWork(TContext dbContext, IMediator notificationPublisher)
+	public UnitOfWork(TContext dbContext, IMediator notificationPublisher, IEventBus eventBus)
 	{
 		_dbContext = dbContext;
 		_notificationPublisher = notificationPublisher;
+		_eventBus = eventBus;
 	}
 
 	public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -27,7 +29,7 @@ internal class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 		}
 		catch (DbUpdateConcurrencyException ex)
 		{
-			throw new ConcurrencyException("Concurrency exception occurred.", ex);
+			throw new Domain.Exceptions.ConcurrencyException("Concurrency exception occurred.", ex);
 		}
 	}
 
@@ -48,7 +50,13 @@ internal class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 
 		foreach (var domainEvent in domainEvents)
 		{
-			await _notificationPublisher.Publish(domainEvent, cancellationToken);
+			Type concreteType = domainEvent.GetType();
+
+			var publishMethod = typeof(IEventBus)
+				.GetMethod(nameof(IEventBus.PublishAsync))!
+				.MakeGenericMethod(concreteType);
+
+			await (Task)publishMethod.Invoke(_eventBus, [domainEvent, cancellationToken])!;
 		}
 	}
 }
