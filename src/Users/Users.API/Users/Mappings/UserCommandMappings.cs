@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.LoginUser;

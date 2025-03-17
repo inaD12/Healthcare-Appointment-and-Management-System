@@ -1,11 +1,11 @@
-﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
-using Appointments.Application.Features.Appointments.Mappings;
+﻿using Appointments.Application.Features.Appointments.Mappings;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Application.Features.Mappings;
-using Appointments.Domain.DTOS;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
+using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using AutoMapper;
@@ -13,19 +13,22 @@ using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Application.UnitTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
+using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
 public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 {
-	protected IRepositoryManager RepositoryMagager { get; }
+	protected IDateTimeProvider DateTimeProvider { get; }
 	protected IJwtParser JWTParser { get; }
-	protected IAppointmentService AppointmentService { get; }
+	protected IAppointmentRepository AppointmentRepository { get; }
+	protected IUserDataRepository UserDataRepository { get; }
 
 	protected readonly List<Appointment> SceduledAppointmentList;
+	protected readonly DateTimeRange DateTimeRange;
 
 	protected BaseAppointmentsUnitTest() : base(
 		new HAMSMapper(
@@ -38,23 +41,22 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		Substitute.For<IUnitOfWork>()
 		)
 	{
-		
-		RepositoryMagager = Substitute.For<IRepositoryManager>();
+		DateTimeProvider = Substitute.For<IDateTimeProvider>();
+		UserDataRepository = Substitute.For<IUserDataRepository>();
+		AppointmentRepository = Substitute.For<IAppointmentRepository>();
 		JWTParser = Substitute.For<IJwtParser>();
-		AppointmentService = Substitute.For<IAppointmentService>();
 		
 		var AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
+		DateTimeRange = DateTimeRange.Create(AppointmentsTestUtilities.SoonDate, AppointmentsTestUtilities.FutureDate);
 
-		var appointment = new Appointment(
+		var appointment = Appointment.Schedule(
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
-			AppointmentsTestUtilities.SoonDate,
-			AppointmentsTestUtilities.FutureDate,
-			AppointmentStatus.Scheduled
-			)
-		{
-			Id = AppointmentsTestUtilities.ValidId
-		};
+			DateTimeRange
+			);
+		//{
+		//	Id = AppointmentsTestUtilities.ValidId
+		//};
 
 		SceduledAppointmentList = new List<Appointment> { appointment };
 
@@ -81,11 +83,11 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsModel();
 
 		string id = "";
-		RepositoryMagager.Appointment.GetByIdAsync(Arg.Do<string>(a => id = a))
+		AppointmentRepository.GetByIdAsync(Arg.Do<string>(a => id = a))
 				.Returns(callInfo =>
 				{
 					if (id == AppointmentsTestUtilities.InvalidId)
-						return (Result<Appointment>.Failure(Responses.AppointmentNotFound));
+						return (Result<Appointment>.Failure(ResponseList.AppointmentNotFound));
 
 					return (Result<Appointment>.Success(appointment));
 				});
@@ -96,7 +98,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				if (id == AppointmentsTestUtilities.WrongIdFromTokenId)
 					return Result<string>.Success(AppointmentsTestUtilities.InvalidId);
 				if (id == AppointmentsTestUtilities.JWTExtractorInternalErrorId)
-					return Result<string>.Failure(Responses.InternalError);
+					return Result<string>.Failure(ResponseList.InternalError);
 
 				return Result<string>.Success(AppointmentsTestUtilities.ValidId);
 			});
@@ -110,11 +112,11 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		//		return Result.Success();
 		//	});
 
-		RepositoryMagager.Appointment.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
+		AppointmentRepository.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
 		   .Returns(Result<List<Appointment>>.Success(SceduledAppointmentList));
 
 
-		RepositoryMagager.UserData
+		UserDataRepository
 			.GetUserDataByEmailAsync(Arg.Any<string>())
 			.Returns(callInfo =>
 			 {
@@ -125,53 +127,41 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				 if (email == AppointmentsTestUtilities.DoctorEmail)
 					 return Result<UserData>.Success(doctorData);
 
-				 return Result<UserData>.Failure(Responses.UserDataNotFound);
+				 return Result<UserData>.Failure(ResponseList.UserDataNotFound);
 			 });
 
-		AppointmentService.CreateAppointment(
-			Arg.Any<CreateAppointmentModel>())
-			.Returns(callInfo =>
-			{
-				var model = callInfo.ArgAt<CreateAppointmentModel>(0);
 
-				if (model.DoctorId == AppointmentsTestUtilities.HelperInternalErrorId)
-					return Task.FromResult(Result<AppointmentCommandViewModel>.Failure(Responses.InternalError));
-
-				return Task.FromResult(Result<AppointmentCommandViewModel>.Success(AppointmentCommandViewModel));
-			});
-
-
-		RepositoryMagager.Appointment
+		AppointmentRepository
 			.GetAppointmentWithUserDetailsAsync(Arg.Do<string>(a => id = a))
 			.Returns(callInfo =>
 			 {
 				 string id = callInfo.ArgAt<string>(0);
 
 				 if (id == AppointmentsTestUtilities.InvalidId)
-					 return Result<AppointmentWithDetailsModel>.Failure(Responses.AppointmentNotFound);
+					 return Result<AppointmentWithDetailsModel>.Failure(ResponseList.AppointmentNotFound);
 				 if (id == AppointmentsTestUtilities.UnauthUserId)
 					 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTONotMatching);
 
 				 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTO);
 			 });
 
-		RepositoryMagager.Appointment
-			.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<DateTime>())
+		AppointmentRepository
+			.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>())
 			.Returns(callInfo =>
 			{
 				string id = callInfo.ArgAt<string>(0);
 
 				if (id == AppointmentsTestUtilities.TimeSlotUnavailableId)
-					return Result<bool>.Success(false);
+					return false;
 
-				return Result<bool>.Success(true);
+				return true;
 			});
 	}
 
 
 	protected void SetupGetAppointmentsToCompleteResult(Result<List<Appointment>> result)
 	{
-		RepositoryMagager.Appointment.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
+		AppointmentRepository.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
 			.Returns(result);
 	}
 }

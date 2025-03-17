@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Abstractions.Repository;
-using Appointments.Domain.Entities;
+﻿using Appointments.Domain.Entities;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ internal class UserDataRepository : GenericRepository<UserData>, IUserDataReposi
 			.FirstOrDefaultAsync(u => u.Email == email);
 
 		if (user == null)
-			return Result<UserData>.Failure(Responses.UserDataNotFound);
+			return Result<UserData>.Failure(ResponseList.UserDataNotFound);
 
 		return Result<UserData>.Success(user);
 	}

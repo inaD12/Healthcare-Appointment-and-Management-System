@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Shared.Infrastructure.Abstractions;
-using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Managers.Interfaces;
+using Users.Domain.Auth.Abstractions;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Utilities;
 using Users.Infrastructure.DBContexts;
 
@@ -17,28 +17,16 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		: base(integrationTestWebAppFactory.Services.CreateScope())
 	{
 		PasswordManager = ServiceScope.ServiceProvider.GetRequiredService<IPasswordManager>();
+		UserRepository = ServiceScope.ServiceProvider.GetRequiredService<IUserRepository>();
 	}
-
+	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
-	private IRepositoryManager _repositoryManager;
-
-	protected IRepositoryManager RepositoryManager
-	{
-		get
-		{
-			if (_repositoryManager == null)
-			{
-				_repositoryManager = ServiceScope.ServiceProvider.GetRequiredService<IRepositoryManager>();
-			}
-			return _repositoryManager;
-		}
-	}
 
 	protected async Task<string> CreateUserAsync()
 	{
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-		var user = new User(
+		var user = User.Create(
 				UsersTestUtilities.TakenEmail,
 				UsersTestUtilities.ValidPasswordHash,
 				UsersTestUtilities.ValidSalt,
@@ -47,11 +35,10 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
 				UsersTestUtilities.ValidPhoneNumber,
-				UsersTestUtilities.ValidAdress,
-				false
+				UsersTestUtilities.ValidAdress
 			);
 
-		await RepositoryManager.User.AddAsync(user);
+		await UserRepository.AddAsync(user);
 		await unitOfWork.SaveChangesAsync();
 
 		return user.Email;

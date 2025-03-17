@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Response\**" />
-    <EmbeddedResource Remove="Models\Response\**" />
-    <None Remove="Models\Response\**" />
+    <Compile Remove="Infrastructure\Models\Response\**" />
+    <EmbeddedResource Remove="Infrastructure\Models\Response\**" />
+    <None Remove="Infrastructure\Models\Response\**" />
   </ItemGroup>
 
   <ItemGroup>

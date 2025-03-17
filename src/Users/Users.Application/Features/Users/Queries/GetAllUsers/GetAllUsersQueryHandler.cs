@@ -2,8 +2,8 @@
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Abstractions.Repositories;
-using Users.Domain.Models;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Models;
 
 namespace Users.Application.Features.Users.Queries.GetAllUsers;
 

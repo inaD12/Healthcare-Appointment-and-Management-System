@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using Shared.Infrastructure.Abstractions;
+using Shared.Domain.Abstractions;
 
 namespace Shared.Infrastructure.MessageBroker;
 

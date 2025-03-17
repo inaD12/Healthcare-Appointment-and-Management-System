@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
-using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 using Users.Infrastructure.DBContexts;
 
@@ -24,7 +24,7 @@ internal class EmailVerificationTokenRepository : GenericRepository<EmailVerific
 			.FirstOrDefaultAsync(x => x.Id == id);
 
 		if (token is null)
-			return Result<EmailVerificationToken>.Failure(Responses.TokenNotFound);
+			return Result<EmailVerificationToken>.Failure(ResponseList.TokenNotFound);
 
 		return Result<EmailVerificationToken>.Success(token);
 	}

@@ -14,7 +14,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 
 	public LoginCommandHandlerTests()
 	{
-		_commandHandler = new LoginUserCommandHandler(RepositoryManager, PasswordManager, TokenManager, HAMSMapper);
+		_commandHandler = new LoginUserCommandHandler(PasswordManager, TokenManager, HAMSMapper, UserRepository);
 	}
 
 	[Fact]
@@ -42,7 +42,7 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.IncorrectPassword);
+		result.Response.Should().BeEquivalentTo(ResponseList.IncorrectPassword);
 	}
 
 	[Fact]
@@ -56,6 +56,6 @@ public class LoginCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.UserNotFound);
 	}
 }

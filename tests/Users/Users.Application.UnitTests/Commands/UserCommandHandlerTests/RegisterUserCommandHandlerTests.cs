@@ -14,12 +14,12 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	public RegisterUserCommandHandlerTests()
 	{
 		_commandHandler = new RegisterUserCommandHandler(
-			RepositoryManager,
 			PasswordManager,
 			EventBus,
 			EmailConfirmationTokenPublisher,
 			HAMSMapper,
-			UnitOfWork
+			UnitOfWork,
+			UserRepository
 			);
 	}
 
@@ -65,6 +65,6 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
+		result.Response.Should().BeEquivalentTo(ResponseList.EmailTaken);
 	}
 }

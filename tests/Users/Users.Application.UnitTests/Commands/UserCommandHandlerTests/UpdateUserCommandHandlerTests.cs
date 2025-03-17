@@ -14,7 +14,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 	public UpdateUserCommandHandlerTests()
 	{
-		_commandHandler = new UpdateUserCommandHandler(RepositoryManager, UnitOfWork, HAMSMapper);
+		_commandHandler = new UpdateUserCommandHandler(UnitOfWork, HAMSMapper, UserRepository);
 	}
 
 	[Fact]
@@ -33,9 +33,9 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
+		result.Response.Should().BeEquivalentTo(ResponseList.UpdateSuccessful);
 
-		RepositoryManager.User.Received(1).UpdateAsync(
+		UserRepository.Received(1).Update(
 		Arg.Is<User>(user =>
 			user.Id == command.Id &&
 			user.Email == command.NewEmail &&
@@ -61,7 +61,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.UserNotFound);
+		result.Response.Should().BeEquivalentTo(ResponseList.UserNotFound);
 	}
 
 	[Fact]
@@ -79,7 +79,7 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.EmailTaken);
+		result.Response.Should().BeEquivalentTo(ResponseList.EmailTaken);
 	}
 
 	[Fact]
@@ -98,9 +98,9 @@ public class UpdateUserCommandHandlerTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(Responses.UpdateSuccessful);
+		result.Response.Should().BeEquivalentTo(ResponseList.UpdateSuccessful);
 
-		RepositoryManager.User.Received(1).UpdateAsync(
+		UserRepository.Received(1).Update(
 		Arg.Is<User>(user =>
 			user.Id == command.Id &&
 			user.Email != command.NewEmail &&

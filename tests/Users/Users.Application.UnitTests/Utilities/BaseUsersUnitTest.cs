@@ -2,27 +2,27 @@
 using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Shared.Domain.Events;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Abstractions;
-using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
-using Users.Application.Features.Managers.Interfaces;
+using Users.Application.Features.Mappings;
 using Users.Application.Features.Users.Mappings;
+using Users.Domain.Auth.Abstractions;
 using Users.Domain.Entities;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 {
-	protected IRepositoryManager RepositoryManager { get; }
-	protected IFactoryManager FactoryManager { get; }
+	protected IEmailVerificationLinkFactory EmailLinkFactory { get; }
+	protected IEmailVerificationTokenFactory EmailVerificationTokenFactory { get; }
+	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenFactory TokenManager { get; }
 	protected IEventBus EventBus { get; }
-	protected IEmailConfirmationTokenPublisher EmailConfirmationTokenPublisher { get; }
 
 	protected readonly List<User> Doctors;
 
@@ -35,14 +35,14 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				}))),
 		Substitute.For<IUnitOfWork>())
 	{
-		RepositoryManager = Substitute.For<IRepositoryManager>();
-		FactoryManager = Substitute.For<IFactoryManager>();
+		EmailLinkFactory = Substitute.For<IEmailVerificationLinkFactory>();
+		EmailVerificationTokenFactory = Substitute.For<IEmailVerificationTokenFactory>();
+		UserRepository = Substitute.For<IUserRepository>();
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenManager = Substitute.For<ITokenFactory>();
 		EventBus = Substitute.For<IEventBus>();
-		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
 
-		var user = new User(
+		var user = User.Create(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -51,14 +51,13 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
-		var doctor = new User(
+		var doctor = User.Create(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -67,15 +66,14 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
 
-		var takenUser = new User(
+		var takenUser =User.Create(
 			UsersTestUtilities.TakenEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -84,14 +82,13 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.TakenId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.TakenId
+		//};
 
-		var emailErrorUser = new User(
+		var emailErrorUser = User.Create(
 			UsersTestUtilities.EmailSendingErrorEmail,
 			UsersTestUtilities.ValidPasswordHash,
 			UsersTestUtilities.ValidSalt,
@@ -100,12 +97,11 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-					)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			UsersTestUtilities.ValidAdress
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
 
 		var emailVerificationToken = new EmailVerificationToken(
@@ -139,7 +135,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		//		return user;
 		//	});
 
-		RepositoryManager.User.GetByEmailAsync(
+		UserRepository.GetByEmailAsync(
 			Arg.Any<string>())
 				.Returns(callInfo =>
 				{
@@ -147,11 +143,11 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 					if (email == UsersTestUtilities.TakenEmail)
 						return Result<User>.Success(takenUser);
-					return Result<User>.Failure(Responses.UserNotFound);
+					return Result<User>.Failure(ResponseList.UserNotFound);
 
 				});
 
-		RepositoryManager.User.GetByIdAsync(
+		UserRepository.GetByIdAsync(
 			Arg.Any<string>())
 				.Returns(callInfo =>
 				{
@@ -159,10 +155,10 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 					if (id == UsersTestUtilities.ValidId)
 						return Result<User>.Success(user);
-					return Result<User>.Failure(Responses.UserNotFound);
+					return Result<User>.Failure(ResponseList.UserNotFound);
 				});
 
-		RepositoryManager.User.DeleteByIdAsync(
+		UserRepository.DeleteByIdAsync(
 			Arg.Any<string>())
 				.Returns(Result.Success());
 
@@ -185,14 +181,14 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		TokenManager.CreateToken(Arg.Any<string>())
 			.Returns(new TokenResult(UsersTestUtilities.ValidId));
 
-		FactoryManager.EmailTokenFactory.CreateToken(
+		EmailVerificationTokenFactory.CreateToken(
 			UsersTestUtilities.TakenId,
 			Arg.Any<DateTime>(),
 			Arg.Any<DateTime>()
 			)
 		  .Returns(emailVerificationToken);
 
-		FactoryManager.EmailLinkFactory.Create(emailVerificationToken)
+		EmailLinkFactory.Create(emailVerificationToken)
 			.Returns(UsersTestUtilities.Link);
 
 		string recipientEmail = "";
@@ -208,12 +204,5 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		//		  return Task.FromResult(new SendResponse());
 		//	  });
 
-		RepositoryManager.User.GetAllDoctorsAsync()
-		   .Returns(Result<IEnumerable<User>>.Success(Doctors));
-	}
-
-	protected void SetupDoctorsResult(Result<IEnumerable<User>> result)
-	{
-		RepositoryManager.User.GetAllDoctorsAsync().Returns(result);
 	}
 }
