@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Users.Application.Features.Auth.Abstractions;
+using Users.Domain.Auth.Abstractions;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Utilities;

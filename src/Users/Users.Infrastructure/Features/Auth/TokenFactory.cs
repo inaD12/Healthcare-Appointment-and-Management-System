@@ -2,10 +2,10 @@
 using JWT.Builder;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Options;
-using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Auth.Models;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 
-namespace Users.Application.Features.Auth;
+namespace Users.Infrastructure.Features.Auth;
 
 public class TokenFactory : ITokenFactory
 {

@@ -1,3 +1,3 @@
-﻿namespace Users.Application.Features.Auth.Models;
+﻿namespace Users.Domain.Auth.Models;
 
 public record PasswordHashResult(string PasswordHash, string Salt);

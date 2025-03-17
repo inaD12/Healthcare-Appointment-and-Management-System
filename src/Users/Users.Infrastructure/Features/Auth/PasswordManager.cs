@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
-using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Auth.Models;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 
-namespace Users.Application.Features.Auth;
+namespace Users.Infrastructure.Features.Auth;
 
 public class PasswordManager : IPasswordManager
 {

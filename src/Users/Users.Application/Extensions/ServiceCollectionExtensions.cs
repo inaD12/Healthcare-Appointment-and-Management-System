@@ -4,8 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
 using Shared.Infrastructure.Extensions;
-using Users.Application.Features.Auth;
-using Users.Application.Features.Auth.Abstractions;
 using Users.Application.Features.Email.Helpers;
 using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Infrastructure.DBContexts;
@@ -19,8 +17,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddTransient<IPasswordManager, PasswordManager>()
-			.AddTransient<ITokenFactory, TokenFactory>()
 			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

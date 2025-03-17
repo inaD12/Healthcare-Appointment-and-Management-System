@@ -1,6 +1,6 @@
-﻿using Users.Application.Features.Auth.Models;
+﻿using Users.Domain.Auth.Models;
 
-namespace Users.Application.Features.Auth.Abstractions;
+namespace Users.Domain.Auth.Abstractions;
 
 public interface IPasswordManager
 {
