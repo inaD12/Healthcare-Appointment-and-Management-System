@@ -77,6 +77,13 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
 
+		group.MapDelete("delete/{id}", DeleteById)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError);
+		//.RequireAuthorization();
+
 		group.MapGet("verify-email", VerifyEmails)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -179,6 +186,17 @@ internal class UserEndPoints : IEndPoints
 
 		var userCommandResponse = mapper.Map<UserPaginatedQueryResponse>(res.Value!);
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
+	}
+
+	public async Task<IResult> DeleteById(
+		[FromRoute] string id,
+		[FromServices] ISender sender,
+		[FromServices] IJwtParser jwtParser,
+		CancellationToken cancellationToken)
+	{
+		var command = new DeleteUserCommand(id);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	public async Task<IResult> DeleteCurrent(
