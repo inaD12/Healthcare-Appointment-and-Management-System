@@ -5,11 +5,10 @@ using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Results;
-using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Email.Helpers.Abstractions;
-using Users.Application.Features.Mappings;
 using Users.Application.Features.Users.Mappings;
 using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
@@ -18,7 +17,6 @@ using Users.Domain.Utilities;
 public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 {
 	protected IEmailVerificationLinkFactory EmailLinkFactory { get; }
-	protected IEmailVerificationTokenFactory EmailVerificationTokenFactory { get; }
 	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenFactory TokenManager { get; }
@@ -36,7 +34,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		Substitute.For<IUnitOfWork>())
 	{
 		EmailLinkFactory = Substitute.For<IEmailVerificationLinkFactory>();
-		EmailVerificationTokenFactory = Substitute.For<IEmailVerificationTokenFactory>();
 		UserRepository = Substitute.For<IUserRepository>();
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenManager = Substitute.For<ITokenFactory>();
@@ -104,15 +101,15 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		//};
 
 
-		var emailVerificationToken = new EmailVerificationToken(
+		var emailVerificationToken = EmailVerificationToken.Create(
 			UsersTestUtilities.TakenId,
 			UsersTestUtilities.CurrentDate,
 			UsersTestUtilities.SoonDate,
 			takenUser
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
+			);
+		//{
+		//	Id = UsersTestUtilities.ValidId
+		//};
 
 		Doctors = new List<User> { doctor };
 
@@ -180,13 +177,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 		TokenManager.CreateToken(Arg.Any<string>())
 			.Returns(new TokenResult(UsersTestUtilities.ValidId));
-
-		EmailVerificationTokenFactory.CreateToken(
-			UsersTestUtilities.TakenId,
-			Arg.Any<DateTime>(),
-			Arg.Any<DateTime>()
-			)
-		  .Returns(emailVerificationToken);
 
 		EmailLinkFactory.Create(emailVerificationToken)
 			.Returns(UsersTestUtilities.Link);

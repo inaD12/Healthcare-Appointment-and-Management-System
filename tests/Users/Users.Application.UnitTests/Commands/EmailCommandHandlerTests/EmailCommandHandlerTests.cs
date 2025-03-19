@@ -28,7 +28,7 @@ public class EmailCommandHandlerTests
 		_commandHandler = new HandleEmailCommandHandler(_unitOfWork, _mockEmailVerificationTokenRepository, _mockUserRepository);
 
 		_user =  User.Create("test@example.com", "hashedPassword", "salt", Roles.Patient, "John", "Doe", DateTime.UtcNow, "1234567890", "Address");
-		_validToken = new EmailVerificationToken
+		_validToken = EmailVerificationToken.Create
 		(
 			 _user.Id,
 			DateTime.UtcNow,
@@ -57,7 +57,7 @@ public class EmailCommandHandlerTests
 	public async Task HandleAsync_ShouldReturnFailure_WhenTokenIsExpired()
 	{
 		// Arrange
-		var expiredToken = new EmailVerificationToken
+		var expiredToken = EmailVerificationToken.Create
 		(
 			 _user.Id,
 			DateTime.UtcNow,

@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
-using Users.Application.Features.Auth.Models;
 using Users.Application.Features.Users.LoginUser;
-using Users.Application.Features.Users.Models;
 using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;
