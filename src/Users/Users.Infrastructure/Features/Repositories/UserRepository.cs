@@ -51,16 +51,6 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		return Result<User>.Success(user);
 	}
 
-	public async Task<Result<User>> GetByFirstNameAsync(string firstName)
-	{
-		var user = await _context.Users.FirstOrDefaultAsync(u => u.FirstName == firstName);
-
-		if (user == null)
-			return Result<User>.Failure(ResponseList.UserNotFound);
-
-		return Result<User>.Success(user);
-	}
-
 	public async Task<Result> DeleteByIdAsync(string id)
 	{
 		var res = await GetByIdAsync(id);
@@ -72,10 +62,5 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		}
 
 		return Result.Failure(res.Response);
-	}
-
-	public override async Task AddAsync(User user)
-	{
-		await _context.Users.AddAsync(user);
 	}
 }
