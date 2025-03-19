@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using Shared.Application.Helpers.Abstractions;
-using Shared.Domain.Responses;
-using Shared.Domain.Results;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Shared.Application.Helpers;
@@ -16,21 +14,17 @@ public class JwtParser : IJwtParser
 		_httpContextAccessor = httpContextAccessor;
 	}
 
-	public Result<string> GetIdFromToken()
+	public string? GetIdFromToken()
 	{
 		return GetClaimValueFromToken("id");
 	}
 
-	private Result<string> GetClaimValueFromToken(string claimType)
+	private string? GetClaimValueFromToken(string claimType)
 	{
-		try
-		{
 			var jwtToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
 			if (string.IsNullOrEmpty(jwtToken))
-			{
-				return Result<string>.Failure(SharedResponses.JWTNotFound);
-			}
+				return null;
 
 			var handler = new JwtSecurityTokenHandler();
 			var jsonToken = handler.ReadToken(jwtToken) as JwtSecurityToken;
@@ -39,15 +33,9 @@ public class JwtParser : IJwtParser
 			if (string.IsNullOrEmpty(claimValue))
 			{
 				Log.Error($"Token doesn't contain the requested claim type: {claimType}");
-				return Result<string>.Failure(SharedResponses.InternalError);
+				return null;
 			}
 
-			return Result<string>.Success(claimValue);
-		}
-		catch (Exception ex)
-		{
-			Log.Error($"Error parsing token: {ex.Message}");
-			return Result<string>.Failure(SharedResponses.InternalError);
-		}
+			return claimValue;
 	}
 }
