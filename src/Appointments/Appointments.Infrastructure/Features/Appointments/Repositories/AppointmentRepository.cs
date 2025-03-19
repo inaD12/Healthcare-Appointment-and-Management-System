@@ -6,7 +6,9 @@ using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Models;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 
 namespace Appointments.Infrastructure.Features.Appointments.Repositories;
@@ -19,6 +21,23 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		_context = context;
 	}
 
+	public async Task<Result<PagedList<Appointment>>> GetAllAsync(AppointmentPagedListQuery query, CancellationToken cancellationToken = default)
+	{
+		var entitiesQuery = _context.Appointments
+			.Where(u =>
+				(string.IsNullOrEmpty(query.DoctorId) || u.DoctorId == query.DoctorId) &&
+				(string.IsNullOrEmpty(query.PatientId) || u.PatientId == query.PatientId) &&
+				(!query.Status.HasValue || u.Status == query.Status!.Value) &&
+				(!query.FromTime.HasValue || u.Duration.End >= query.FromTime) &&
+				(!query.ToTime.HasValue || u.Duration.Start <= query.ToTime)
+			).ApplySorting(query.SortPropertyName, query.SortOrder);
+
+		if (entitiesQuery == null)
+			return Result<PagedList<Appointment>>.Failure(ResponseList.NoAppointmentsFound);
+
+		var appointments = await PagedList<Appointment>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
+		return Result<PagedList<Appointment>>.Success(appointments);
+	}
 	public async Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default)
 	{
 		bool isSlotTaken = await _context.Appointments
