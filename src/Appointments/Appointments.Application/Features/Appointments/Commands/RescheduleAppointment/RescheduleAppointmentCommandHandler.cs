@@ -33,30 +33,28 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 
 	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var detailedAppointmentRes = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentID);
+		var detailedAppointment = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentID);
 
-		if (detailedAppointmentRes.IsFailure)
-			return Result<AppointmentCommandViewModel>.Failure(detailedAppointmentRes.Response);
-
-		AppointmentWithDetailsModel appointmentWithDetails = detailedAppointmentRes.Value!;
+		if (detailedAppointment == null)
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
 
 		var userIdRes = _jwtParser.GetIdFromToken();
 
 		if (userIdRes.IsFailure)
 			return Result<AppointmentCommandViewModel>.Failure(userIdRes.Response);
-		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
+		if (userIdRes.Value != detailedAppointment.PatientId && userIdRes.Value != detailedAppointment.DoctorId)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
 
 		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
-		if (await _appointmentRepository.IsTimeSlotAvailableAsync(appointmentWithDetails.DoctorId, duration, cancellationToken))
+		if (await _appointmentRepository.IsTimeSlotAvailableAsync(detailedAppointment.DoctorId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
-		var appointment = Appointment.Schedule(appointmentWithDetails.PatientId, appointmentWithDetails.DoctorId, duration);
+		var appointment = Appointment.Schedule(detailedAppointment.PatientId, detailedAppointment.DoctorId, duration);
 
 		await _appointmentRepository.AddAsync(appointment);
 
-		var result = appointmentWithDetails.Appointment.Reschedule(_dateTimeProvider.UtcNow);
+		var result = detailedAppointment.Appointment.Reschedule(_dateTimeProvider.UtcNow);
 		if (result.IsFailure)
 			return Result<AppointmentCommandViewModel>.Failure(result.Response);
 

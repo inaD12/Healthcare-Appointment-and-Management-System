@@ -2,6 +2,7 @@
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.Commands.DeleteUser;
 
@@ -20,11 +21,10 @@ public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand
 	{
 		var res = await _userRepository.GetByIdAsync(request.Id);
 
-		if (res.IsFailure)
-			return Result.Failure(res.Response);
+		if (res == null)
+			return Result.Failure(ResponseList.UserNotFound);
 
 		var result = await _userRepository.DeleteByIdAsync(request.Id);
-
 		await _unitOfWork.SaveChangesAsync();
 		return result;
 	}

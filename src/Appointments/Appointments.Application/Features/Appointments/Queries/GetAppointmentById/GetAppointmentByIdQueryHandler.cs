@@ -1,6 +1,7 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
+using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -20,13 +21,11 @@ public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmen
 
 	public async Task<Result<AppointmentQueryViewModel>> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
 	{
-		var appointmentRes = await _appointmentRepository.GetByIdAsync(request.Id);
-		if (appointmentRes.IsFailure)
-			return Result<AppointmentQueryViewModel>.Failure(appointmentRes.Response);
+		var appointment = await _appointmentRepository.GetByIdAsync(request.Id);
+		if (appointment == null)
+			return Result<AppointmentQueryViewModel>.Failure(ResponseList.AppointmentNotFound);
 
-		var appointment = appointmentRes.Value!;
 		var appointmentQueryViewModel = _mapper.Map<AppointmentQueryViewModel>(appointment);
-
 		return Result<AppointmentQueryViewModel>.Success(appointmentQueryViewModel);
 	}
 }

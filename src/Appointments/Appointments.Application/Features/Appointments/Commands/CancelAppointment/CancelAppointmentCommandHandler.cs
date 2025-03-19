@@ -24,12 +24,10 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentRes = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
+		var appointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
 
-		if (appointmentRes.IsFailure)
-			return Result.Failure(appointmentRes.Response);
-
-		Appointment appointment = appointmentRes.Value!;
+		if (appointment == null)
+			return Result.Failure(ResponseList.AppointmentNotFound);
 
 		var userIdRes = _jwtParser.GetIdFromToken();
 		if (userIdRes.IsFailure)

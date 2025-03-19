@@ -3,11 +3,9 @@ using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
-using Appointments.Domain.Responses;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Shared.Domain.Models;
-using Shared.Domain.Results;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 
@@ -21,7 +19,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		_context = context;
 	}
 
-	public async Task<Result<PagedList<Appointment>>> GetAllAsync(AppointmentPagedListQuery query, CancellationToken cancellationToken = default)
+	public async Task<PagedList<Appointment>?> GetAllAsync(AppointmentPagedListQuery query, CancellationToken cancellationToken = default)
 	{
 		var entitiesQuery = _context.Appointments
 			.Where(u =>
@@ -33,10 +31,10 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 			).ApplySorting(query.SortPropertyName, query.SortOrder);
 
 		if (entitiesQuery == null)
-			return Result<PagedList<Appointment>>.Failure(ResponseList.NoAppointmentsFound);
+			return null!;
 
 		var appointments = await PagedList<Appointment>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
-		return Result<PagedList<Appointment>>.Success(appointments);
+		return appointments;
 	}
 	public async Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default)
 	{
@@ -51,7 +49,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		return !isSlotTaken;
 	}
 
-	public async Task<Result<AppointmentWithDetailsModel>> GetAppointmentWithUserDetailsAsync(string appointmentId)
+	public async Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId)
 	{
 		var result = await (
 		from appointment in _context.Appointments
@@ -73,18 +71,15 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		}
 		).FirstOrDefaultAsync();
 
-		if (result == null)
-			return Result<AppointmentWithDetailsModel>.Failure(ResponseList.AppointmentNotFound);
-
-		return Result<AppointmentWithDetailsModel>.Success(result);
+		return result!;
 	}
 
-	public async Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime)
+	public async Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime)
 	{
 		var res = await _context.Appointments
 		.Where(a => a.Duration.End <= currentTime && a.Status == AppointmentStatus.Scheduled)
 		.ToListAsync();
 
-		return Result<List<Appointment>>.Success(res);
+		return res;
 	}
 }

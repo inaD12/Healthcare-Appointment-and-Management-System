@@ -27,12 +27,10 @@ public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, 
 
 	public async Task<Result<LoginUserCommandViewModel>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
 	{
-		var res = await _userRepository.GetByEmailAsync(request.Email);
+		var user = await _userRepository.GetByEmailAsync(request.Email);
 
-		if (res.IsFailure)
-			return Result<LoginUserCommandViewModel>.Failure(res.Response);
-
-		User user = res.Value!;
+		if (user == null)
+			return Result<LoginUserCommandViewModel>.Failure(ResponseList.UserNotFound);
 
 		if (!_passwordManager.VerifyPassword(request.Password, user.PasswordHash, user.Salt))
 			return Result<LoginUserCommandViewModel>.Failure(ResponseList.IncorrectPassword);

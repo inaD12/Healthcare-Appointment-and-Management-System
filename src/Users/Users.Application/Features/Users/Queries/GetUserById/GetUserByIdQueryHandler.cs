@@ -3,6 +3,7 @@ using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.Queries.GetById;
 
@@ -19,13 +20,11 @@ public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Us
 
 	public async Task<Result<UserQueryViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
 	{
-		var userRes = await _userRepository.GetByIdAsync(request.Id);
-		if (userRes.IsFailure)
-			return Result<UserQueryViewModel>.Failure(userRes.Response);
+		var user = await _userRepository.GetByIdAsync(request.Id);
+		if (user == null)
+			return Result<UserQueryViewModel>.Failure(ResponseList.UserNotFound);
 
-		var user = userRes.Value!;
 		var userQueryViewModel = _mapper.Map<UserQueryViewModel>(user);
-
 		return Result<UserQueryViewModel>.Success(userQueryViewModel);
 	}
 }

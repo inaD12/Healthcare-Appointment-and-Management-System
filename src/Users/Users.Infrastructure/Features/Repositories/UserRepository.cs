@@ -20,7 +20,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		_context = context;
 	}
 
-	public async Task<Result<PagedList<User>>> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
+	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
 	{
 		var entitiesQuery = _context.Users
 			.Where(u =>
@@ -34,33 +34,29 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 			).ApplySorting(query.SortPropertyName, query.SortOrder);
 
 		if (entitiesQuery == null)
-			return Result<PagedList<User>>.Failure(ResponseList.NoUsersFound);
+			return null;
 
 		var users = await PagedList<User>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
-		return Result<PagedList<User>>.Success(users);
+		return users;
 	}
 
 
-	public async Task<Result<User>> GetByEmailAsync(string email)
+	public async Task<User?> GetByEmailAsync(string email)
 	{
 		var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-		if (user == null)
-			return Result<User>.Failure(ResponseList.UserNotFound);
-
-		return Result<User>.Success(user);
+		return user;
 	}
 
 	public async Task<Result> DeleteByIdAsync(string id)
 	{
 		var res = await GetByIdAsync(id);
 
-		if (res.IsSuccess)
-		{
-			Delete(res.Value!);
-			return Result.Success();
-		}
+		if (res == null)
+			return Result.Failure(ResponseList.UserNotFound);
 
-		return Result.Failure(res.Response);
+		Delete(res!);
+		return Result.Success();
+
 	}
 }

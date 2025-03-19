@@ -1,4 +1,6 @@
 ﻿using Appointments.Domain.Infrastructure.Abstractions.Repository;
+using Appointments.Domain.Responses;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -21,17 +23,13 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentsToCompleteRes = await _appointmentRepository
+		var appointmentsToComplete = await _appointmentRepository
 			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow);
-		if (appointmentsToCompleteRes.IsFailure)
-			return Result.Failure(appointmentsToCompleteRes.Response);
 
-		if (appointmentsToCompleteRes.Value!.Count == 0)
+		if (appointmentsToComplete.IsNullOrEmpty())
 			return Result.Success();
 
-		var appointmentsToComplete = appointmentsToCompleteRes.Value;
-
-		foreach (var appointment in appointmentsToComplete)
+		foreach (var appointment in appointmentsToComplete!)
 		{
 			var res = appointment.Complete();
 		}

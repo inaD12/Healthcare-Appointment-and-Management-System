@@ -1,6 +1,7 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
+using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -21,11 +22,10 @@ public class GetAllAppointmentsQueryHandler : IQueryHandler<GetAllAppointmentsQu
 	public async Task<Result<AppointmentPaginatedQueryViewModel>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
 	{
 		var appointmentPagedListQuery = _hamsMapper.Map<AppointmentPagedListQuery>(request);
-		var appointmentPagedListRes = await _appointmentRepository.GetAllAsync(appointmentPagedListQuery, cancellationToken);
-		if (appointmentPagedListRes.IsFailure)
-			return Result<AppointmentPaginatedQueryViewModel>.Failure(appointmentPagedListRes.Response);
+		var appointmentPagedList = await _appointmentRepository.GetAllAsync(appointmentPagedListQuery, cancellationToken);
+		if (appointmentPagedList == null)
+			return Result<AppointmentPaginatedQueryViewModel>.Failure(ResponseList.NoAppointmentsFound);
 
-		var appointmentPagedList = appointmentPagedListRes.Value!;
 		var appointmentPaginatedQueryViewModel = _hamsMapper.Map<AppointmentPaginatedQueryViewModel>(appointmentPagedList);
 		return Result<AppointmentPaginatedQueryViewModel>.Success(appointmentPaginatedQueryViewModel);
 	}
