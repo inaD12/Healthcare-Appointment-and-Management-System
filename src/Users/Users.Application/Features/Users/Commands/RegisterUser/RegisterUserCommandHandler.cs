@@ -29,7 +29,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 	public async Task<Result<UserCommandViewModel>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 	{
 		var emailUser = await _userRepository.GetByEmailAsync(request.Email);
-		if (emailUser == null)
+		if (emailUser != null)
 			return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
 
 		PasswordHashResult passwordHashResult = _passwordManager.HashPassword(request.Password);

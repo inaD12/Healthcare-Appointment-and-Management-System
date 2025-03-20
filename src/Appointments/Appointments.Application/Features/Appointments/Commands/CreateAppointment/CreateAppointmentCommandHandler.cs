@@ -42,7 +42,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 
 		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
-		if (await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.Id, duration, cancellationToken))
+		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.UserId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
 		try

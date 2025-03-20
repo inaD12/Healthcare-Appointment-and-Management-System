@@ -5,6 +5,8 @@ using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
 using Shared.Application.Helpers.Abstractions;
+using Shared.Domain.Responses;
+using Shared.Domain.Results;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -128,10 +130,9 @@ internal class UserEndPoints : IEndPoints
 		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var parserRes = jwtParser.GetIdFromToken();
-		if (parserRes.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(parserRes);
-		string id = parserRes.Value!;
+		var id = jwtParser.GetIdFromToken();
+		if (id == null)
+			return ControllerResponse.ParseAndReturnMessage(Result.Failure(SharedResponses.JWTNotFound));
 
 		var command = mapper.Map<UpdateUserCommand>((request, id));
 		var res = await sender.Send(command, cancellationToken);
@@ -204,10 +205,9 @@ internal class UserEndPoints : IEndPoints
 		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var parserRes = jwtParser.GetIdFromToken();
-		if (parserRes.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(parserRes);
-		string id = parserRes.Value!;
+		var id = jwtParser.GetIdFromToken();
+		if (id == null)
+			return ControllerResponse.ParseAndReturnMessage(Result.Failure(SharedResponses.JWTNotFound));
 
 		var command = new DeleteUserCommand(id);
 		var res = await sender.Send(command, cancellationToken);

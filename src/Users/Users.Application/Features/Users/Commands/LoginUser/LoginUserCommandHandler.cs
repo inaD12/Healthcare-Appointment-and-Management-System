@@ -4,7 +4,6 @@ using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Auth.Abstractions;
 using Users.Domain.Auth.Models;
-using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 

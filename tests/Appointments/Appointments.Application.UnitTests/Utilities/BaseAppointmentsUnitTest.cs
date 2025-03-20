@@ -2,11 +2,9 @@
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Mappings;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
-using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using AutoMapper;
 using NSubstitute;
@@ -15,7 +13,6 @@ using Shared.Application.Helpers.Abstractions;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.UnitTests.Utilities;
@@ -29,6 +26,15 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 
 	protected readonly List<Appointment> SceduledAppointmentList;
 	protected readonly DateTimeRange DateTimeRange;
+	protected readonly AppointmentCommandViewModel AppointmentCommandViewModel;
+	protected readonly Appointment Appointment;
+	protected readonly Appointment AppointmentInvalid;
+	protected readonly Appointment AppointmentCanceled;
+	protected readonly UserData DoctorData;
+	protected readonly UserData PatientData;
+	protected readonly AppointmentWithDetailsModel AppointmentWithDetailsDTO;
+	protected readonly AppointmentWithDetailsModel AppointmentWithDetailsDTONotMatching;
+	protected readonly AppointmentWithDetailsModel AppointmentWithDetailsDTOCanceled;
 
 	protected BaseAppointmentsUnitTest() : base(
 		new HAMSMapper(
@@ -46,122 +52,86 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		AppointmentRepository = Substitute.For<IAppointmentRepository>();
 		JWTParser = Substitute.For<IJwtParser>();
 		
-		var AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
+		AppointmentCommandViewModel = new AppointmentCommandViewModel(AppointmentsTestUtilities.ValidId);
+
 		DateTimeRange = DateTimeRange.Create(AppointmentsTestUtilities.SoonDate, AppointmentsTestUtilities.FutureDate);
 
-		var appointment = Appointment.Schedule(
+		Appointment = Appointment.Schedule(
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
 			DateTimeRange
 			);
-		//{
-		//	Id = AppointmentsTestUtilities.ValidId
-		//};
 
-		SceduledAppointmentList = new List<Appointment> { appointment };
+		AppointmentInvalid = Appointment.Schedule(
+			AppointmentsTestUtilities.InvalidId,
+			AppointmentsTestUtilities.InvalidId,
+			DateTimeRange
+			);
 
-		var doctorData = new UserData
+		AppointmentCanceled = Appointment.Schedule(
+			AppointmentsTestUtilities.ValidId,
+			AppointmentsTestUtilities.ValidId,
+			DateTimeRange
+			);
+		AppointmentCanceled.Cancel(AppointmentsTestUtilities.PastDate);
+
+		SceduledAppointmentList = new List<Appointment> { Appointment };
+
+		DoctorData = new UserData
 		(
 			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.DoctorEmail,
 			Roles.Doctor
 		);
 
-		var patientData = new UserData
+		PatientData = new UserData
 		(
 			AppointmentsTestUtilities.PatientId,
 			AppointmentsTestUtilities.PatientEmail,
 			Roles.Patient
 		);
 
-		var appointmentWithDetailsDTO = new AppointmentWithDetailsModel
+		AppointmentWithDetailsDTO = new AppointmentWithDetailsModel
 		{
-			DoctorId = AppointmentsTestUtilities.ValidId,
-			PatientId = AppointmentsTestUtilities.ValidId,
+			DoctorId = AppointmentsTestUtilities.DoctorId,
+			PatientId = AppointmentsTestUtilities.PatientId,
+			Appointment = Appointment
 		};
 
-		var appointmentWithDetailsDTONotMatching = new AppointmentWithDetailsModel();
+		AppointmentWithDetailsDTONotMatching = new AppointmentWithDetailsModel();
 
-		string id = "";
-		AppointmentRepository.GetByIdAsync(Arg.Do<string>(a => id = a))
-				.Returns(callInfo =>
-				{
-					if (id == AppointmentsTestUtilities.InvalidId)
-						return (Result<Appointment>.Failure(ResponseList.AppointmentNotFound));
+		AppointmentWithDetailsDTOCanceled = new AppointmentWithDetailsModel
+		{
+			DoctorId = AppointmentsTestUtilities.DoctorId,
+			PatientId = AppointmentsTestUtilities.PatientId,
+			Appointment = AppointmentCanceled
+		};
 
-					return (Result<Appointment>.Success(appointment));
-				});
+		AppointmentRepository.GetByIdAsync(AppointmentsTestUtilities.ValidId).Returns(Appointment);
+		AppointmentRepository.GetByIdAsync(AppointmentsTestUtilities.WrongIdFromTokenId).Returns(AppointmentInvalid);
 
-		JWTParser.GetIdFromToken()
-			.Returns(callInfo =>
-			{
-				if (id == AppointmentsTestUtilities.WrongIdFromTokenId)
-					return Result<string>.Success(AppointmentsTestUtilities.InvalidId);
-				if (id == AppointmentsTestUtilities.JWTExtractorInternalErrorId)
-					return Result<string>.Failure(ResponseList.InternalError);
+		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.ValidId);
 
-				return Result<string>.Success(AppointmentsTestUtilities.ValidId);
-			});
+		AppointmentRepository.GetAppointmentsToCompleteAsync(AppointmentsTestUtilities.CurrentDate).Returns(SceduledAppointmentList);
 
-		//RepositoryMagager.Appointment.ChangeStatusAsync(Arg.Any<Appointment>(), (Arg.Any<AppointmentStatus>()))
-		//	.Returns(callInfo =>
-		//	{
-		//		if (id == AppointmentsTestUtilities.ChangeStatusInternalErrorId)
-		//			return (Result.Failure(Responses.InternalError));
-
-		//		return Result.Success();
-		//	});
-
-		AppointmentRepository.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
-		   .Returns(Result<List<Appointment>>.Success(SceduledAppointmentList));
-
-
-		UserDataRepository
-			.GetUserDataByEmailAsync(Arg.Any<string>())
-			.Returns(callInfo =>
+		UserDataRepository.GetUserDataByEmailAsync(Arg.Any<string>()).Returns(callInfo =>
 			 {
 				 string email = callInfo.ArgAt<string>(0);
 
 				 if (email == AppointmentsTestUtilities.PatientEmail)
-					 return Result<UserData>.Success(patientData);
+					 return PatientData;
 				 if (email == AppointmentsTestUtilities.DoctorEmail)
-					 return Result<UserData>.Success(doctorData);
+					 return DoctorData;
 
-				 return Result<UserData>.Failure(ResponseList.UserDataNotFound);
-			 });
-
-
-		AppointmentRepository
-			.GetAppointmentWithUserDetailsAsync(Arg.Do<string>(a => id = a))
-			.Returns(callInfo =>
-			 {
-				 string id = callInfo.ArgAt<string>(0);
-
-				 if (id == AppointmentsTestUtilities.InvalidId)
-					 return Result<AppointmentWithDetailsModel>.Failure(ResponseList.AppointmentNotFound);
-				 if (id == AppointmentsTestUtilities.UnauthUserId)
-					 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTONotMatching);
-
-				 return Result<AppointmentWithDetailsModel>.Success(appointmentWithDetailsDTO);
+				 return null;
 			 });
 
 		AppointmentRepository
-			.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>())
-			.Returns(callInfo =>
-			{
-				string id = callInfo.ArgAt<string>(0);
+			.GetAppointmentWithUserDetailsAsync(AppointmentsTestUtilities.ValidId).Returns(AppointmentWithDetailsDTO);
 
-				if (id == AppointmentsTestUtilities.TimeSlotUnavailableId)
-					return false;
+		AppointmentRepository
+			.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>()).Returns(true);
 
-				return true;
-			});
-	}
-
-
-	protected void SetupGetAppointmentsToCompleteResult(Result<List<Appointment>> result)
-	{
-		AppointmentRepository.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>())
-			.Returns(result);
+		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.CurrentDate);
 	}
 }

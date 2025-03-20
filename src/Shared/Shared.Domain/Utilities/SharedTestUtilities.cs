@@ -63,28 +63,28 @@ public class SharedTestUtilities
 
 	public static DateTime GetDate()
 	{
-		var result = _faker.Date.Soon();
+		var result = DateTime.Now.ToUniversalTime();
 
 		return result;
 	}
 
 	public static DateTime GetDatePast()
 	{
-		var result = _faker.Date.Past();
+		var result = _faker.Date.Past().ToUniversalTime();
 
 		return result;
 	}
 
 	public static DateTime GetDateSoon()
 	{
-		var result = _faker.Date.Soon();
+		var result = _faker.Date.Soon().ToUniversalTime();
 
 		return result;
 	}
 
 	public static DateTime GetDateFuture()
 	{
-		var result = _faker.Date.Future();
+		var result = _faker.Date.Future().ToUniversalTime();
 
 		return result;
 	}

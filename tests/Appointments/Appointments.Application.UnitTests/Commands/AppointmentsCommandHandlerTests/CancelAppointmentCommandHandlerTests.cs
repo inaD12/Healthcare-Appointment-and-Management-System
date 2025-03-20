@@ -4,6 +4,7 @@ using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Responses;
 
 namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
 
@@ -18,73 +19,120 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnSuccess_WhenCalcelationIsSuccessful()
-	{
-		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
-
-		//Act
-		var result = await _handler.Handle(command, CancellationToken.None);
-
-		//Assert
-		result.IsSuccess.Should().BeTrue();
-
-		await AppointmentRepository.Received(1).GetByIdAsync(AppointmentsTestUtilities.ValidId);
-		JWTParser.Received(1).GetIdFromToken();
-		//AppointmentRepository.Received(1).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), AppointmentStatus.Cancelled);
-	}
-
-	[Fact]
-	public async Task Handle_ShouldReturnFaliure_WhenAppointmentDoesntExist()
-	{
-		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.WrongIdFromTokenId);
-
-		//Act
-		var result = await _handler.Handle(command, CancellationToken.None);
-
-		//Assert
-		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(ResponseList.CannotCancelOthersAppointment);
-
-		await AppointmentRepository.Received(1).GetByIdAsync(command.AppointmentId);
-		JWTParser.Received(1).GetIdFromToken();
-		//RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), AppointmentStatus.Cancelled);
-	}
-
-	[Fact]
-	public async Task Handle_ShouldReturnFaliure_AppointmentIsNotFound()
+	public async Task Handle_ShouldReturnFaliure_WhenAppointmentIsNotFound()
 	{
 		//Arrange
 		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.InvalidId);
 
 		//Act
-		var result = await _handler.Handle(command, CancellationToken.None);
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
+	}
+
+
+	[Fact]
+	public async Task Handle_ShouldReturnFaliure_WhenUserIdIsNotFound()
+	{
+		//Arrange
+		JWTParser.GetIdFromToken().Returns(string.Empty);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(SharedResponses.JWTNotFound);
+	}
+
+
+	[Fact]
+	public async Task Handle_ShouldReturnFaliure_WhenIdsDontMatch()
+	{
+		//Arrange
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.WrongIdFromTokenId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
 
 		//Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
-
-		await AppointmentRepository.Received(1).GetByIdAsync(command.AppointmentId);
-		JWTParser.Received(0).GetIdFromToken();
-		//RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Is<Appointment>(a => a.Id == command.AppointmentId), AppointmentStatus.Cancelled);
+		result.Response.Should().BeEquivalentTo(ResponseList.CannotCancelOthersAppointment);
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnFailure_WhenJWTExtractorError()
+	public async Task Handle_ShouldReturnFaliure_WhenAppointmentIsNotScheduled()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.JWTExtractorInternalErrorId);
+		AppointmentRepository.GetByIdAsync(Arg.Any<string>()).Returns(AppointmentCanceled);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
 
 		//Act
-		var result = await _handler.Handle(command, CancellationToken.None);
+		var result = await _handler.Handle(command, CancellationToken);
 
 		//Assert
 		result.IsFailure.Should().BeTrue();
-		result.Response.Should().BeEquivalentTo(ResponseList.InternalError);
-
-		await AppointmentRepository.Received(1).GetByIdAsync(command.AppointmentId);
-		JWTParser.Received(1).GetIdFromToken();
-		//RepositoryMagager.Appointment.Received(0).ChangeStatusAsync(Arg.Any<Appointment>(), AppointmentStatus.Cancelled);
+		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotScheduled);
 	}
+
+	[Fact]
+	public async Task Handle_ShouldReturnFaliure_WhenAppointmentAlreadyStarted()
+	{
+		//Arrange
+		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.FutureDate);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsFailure.Should().BeTrue();
+		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentAlreadyStarted);
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallGetById_WhenEverythingIsCorrect()
+	{
+		//Arrange
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsSuccess.Should().BeTrue();
+		await AppointmentRepository.Received(1).GetByIdAsync(AppointmentsTestUtilities.ValidId);
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallJWTParser_WhenEverythingIsCorrect()
+	{
+		//Arrange
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsSuccess.Should().BeTrue();
+		JWTParser.Received(1).GetIdFromToken();
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallSaveChanges_WhenEverythingIsCorrect()
+	{
+		//Arrange
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId);
+
+		//Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		//Assert
+		result.IsSuccess.Should().BeTrue();
+		await UnitOfWork.Received(1).SaveChangesAsync();
+	}
+
 }

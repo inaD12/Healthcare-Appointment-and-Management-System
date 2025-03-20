@@ -132,17 +132,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		//		return user;
 		//	});
 
-		UserRepository.GetByEmailAsync(
-			Arg.Any<string>())
-				.Returns(callInfo =>
-				{
-					var email = callInfo.ArgAt<string>(0);
-
-					if (email == UsersTestUtilities.TakenEmail)
-						return Result<User>.Success(takenUser);
-					return Result<User>.Failure(ResponseList.UserNotFound);
-
-				});
+		UserRepository.GetByEmailAsync(Arg.Is<string>(UsersTestUtilities.TakenEmail)).Returns(takenUser);
 
 		UserRepository.GetByIdAsync(
 			Arg.Any<string>())

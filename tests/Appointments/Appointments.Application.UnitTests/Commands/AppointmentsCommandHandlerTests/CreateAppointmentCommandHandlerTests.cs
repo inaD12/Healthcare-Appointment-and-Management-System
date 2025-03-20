@@ -1,8 +1,10 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
-using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
+using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
@@ -35,16 +37,12 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 			AppointmentDuration.OneHour
 		);
 
-		var cancellationToken = CancellationToken.None;
-
 		// Act
-		var result = await _handler.Handle(command, cancellationToken);
+		var result = await _handler.Handle(command, CancellationToken);
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.DoctorNotFound);
-
-		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -67,8 +65,6 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.UserIsNotADoctor);
-
-		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
@@ -91,12 +87,32 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.PatientNotFound);
-
-		//await AppointmentService.DidNotReceiveWithAnyArgs().CreateAppointment(Arg.Any<CreateAppointmentModel>());
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallHelperAndReturnResult_WhenDoctorAndPatientExist()
+	public async Task Handle_ShouldReturnFailure_WhenTimeSlotNotAvailable()
+	{
+		// Arrange
+		AppointmentRepository.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>(), CancellationToken).Returns(false);
+
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeFalse();
+		result.Response.Should().BeEquivalentTo(ResponseList.TimeSlotNotAvailable);
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallGetUserDataByEmailForPatient_WhenEverythingIsCorrect()
 	{
 		// Arrange
 		var command = new CreateAppointmentCommand
@@ -107,16 +123,127 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 			AppointmentDuration.OneHour
 		);
 
-		var cancellationToken = CancellationToken.None;
-
 		// Act
-		var result = await _handler.Handle(command, cancellationToken);
+		var result = await _handler.Handle(command, CancellationToken);
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		//await AppointmentService.Received(1).CreateAppointment(Arg.Is<CreateAppointmentModel>(uc => 
-		//	uc.DoctorId == AppointmentsTestUtilities.DoctorId &&
-		//	uc.PatientId == AppointmentsTestUtilities.PatientId));
+		await UserDataRepository.Received(1).GetUserDataByEmailAsync(command.PatientEmail);
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallGetUserDataByEmailForDoctor_WhenEverythingIsCorrect()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+
+		await UserDataRepository.Received(1).GetUserDataByEmailAsync(command.DoctorEmail);
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallIsTimeSlotAvailable_WhenEverythingIsCorrect()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+
+		await AppointmentRepository.Received(1).IsTimeSlotAvailableAsync(
+			AppointmentsTestUtilities.DoctorId, 
+			Arg.Is<DateTimeRange>
+			(a => a.Start == command.ScheduledStartTime &&
+			a.End == command.ScheduledStartTime.AddMinutes((int)command.Duration)));
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallAddForAppointment_WhenEverythingIsCorrect()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+
+		await AppointmentRepository.Received(1).AddAsync(Arg.Is<Appointment>(a =>
+			a.PatientId == AppointmentsTestUtilities.PatientId &&
+			a.DoctorId == AppointmentsTestUtilities.DoctorId &&
+			a.Duration.Start == command.ScheduledStartTime &&
+			a.Duration.End == command.ScheduledStartTime.AddMinutes((int)command.Duration) &&
+			a.Status == AppointmentStatus.Scheduled));
+	}
+
+	[Fact]
+	public async Task Handle_ShouldCallSaveChanges_WhenEverythingIsCorrect()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+
+		await UnitOfWork.Received(1).SaveChangesAsync();
+	}
+
+	[Fact]
+	public async Task Handle_ShouldReturnValidModel_WhenAllStepsSucceed()
+	{
+		// Arrange
+		var command = new CreateAppointmentCommand
+		(
+			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.CurrentDate,
+			AppointmentDuration.OneHour
+		);
+
+		// Act
+		var result = await _handler.Handle(command, CancellationToken);
+
+		// Assert
+		result.IsSuccess.Should().BeTrue();
+		result.Value!.Id.Should().NotBeNullOrEmpty();
+		await AppointmentRepository.Received(1).AddAsync(Arg.Is<Appointment>(a =>
+			a.Id == result.Value.Id));
 	}
 }

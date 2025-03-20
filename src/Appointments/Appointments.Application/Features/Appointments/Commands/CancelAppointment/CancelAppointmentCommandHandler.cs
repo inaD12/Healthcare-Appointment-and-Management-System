@@ -1,9 +1,11 @@
 ﻿using Appointments.Domain.Entities;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Responses;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
@@ -29,11 +31,11 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 		if (appointment == null)
 			return Result.Failure(ResponseList.AppointmentNotFound);
 
-		var userIdRes = _jwtParser.GetIdFromToken();
-		if (userIdRes.IsFailure)
-			return Result.Failure(userIdRes.Response);
+		var userId = _jwtParser.GetIdFromToken();
+		if (userId.IsNullOrEmpty())
+			return Result.Failure(SharedResponses.JWTNotFound);
 
-		if (userIdRes.Value != appointment.PatientId && userIdRes.Value != appointment.DoctorId)
+		if (userId != appointment.PatientId && userId != appointment.DoctorId)
 			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 
 		var res = appointment.Cancel(_dateTimeProvider.UtcNow);
