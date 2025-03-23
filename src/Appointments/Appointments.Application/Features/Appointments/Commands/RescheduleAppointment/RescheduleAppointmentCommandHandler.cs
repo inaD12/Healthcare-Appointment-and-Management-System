@@ -32,8 +32,12 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 		if (detailedAppointment == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
 
-		if (request.userId != detailedAppointment.PatientId && request.userId != detailedAppointment.DoctorId)
+		if (request.UserId != detailedAppointment.PatientId &&
+			request.UserId != detailedAppointment.DoctorId &&
+			!request.IsAdmin)
+		{
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
+		}
 
 		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 

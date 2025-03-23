@@ -34,7 +34,7 @@ public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, 
 		if (!_passwordManager.VerifyPassword(request.Password, user.PasswordHash, user.Salt))
 			return Result<LoginUserCommandViewModel>.Failure(ResponseList.IncorrectPassword);
 
-		TokenResult token = _tokenManager.CreateToken(user.Id);
+		TokenResult token = _tokenManager.CreateToken(user.Id, user.Role);
 		var loginUserCommandViewModel = _mapper.Map<LoginUserCommandViewModel>(token);
 		return Result<LoginUserCommandViewModel>.Success(loginUserCommandViewModel);
 	}

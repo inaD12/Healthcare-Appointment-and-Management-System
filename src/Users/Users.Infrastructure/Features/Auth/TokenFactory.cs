@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Domain.Enums;
 using Shared.Domain.Options;
 using Shared.Infrastructure.Clock;
 using Shared.Utilities;
@@ -22,14 +23,15 @@ public class TokenFactory : ITokenFactory
 		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public TokenResult CreateToken(string id)
+	public TokenResult CreateToken(string id, Roles role)
 	{
 		byte[] secretKeyBytes = Encoding.UTF8.GetBytes(_jwtOptions.SecretKey);
 		var signingKey = new SymmetricSecurityKey(secretKeyBytes);
 		var expiration = _dateTimeProvider.GetUtcNow(_jwtOptions.SecondsValid);
 
 		var claimsIdentity = new ClaimsIdentity(
-			[new(AppClaims.Id, id)]);
+			[new(AppClaims.Id, id),
+			 new(AppClaims.Role, role.ToString())]);
 
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{

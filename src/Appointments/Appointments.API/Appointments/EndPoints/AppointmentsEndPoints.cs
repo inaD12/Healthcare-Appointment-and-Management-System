@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
+using Shared.Domain.Enums;
 
 namespace Appointments.API.EndPoints;
 
@@ -43,8 +44,8 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization();
 
 		group.MapGet("get-all", GetAll)
 			.Produces<AppointmentPaginatedQueryResponse>(StatusCodes.Status200OK)
@@ -97,8 +98,8 @@ internal class AppointmentsEndPoints : IEndPoints
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = mapper.Map<RescheduleAppointmentCommand>((request, userId));
+		var claims = claimsExtractor.GetAllClaims();
+		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

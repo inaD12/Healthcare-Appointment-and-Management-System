@@ -4,7 +4,6 @@ using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
-using Shared.Domain.Responses;
 
 namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
 
