@@ -14,9 +14,17 @@ public class AppointmentsCommandMappings : Profile
 	{
 		CreateMap<CreateAppointmentRequest, CreateAppointmentCommand>();
 
-		CreateMap<CancelAppointmentRequest, CancelAppointmentCommand>();
+		CreateMap<(CancelAppointmentRequest, string id), CancelAppointmentCommand>()
+			.ConstructUsing(src => new(
+				src.Item1.AppointmentId,
+				src.Item2));
 
-		CreateMap<RescheduleAppointmentRequest, RescheduleAppointmentCommand>();
+		CreateMap<(RescheduleAppointmentRequest, string id), RescheduleAppointmentCommand>()
+			.ConstructUsing(src => new(
+				src.Item1.AppointmentID,
+				src.Item2,
+				src.Item1.ScheduledStartTime,
+				src.Item1.Duration));
 
 		CreateMap<AppointmentCommandViewModel, AppointmentCommandResponse>();
 	}

@@ -1,11 +1,7 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
-using Microsoft.IdentityModel.Tokens;
-using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Responses;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
@@ -14,12 +10,10 @@ namespace Appointments.Application.Features.Commands.Appointments.CancelAppointm
 public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {
 	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IJwtParser _jwtParser;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDateTimeProvider _dateTimeProvider;
-	public CancelAppointmentCommandHandler(IJwtParser jwtParser, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager)
+	public CancelAppointmentCommandHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager)
 	{
-		_jwtParser = jwtParser;
 		_unitOfWork = unitOfWork;
 		_dateTimeProvider = dateTimeProvider;
 		_appointmentRepository = repositoryManager;
@@ -31,11 +25,7 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 		if (appointment == null)
 			return Result.Failure(ResponseList.AppointmentNotFound);
 
-		var userId = _jwtParser.GetIdFromToken();
-		if (userId.IsNullOrEmpty())
-			return Result.Failure(SharedResponses.JWTNotFound);
-
-		if (userId != appointment.PatientId && userId != appointment.DoctorId)
+		if (request.userId != appointment.PatientId && request.userId != appointment.DoctorId)
 			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 
 		var res = appointment.Cancel(_dateTimeProvider.UtcNow);

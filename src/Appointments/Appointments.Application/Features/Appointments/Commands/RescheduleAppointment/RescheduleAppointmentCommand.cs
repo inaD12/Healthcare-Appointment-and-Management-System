@@ -6,6 +6,7 @@ namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppo
 
 public sealed record RescheduleAppointmentCommand(
 	 string AppointmentID,
+	 string userId,
 	 DateTime ScheduledStartTime,
 	 AppointmentDuration Duration) : ICommand<AppointmentCommandViewModel>;
 

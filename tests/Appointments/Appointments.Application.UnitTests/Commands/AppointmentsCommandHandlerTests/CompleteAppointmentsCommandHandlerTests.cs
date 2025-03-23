@@ -43,7 +43,7 @@ public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		SceduledAppointmentList.Select(d => d.Status).Should().AllBeEquivalentTo(AppointmentStatus.Completed);
+		ScheduledAppointmentList.Select(d => d.Status).Should().AllBeEquivalentTo(AppointmentStatus.Completed);
 	}
 
 	[Fact]

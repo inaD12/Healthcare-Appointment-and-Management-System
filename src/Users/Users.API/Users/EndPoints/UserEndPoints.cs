@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
-using Shared.Application.Helpers.Abstractions;
-using Shared.Domain.Responses;
-using Shared.Domain.Results;
+using Shared.Utilities;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -125,16 +123,13 @@ internal class UserEndPoints : IEndPoints
 
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var id = jwtParser.GetIdFromToken();
-		if (id == null)
-			return ControllerResponse.ParseAndReturnMessage(Result.Failure(SharedResponses.JWTNotFound));
-
-		var command = mapper.Map<UpdateUserCommand>((request, id));
+		var userId = claimsExtractor.GetUserId();
+		var command = mapper.Map<UpdateUserCommand>((request, userId));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -148,7 +143,6 @@ internal class UserEndPoints : IEndPoints
 		[FromBody] UpdateUserRequest request,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
 		var command = mapper.Map<UpdateUserCommand>((request, id));
@@ -192,7 +186,6 @@ internal class UserEndPoints : IEndPoints
 	public async Task<IResult> DeleteById(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
 		var command = new DeleteUserCommand(id);
@@ -201,15 +194,12 @@ internal class UserEndPoints : IEndPoints
 	}
 
 	public async Task<IResult> DeleteCurrent(
+		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var id = jwtParser.GetIdFromToken();
-		if (id == null)
-			return ControllerResponse.ParseAndReturnMessage(Result.Failure(SharedResponses.JWTNotFound));
-
-		var command = new DeleteUserCommand(id);
+		var userId = claimsExtractor.GetUserId();
+		var command = new DeleteUserCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

@@ -19,7 +19,6 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public RescheduleAppointmentCommandHandlerTests()
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
-			JWTParser,
 			HAMSMapper,
 			UnitOfWork,
 			AppointmentRepository,
@@ -33,6 +32,7 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		var command = new RescheduleAppointmentCommand
 		(
 			AppointmentsTestUtilities.InvalidId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -43,40 +43,16 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeFalse();
 		result.Response.Should().BeEquivalentTo(ResponseList.AppointmentNotFound);
-
-		JWTParser.DidNotReceiveWithAnyArgs().GetIdFromToken();
-	}
-
-	[Fact]
-	public async Task Handle_ShouldReturnFailure_WhenUserIdIsNull()
-	{
-		// Arrange
-		JWTParser.GetIdFromToken().Returns(string.Empty);
-
-		var command = new RescheduleAppointmentCommand
-		(
-			AppointmentsTestUtilities.ValidId,
-			AppointmentsTestUtilities.CurrentDate,
-			AppointmentDuration.OneHour
-		);
-
-		// Act
-		var result = await _handler.Handle(command, CancellationToken);
-
-		// Assert
-		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(SharedResponses.JWTNotFound);
 	}
 
 	[Fact]
 	public async Task Handle_ShouldReturnFailure_WhenUserIsNotAuthorized()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.InvalidId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.InvalidId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -94,11 +70,11 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	{
 		// Arrange
 		AppointmentRepository.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>()).Returns(false);
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
 
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -116,11 +92,11 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	{
 		// Arrange
 		AppointmentRepository.GetAppointmentWithUserDetailsAsync(Arg.Any<string>()).Returns(AppointmentWithDetailsDTOCanceled);
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
 
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -137,11 +113,10 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenAppointmentAlreadyStarted()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.FutureDate,
 		AppointmentDuration.OneHour
 		);
@@ -157,35 +132,13 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallJWTParser_WhenRequestIsValid()
-	{
-		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
-		var command = new RescheduleAppointmentCommand
-		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.CurrentDate,
-		AppointmentDuration.OneHour
-		);
-
-		// Act
-		var result = await _handler.Handle(command, CancellationToken);
-
-		// Assert
-		result.IsSuccess.Should().BeTrue();
-		JWTParser.Received(1).GetIdFromToken();
-	}
-
-	[Fact]
 	public async Task Handle_ShouldCallIsTimeSlotAvailableAsync_WhenRequestIsValid()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -207,11 +160,10 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldAddNewAppointment_WhenRequestIsValid()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -234,11 +186,10 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldRescheduleAppointment_WhenAllStepsSucceed()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -255,11 +206,10 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallSaveChanges_WhenAllStepsSucceed()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -276,11 +226,10 @@ public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnValidModel_WhenAllStepsSucceed()
 	{
 		// Arrange
-		JWTParser.GetIdFromToken().Returns(AppointmentsTestUtilities.DoctorId);
-
 		var command = new RescheduleAppointmentCommand
 		(
 		AppointmentsTestUtilities.ValidId,
+		AppointmentsTestUtilities.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
