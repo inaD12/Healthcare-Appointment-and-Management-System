@@ -1,6 +1,5 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
@@ -29,6 +28,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenDoctorNotFound()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -49,6 +49,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenUserIsNotADoctor()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -57,10 +58,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 			AppointmentDuration.OneHour
 		);
 
-		var cancellationToken = CancellationToken.None;
-
 		// Act
-		var result = await _handler.Handle(command, cancellationToken);
+		var result = await _handler.Handle(command, CancellationToken);
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
@@ -71,6 +70,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenPatientNotFound()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.InvalidEmail,
@@ -79,10 +79,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 			AppointmentDuration.OneHour
 		);
 
-		var cancellationToken = CancellationToken.None;
-
 		// Act
-		var result = await _handler.Handle(command, cancellationToken);
+		var result = await _handler.Handle(command, CancellationToken);
 
 		// Assert
 		result.IsSuccess.Should().BeFalse();
@@ -93,8 +91,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnFailure_WhenTimeSlotNotAvailable()
 	{
 		// Arrange
-		AppointmentRepository.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>(), CancellationToken).Returns(false);
-
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -102,6 +99,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
+
+		AppointmentRepository.IsTimeSlotAvailableAsync(appointment.DoctorId, Arg.Any<DateTimeRange>()).Returns(false);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -115,6 +114,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallGetUserDataByEmailForPatient_WhenEverythingIsCorrect()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -136,6 +136,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallGetUserDataByEmailForDoctor_WhenEverythingIsCorrect()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -157,6 +158,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallIsTimeSlotAvailable_WhenEverythingIsCorrect()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -182,6 +184,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallAddForAppointment_WhenEverythingIsCorrect()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -208,6 +211,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallSaveChanges_WhenEverythingIsCorrect()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,
@@ -229,6 +233,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldReturnValidModel_WhenAllStepsSucceed()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
 			AppointmentsTestUtilities.PatientEmail,

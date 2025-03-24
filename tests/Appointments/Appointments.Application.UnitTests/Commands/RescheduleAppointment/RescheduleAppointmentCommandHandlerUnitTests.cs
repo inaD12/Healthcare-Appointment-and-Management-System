@@ -47,9 +47,10 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldReturnFailure_WhenUserIsNotAuthorized()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
+		appointment.Id,
 		AppointmentsTestUtilities.InvalidId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
@@ -67,15 +68,16 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldReturnFailure_WhenTimeSlotNotAvailable()
 	{
 		// Arrange
-		AppointmentRepository.IsTimeSlotAvailableAsync(Arg.Any<string>(), Arg.Any<DateTimeRange>()).Returns(false);
-
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
+
+		AppointmentRepository.IsTimeSlotAvailableAsync(appointment.DoctorId, Arg.Any<DateTimeRange>()).Returns(false);
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -89,12 +91,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldReturnFailure_WhenAppointmentNotScheduled()
 	{
 		// Arrange
-		AppointmentRepository.GetAppointmentWithUserDetailsAsync(Arg.Any<string>()).Returns(AppointmentWithDetailsDTOCanceled);
-
+		var appointment = GetAppointment(true);
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -111,10 +112,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldReturnFailure_WhenAppointmentAlreadyStarted()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.FutureDate,
 		AppointmentDuration.OneHour
 		);
@@ -133,10 +135,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldCallIsTimeSlotAvailableAsync_WhenRequestIsValid()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -158,10 +161,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldAddNewAppointment_WhenRequestIsValid()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -184,10 +188,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldRescheduleAppointment_WhenAllStepsSucceed()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -197,17 +202,18 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		Assert.True(Appointment.Status == AppointmentStatus.Rescheduled);
+		Assert.True(appointment.Status == AppointmentStatus.Rescheduled);
 	}
 
 	[Fact]
 	public async Task Handle_ShouldCallSaveChanges_WhenAllStepsSucceed()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -224,10 +230,11 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public async Task Handle_ShouldReturnValidModel_WhenAllStepsSucceed()
 	{
 		// Arrange
+		var appointment = GetAppointment();
 		var command = new RescheduleAppointmentCommand
 		(
-		AppointmentsTestUtilities.ValidId,
-		AppointmentsTestUtilities.DoctorId,
+		appointment.Id,
+		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);

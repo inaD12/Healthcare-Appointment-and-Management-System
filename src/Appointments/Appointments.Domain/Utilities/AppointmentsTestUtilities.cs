@@ -1,4 +1,6 @@
-﻿using Shared.Domain.Utilities;
+﻿using Appointments.Domain.Entities.Enums;
+using Shared.Domain.Enums;
+using Shared.Domain.Utilities;
 
 namespace Appointments.Domain.Utilities;
 
@@ -19,4 +21,14 @@ public class AppointmentsTestUtilities : SharedTestUtilities
 	public static readonly DateTime CurrentDate = GetDate();
 	public static readonly DateTime SoonDate = GetDateSoon();
 	public static readonly DateTime FutureDate = GetDateFuture();
+
+	public static readonly AppointmentStatus ValidAppointmentStatus = AppointmentStatus.Scheduled;
+
+	public static readonly int ValidPageValue = 1;
+	public static readonly int ValidPageSizeValue = 20;
+
+	public static readonly string ValidSortPropertyName = "Id";
+	public static readonly string InvalidSortPropertyName = "Idd";
+
+	public static readonly SortOrder ValidSortOrderProperty = SortOrder.ASC;
 }

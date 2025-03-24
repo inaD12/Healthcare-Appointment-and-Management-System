@@ -7,7 +7,6 @@ using NSubstitute;
 
 namespace Appointments.Application.UnitTests.Commands.CompleteAppointments;
 
-
 public class CompleteAppointmentsCommandHandlerUnitTests : BaseAppointmentsUnitTest
 {
 	private readonly CompleteAppointmentsCommandHandler _handler;
@@ -21,7 +20,6 @@ public class CompleteAppointmentsCommandHandlerUnitTests : BaseAppointmentsUnitT
 	public async Task Handle_ShouldNotSaveChanges_WhenNoAppointmentsToComplete()
 	{
 		// Arrange
-		AppointmentRepository.GetAppointmentsToCompleteAsync(Arg.Any<DateTime>()).Returns(new List<Appointment>());
 		var command = new CompleteAppointmentsCommand();
 
 		// Act
@@ -36,6 +34,7 @@ public class CompleteAppointmentsCommandHandlerUnitTests : BaseAppointmentsUnitT
 	public async Task Handle_ShouldCompleteAppointments_WhenThereArePendingAppointments()
 	{
 		// Arrange
+		var apppointments = GetAppointmentList();
 		var command = new CompleteAppointmentsCommand();
 
 		// Act
@@ -43,13 +42,14 @@ public class CompleteAppointmentsCommandHandlerUnitTests : BaseAppointmentsUnitT
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		ScheduledAppointmentList.Select(d => d.Status).Should().AllBeEquivalentTo(AppointmentStatus.Completed);
+		apppointments.Select(d => d.Status).Should().AllBeEquivalentTo(AppointmentStatus.Completed);
 	}
 
 	[Fact]
 	public async Task Handle_ShouldCallSaveChanges_WhenThereArePendingAppointments()
 	{
 		// Arrange
+		var apppointments = GetAppointmentList();
 		var command = new CompleteAppointmentsCommand();
 
 		// Act
