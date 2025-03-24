@@ -11,8 +11,8 @@ public class AppointmentsTestUtilities : SharedTestUtilities
 	public static readonly string PatientId = GetAverageString(AppointmentsBusinessConfiguration.PATIENTID_MIN_LENGTH, AppointmentsBusinessConfiguration.PATIENTID_MAX_LENGTH);
 	public static readonly string DoctorId = GetAverageString(AppointmentsBusinessConfiguration.DOCTORID_MIN_LENGTH, AppointmentsBusinessConfiguration.DOCTORID_MAX_LENGTH);
 
-	public static readonly string DoctorEmail = GetAverageString(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH, AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH);
-	public static readonly string PatientEmail = GetAverageString(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH, AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH);
+	public static readonly string DoctorEmail = GetAverageString(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH, AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH) + "@gmail.com";
+	public static readonly string PatientEmail = GetAverageString(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH, AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH) + "@gmail.com";
 	public static readonly string InvalidEmail = GetAverageString(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH, AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH);
 
 	public static readonly DateTime PastDate = GetDatePast();

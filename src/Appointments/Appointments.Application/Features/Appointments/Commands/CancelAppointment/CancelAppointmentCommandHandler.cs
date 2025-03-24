@@ -25,7 +25,7 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 		if (appointment == null)
 			return Result.Failure(ResponseList.AppointmentNotFound);
 
-		if (request.userId != appointment.PatientId && request.userId != appointment.DoctorId)
+		if (request.UserId != appointment.PatientId && request.UserId != appointment.DoctorId)
 			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 
 		var res = appointment.Cancel(_dateTimeProvider.UtcNow);

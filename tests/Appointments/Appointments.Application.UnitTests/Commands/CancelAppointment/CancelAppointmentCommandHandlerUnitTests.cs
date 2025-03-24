@@ -5,14 +5,14 @@ using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
+namespace Appointments.Application.UnitTests.Commands.CancelAppointment;
 
-public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
+public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 {
 	private readonly CancelAppointmentCommandHandler _handler;
 
 
-	public CancelAppointmentCommandHandlerTests()
+	public CancelAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new CancelAppointmentCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository);
 	}
@@ -80,7 +80,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallGetById_WhenEverythingIsCorrect()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId , AppointmentsTestUtilities.DoctorId);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId, AppointmentsTestUtilities.DoctorId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -95,7 +95,7 @@ public class CancelAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 	public async Task Handle_ShouldCallSaveChanges_WhenEverythingIsCorrect()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId , AppointmentsTestUtilities.DoctorId);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.ValidId, AppointmentsTestUtilities.DoctorId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);

@@ -10,13 +10,13 @@ using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
+namespace Appointments.Application.UnitTests.Commands.CreateAppointment;
 
-public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
+public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 {
 	private readonly CreateAppointmentCommandHandler _handler;
 
-	public CreateAppointmentCommandHandlerTests()
+	public CreateAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new CreateAppointmentCommandHandler(
 			HAMSMapper,
@@ -172,7 +172,7 @@ public class CreateAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
 		result.IsSuccess.Should().BeTrue();
 
 		await AppointmentRepository.Received(1).IsTimeSlotAvailableAsync(
-			AppointmentsTestUtilities.DoctorId, 
+			AppointmentsTestUtilities.DoctorId,
 			Arg.Is<DateTimeRange>
 			(a => a.Start == command.ScheduledStartTime &&
 			a.End == command.ScheduledStartTime.AddMinutes((int)command.Duration)));

@@ -5,14 +5,14 @@ using Appointments.Domain.Entities.Enums;
 using FluentAssertions;
 using NSubstitute;
 
-namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
+namespace Appointments.Application.UnitTests.Commands.CompleteAppointments;
 
 
-public class CompleteAppointmentsCommandHandlerTests : BaseAppointmentsUnitTest
+public class CompleteAppointmentsCommandHandlerUnitTests : BaseAppointmentsUnitTest
 {
 	private readonly CompleteAppointmentsCommandHandler _handler;
 
-	public CompleteAppointmentsCommandHandlerTests()
+	public CompleteAppointmentsCommandHandlerUnitTests()
 	{
 		_handler = new CompleteAppointmentsCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository);
 	}

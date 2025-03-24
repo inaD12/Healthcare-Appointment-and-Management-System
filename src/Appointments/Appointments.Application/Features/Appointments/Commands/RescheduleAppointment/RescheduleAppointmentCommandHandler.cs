@@ -27,7 +27,7 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 
 	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var detailedAppointment = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentID);
+		var detailedAppointment = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentId);
 
 		if (detailedAppointment == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);

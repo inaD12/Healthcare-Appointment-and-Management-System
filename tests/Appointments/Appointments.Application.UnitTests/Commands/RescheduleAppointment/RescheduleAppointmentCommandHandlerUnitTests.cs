@@ -1,5 +1,4 @@
-﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+﻿using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
@@ -8,15 +7,14 @@ using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
-using Shared.Domain.Responses;
 
-namespace Appointments.Application.UnitTests.Commands.AppointmentsCommandHandlerTests;
+namespace Appointments.Application.UnitTests.Commands.RescheduleAppointment;
 
-public class RescheduleAppointmentCommandHandlerTests : BaseAppointmentsUnitTest
+public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 {
 	private readonly RescheduleAppointmentCommandHandler _handler;
 
-	public RescheduleAppointmentCommandHandlerTests()
+	public RescheduleAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
 			HAMSMapper,

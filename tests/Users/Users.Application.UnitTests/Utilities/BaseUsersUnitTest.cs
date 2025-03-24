@@ -141,8 +141,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 					var id = callInfo.ArgAt<string>(0);
 
 					if (id == UsersTestUtilities.ValidId)
-						return Result<User>.Success(user);
-					return Result<User>.Failure(ResponseList.UserNotFound);
+						return user;
+					return null;
 				});
 
 		UserRepository.DeleteByIdAsync(
@@ -165,7 +165,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		EventBus.PublishAsync(Arg.Any<string>, CancellationToken.None)
 			.Returns(Task.CompletedTask);
 
-		TokenManager.CreateToken(Arg.Any<string>())
+		TokenManager.CreateToken(Arg.Any<string>(), Arg.Any<Roles>())
 			.Returns(new TokenResult(UsersTestUtilities.ValidId));
 
 		EmailLinkFactory.Create(emailVerificationToken)

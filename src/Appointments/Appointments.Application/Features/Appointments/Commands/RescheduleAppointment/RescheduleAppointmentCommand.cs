@@ -6,7 +6,7 @@ namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppo
 
 public sealed class RescheduleAppointmentCommand : ICommand<AppointmentCommandViewModel>
 {
-	public string AppointmentID { get; private set; }
+	public string AppointmentId { get; private set; }
 	public string UserId { get; private set; }
 	public DateTime ScheduledStartTime { get; private set; }
 	public AppointmentDuration Duration { get; private set; }
@@ -19,7 +19,7 @@ public sealed class RescheduleAppointmentCommand : ICommand<AppointmentCommandVi
 		AppointmentDuration duration,
 		bool isAdmin = false)
 	{
-		AppointmentID = appointmentID;
+		AppointmentId = appointmentID;
 		UserId = userId;
 		ScheduledStartTime = scheduledStartTime;
 		Duration = duration;
