@@ -47,16 +47,4 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		return user;
 	}
-
-	public async Task<Result> DeleteByIdAsync(string id)
-	{
-		var res = await GetByIdAsync(id);
-
-		if (res == null)
-			return Result.Failure(ResponseList.UserNotFound);
-
-		Delete(res!);
-		return Result.Success();
-
-	}
 }

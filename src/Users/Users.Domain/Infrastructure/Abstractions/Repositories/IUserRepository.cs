@@ -10,5 +10,4 @@ public interface IUserRepository : IGenericRepository<User>
 {
 	Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken);
 	Task<User?> GetByEmailAsync(string email);
-	Task<Result> DeleteByIdAsync(string id);
 }
