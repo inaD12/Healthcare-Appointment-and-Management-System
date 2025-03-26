@@ -1,6 +1,7 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
+using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
+using Shared.Domain.Enums;
 
 namespace Appointments.API.EndPoints;
 
@@ -33,8 +35,8 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization();
 
 		group.MapPut("reschedule", Reschedule)
 			.Produces<AppointmentCommandResponse>(StatusCodes.Status200OK)
@@ -42,10 +44,17 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization();
+
+		group.MapGet("get-all", GetAll)
+			.Produces<AppointmentPaginatedQueryResponse>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError);
 		//.RequireAuthorization();
 
-		group.MapGet("getById/{id}", GetById)
+		group.MapGet("get/{id}", GetById)
 			.Produces<AppointmentQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -71,22 +80,26 @@ internal class AppointmentsEndPoints : IEndPoints
 
 	public async Task<IResult> Cancel(
 		[FromBody] CancelAppointmentRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = mapper.Map<CancelAppointmentCommand>(request);
+		var userId = claimsExtractor.GetUserId();
+		var command = mapper.Map<CancelAppointmentCommand>((request, userId));
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	public async Task<IResult> Reschedule(
 		[FromBody] RescheduleAppointmentRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = mapper.Map<RescheduleAppointmentCommand>(request);
+		var claims = claimsExtractor.GetAllClaims();
+		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -95,6 +108,20 @@ internal class AppointmentsEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
+	public async Task<IResult> GetAll(
+		[AsParameters] GetAllAppointmentsRequest request,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		CancellationToken cancellationToken)
+	{
+		var query = mapper.Map<GetAllAppointmentsQuery>(request);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = mapper.Map<AppointmentPaginatedQueryResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
 	public async Task<IResult> GetById(
 		[FromRoute] string id,
 		[FromServices] ISender sender,

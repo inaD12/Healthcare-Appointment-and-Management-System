@@ -2,13 +2,10 @@
 
 namespace Shared.API.Models.Requests;
 
-public class CollectionReadRequest
-{
-	public SortOrder? SortOrder { get; set; }
-
-	public string SortPropertyName { get; set; } = "Id";
-
-	public int Page { get; set; } = 1;
-
-	public int PageSize { get; set; } = 10;
-}
+public record CollectionReadRequest
+(
+	SortOrder SortOrder = SortOrder.ASC,
+	string SortPropertyName = "Id",
+	int Page = 1,
+	int PageSize = 10
+);

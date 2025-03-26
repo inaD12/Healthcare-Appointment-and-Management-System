@@ -14,4 +14,5 @@ public static class ErrorMessages
 	public const string UserIsNotADoctor = "The user you selected is not a doctor. Please choose a valid doctor.";
 	public const string AppointmentNotScheduled = "Appointment is not scheduled";
 	public const string AppointmentAlreadyStarted = "Appointment has already started";
+	public const string NoAppointmentsFound = "No appointments found";
 }

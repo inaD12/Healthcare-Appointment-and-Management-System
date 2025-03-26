@@ -1,4 +1,5 @@
 ﻿using Appointments.Domain.Entities.Enums;
+using Shared.Domain.Exceptions;
 
 namespace Appointments.Domain.Entities.ValueObjects;
 
@@ -16,7 +17,7 @@ public sealed record DateTimeRange
 	{
 		if (start > end)
 		{
-			throw new ApplicationException("End date precedes start date");
+			throw new HAMSValidationException("EndTime" ,"End date precedes start date");
 		}
 
 		return new DateTimeRange

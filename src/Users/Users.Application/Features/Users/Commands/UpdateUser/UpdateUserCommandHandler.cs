@@ -3,7 +3,6 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
@@ -23,16 +22,14 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 
 	public async Task<Result<UserCommandViewModel>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
-		var userResult = await _userRepository.GetByIdAsync(request.Id);
-		if (userResult.IsFailure)
-			return Result<UserCommandViewModel>.Failure(userResult.Response);
-
-		User user = userResult.Value!;
+		var user = await _userRepository.GetByIdAsync(request.Id);
+		if (user == null)
+			return Result<UserCommandViewModel>.Failure(ResponseList.UserNotFound);
 
 		if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
 		{
-			var emailCheckResult = await _userRepository.GetByEmailAsync(request.NewEmail);
-			if (emailCheckResult.IsSuccess)
+			var emailCheck = await _userRepository.GetByEmailAsync(request.NewEmail);
+			if (emailCheck != null)
 				return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
 
 			user.UpdateProfile(request.NewEmail, request.FirstName, request.LastName);

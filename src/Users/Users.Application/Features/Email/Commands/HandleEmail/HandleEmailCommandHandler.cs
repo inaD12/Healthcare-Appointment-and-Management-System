@@ -21,11 +21,9 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 
 	public async Task<Result> Handle(HandleEmailCommand request, CancellationToken cancellationToken)
 	{
-		var tokenResult = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId);
+		var token = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId);
 
-		var token = tokenResult.Value!;
-
-		if (tokenResult.IsFailure ||
+		if (token == null ||
 			token.ExpiresOnUtc < DateTime.UtcNow ||
 			token.User.EmailVerified)
 		{

@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
-using Shared.Application.Helpers.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.LoginUser;
 using Users.Application.Features.Users.Queries.GetAllUsers;
+using Users.Application.Features.Users.Queries.GetById;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Users.Models.Requests;
 using Users.Users.Models.Responses;
@@ -61,12 +61,27 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError);
 		//.RequireAuthorization();
 
+		group.MapGet("get/{id}", GetById)
+			.Produces<UserQueryResponse>(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError);
+		//.RequireAuthorization();
+
 		group.MapDelete("delete-current", DeleteCurrent)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization();
+
+		group.MapDelete("delete/{id}", DeleteById)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError);
+		//.RequireAuthorization();
 
 		group.MapGet("verify-email", VerifyEmails)
 			.Produces(StatusCodes.Status200OK)
@@ -107,17 +122,13 @@ internal class UserEndPoints : IEndPoints
 
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var parserRes = jwtParser.GetIdFromToken();
-		if (parserRes.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(parserRes);
-		string id = parserRes.Value!;
-
-		var command = mapper.Map<UpdateUserCommand>((request, id));
+		var userId = claimsExtractor.GetUserId();
+		var command = mapper.Map<UpdateUserCommand>((request, userId));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -131,7 +142,6 @@ internal class UserEndPoints : IEndPoints
 		[FromBody] UpdateUserRequest request,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
 		var command = mapper.Map<UpdateUserCommand>((request, id));
@@ -143,6 +153,20 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
+	public async Task<IResult> GetById(
+		[FromRoute] string id,
+		[FromServices] ISender sender,
+		[FromServices] IHAMSMapper mapper,
+		CancellationToken cancellationToken)
+	{
+		var query = mapper.Map<GetUserByIdQuery>(id);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = mapper.Map<UserQueryResponse>(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
 	public async Task<IResult> GetAll(
 		[AsParameters] GetAllUsersRequest request,
 		[FromServices] ISender sender,
@@ -158,17 +182,23 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> DeleteCurrent(
+	public async Task<IResult> DeleteById(
+		[FromRoute] string id,
 		[FromServices] ISender sender,
-		[FromServices] IJwtParser jwtParser,
 		CancellationToken cancellationToken)
 	{
-		var parserRes = jwtParser.GetIdFromToken();
-		if (parserRes.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(parserRes);
-		string id = parserRes.Value!;
-
 		var command = new DeleteUserCommand(id);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+
+	public async Task<IResult> DeleteCurrent(
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = new DeleteUserCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

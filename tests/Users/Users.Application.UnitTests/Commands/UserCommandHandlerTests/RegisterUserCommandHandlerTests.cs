@@ -15,8 +15,6 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	{
 		_commandHandler = new RegisterUserCommandHandler(
 			PasswordManager,
-			EventBus,
-			EmailConfirmationTokenPublisher,
 			HAMSMapper,
 			UnitOfWork,
 			UserRepository

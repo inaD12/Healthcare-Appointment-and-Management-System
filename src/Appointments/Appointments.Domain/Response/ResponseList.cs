@@ -23,4 +23,5 @@ public static class ResponseList
 	public static Response UserIsNotADoctor => Response.Create(ErrorMessages.UserIsNotADoctor, HttpStatusCode.Conflict);
 	public static Response AppointmentNotScheduled => Response.Create(ErrorMessages.AppointmentNotScheduled, HttpStatusCode.Conflict);
 	public static Response AppointmentAlreadyStarted => Response.Create(ErrorMessages.AppointmentAlreadyStarted, HttpStatusCode.Conflict);
+	public static Response NoAppointmentsFound => Response.Create(ErrorMessages.NoAppointmentsFound, HttpStatusCode.NotFound);
 }

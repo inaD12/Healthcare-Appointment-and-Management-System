@@ -4,7 +4,6 @@ using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Auth.Abstractions;
 using Users.Domain.Auth.Models;
-using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
@@ -27,17 +26,15 @@ public sealed class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, 
 
 	public async Task<Result<LoginUserCommandViewModel>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
 	{
-		var res = await _userRepository.GetByEmailAsync(request.Email);
+		var user = await _userRepository.GetByEmailAsync(request.Email);
 
-		if (res.IsFailure)
-			return Result<LoginUserCommandViewModel>.Failure(res.Response);
-
-		User user = res.Value!;
+		if (user == null)
+			return Result<LoginUserCommandViewModel>.Failure(ResponseList.UserNotFound);
 
 		if (!_passwordManager.VerifyPassword(request.Password, user.PasswordHash, user.Salt))
 			return Result<LoginUserCommandViewModel>.Failure(ResponseList.IncorrectPassword);
 
-		TokenResult token = _tokenManager.CreateToken(user.Id);
+		TokenResult token = _tokenManager.CreateToken(user.Id, user.Role);
 		var loginUserCommandViewModel = _mapper.Map<LoginUserCommandViewModel>(token);
 		return Result<LoginUserCommandViewModel>.Success(loginUserCommandViewModel);
 	}

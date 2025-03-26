@@ -28,26 +28,26 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 	}
 	public async Task<Result<AppointmentCommandViewModel>> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var doctorDataRes = await _userDataRepository.GetUserDataByEmailAsync(request.DoctorEmail);
+		var doctorData = await _userDataRepository.GetUserDataByEmailAsync(request.DoctorEmail);
 
-		if (doctorDataRes.IsFailure)
+		if (doctorData == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.DoctorNotFound);
-		if (doctorDataRes.Value!.Role != Roles.Doctor)
+		if (doctorData.Role != Roles.Doctor)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.UserIsNotADoctor);
 
-		var patientDataRes = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
+		var patientData = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
 
-		if (patientDataRes.IsFailure)
+		if (patientData == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.PatientNotFound);
 
 		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
-		if (await _appointmentRepository.IsTimeSlotAvailableAsync(doctorDataRes.Value.Id, duration, cancellationToken))
+		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.UserId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
 		try
 		{
-			var appointment = Appointment.Schedule(patientDataRes.Value!.UserId, doctorDataRes.Value.UserId, duration);
+			var appointment = Appointment.Schedule(patientData.UserId, doctorData.UserId, duration);
 
 			await _appointmentRepository.AddAsync(appointment);
 			await _unitOfWork.SaveChangesAsync();

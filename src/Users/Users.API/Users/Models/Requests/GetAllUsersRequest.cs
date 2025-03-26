@@ -3,13 +3,17 @@ using Shared.Domain.Enums;
 
 namespace Users.Users.Models.Requests;
 
-public class GetAllUsersRequest : CollectionReadRequest
-{
-	public string? Email { get; set; } = string.Empty;
-	public Roles? Role { get; set; }
-	public string? FirstName { get; set; } = string.Empty;
-	public string? LastName { get; set; } = string.Empty;
-	public string? PhoneNumber { get; set; } = string.Empty;
-	public string? Address { get; set; } = string.Empty;
-	public bool? EmailVerified { get; set; }
-}
+public record GetAllUsersRequest
+(
+	string Email = "",
+	Roles? Role = null,
+	string FirstName  = "",
+	string LastName  = "",
+	string PhoneNumber  = "",
+	string Address = "",
+	bool? EmailVerified = null,
+	SortOrder SortOrder = SortOrder.ASC,
+	string SortPropertyName = "Id",
+	int Page = 1,
+	int PageSize = 10
+) : CollectionReadRequest(SortOrder, SortPropertyName, Page, PageSize);

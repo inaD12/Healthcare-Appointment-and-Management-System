@@ -4,6 +4,7 @@ using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Infrastructure.Models;
+using Users.Domain.Responses;
 
 namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
@@ -21,11 +22,10 @@ public class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, UserPagin
 	public async Task<Result<UserPaginatedQueryViewModel>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
 	{
 		var userPagedListQuery = _hamsMapper.Map<UserPagedListQuery>(request);
-		var usersPagedListRes = await _userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
-		if (usersPagedListRes.IsFailure)
-			return Result<UserPaginatedQueryViewModel>.Failure(usersPagedListRes.Response);
+		var usersPagedList = await _userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
+		if (usersPagedList == null)
+			return Result<UserPaginatedQueryViewModel>.Failure(ResponseList.NoUsersFound);
 
-		var usersPagedList = usersPagedListRes.Value!;
 		var userPaginatedQueryViewModel = _hamsMapper.Map<UserPaginatedQueryViewModel>(usersPagedList);
 		return Result<UserPaginatedQueryViewModel>.Success(userPaginatedQueryViewModel);
 	}
