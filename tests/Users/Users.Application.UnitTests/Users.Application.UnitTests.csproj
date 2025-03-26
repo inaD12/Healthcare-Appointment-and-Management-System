@@ -31,8 +31,4 @@
     <ProjectReference Include="..\..\Shared\Shared.Application.UnitTests\Shared.Application.UnitTests.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Queries\UsersQueriesTests\" />
-  </ItemGroup>
-
 </Project>

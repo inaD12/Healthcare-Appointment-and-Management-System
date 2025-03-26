@@ -42,8 +42,8 @@ public class EmailCommandHandlerTests
 	{
 		// Arrange
 		var command = new HandleEmailCommand("invalidToken");
-		_mockEmailVerificationTokenRepository.GetByIdAsync("invalidToken")
-			.Returns(Result<EmailVerificationToken>.Failure(ResponseList.InvalidVerificationToken));
+		//_mockEmailVerificationTokenRepository.GetByIdAsync("invalidToken")
+		//	.Returns(Result<EmailVerificationToken>.Failure(ResponseList.InvalidVerificationToken));
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);
@@ -67,8 +67,8 @@ public class EmailCommandHandlerTests
 
 		var command = new HandleEmailCommand(expiredToken.Id);
 
-		_mockEmailVerificationTokenRepository.GetByIdAsync(expiredToken.Id)
-			.Returns(Result<EmailVerificationToken>.Success(expiredToken));
+		//_mockEmailVerificationTokenRepository.GetByIdAsync(expiredToken.Id)
+		//	.Returns(Result<EmailVerificationToken>.Success(expiredToken));
 
 		// Act
 		var result = await _commandHandler.Handle(command, CancellationToken.None);
@@ -84,8 +84,8 @@ public class EmailCommandHandlerTests
 		// Arrange
 		var verifiedUserToken = _validToken;
 		verifiedUserToken.User.VerifyEmail();
-		_mockEmailVerificationTokenRepository.GetByIdAsync(verifiedUserToken.Id)
-			.Returns(Result<EmailVerificationToken>.Success(verifiedUserToken));
+		//_mockEmailVerificationTokenRepository.GetByIdAsync(verifiedUserToken.Id)
+		//	.Returns(Result<EmailVerificationToken>.Success(verifiedUserToken));
 		var command = new HandleEmailCommand(verifiedUserToken.Id);
 
 		// Act
@@ -102,8 +102,8 @@ public class EmailCommandHandlerTests
 		// Arrange
 		var command = new HandleEmailCommand(_validToken.Id);
 
-		_mockEmailVerificationTokenRepository.GetByIdAsync(_validToken.Id)
-			.Returns(Result<EmailVerificationToken>.Success(_validToken));
+		//_mockEmailVerificationTokenRepository.GetByIdAsync(_validToken.Id)
+		//	.Returns(Result<EmailVerificationToken>.Success(_validToken));
 
 
 		// Act
