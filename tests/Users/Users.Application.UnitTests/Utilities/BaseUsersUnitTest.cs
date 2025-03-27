@@ -5,6 +5,7 @@ using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
+using Shared.Infrastructure.Clock;
 using Users.Application.Features.Users.Mappings;
 using Users.Domain.Auth.Abstractions;
 using Users.Domain.Auth.Models;
@@ -17,6 +18,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITokenFactory TokenFactory { get; }
+	protected IEmailVerificationTokenRepository EmailVerificationTokenRepository { get; }
+	protected IDateTimeProvider DateTimeProvider { get; }
 
 	public BaseUsersUnitTest() : base(
 		new HAMSMapper(
@@ -30,6 +33,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 		UserRepository = Substitute.For<IUserRepository>();
 		PasswordManager = Substitute.For<IPasswordManager>();
 		TokenFactory = Substitute.For<ITokenFactory>();
+		EmailVerificationTokenRepository = Substitute.For<IEmailVerificationTokenRepository>();
+		DateTimeProvider = Substitute.For<IDateTimeProvider>();
 
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword)
 				.Returns(new PasswordHashResult(UsersTestUtilities.ValidPasswordHash, UsersTestUtilities.ValidSalt));
@@ -43,6 +48,8 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				var password = callInfo.ArgAt<string>(0);
 				return password == UsersTestUtilities.ValidPassword;
 			});
+
+		DateTimeProvider.UtcNow.Returns(UsersTestUtilities.CurrentDate);
 	}
 	public User GetUser()
 	{
@@ -65,13 +72,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 
 		password = UsersTestUtilities.ValidPassword;
 
-		var emailVerificationToken = EmailVerificationToken.Create(
-			user.Id,
-			UsersTestUtilities.CurrentDate,
-			UsersTestUtilities.SoonDate,
-			user
-			);
-
 		UserRepository.GetByEmailAsync(user.Email)
 			.Returns(user);
 
@@ -88,5 +88,24 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			.Returns(new TokenResult(UsersTestUtilities.Token));
 
 		return user;
+	}
+
+	public EmailVerificationToken GetToken(bool emailVerified = false)
+	{
+		var user = GetUser(out _);
+		if (emailVerified)
+			user.VerifyEmail();
+
+		var emailVerificationToken = EmailVerificationToken.Create(
+			user.Id,
+			UsersTestUtilities.CurrentDate,
+			UsersTestUtilities.SoonDate,
+			user
+			);
+
+		EmailVerificationTokenRepository.GetByIdAsync(emailVerificationToken.Id)
+			.Returns(emailVerificationToken);
+
+		return emailVerificationToken;
 	}
 }

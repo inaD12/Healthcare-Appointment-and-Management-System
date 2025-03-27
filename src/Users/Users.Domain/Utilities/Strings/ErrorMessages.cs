@@ -12,4 +12,5 @@ public static class ErrorMessages
 	public const string InvalidVerificationToken = "Invalid verification token";
 	public const string EmailNotSent = "Email wasn't sent due to an internal error";
 	public const string EmailAlreadyVerified = "Email is already verified";
+	public const string ExpiredVerificationToken = "Verification token has expired";
 }

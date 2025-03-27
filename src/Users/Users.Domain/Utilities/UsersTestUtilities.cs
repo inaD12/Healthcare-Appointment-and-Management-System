@@ -28,4 +28,5 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly DateTime PastDate = GetDatePast().ToUniversalTime();
 	public static readonly DateTime CurrentDate = GetDate().ToUniversalTime();
 	public static readonly DateTime SoonDate = GetDateSoon().ToUniversalTime();
+	public static readonly DateTime FutureDate = GetDateFuture().ToUniversalTime();
 }
