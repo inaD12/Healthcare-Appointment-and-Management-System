@@ -3,10 +3,11 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Models;
+using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Responses;
 
-namespace Users.Application.Features.Users.UpdateUser;
+namespace Users.Application.Features.Users.Commands.UpdateUser;
 
 public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, UserCommandViewModel>
 {
@@ -31,13 +32,8 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 			var emailCheck = await _userRepository.GetByEmailAsync(request.NewEmail);
 			if (emailCheck != null)
 				return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
-
-			user.UpdateProfile(request.NewEmail, request.FirstName, request.LastName);
 		}
-		else
-		{
-			user.UpdateProfile(null, request.FirstName, request.LastName);
-		}
+		user.UpdateProfile(request.NewEmail, request.FirstName, request.LastName);
 
 		_userRepository.Update(user);
 

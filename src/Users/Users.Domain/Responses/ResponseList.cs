@@ -19,6 +19,6 @@ public static class ResponseList
 	public static Response InternalError => Response.Create(ErrorMessages.InternalError, HttpStatusCode.InternalServerError);
 	public static Response TokenNotFound => Response.Create(ErrorMessages.TokenNotFound, HttpStatusCode.NotFound);
 	public static Response InvalidVerificationToken => Response.Create(ErrorMessages.InvalidVerificationToken, HttpStatusCode.BadRequest);
-	public static Response EmailNotSent => Response.Create(ErrorMessages.EmailNotSent, HttpStatusCode.InternalServerError);
 	public static Response EmailAlreadyVerified => Response.Create(ErrorMessages.EmailAlreadyVerified, HttpStatusCode.Conflict);
+	public static Response ExpiredVerificationToken => Response.Create(ErrorMessages.ExpiredVerificationToken, HttpStatusCode.Conflict);
 }
