@@ -18,6 +18,7 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string InvalidEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
 
 	public static readonly string ValidPhoneNumber = GetAverageLong(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH).ToString();
+	public static readonly string InvalidPhoneNumber = GetAverageLong(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH - 4).ToString() + "abcd";
 	public static readonly string ValidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
 	public static readonly string ValidPasswordHash = GetString();
 	public static readonly string ValidSalt = GetString();

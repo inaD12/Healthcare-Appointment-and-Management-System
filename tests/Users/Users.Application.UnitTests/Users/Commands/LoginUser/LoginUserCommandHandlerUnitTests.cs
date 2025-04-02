@@ -7,11 +7,11 @@ using Xunit;
 
 namespace Users.Application.UnitTests.Users.Commands.LoginUser;
 
-public class LoginCommandHandlerUnitTests : BaseUsersUnitTest
+public class LoginUserCommandHandlerUnitTests : BaseUsersUnitTest
 {
 	private readonly LoginUserCommandHandler _commandHandler;
 
-	public LoginCommandHandlerUnitTests()
+	public LoginUserCommandHandlerUnitTests()
 	{
 		_commandHandler = new LoginUserCommandHandler(PasswordManager, TokenFactory, HAMSMapper, UserRepository);
 	}

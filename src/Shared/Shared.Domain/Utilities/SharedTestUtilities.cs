@@ -34,6 +34,11 @@ public class SharedTestUtilities
 		return result;
 	}
 
+	public static long GetLong(int lenght)
+	{
+		return GetAverageLong(lenght, lenght);
+	}
+
 	public static long GetAverageLong(int minLength, int maxLength)
 	{
 		if (minLength < 1)
