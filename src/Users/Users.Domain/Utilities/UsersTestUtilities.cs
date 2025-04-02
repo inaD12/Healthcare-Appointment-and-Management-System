@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Utilities;
+﻿using Shared.Domain.Enums;
+using Shared.Domain.Utilities;
 
 namespace Users.Domain.Utilities;
 
@@ -25,6 +26,14 @@ public class UsersTestUtilities : SharedTestUtilities
 
 	public static readonly string Link = GetString();
 	public static readonly string Token = GetString();
+
+	public static readonly int ValidPageValue = 1;
+	public static readonly int ValidPageSizeValue = 20;
+
+	public static readonly string ValidSortPropertyName = "Id";
+	public static readonly string InvalidSortPropertyName = "Idd";
+
+	public static readonly SortOrder ValidSortOrderProperty = SortOrder.ASC;
 
 	public static readonly DateTime PastDate = GetDatePast().ToUniversalTime();
 	public static readonly DateTime CurrentDate = GetDate().ToUniversalTime();

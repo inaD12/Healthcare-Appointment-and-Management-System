@@ -4,6 +4,7 @@ using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
+using Shared.Domain.Models;
 using Shared.Domain.Utilities;
 using Shared.Infrastructure.Clock;
 using Users.Application.Features.Users.Mappings;
@@ -11,6 +12,7 @@ using Users.Domain.Auth.Abstractions;
 using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Models;
 using Users.Domain.Utilities;
 
 public abstract class BaseUsersUnitTest : BaseSharedUnitTest
@@ -27,6 +29,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				new MapperConfiguration(cfg =>
 				{
 					cfg.AddProfile<UserCommandProfile>();
+					cfg.AddProfile<UserQueryProfile>();
 				}))),
 		Substitute.For<IUnitOfWork>())
 	{
@@ -69,14 +72,28 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress
 			);
-
 		password = UsersTestUtilities.ValidPassword;
 
+		var usersList = new List<User> { user };
+
+		var pagedList = new PagedList<User>(
+			usersList,
+			UsersTestUtilities.ValidPageValue,
+			UsersTestUtilities.ValidPageSizeValue,
+			usersList.Count);
+
 		UserRepository.GetByEmailAsync(user.Email)
-			.Returns(user);
+		.Returns(user);
 
 		UserRepository.GetByIdAsync(user.Id)
-			.Returns(user);
+		.Returns(user);
+
+		UserRepository.GetAllAsync(Arg.Is<UserPagedListQuery>(q =>
+																				q.Email == user.Email &&
+																				q.FirstName == user.FirstName &&
+																				q.LastName == user.LastName),
+																				CancellationToken)
+			.Returns(pagedList);
 
 		PasswordManager.HashPassword(password)
 			.Returns(new PasswordHashResult(user.PasswordHash, user.Salt));
