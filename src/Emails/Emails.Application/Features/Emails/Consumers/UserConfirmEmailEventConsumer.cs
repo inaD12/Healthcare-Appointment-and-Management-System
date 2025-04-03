@@ -18,9 +18,9 @@ namespace Emails.Application.Features.Emails.Consumers
 		{
 			var message = context.Message;
 
-			string body = $"To verify your email <a href='{message.link}'>click here</a>";
+			string body = $"To verify your email <a href='{message.Link}'>click here</a>";
 
-			await _emailSender.SendEmailAsync(message.email, Constants.EmailConfirmationTitle, body, true);
+			await _emailSender.SendEmailAsync(message.Email, Constants.EmailConfirmationTitle, body, true);
 		}
 	}
 }

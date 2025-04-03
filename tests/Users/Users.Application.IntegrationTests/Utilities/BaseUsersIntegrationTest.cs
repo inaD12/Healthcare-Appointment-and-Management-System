@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
@@ -11,26 +12,29 @@ using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.IntegrationTests.Utilities;
 
-public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, IClassFixture<IntegrationTestWebAppFactory>, IAsyncLifetime
+public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, IClassFixture<UsersIntegrationTestWebAppFactory>, IAsyncLifetime
 {
-	protected BaseUsersIntegrationTest(IntegrationTestWebAppFactory integrationTestWebAppFactory)
+	protected BaseUsersIntegrationTest(UsersIntegrationTestWebAppFactory integrationTestWebAppFactory)
 		: base(integrationTestWebAppFactory.Services.CreateScope())
 	{
 		PasswordManager = ServiceScope.ServiceProvider.GetRequiredService<IPasswordManager>();
 		UserRepository = ServiceScope.ServiceProvider.GetRequiredService<IUserRepository>();
+		TestHarness = ServiceScope.ServiceProvider.GetTestHarness();
+
 	}
 	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
+	protected ITestHarness TestHarness { get; }
 
-	protected async Task<string> CreateUserAsync()
+	protected async Task<User> CreateUserAsync()
 	{
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
 		var user = User.Create(
-				UsersTestUtilities.TakenEmail,
+				UsersTestUtilities.ValidEmail,
 				UsersTestUtilities.ValidPasswordHash,
 				UsersTestUtilities.ValidSalt,
-				Roles.Doctor,
+				Roles.Patient,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
@@ -41,7 +45,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		await UserRepository.AddAsync(user);
 		await unitOfWork.SaveChangesAsync();
 
-		return user.Email;
+		return user;
 	}
 	public async Task DisposeAsync()
 	{
