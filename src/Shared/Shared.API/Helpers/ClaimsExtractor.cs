@@ -2,6 +2,7 @@
 using Shared.API.Abstractions;
 using Shared.API.Models;
 using Shared.Utilities;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Shared.API.Helpers;
@@ -34,4 +35,23 @@ internal class ClaimsExtractor : IClaimsExtractor
 
 		return new ClaimsExtractorModel(claimsDictionary);
 	}
+
+	private string GetClaimFromToken(string token, string key)
+	{
+		var handler = new JwtSecurityTokenHandler();
+
+		if (!handler.CanReadToken(token))
+		{
+			throw new ArgumentException("Invalid JWT token.", nameof(token));
+		}
+
+		var jwtToken = handler.ReadJwtToken(token);
+		var claimValue = jwtToken.Claims.FirstOrDefault(c => c.Type == key)?.Value;
+
+		return claimValue ?? throw new KeyNotFoundException($"Claim '{key}' not found in token.");
+	}
+
+	public string GetUserId(string Token) => GetClaimFromToken(Token, AppClaims.Id);
+
+	public string GetUserRole(string Token) => GetClaimFromToken(Token,AppClaims.Role);
 }

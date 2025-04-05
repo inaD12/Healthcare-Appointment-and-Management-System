@@ -1,6 +1,7 @@
 ﻿using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.API.Abstractions;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
@@ -20,20 +21,25 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		PasswordManager = ServiceScope.ServiceProvider.GetRequiredService<IPasswordManager>();
 		UserRepository = ServiceScope.ServiceProvider.GetRequiredService<IUserRepository>();
 		TestHarness = ServiceScope.ServiceProvider.GetTestHarness();
+		ClaimsExtractor = ServiceScope.ServiceProvider.GetRequiredService<IClaimsExtractor>();
 
 	}
 	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITestHarness TestHarness { get; }
+	protected IClaimsExtractor ClaimsExtractor { get; }
 
+	protected string Password => UsersTestUtilities.ValidPassword;
 	protected async Task<User> CreateUserAsync()
 	{
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+		
+		var passwordHashResult = PasswordManager.HashPassword(Password);
 
 		var user = User.Create(
 				UsersTestUtilities.ValidEmail,
-				UsersTestUtilities.ValidPasswordHash,
-				UsersTestUtilities.ValidSalt,
+				passwordHashResult.PasswordHash,
+				passwordHashResult.Salt,
 				Roles.Patient,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,

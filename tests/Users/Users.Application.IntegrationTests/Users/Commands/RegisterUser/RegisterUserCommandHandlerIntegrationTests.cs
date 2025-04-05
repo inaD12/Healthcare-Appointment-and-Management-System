@@ -20,7 +20,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenEmailIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenEmailIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -46,7 +46,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.EMAIL_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.EMAIL_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenEmailLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenEmailLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -70,7 +70,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenPasswordIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenPasswordIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -96,7 +96,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.PASSWORD_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.PASSWORD_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenPasswordLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenPasswordLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -120,7 +120,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenFirstNameIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenFirstNameIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -146,7 +146,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenFirstNameLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenFirstNameLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -170,7 +170,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenLastNameIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenLastNameIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -196,7 +196,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenLastNameLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenLastNameLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -220,7 +220,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenDateOfBirthIsntInThePast()
+	public async Task Send_ShouldThrowValidationException_WhenDateOfBirthIsntInThePast()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -244,7 +244,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenPhoneNumberIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenPhoneNumberIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -270,7 +270,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenPhoneNumberLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenPhoneNumberLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -294,7 +294,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenPhoneNumberIsInvalid()
+	public async Task Send_ShouldThrowValidationException_WhenPhoneNumberIsInvalid()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -318,7 +318,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenAddressIsNull()
+	public async Task Send_ShouldThrowValidationException_WhenAddressIsNull()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -344,7 +344,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.ADRESS_MIN_LENGTH - 1)]
 	[InlineData(UsersBusinessConfiguration.ADRESS_MAX_LENGTH + 1)]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenAddressLengthIsInvalid(int length)
+	public async Task Send_ShouldThrowValidationException_WhenAddressLengthIsInvalid(int length)
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -368,7 +368,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsnyc_ShouldThrowValidationException_WhenRoleIsInvalid()
+	public async Task Send_ShouldThrowValidationException_WhenRoleIsInvalid()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -392,7 +392,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsync_ShouldReturnFailure_WhenEmailIsTaken()
+	public async Task Send_ShouldReturnFailure_WhenEmailIsTaken()
 	{
 		// Arrange
 		var existingUser = await CreateUserAsync(); ;
@@ -416,7 +416,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsync_ShouldRegisterUser_WhenUserIsValid()
+	public async Task Send_ShouldRegisterUser_WhenUserIsValid()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -449,7 +449,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsync_ShouldReturnCorrectViewModel_WhenUserIsValid()
+	public async Task Send_ShouldReturnCorrectViewModel_WhenUserIsValid()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
@@ -474,7 +474,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	}
 
 	[Fact]
-	public async Task SendAsync_ShouldPublishUserCreatedDomainEvent_WhenUserIsValid()
+	public async Task Send_ShouldPublishUserCreatedDomainEvent_WhenUserIsValid()
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
