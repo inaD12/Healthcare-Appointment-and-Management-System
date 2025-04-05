@@ -53,6 +53,30 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 
 		return user;
 	}
+
+	protected async Task<User> CreateUserAsync(string email)
+	{
+		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+		var passwordHashResult = PasswordManager.HashPassword(Password);
+
+		var user = User.Create(
+				email,
+				passwordHashResult.PasswordHash,
+				passwordHashResult.Salt,
+				Roles.Patient,
+				UsersTestUtilities.ValidFirstName,
+				UsersTestUtilities.ValidLastName,
+				UsersTestUtilities.PastDate.ToUniversalTime(),
+				UsersTestUtilities.ValidPhoneNumber,
+				UsersTestUtilities.ValidAdress
+			);
+
+		await UserRepository.AddAsync(user);
+		await unitOfWork.SaveChangesAsync();
+
+		return user;
+	}
 	public async Task DisposeAsync()
 	{
 		await EnsureDatabaseIsEmpty();

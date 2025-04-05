@@ -24,6 +24,10 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string ValidPasswordHash = GetString();
 	public static readonly string ValidSalt = GetString();
 
+	public static readonly string ValidUpdateEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
+	public static readonly string ValidUpdateFirstName = GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH);
+	public static readonly string ValidUpdateLastName = GetAverageString(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH, UsersBusinessConfiguration.LASTNAME_MAX_LENGTH);
+
 	public static readonly string Link = GetString();
 	public static readonly string Token = GetString();
 
