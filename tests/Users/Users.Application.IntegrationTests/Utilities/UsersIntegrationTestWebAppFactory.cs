@@ -1,19 +1,24 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Shared.Application.IntegrationTests.Extentensions;
 using Testcontainers.PostgreSql;
+using Users.Application.Features.Users.Consumers;
 using Users.Infrastructure.DBContexts;
 
 namespace Users.Application.IntegrationTests.Utilities;
 
-public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class UsersIntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
 {
 	private readonly PostgreSqlContainer _dbContainer;
 
-	public IntegrationTestWebAppFactory()
+	public UsersIntegrationTestWebAppFactory()
 	{
 		_dbContainer = new PostgreSqlBuilder()
 		.WithImage("postgres:latest")
@@ -27,6 +32,14 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 		builder.ConfigureTestServices(serviceCollection =>
 		{
 			serviceCollection.AddTestDbContext<UsersDBContext>(opt => opt.UseNpgsql(_dbContainer.GetConnectionString()));
+
+			serviceCollection.AddMassTransitTestHarness(cfg =>
+			{
+				cfg.AddConsumer<UserCreatedDomainEventConsumer>();
+			});
+
+			var mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
+			serviceCollection.AddSingleton(mockHttpContextAccessor);
 		});
 	}
 	public new Task DisposeAsync()

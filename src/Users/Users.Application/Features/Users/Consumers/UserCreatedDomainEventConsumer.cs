@@ -37,17 +37,17 @@ public sealed class UserCreatedDomainEventConsumer : IConsumer<UserCreatedDomain
 		var msg = context.Message;
 
 		var userCreatedEvent = _hamsMapper.Map<UserCreatedIntegrationEvent>(msg);
-		await _eventBus.PublishAsync(userCreatedEvent, context.CancellationToken);
+		var userCreatedEventTask = _eventBus.PublishAsync(userCreatedEvent, context.CancellationToken);
 
-		var emailVerificationToken = EmailVerificationToken.Create(
-			msg.Id,
-			_dateTimeProvider.UtcNow);
-
+		var emailVerificationToken = EmailVerificationToken.Create(msg.Id, _dateTimeProvider.UtcNow);
 		await _emailVerificationTokenRepository.AddAsync(emailVerificationToken);
 
 		string verificationLink = _emailVerificationLinkFactory.Create(emailVerificationToken);
-
 		var userConfirmEmailEvent = new EmailConfirmationRequestedIntegrationEvent(verificationLink, msg.Email);
-		await _eventBus.PublishAsync(userConfirmEmailEvent, context.CancellationToken);
+
+		var emailEventTask = _eventBus.PublishAsync(userConfirmEmailEvent, context.CancellationToken);
+
+		await Task.WhenAll(userCreatedEventTask, emailEventTask);
 	}
+
 }

@@ -1,3 +1,3 @@
 ﻿namespace Shared.Application.IntegrationEvents;
 
-public record EmailConfirmationRequestedIntegrationEvent(string link, string email);
+public record EmailConfirmationRequestedIntegrationEvent(string Link, string Email);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Extensions;
@@ -33,7 +34,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 				(!query.EmailVerified.HasValue || u.EmailVerified == query.EmailVerified!.Value)
 			).ApplySorting(query.SortPropertyName, query.SortOrder);
 
-		if (entitiesQuery == null)
+		if (entitiesQuery.IsNullOrEmpty())
 			return null;
 
 		var users = await PagedList<User>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
