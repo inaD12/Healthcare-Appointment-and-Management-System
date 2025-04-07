@@ -22,12 +22,14 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		UserRepository = ServiceScope.ServiceProvider.GetRequiredService<IUserRepository>();
 		TestHarness = ServiceScope.ServiceProvider.GetTestHarness();
 		ClaimsExtractor = ServiceScope.ServiceProvider.GetRequiredService<IClaimsExtractor>();
+		EmailVerificationTokenRepository = ServiceScope.ServiceProvider.GetRequiredService<IEmailVerificationTokenRepository>();
 
 	}
 	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
 	protected ITestHarness TestHarness { get; }
 	protected IClaimsExtractor ClaimsExtractor { get; }
+	protected IEmailVerificationTokenRepository EmailVerificationTokenRepository { get; }
 
 	protected string Password => UsersTestUtilities.ValidPassword;
 	protected async Task<User> CreateUserAsync()
@@ -77,6 +79,36 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 
 		return user;
 	}
+
+	protected async Task<EmailVerificationToken> CreateEmailVerificationTokenWithEmailVerifiedUserAsync()
+	{
+		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+		var token = await CreateEmailVerificationTokenAsync();
+
+		token.User.VerifyEmail();
+		UserRepository.Update(token.User);
+		await unitOfWork.SaveChangesAsync();
+
+		return token;
+	}
+	protected async Task<EmailVerificationToken> CreateEmailVerificationTokenAsync(DateTime? expirationDate = null)
+	{
+		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+		var user = await CreateUserAsync();
+
+		var token = EmailVerificationToken.Create(
+			UsersTestUtilities.ValidId,
+			UsersTestUtilities.PastDate,
+			expirationDate ?? UsersTestUtilities.CurrentDate.AddDays(1),
+			user
+		);
+
+		await EmailVerificationTokenRepository.AddAsync(token);
+		await unitOfWork.SaveChangesAsync();
+
+		return token;
+	}
+
 	public async Task DisposeAsync()
 	{
 		await EnsureDatabaseIsEmpty();
