@@ -107,6 +107,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emails.API", "src\Emails\Em
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared\Shared.csproj", "{2115B503-21B7-491A-BCE2-B3D3A824CFA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.Application.IntegrationTests", "tests\Appointments\Appointments.Application.IntegrationTests\Appointments.Application.IntegrationTests.csproj", "{EC103236-E060-4B68-8782-6AED54DE9064}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +203,10 @@ Global
 		{2115B503-21B7-491A-BCE2-B3D3A824CFA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2115B503-21B7-491A-BCE2-B3D3A824CFA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2115B503-21B7-491A-BCE2-B3D3A824CFA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC103236-E060-4B68-8782-6AED54DE9064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC103236-E060-4B68-8782-6AED54DE9064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC103236-E060-4B68-8782-6AED54DE9064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC103236-E060-4B68-8782-6AED54DE9064}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -235,6 +241,7 @@ Global
 		{D67E89AC-4BB6-4E31-A8C2-BBA8CF8A6C55} = {E136B147-F033-4730-878D-58EACF8F8C9B}
 		{258E771F-09C6-40D6-90D3-67E84E8AE6FD} = {E136B147-F033-4730-878D-58EACF8F8C9B}
 		{2115B503-21B7-491A-BCE2-B3D3A824CFA1} = {558B1292-4B6C-470E-8C55-764312F2AC31}
+		{EC103236-E060-4B68-8782-6AED54DE9064} = {D905681D-E8DF-4A19-A4E0-3429A1DA1F1B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B125A6E-E48E-43DC-A6A5-52495A64B42D}
