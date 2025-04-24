@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="FluentAssertions" Version="8.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NSubstitute" Version="5.3.0" />
@@ -20,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Appointments\Appointments.Application\Appointments.Application.csproj" />
     <ProjectReference Include="..\..\..\src\Appointments\Appointments.Infrastructure\Appointments.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Application.IntegrationTests\Shared.Application.IntegrationTests.csproj" />
   </ItemGroup>

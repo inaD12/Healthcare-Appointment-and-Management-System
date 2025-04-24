@@ -21,7 +21,7 @@ public abstract class BaseAppointmentsIntegrationTest : BaseSharedIntegrationTes
 
 	protected IAppointmentRepository AppointmentRepository { get; }
 
-	protected async Task<Appointment> CreateUserAsync()
+	protected async Task<Appointment> CreateAppointmentAsync(bool isCompleted = false)
 	{
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
@@ -35,6 +35,9 @@ public abstract class BaseAppointmentsIntegrationTest : BaseSharedIntegrationTes
 			AppointmentsTestUtilities.DoctorId,
 			dateTimeRange
 		);
+
+		if (isCompleted)
+			appointment.Complete();
 
 		await AppointmentRepository.AddAsync(appointment);
 		await unitOfWork.SaveChangesAsync();
