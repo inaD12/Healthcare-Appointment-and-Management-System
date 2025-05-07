@@ -1,4 +1,4 @@
-import Login from "../pages/Login/Login";
+import Login from "../features/users/pages/Login";
 
 export default function LoginRoute() {
   return <Login />;
