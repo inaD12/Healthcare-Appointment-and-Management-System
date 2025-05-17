@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using Serilog;
 using Shared.Domain.Exceptions;
+using System.Text.Json;
 
 namespace Shared.API.Middlewares;
 
@@ -20,7 +20,7 @@ public class ErrorHandlingMiddleware
 		{
 			await _next(context);
 		}
-		catch(HAMSValidationException ex)
+		catch (HAMSValidationException ex)
 		{
 			await HandleValidationExceptionAsync(context, ex);
 		}
@@ -34,28 +34,26 @@ public class ErrorHandlingMiddleware
 	private Task HandleValidationExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.ContentType = "application/json";
-
 		context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
 		var response = new
 		{
-			exception.Message
+			message = exception.Message
 		};
 
-		return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+		return context.Response.WriteAsync(JsonSerializer.Serialize(response));
 	}
 
 	private Task HandleExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.ContentType = "application/json";
-
 		context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
 		var response = new
 		{
-			Message = "An internal server error occurred.",
+			message = "An internal server error occurred."
 		};
 
-		return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+		return context.Response.WriteAsync(JsonSerializer.Serialize(response));
 	}
 }

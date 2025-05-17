@@ -10,50 +10,50 @@ public static class ControllerResponse
 	{
 		if (result.IsSuccess)
 		{
-			return Results.Json(new { message = result.Response?.Message.Message, data = result.Value },
+			return Results.Json(new { Message = result.Response?.Message.Message, data = result.Value },
 								statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 		}
 
 		if (result.IsFailure)
 		{
-			return Results.Json(new { message = result.Response.Message.Message },
+			return Results.Json(new { Message = result.Response.Message.Message },
 								statusCode: (int)result.Response.StatusCode);
 		}
 
-		return Results.Json(new { message = "Unknown result state" }, statusCode: 500);
+		return Results.Json(new { Message = "Unknown result state" }, statusCode: 500);
 	}
 
 	public static IResult ParseAndReturnMessage(Result result)
 	{
 		if (result.IsSuccess)
 		{
-			return Results.Json(new { message = result.Response?.Message.Message },
+			return Results.Json(new { Message = result.Response?.Message.Message },
 								statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 		}
 
 		if (result.IsFailure)
 		{
-			return Results.Json(new { message = result.Response.Message.Message },
+			return Results.Json(new { Message = result.Response.Message.Message },
 								statusCode: (int)result.Response.StatusCode);
 		}
 
-		return Results.Json(new { message = "Unknown result state" }, statusCode: 500);
+		return Results.Json(new { Message = "Unknown result state" }, statusCode: 500);
 	}
 
-	public static IResult ParseAndReturnMessage<T>(Result<T> result, object returnObject)
+	public static IResult ParseAndReturnMessage<T>(Result<T> result, object returnObject)	
 	{
 		if (result.IsSuccess)
 		{
-			return Results.Json(new { message = result.Response?.Message.Message, data = returnObject },
+			return Results.Json(new { Message = result.Response?.Message.Message, data = returnObject },
 								statusCode: (int)(result.Response?.StatusCode ?? HttpStatusCode.OK));
 		}
 
 		if (result.IsFailure)
 		{
-			return Results.Json(new { message = result.Response.Message.Message },
+			return Results.Json(new { Message = result.Response.Message.Message },
 								statusCode: (int)result.Response.StatusCode);
 		}
 
-		return Results.Json(new { message = "Unknown result state" }, statusCode: 500);
+		return Results.Json(new { Message = "Unknown result state" }, statusCode: 500);
 	}
 }
