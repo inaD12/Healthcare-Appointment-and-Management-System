@@ -24,9 +24,12 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     response => response,
     error => {
-        if (error.response.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "/login";
+        if (error.response) {
+            if (error.response.status === 401) {
+                console.log("Unauthorized access");
+            }
+        } else {
+            console.error(error.message);
         }
         return Promise.reject(error);
     }
