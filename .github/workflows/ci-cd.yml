@@ -14,46 +14,52 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [Appointments, Emails, Gateway, Users]
+        include:
+          - name: Appointments
+            image: appointments
+          - name: Emails
+            image: emails
+          - name: Gateway
+            image: gateway
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup .NET
+      - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
-      - name: Setup Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Log in to GHCR
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.IMAGE_NAMESPACE }}
           password: ${{ secrets.CR_PAT }}
 
-      - name: Restore and build
+      - name: Restore and Build
         run: |
-          dotnet restore src/${{ matrix.service }}/${{ matrix.service }}.API/${{ matrix.service }}.API.csproj
-          dotnet build src/${{ matrix.service }}/${{ matrix.service }}.API/${{ matrix.service }}.API.csproj --no-restore --configuration Release
+          dotnet restore src/${{ matrix.name }}/${{ matrix.name }}.API/${{ matrix.name }}.API.csproj
+          dotnet build src/${{ matrix.name }}/${{ matrix.name }}.API/${{ matrix.name }}.API.csproj --no-restore --configuration Release
 
       - name: Run Unit Tests
         run: |
-          dotnet test tests/${{ matrix.service }}/${{ matrix.service }}.Application.UnitTests/${{ matrix.service }}.Application.UnitTests.csproj --no-build --logger trx
+          dotnet test tests/${{ matrix.name }}/${{ matrix.name }}.Application.UnitTests/${{ matrix.name }}.Application.UnitTests.csproj --no-build --logger trx
 
       - name: Run Integration Tests
         run: |
-          dotnet test tests/${{ matrix.service }}/${{ matrix.service }}.Application.IntegrationTests/${{ matrix.service }}.Application.IntegrationTests.csproj --no-build --logger trx
+          dotnet test tests/${{ matrix.name }}/${{ matrix.name }}.Application.IntegrationTests/${{ matrix.name }}.Application.IntegrationTests.csproj --no-build --logger trx
 
-      - name: Build Docker image
+      - name: Build Docker Image
         run: |
-          IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.service | toLower }}
-          docker build -f src/${{ matrix.service }}/${{ matrix.service }}.API/Dockerfile -t $IMAGE_NAME:latest src/${{ matrix.service }}/${{ matrix.service }}.API
+          IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
+          docker build -f src/${{ matrix.name }}/${{ matrix.name }}.API/Dockerfile -t $IMAGE_NAME:latest src/${{ matrix.name }}/${{ matrix.name }}.API
 
-      - name: Push Docker image
+      - name: Push Docker Image
         run: |
-          IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.service | toLower }}
+          IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
           docker push $IMAGE_NAME:latest
