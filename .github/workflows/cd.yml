@@ -1,6 +1,7 @@
 name: CD
 
 on:
+  workflow_dispatch:
   workflow_run:
     workflows: ["CI"]
     types:
@@ -10,6 +11,9 @@ jobs:
   docker-build-push:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAMESPACE: inad12
 
     strategy:
       matrix:
