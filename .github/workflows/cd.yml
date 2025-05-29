@@ -39,8 +39,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          IMAGE_NAME=ghcr.io/inad12/${{ matrix.image }}
-          docker build -f src/${{ matrix.name }}/${{ matrix.name }}.API/Dockerfile -t $IMAGE_NAME:latest src/${{ matrix.name }}/${{ matrix.name }}.API
+          IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
+          docker build -f src/${{ matrix.name }}/${{ matrix.name }}.API/Dockerfile -t $IMAGE_NAME:latest .
 
       - name: Push Docker Image
         run: |
