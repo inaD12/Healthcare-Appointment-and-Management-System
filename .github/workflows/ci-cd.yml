@@ -44,13 +44,13 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Restore
-        run: dotnet restore ./Healthcare Appointment and Management System.sln
+        run: dotnet restore "./Healthcare Appointment and Management System.sln"
 
       - name: Build
-        run: dotnet build ./Healthcare Appointment and Management System.sln --configuration Release --no-restore 
+        run: dotnet build "./Healthcare Appointment and Management System.sln" --configuration Release --no-restore 
 
       - name: Run tests
-        run: dotnet test ./Healthcare Appointment and Management System.sln --configuration Release  --no-restore --no-build
+        run: dotnet test "./Healthcare Appointment and Management System.sln" --configuration Release  --no-restore --no-build
 
       - name: Build Docker Image
         run: |
