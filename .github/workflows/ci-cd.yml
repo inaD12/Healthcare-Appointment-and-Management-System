@@ -43,18 +43,14 @@ jobs:
           username: ${{ env.IMAGE_NAMESPACE }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Restore and Build
-        run: |
-          dotnet restore src/${{ matrix.name }}/${{ matrix.name }}.API/${{ matrix.name }}.API.csproj
-          dotnet build src/${{ matrix.name }}/${{ matrix.name }}.API/${{ matrix.name }}.API.csproj --no-restore --configuration Release
+      - name: Restore
+        run: dotnet restore ./Healthcare Appointment and Management System.sln
 
-      - name: Run Unit Tests
-        run: |
-          dotnet test tests/${{ matrix.name }}/${{ matrix.name }}.Application.UnitTests/${{ matrix.name }}.Application.UnitTests.csproj --no-build --logger trx
+      - name: Build
+        run: dotnet build ./Healthcare Appointment and Management System.sln --configuration Release --no-restore 
 
-      - name: Run Integration Tests
-        run: |
-          dotnet test tests/${{ matrix.name }}/${{ matrix.name }}.Application.IntegrationTests/${{ matrix.name }}.Application.IntegrationTests.csproj --no-build --logger trx
+      - name: Run tests
+        run: dotnet test ./Healthcare Appointment and Management System.sln --configuration Release  --no-restore --no-build
 
       - name: Build Docker Image
         run: |
