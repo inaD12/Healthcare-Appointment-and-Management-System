@@ -3,26 +3,31 @@ WORKDIR /app
 EXPOSE 5100
 #EXPOSE 5101
 
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["Users.API.csproj", "Users.API/"]
-COPY ["Users.Application/Users.Application.csproj", "Users.Application/"]
-COPY ["Users.Domain/Users.Domain.csproj", "Users.Domain/"]
-COPY ["Users.Infrastructure/Users.Infrastructure.csproj", "Users.Infrastructure/"]
-RUN dotnet restore "Users.API/Users.API.csproj"
-COPY . .
+COPY ["src/Users/Users.API/", "Users.API/"]
+COPY ["src/Users/Users.Application/", "Users.Application/"]
+COPY ["src/Users/Users.Domain/", "Users.Domain/"]
+COPY ["src/Users/Users.Infrastructure/", "Users.Infrastructure/"]
+COPY ["src/Shared/Shared.API/", "Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+
 WORKDIR "/src/Users.API"
-RUN dotnet build "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN dotnet restore "Users.API.csproj"
+
+RUN dotnet build "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+WORKDIR "/src/Users.API"
+RUN dotnet publish "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
 ENTRYPOINT ["dotnet", "Users.API.dll"]

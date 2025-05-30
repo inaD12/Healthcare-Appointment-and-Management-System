@@ -6,15 +6,23 @@ EXPOSE 5001
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Gateway.API.csproj", "Gateway.API/"]
-RUN dotnet restore "Gateway.API/Gateway.API.csproj"
-COPY . .
+
+COPY ["src/Gateway/Gateway.API/", "Gateway.API/"]
+COPY ["src/Shared/Shared.API/", "Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+
 WORKDIR "/src/Gateway.API"
-RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+RUN dotnet restore "Gateway.API.csproj"
+
+RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+WORKDIR "/src/Gateway.API"
+RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
 
 FROM base AS final
 WORKDIR /app
