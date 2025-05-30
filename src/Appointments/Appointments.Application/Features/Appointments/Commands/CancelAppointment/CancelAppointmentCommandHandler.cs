@@ -1,40 +1,38 @@
-﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
-using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
+﻿using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
-using Shared.Application.Helpers.Abstractions;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 
 public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
 {
-	private readonly IRepositoryManager _repositoryManager;
-	private readonly IJwtParser _jwtParser;
-	public CancelAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser)
+	private readonly IAppointmentRepository _appointmentRepository;
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly IDateTimeProvider _dateTimeProvider;
+	public CancelAppointmentCommandHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager)
 	{
-		_repositoryManager = repositoryManager;
-		_jwtParser = jwtParser;
+		_unitOfWork = unitOfWork;
+		_dateTimeProvider = dateTimeProvider;
+		_appointmentRepository = repositoryManager;
 	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentRes = await _repositoryManager.Appointment.GetByIdAsync(request.AppointmentId);
+		var appointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
 
-		if (appointmentRes.IsFailure)
-			return Result.Failure(appointmentRes.Response);
+		if (appointment == null)
+			return Result.Failure(ResponseList.AppointmentNotFound);
 
-		Appointment appointment = appointmentRes.Value!;
+		if (request.UserId != appointment.PatientId && request.UserId != appointment.DoctorId)
+			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 
-		var userIdRes = _jwtParser.GetIdFromToken();
-		if (userIdRes.IsFailure)
-			return Result.Failure(userIdRes.Response);
+		var res = appointment.Cancel(_dateTimeProvider.UtcNow);
+		if (res.IsFailure)
+			return res;
 
-		if (userIdRes.Value != appointment.PatientId && userIdRes.Value != appointment.DoctorId)
-			return Result.Failure(Responses.CannotCancelOthersAppointment);
-
-		var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointment, AppointmentStatus.Cancelled);
-
-		return changeStatusRes;
+		await _unitOfWork.SaveChangesAsync();
+		return Result.Success();
 	}
 }

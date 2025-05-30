@@ -1,11 +1,11 @@
 ﻿using Emails.Application.Features.Emails.Abstractions;
 using Emails.Application.Features.Emails.Utilities;
 using MassTransit;
-using Shared.Domain.Events;
+using Shared.Application.IntegrationEvents;
 
 namespace Emails.Application.Features.Emails.Consumers
 {
-	public sealed class UserConfirmEmailEventConsumer: IConsumer<EmailConfirmationRequestedEvent>
+	public sealed class UserConfirmEmailEventConsumer: IConsumer<EmailConfirmationRequestedIntegrationEvent>
 	{
 		private readonly IEmailSender _emailSender;
 
@@ -14,13 +14,13 @@ namespace Emails.Application.Features.Emails.Consumers
 			_emailSender = emailSender;
 		}
 
-		public async Task Consume(ConsumeContext<EmailConfirmationRequestedEvent> context)
+		public async Task Consume(ConsumeContext<EmailConfirmationRequestedIntegrationEvent> context)
 		{
 			var message = context.Message;
 
-			string body = $"To verify your email <a href='{message.link}'>click here</a>";
+			string body = $"To verify your email <a href='{message.Link}'>click here</a>";
 
-			await _emailSender.SendEmailAsync(message.email, Constants.EmailConfirmationTitle, body, true);
+			await _emailSender.SendEmailAsync(message.Email, Constants.EmailConfirmationTitle, body, true);
 		}
 	}
 }

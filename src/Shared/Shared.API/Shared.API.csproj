@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Binders\**" />
+    <EmbeddedResource Remove="Binders\**" />
+    <None Remove="Binders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
@@ -18,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
+	<ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

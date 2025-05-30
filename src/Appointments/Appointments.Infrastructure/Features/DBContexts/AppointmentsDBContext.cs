@@ -22,7 +22,12 @@ public class AppointmentsDBContext : DbContext
 		modelBuilder.Entity<Appointment>(entity =>
 		{
 			entity.HasIndex(a => a.Id).IsUnique();
-
+			
+			entity.OwnsOne(a => a.Duration, duration =>
+			{
+				duration.Property(d => d.Start).HasColumnName("ScheduledStartTime");
+				duration.Property(d => d.End).HasColumnName("ScheduledEndTime");
+			});
 		});
 
 		modelBuilder.Entity<UserData>(entity =>

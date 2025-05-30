@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Serilog;
-using System.ComponentModel.DataAnnotations;
+using Shared.Domain.Exceptions;
 
 namespace Shared.API.Middlewares;
 
@@ -20,7 +20,7 @@ public class ErrorHandlingMiddleware
 		{
 			await _next(context);
 		}
-		catch (ValidationException ex)
+		catch(HAMSValidationException ex)
 		{
 			await HandleValidationExceptionAsync(context, ex);
 		}
@@ -31,7 +31,7 @@ public class ErrorHandlingMiddleware
 		}
 	}
 
-	private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+	private Task HandleValidationExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.ContentType = "application/json";
 
@@ -45,7 +45,7 @@ public class ErrorHandlingMiddleware
 		return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
 	}
 
-	private static Task HandleValidationExceptionAsync(HttpContext context, Exception exception)
+	private Task HandleExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.ContentType = "application/json";
 

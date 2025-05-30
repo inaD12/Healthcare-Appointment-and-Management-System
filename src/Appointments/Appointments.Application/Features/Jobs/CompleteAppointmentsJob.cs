@@ -1,9 +1,10 @@
 ﻿using Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
+using Appointments.Domain.Infrastructure.Abstractions;
 using MediatR;
 
 namespace Appointments.Application.Features.Jobs;
 
-public class CompleteAppointmentsJob
+internal class CompleteAppointmentsJob : ICompleteAppointmentsJob
 {
 	private readonly ISender _sender;
 

@@ -1,55 +1,60 @@
-﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
-using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
-using Appointments.Domain.DTOS;
+﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Enums;
+using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
-using Shared.Application.Helpers.Abstractions;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 
-public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand>
+public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand, AppointmentCommandViewModel>
 {
-	private readonly IRepositoryManager _repositoryManager;
-	private readonly IJwtParser _jwtParser;
-	private readonly IAppointmentService _appointmentService;
+	private readonly IAppointmentRepository _appointmentRepository;
 	private readonly IHAMSMapper _mapper;
-
-	public RescheduleAppointmentCommandHandler(IRepositoryManager repositoryManager, IJwtParser jwtParser, IAppointmentService appointmentServuce, IHAMSMapper mapper)
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly IDateTimeProvider _dateTimeProvider;
+	public RescheduleAppointmentCommandHandler(IHAMSMapper mapper, IUnitOfWork unitOfWork, IAppointmentRepository appointmentRepository, IDateTimeProvider dateTimeProvider)
 	{
-		_repositoryManager = repositoryManager;
-		_jwtParser = jwtParser;
-		_appointmentService = appointmentServuce;
 		_mapper = mapper;
+		_unitOfWork = unitOfWork;
+		_appointmentRepository = appointmentRepository;
+		_dateTimeProvider = dateTimeProvider;
 	}
 
-	public async Task<Result> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
+	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var detailedAppointmentRes = await _repositoryManager.Appointment.GetAppointmentWithUserDetailsAsync(request.AppointmentID);
+		var detailedAppointment = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentId);
 
-		if (detailedAppointmentRes.IsFailure)
-			return Result.Failure(detailedAppointmentRes.Response);
+		if (detailedAppointment == null)
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
 
-		AppointmentWithDetailsDTO appointmentWithDetails = detailedAppointmentRes.Value!;
+		if (request.UserId != detailedAppointment.PatientId &&
+			request.UserId != detailedAppointment.DoctorId &&
+			!request.IsAdmin)
+		{
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
+		}
 
-		var userIdRes = _jwtParser.GetIdFromToken();
+		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
 
-		if (userIdRes.IsFailure)
-			return Result.Failure(userIdRes.Response);
-		if (userIdRes.Value != appointmentWithDetails.PatientId && userIdRes.Value != appointmentWithDetails.DoctorId)
-			return Result.Failure(Responses.CannotRescheduleOthersAppointment);
+		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(detailedAppointment.DoctorId, duration, cancellationToken))
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
-		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((appointmentWithDetails, request));
-		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
-		if (helperResult.IsFailure)
-			return Result.Failure(helperResult.Response);
+		var appointment = Appointment.Schedule(detailedAppointment.PatientId, detailedAppointment.DoctorId, duration);
 
-		var changeStatusRes = await _repositoryManager.Appointment.ChangeStatusAsync(appointmentWithDetails.Appointment, AppointmentStatus.Rescheduled);
+		await _appointmentRepository.AddAsync(appointment);
 
-		return changeStatusRes;
+		var result = detailedAppointment.Appointment.Reschedule(_dateTimeProvider.UtcNow);
+		if (result.IsFailure)
+			return Result<AppointmentCommandViewModel>.Failure(result.Response);
+
+		await _unitOfWork.SaveChangesAsync();
+
+		var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
 	}
 }

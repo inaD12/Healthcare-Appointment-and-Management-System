@@ -1,15 +1,12 @@
-﻿using Appointments.Application.Features.Appointments.Helpers;
-using Appointments.Application.Features.Appointments.Helpers.Abstractions;
-using Appointments.Application.Features.Helpers;
-using Appointments.Application.Features.Jobs;
-using Appointments.Application.Features.Jobs.Managers;
-using Appointments.Application.Features.Jobs.Managers.Interfaces;
+﻿using Appointments.Application.Features.Jobs;
+using Appointments.Domain.Infrastructure.Abstractions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
 using Shared.Domain.Options;
+using Shared.Infrastructure.Extensions;
 
 namespace Appointments.Application.Extensions;
 
@@ -20,9 +17,7 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddScoped<IRepositoryManager, RepositoryManager>()
-			.AddTransient<IAppointmentService, AppointmentService>()
-			.AddScoped<CompleteAppointmentsJob>()
+			.AddScoped<ICompleteAppointmentsJob, CompleteAppointmentsJob>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 		var dbOptions = configuration
@@ -33,9 +28,9 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(dbOptions.ConnectionString)
-			.AddHostedService<HangfireHostedService>()
 			.AddMessageBroker(configuration, currentAssembly)
-			.AddMapper(currentAssembly);
+			.AddMapper(currentAssembly)
+			.AddDateTimeProvider();
 
 
 		return services;
