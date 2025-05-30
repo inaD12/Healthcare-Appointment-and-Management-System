@@ -1,40 +1,40 @@
-﻿using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
-using Microsoft.IdentityModel.Tokens;
-using Shared.Domain.Abstractions;
+﻿using Appointments.Application.Features.Jobs.Managers.Interfaces;
+using Appointments.Domain.Enums;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
 
 public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<CompleteAppointmentsCommand>
 {
-	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IDateTimeProvider _dateTimeProvider;
+	private readonly IRepositoryManager _repositoryManager;
 
-	public CompleteAppointmentsCommandHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager)
+	public CompleteAppointmentsCommandHandler(IRepositoryManager repositoryManager)
 	{
-		_unitOfWork = unitOfWork;
-		_dateTimeProvider = dateTimeProvider;
-		_appointmentRepository = repositoryManager;
+		_repositoryManager = repositoryManager;
 	}
 
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentsToComplete = await _appointmentRepository
-			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow);
+		var now = DateTime.UtcNow;
 
-		if (appointmentsToComplete.IsNullOrEmpty())
+		var appointmentsToCompleteRes = await _repositoryManager.Appointment
+			.GetAppointmentsToCompleteAsync(now);
+		if (appointmentsToCompleteRes.IsFailure)
+			return Result.Failure(appointmentsToCompleteRes.Response);
+
+		if (appointmentsToCompleteRes.Value!.Count == 0)
 			return Result.Success();
 
-		foreach (var appointment in appointmentsToComplete!)
+		var appointmentsToComplete = appointmentsToCompleteRes.Value;
+
+		foreach (var appointment in appointmentsToComplete)
 		{
-			var res = appointment.Complete();
+			appointment.Status = AppointmentStatus.Completed;
 		}
 
-		await _unitOfWork.SaveChangesAsync();
+		await _repositoryManager.Appointment.SaveChangesAsync();
+
 		return Result.Success();
 	}
 }

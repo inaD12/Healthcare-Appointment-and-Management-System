@@ -1,12 +1,11 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Infrastructure.Models;
+﻿using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.DTOS;
+using Appointments.Domain.Entities;
+using Appointments.Domain.Enums;
+using Appointments.Domain.Responses;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Models;
-using Shared.Infrastructure.Extensions;
+using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
 
 namespace Appointments.Infrastructure.Features.Appointments.Repositories;
@@ -19,48 +18,39 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		_context = context;
 	}
 
-	public async Task<PagedList<Appointment>?> GetAllAsync(AppointmentPagedListQuery query, CancellationToken cancellationToken = default)
-	{
-		var entitiesQuery = _context.Appointments
-			.Where(u =>
-				(string.IsNullOrEmpty(query.DoctorId) || u.DoctorId == query.DoctorId) &&
-				(string.IsNullOrEmpty(query.PatientId) || u.PatientId == query.PatientId) &&
-				(!query.Status.HasValue || u.Status == query.Status!.Value) &&
-				(!query.FromTime.HasValue || u.Duration.End >= query.FromTime) &&
-				(!query.ToTime.HasValue || u.Duration.Start <= query.ToTime)
-			).ApplySorting(query.SortPropertyName, query.SortOrder);
-
-		if (entitiesQuery == null)
-			return null!;
-
-		var appointments = await PagedList<Appointment>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
-		return appointments;
-	}
-	public async Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default)
+	public async Task<Result<bool>> IsTimeSlotAvailableAsync(string doctorId, DateTime requestedStartTime, DateTime requestedEndTime)
 	{
 		bool isSlotTaken = await _context.Appointments
 			.AnyAsync(appointment =>
 				appointment.DoctorId == doctorId &&
 				appointment.Status == AppointmentStatus.Scheduled &&
-				appointment.Duration.Start <= dateTimeRange.End &&
-				appointment.Duration.End >= dateTimeRange.Start,
-				cancellationToken);
+				appointment.ScheduledStartTime <= requestedEndTime &&
+				appointment.ScheduledEndTime >= requestedStartTime);
 
-		return !isSlotTaken;
+		return Result<bool>.Success(!isSlotTaken);
 	}
 
-	public async Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId)
+	public async Task<Result> ChangeStatusAsync(Appointment appointment, AppointmentStatus newStatus)
+	{
+		appointment.Status = newStatus;
+
+		_context.SaveChanges();
+
+		return Result.Success();
+	}
+
+	public async Task<Result<AppointmentWithDetailsDTO>> GetAppointmentWithUserDetailsAsync(string appointmentId)
 	{
 		var result = await (
 		from appointment in _context.Appointments
 		join doctor in _context.UserData on appointment.DoctorId equals doctor.UserId
 		join patient in _context.UserData on appointment.PatientId equals patient.UserId
 		where appointment.Id == appointmentId
-		select new AppointmentWithDetailsModel
+		select new AppointmentWithDetailsDTO
 		{
 			AppointmentId = appointment.Id,
-			ScheduledStartTime = appointment.Duration.Start,
-			ScheduledEndTime = appointment.Duration.End,
+			ScheduledStartTime = appointment.ScheduledStartTime,
+			ScheduledEndTime = appointment.ScheduledEndTime,
 			Status = appointment.Status,
 			DoctorEmail = doctor.Email,
 			PatientEmail = patient.Email,
@@ -71,15 +61,23 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		}
 		).FirstOrDefaultAsync();
 
-		return result!;
+		if (result == null)
+			return Result<AppointmentWithDetailsDTO>.Failure(Responses.AppointmentNotFound);
+
+		return Result<AppointmentWithDetailsDTO>.Success(result);
 	}
 
-	public async Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime)
+	public async Task<Result<List<Appointment>>> GetAppointmentsToCompleteAsync(DateTime currentTime)
 	{
 		var res = await _context.Appointments
-		.Where(a => a.Duration.End <= currentTime && a.Status == AppointmentStatus.Scheduled)
+		.Where(a => a.ScheduledEndTime <= currentTime && a.Status == AppointmentStatus.Scheduled)
 		.ToListAsync();
 
-		return res;
+		return Result<List<Appointment>>.Success(res);
+	}
+
+	public async Task SaveChangesAsync()
+	{
+		await _context.SaveChangesAsync();
 	}
 }

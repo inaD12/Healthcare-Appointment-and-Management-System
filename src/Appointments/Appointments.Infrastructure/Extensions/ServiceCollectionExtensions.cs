@@ -1,7 +1,6 @@
-﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.Enums;
 using Appointments.Infrastructure.Features.Appointments.Repositories;
-using Appointments.Infrastructure.Features.BackgroundJobs;
 using Appointments.Infrastructure.Features.DBContexts;
 using Appointments.Infrastructure.Features.Helpers;
 using Appointments.Infrastructure.Features.UsersData.Repositories;
@@ -23,8 +22,6 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
-			.AddUnitOfWork<AppointmentsDBContext>()
-			.AddHostedService<HangfireHostedService>()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<Roles>("roles");

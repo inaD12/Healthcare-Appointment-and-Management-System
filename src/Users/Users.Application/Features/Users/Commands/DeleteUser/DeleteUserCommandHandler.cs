@@ -1,30 +1,27 @@
-﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Responses;
+using Users.Application.Features.Managers.Interfaces;
 
 namespace Users.Application.Features.Users.Commands.DeleteUser;
 
 public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
 {
-	private readonly IUserRepository _userRepository;
-	private readonly IUnitOfWork _unitOfWork;
+	private readonly IRepositoryManager _repositotyManager;
 
-	public DeleteUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
+	public DeleteUserCommandHandler(IRepositoryManager repositotyManager)
 	{
-		_unitOfWork = unitOfWork;
-		_userRepository = userRepository;
+		_repositotyManager = repositotyManager;
 	}
 
 	public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.GetByIdAsync(request.Id);
-		if (user == null)
-			return Result.Failure(ResponseList.UserNotFound);
+		var res = await _repositotyManager.User.GetByIdAsync(request.Id);
 
-		_userRepository.Delete(user);
-		await _unitOfWork.SaveChangesAsync();
-		return Result.Success();
+		if (res.IsFailure)
+			return Result.Failure(res.Response);
+
+		var result = await _repositotyManager.User.DeleteByIdAsync(request.Id);
+
+		return result;
 	}
 }

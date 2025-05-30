@@ -21,13 +21,14 @@ public class CreateAppointmentCommandValidator : AbstractValidator<CreateAppoint
 
 		RuleFor(x => x.ScheduledStartTime)
 				.GreaterThan(DateTime.Now)
-				.Must((command, startTime) =>
+				.Must((dto, startTime) =>
 				{
-					var endTime = startTime.AddMinutes((int)command.Duration);
+					var endTime = startTime.AddMinutes((int)dto.Duration);
 					return startTime < endTime;
 				}).WithMessage("Scheduled start time must be before the calculated end time.");
 
 		RuleFor(x => x.Duration)
+				.NotEmpty()
 				.IsInEnum();
 	}
 }

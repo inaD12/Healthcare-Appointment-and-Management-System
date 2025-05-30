@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Shared.Domain.Enums;
 

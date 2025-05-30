@@ -7,12 +7,7 @@ public class RescheduleAppointmentCommandValidator : AbstractValidator<Reschedul
 {
 	public RescheduleAppointmentCommandValidator()
 	{
-		RuleFor(x => x.AppointmentId)
-			.NotEmpty()
-			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
-			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
-
-		RuleFor(x => x.UserId)
+		RuleFor(x => x.AppointmentID)
 			.NotEmpty()
 			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
 			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);

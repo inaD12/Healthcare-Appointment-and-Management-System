@@ -3,6 +3,5 @@
 namespace Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 
 public sealed record CancelAppointmentCommand(
-	string AppointmentId,
-	string UserId) : ICommand;
+	string AppointmentId) : ICommand;
 

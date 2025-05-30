@@ -31,8 +31,4 @@
     <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Helpers\Abstractions\" />
-  </ItemGroup>
-
 </Project>

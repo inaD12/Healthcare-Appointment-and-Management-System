@@ -34,11 +34,6 @@ public class SharedTestUtilities
 		return result;
 	}
 
-	public static long GetLong(int lenght)
-	{
-		return GetAverageLong(lenght, lenght);
-	}
-
 	public static long GetAverageLong(int minLength, int maxLength)
 	{
 		if (minLength < 1)
@@ -68,28 +63,28 @@ public class SharedTestUtilities
 
 	public static DateTime GetDate()
 	{
-		var result = DateTime.Now.ToUniversalTime();
+		var result = _faker.Date.Soon();
 
 		return result;
 	}
 
 	public static DateTime GetDatePast()
 	{
-		var result = _faker.Date.Past().ToUniversalTime();
+		var result = _faker.Date.Past();
 
 		return result;
 	}
 
 	public static DateTime GetDateSoon()
 	{
-		var result = _faker.Date.Soon().ToUniversalTime();
+		var result = _faker.Date.Soon();
 
 		return result;
 	}
 
 	public static DateTime GetDateFuture()
 	{
-		var result = _faker.Date.Future().ToUniversalTime();
+		var result = _faker.Date.Future();
 
 		return result;
 	}

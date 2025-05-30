@@ -1,7 +1,9 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Domain.Abstractions.Repository;
+using Appointments.Domain.Entities;
+using Appointments.Domain.Responses;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
+using Shared.Domain.Results;
 using Shared.Infrastructure.Repositories;
 
 namespace Appointments.Infrastructure.Features.UsersData.Repositories;
@@ -14,11 +16,14 @@ internal class UserDataRepository : GenericRepository<UserData>, IUserDataReposi
 		_dbContext = context;
 	}
 
-	public async Task<UserData?> GetUserDataByEmailAsync(string email)
+	public async Task<Result<UserData>> GetUserDataByEmailAsync(string email)
 	{
 		var user = await _dbContext.UserData
 			.FirstOrDefaultAsync(u => u.Email == email);
 
-		return user!;
+		if (user == null)
+			return Result<UserData>.Failure(Responses.UserDataNotFound);
+
+		return Result<UserData>.Success(user);
 	}
 }

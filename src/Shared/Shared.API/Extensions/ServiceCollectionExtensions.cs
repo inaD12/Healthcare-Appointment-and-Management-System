@@ -5,10 +5,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Shared.API.Abstractions;
-using Shared.API.Helpers;
 using Shared.API.Options;
 using Shared.API.Utilities;
+using Shared.Application.Helpers;
+using Shared.Application.Helpers.Abstractions;
 using Shared.Domain.Options;
 using System.Text;
 
@@ -36,18 +36,16 @@ public static class ServiceCollectionExtensions
 
 				opts.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = true,
-					ValidIssuer = tokenOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = tokenOptions.Audience,
-					ValidateLifetime = true,
+					ValidateIssuer = false,
+					ValidateAudience = false,
 					IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
 				};
 			});
 
 		services
 			.AddAuthorization()
-			.AddScoped<IClaimsExtractor, ClaimsExtractor>();
+			.AddTransient<IJwtParser, JwtParser>();
+
 
 		return services;
 	}

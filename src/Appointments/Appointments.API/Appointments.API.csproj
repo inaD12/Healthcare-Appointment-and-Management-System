@@ -28,7 +28,6 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\..\Shared\Shared.API\Shared.API.csproj" />
-	  <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
 	  <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	  <ProjectReference Include="..\Appointments.Application\Appointments.Application.csproj" />
 	  <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />

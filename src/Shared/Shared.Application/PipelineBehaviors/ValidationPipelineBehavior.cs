@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Shared.Domain.Exceptions;
 
 namespace Shared.Application.PipelineBehaviors;
 
@@ -25,14 +24,16 @@ public sealed class ValidationPipelineBehavior<TRequest, TResponse>
 		var validationResults = await Task.WhenAll(
 			_validators.Select(v => v.ValidateAsync(validationContext)));
 
-		var firstFailure = validationResults
-		.Where(vr => !vr.IsValid)
-		.SelectMany(vr => vr.Errors)
-		.FirstOrDefault();
+		var validationFailures = validationResults
+			.Where(vr => !vr.IsValid)
+			.SelectMany(vr => vr.Errors)
+			.Select(vr => vr.ErrorMessage);
 
-		if (firstFailure != null)
+		if (validationFailures.Any())
 		{
-			throw new HAMSValidationException(firstFailure.PropertyName, firstFailure.ErrorMessage);
+			var errorMessage = string.Join(",\n", validationFailures);
+
+			throw new ValidationException(errorMessage);
 		}
 
 		return await next();

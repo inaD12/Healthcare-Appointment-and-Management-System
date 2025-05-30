@@ -11,10 +11,5 @@ public class CancelAppointmentCommandValidator : AbstractValidator<CancelAppoint
 			.NotEmpty()
 			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
 			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
-
-		RuleFor(x => x.UserId)
-			.NotEmpty()
-			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
-			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
 	}
 }

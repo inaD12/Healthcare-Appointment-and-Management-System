@@ -11,9 +11,8 @@ public class UserData : BaseEntity
 		Email = email;
 		Role = role;
 	}
-	private UserData() { }
 
-	public string UserId { get; private set; }
-	public string Email { get; private set; }
-	public Roles Role { get; private set; }
+	public string UserId { get; set; }
+	public string Email { get; set; }
+	public Roles Role { get; set; }
 }

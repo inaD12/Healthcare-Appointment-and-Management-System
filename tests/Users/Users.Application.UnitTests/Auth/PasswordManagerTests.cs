@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
+using Users.Application.Features.Auth;
 using Users.Domain.Utilities;
-using Users.Infrastructure.Features.Auth;
 using Xunit;
 
 namespace Users.Application.UnitTests.Auth;

@@ -1,63 +1,43 @@
-﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
-using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.ValueObjects;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Application.Features.Appointments.Helpers.Abstractions;
+using Appointments.Application.Features.Appointments.Models;
+using Appointments.Application.Features.Jobs.Managers.Interfaces;
 using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
-using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
-using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Features.Appointments.Commands.CreateAppointment;
+namespace Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 
-public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand, AppointmentCommandViewModel>
+public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand>
 {
-	private readonly IUserDataRepository _userDataRepository;
-	private readonly IAppointmentRepository _appointmentRepository;
+	private readonly IRepositoryManager _repositoryManager;
+	private readonly IAppointmentService _appointmentService;
 	private readonly IHAMSMapper _mapper;
-	private readonly IUnitOfWork _unitOfWork;
-	public CreateAppointmentCommandHandler(IHAMSMapper mapper, IUnitOfWork unitOfWork, IUserDataRepository userDataRepository, IAppointmentRepository appointmentRepository)
+	public CreateAppointmentCommandHandler(IRepositoryManager repositoryManager, IAppointmentService appointmentServuce, IHAMSMapper mapper)
 	{
+		_repositoryManager = repositoryManager;
+		_appointmentService = appointmentServuce;
 		_mapper = mapper;
-		_unitOfWork = unitOfWork;
-		_userDataRepository = userDataRepository;
-		_appointmentRepository = appointmentRepository;
 	}
-	public async Task<Result<AppointmentCommandViewModel>> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
+	public async Task<Result> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var doctorData = await _userDataRepository.GetUserDataByEmailAsync(request.DoctorEmail);
+		var doctorDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.DoctorEmail);
 
-		if (doctorData == null)
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.DoctorNotFound);
-		if (doctorData.Role != Roles.Doctor)
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.UserIsNotADoctor);
+		if (doctorDataRes.IsFailure)
+			return Result.Failure(Responses.DoctorNotFound);
+		if (doctorDataRes.Value!.Role != Roles.Doctor)
+			return Result.Failure(Responses.UserIsNotADoctor);
 
-		var patientData = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
+		var patientDataRes = await _repositoryManager.UserData.GetUserDataByEmailAsync(request.PatientEmail);
 
-		if (patientData == null)
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.PatientNotFound);
+		if (patientDataRes.IsFailure)
+			return Result.Failure(Responses.PatientNotFound);
 
-		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
+		var doctorPatientIdModel = new DoctorPatientIdModel(doctorDataRes.Value.UserId, patientDataRes.Value!.UserId);
+		var createAppointmentModel = _mapper.Map<CreateAppointmentModel>((doctorPatientIdModel, request));
+		var helperResult = await _appointmentService.CreateAppointment(createAppointmentModel);
 
-		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.UserId, duration, cancellationToken))
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
-
-		try
-		{
-			var appointment = Appointment.Schedule(patientData.UserId, doctorData.UserId, duration);
-
-			await _appointmentRepository.AddAsync(appointment);
-			await _unitOfWork.SaveChangesAsync();
-
-			var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
-			return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
-		}
-		catch (ConcurrencyException)
-		{
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
-		}
+		return helperResult;
 	}
 }
