@@ -2,29 +2,26 @@
 using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
-using Shared.Domain.Events;
-using Shared.Domain.Results;
-using Shared.Infrastructure.MessageBroker;
-using Users.Application.Features.Auth.Abstractions;
-using Users.Application.Features.Auth.Models;
-using Users.Application.Features.Email.Helpers.Abstractions;
-using Users.Application.Features.Managers.Interfaces;
+using Shared.Domain.Models;
+using Shared.Domain.Utilities;
+using Shared.Infrastructure.Clock;
 using Users.Application.Features.Users.Mappings;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
-using Users.Domain.Responses;
+using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Models;
 using Users.Domain.Utilities;
 
 public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 {
-	protected IRepositoryManager RepositoryManager { get; }
-	protected IFactoryManager FactoryManager { get; }
+	protected IUserRepository UserRepository { get; }
 	protected IPasswordManager PasswordManager { get; }
-	protected ITokenFactory TokenManager { get; }
-	protected IEventBus EventBus { get; }
-	protected IEmailConfirmationTokenPublisher EmailConfirmationTokenPublisher { get; }
-
-	protected readonly List<User> Doctors;
+	protected ITokenFactory TokenFactory { get; }
+	protected IEmailVerificationTokenRepository EmailVerificationTokenRepository { get; }
+	protected IDateTimeProvider DateTimeProvider { get; }
 
 	public BaseUsersUnitTest() : base(
 		new HAMSMapper(
@@ -32,138 +29,15 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				new MapperConfiguration(cfg =>
 				{
 					cfg.AddProfile<UserCommandProfile>();
-				}))))
+					cfg.AddProfile<UserQueryProfile>();
+				}))),
+		Substitute.For<IUnitOfWork>())
 	{
-		RepositoryManager = Substitute.For<IRepositoryManager>();
-		FactoryManager = Substitute.For<IFactoryManager>();
+		UserRepository = Substitute.For<IUserRepository>();
 		PasswordManager = Substitute.For<IPasswordManager>();
-		TokenManager = Substitute.For<ITokenFactory>();
-		EventBus = Substitute.For<IEventBus>();
-		EmailConfirmationTokenPublisher = Substitute.For<IEmailConfirmationTokenPublisher>();
-
-		var user = new User(
-			UsersTestUtilities.ValidEmail,
-			UsersTestUtilities.ValidPasswordHash,
-			UsersTestUtilities.ValidSalt,
-			Roles.Patient,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
-
-		var doctor = new User(
-			UsersTestUtilities.ValidEmail,
-			UsersTestUtilities.ValidPasswordHash,
-			UsersTestUtilities.ValidSalt,
-			Roles.Doctor,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
-
-
-		var takenUser = new User(
-			UsersTestUtilities.TakenEmail,
-			UsersTestUtilities.ValidPasswordHash,
-			UsersTestUtilities.ValidSalt,
-			Roles.Patient,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-			)
-		{
-			Id = UsersTestUtilities.TakenId
-		};
-
-		var emailErrorUser = new User(
-			UsersTestUtilities.EmailSendingErrorEmail,
-			UsersTestUtilities.ValidPasswordHash,
-			UsersTestUtilities.ValidSalt,
-			Roles.Patient,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			false
-					)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
-
-
-		var emailVerificationToken = new EmailVerificationToken(
-			UsersTestUtilities.TakenId,
-			UsersTestUtilities.CurrentDate,
-			UsersTestUtilities.SoonDate,
-			takenUser
-			)
-		{
-			Id = UsersTestUtilities.ValidId
-		};
-
-		Doctors = new List<User> { doctor };
-
-		//FactoryManager.UserFactory.CreateUser(
-		//	Arg.Any<string>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<DateTime>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<string>(),
-		//	Arg.Any<Roles>()
-		//	).Returns(callInfo =>
-		//	{
-		//		var email = callInfo.ArgAt<string>(0);
-
-		//		if (email == UsersTestUtilities.EmailSendingErrorEmail)
-		//			return emailErrorUser;
-		//		return user;
-		//	});
-
-		RepositoryManager.User.GetByEmailAsync(
-			Arg.Any<string>())
-				.Returns(callInfo =>
-				{
-					var email = callInfo.ArgAt<string>(0);
-
-					if (email == UsersTestUtilities.TakenEmail)
-						return Result<User>.Success(takenUser);
-					return Result<User>.Failure(Responses.UserNotFound);
-
-				});
-
-		RepositoryManager.User.GetByIdAsync(
-			Arg.Any<string>())
-				.Returns(callInfo =>
-				{
-					var id = callInfo.ArgAt<string>(0);
-
-					if (id == UsersTestUtilities.ValidId)
-						return Result<User>.Success(user);
-					return Result<User>.Failure(Responses.UserNotFound);
-				});
-
-		RepositoryManager.User.DeleteByIdAsync(
-			Arg.Any<string>())
-				.Returns(Result.Success());
+		TokenFactory = Substitute.For<ITokenFactory>();
+		EmailVerificationTokenRepository = Substitute.For<IEmailVerificationTokenRepository>();
+		DateTimeProvider = Substitute.For<IDateTimeProvider>();
 
 		PasswordManager.HashPassword(UsersTestUtilities.ValidPassword)
 				.Returns(new PasswordHashResult(UsersTestUtilities.ValidPasswordHash, UsersTestUtilities.ValidSalt));
@@ -178,41 +52,77 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 				return password == UsersTestUtilities.ValidPassword;
 			});
 
-		EventBus.PublishAsync(Arg.Any<string>, CancellationToken.None)
-			.Returns(Task.CompletedTask);
-
-		TokenManager.CreateToken(Arg.Any<string>())
-			.Returns(new TokenResult(UsersTestUtilities.ValidId));
-
-		FactoryManager.EmailTokenFactory.CreateToken(
-			UsersTestUtilities.TakenId,
-			Arg.Any<DateTime>(),
-			Arg.Any<DateTime>()
-			)
-		  .Returns(emailVerificationToken);
-
-		FactoryManager.EmailLinkFactory.Create(emailVerificationToken)
-			.Returns(UsersTestUtilities.Link);
-
-		string recipientEmail = "";
-		//FluentEmail.To(Arg.Do<string>(email => recipientEmail = email)).Returns(FluentEmail);
-		//FluentEmail.Subject(Arg.Any<string>()).Returns(FluentEmail);
-		//FluentEmail.Body(Arg.Any<string>(), true).Returns(FluentEmail);
-		//FluentEmail.SendAsync()
-		//	  .Returns(callInfo =>
-		//	  {
-		//		  if (recipientEmail == UsersTestUtilities.EmailSendingErrorEmail)
-		//			  return Task.FromResult(new SendResponse { ErrorMessages = new List<string> { "Email sending failed" } });
-
-		//		  return Task.FromResult(new SendResponse());
-		//	  });
-
-		RepositoryManager.User.GetAllDoctorsAsync()
-		   .Returns(Result<IEnumerable<User>>.Success(Doctors));
+		DateTimeProvider.UtcNow.Returns(UsersTestUtilities.CurrentDate);
+	}
+	public User GetUser()
+	{
+		return GetUser(out _);
 	}
 
-	protected void SetupDoctorsResult(Result<IEnumerable<User>> result)
+	public User GetUser(out string password)
 	{
-		RepositoryManager.User.GetAllDoctorsAsync().Returns(result);
+		var user = User.Create(
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH, UsersBusinessConfiguration.EMAIL_MIN_LENGTH),
+			UsersTestUtilities.ValidPasswordHash,
+			UsersTestUtilities.ValidSalt,
+			Roles.Patient,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH),
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH, UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH),
+			UsersTestUtilities.PastDate,
+			UsersTestUtilities.ValidPhoneNumber,
+			UsersTestUtilities.ValidAdress
+			);
+		password = UsersTestUtilities.ValidPassword;
+
+		var usersList = new List<User> { user };
+
+		var pagedList = new PagedList<User>(
+			usersList,
+			UsersTestUtilities.ValidPageValue,
+			UsersTestUtilities.ValidPageSizeValue,
+			usersList.Count);
+
+		UserRepository.GetByEmailAsync(user.Email)
+		.Returns(user);
+
+		UserRepository.GetByIdAsync(user.Id)
+		.Returns(user);
+
+		UserRepository.GetAllAsync(Arg.Is<UserPagedListQuery>(q =>
+																				q.Email == user.Email &&
+																				q.FirstName == user.FirstName &&
+																				q.LastName == user.LastName),
+																				CancellationToken)
+			.Returns(pagedList);
+
+		PasswordManager.HashPassword(password)
+			.Returns(new PasswordHashResult(user.PasswordHash, user.Salt));
+
+		PasswordManager.VerifyPassword(password, user.PasswordHash, user.Salt)
+			.Returns(true);
+
+		TokenFactory.CreateToken(user.Id, user.Role)
+			.Returns(new TokenResult(UsersTestUtilities.Token));
+
+		return user;
+	}
+
+	public EmailVerificationToken GetToken(bool emailVerified = false)
+	{
+		var user = GetUser(out _);
+		if (emailVerified)
+			user.VerifyEmail();
+
+		var emailVerificationToken = EmailVerificationToken.Create(
+			user.Id,
+			UsersTestUtilities.CurrentDate,
+			UsersTestUtilities.SoonDate,
+			user
+			);
+
+		EmailVerificationTokenRepository.GetByIdAsync(emailVerificationToken.Id)
+			.Returns(emailVerificationToken);
+
+		return emailVerificationToken;
 	}
 }

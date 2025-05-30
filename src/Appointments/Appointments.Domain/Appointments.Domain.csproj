@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOS\Response\**" />
-    <EmbeddedResource Remove="DTOS\Response\**" />
-    <None Remove="DTOS\Response\**" />
+    <Compile Remove="Infrastructure\Models\Response\**" />
+    <EmbeddedResource Remove="Infrastructure\Models\Response\**" />
+    <None Remove="Infrastructure\Models\Response\**" />
   </ItemGroup>
 
   <ItemGroup>

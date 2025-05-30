@@ -33,12 +33,17 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 			.LessThan(DateTime.Now);
 
 		RuleFor(x => x.PhoneNumber)
-			.Matches(@"^\+?\d{5,18}$")
+			.NotEmpty()
+			.Matches(@"^\+?[0-9\s\-().]*$")
 			.MinimumLength(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH)
 			.MaximumLength(UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH);
 
 		RuleFor(x => x.Address)
+			.NotEmpty()
 			.MinimumLength(UsersBusinessConfiguration.ADRESS_MIN_LENGTH)
 			.MaximumLength(UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
+
+		RuleFor(x => x.Role)
+				.IsInEnum();
 	}
 }

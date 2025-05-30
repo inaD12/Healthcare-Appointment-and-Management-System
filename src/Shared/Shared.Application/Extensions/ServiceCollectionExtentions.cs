@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Abstractions;
 using Shared.Application.Helpers;
 using Shared.Application.PipelineBehaviors;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Options;
 using Shared.Infrastructure.MessageBroker;
 using System.Reflection;

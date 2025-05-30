@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
-using Users.Application.Features.Auth.Models;
 using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.LoginUser;
 
-public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand<TokenResult>>
+public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
 {
 	public LoginUserCommandValidator()
 	{

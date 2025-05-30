@@ -15,7 +15,8 @@ public static class ServiceCollectionExtensions
 			.ConfigureCors(configuration)
 			.AddMediatR(currentAssembly)
 			.AddEndpointsApiExplorer()
-			.AddHttpContextAccessor();
+			.AddHttpContextAccessor()
+			.AddMapper(currentAssembly);
 
 		return serviceCollection;
 	}
