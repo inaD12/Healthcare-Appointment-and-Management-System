@@ -23,7 +23,7 @@ RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR "/src/Gateway/Gateway.API"
-RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
+RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

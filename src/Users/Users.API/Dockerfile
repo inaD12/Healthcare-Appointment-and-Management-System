@@ -26,7 +26,7 @@ RUN dotnet build "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-r
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR "/src/Users/Users.API"
-RUN dotnet publish "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
+RUN dotnet publish "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
