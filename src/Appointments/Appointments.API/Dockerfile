@@ -6,14 +6,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Appointments/Appointments.API/", "Appointments.API/"]
-COPY ["src/Appointments/Appointments.Application/", "Appointments.Application/"]
-COPY ["src/Appointments/Appointments.Domain/", "Appointments.Domain/"]
-COPY ["src/Appointments/Appointments.Infrastructure/", "Appointments.Infrastructure/"]
-COPY ["src/Shared/Shared.API/", "Shared.API/"]
-COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
-COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
-COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+COPY ["src/Appointments/Appointments.API/", "Appointments/Appointments.API/"]
+COPY ["src/Appointments/Appointments.Application/", "Appointments/Appointments.Application/"]
+COPY ["src/Appointments/Appointments.Domain/", "Appointments/Appointments.Domain/"]
+COPY ["src/Appointments/Appointments.Infrastructure/", "Appointments/Appointments.Infrastructure/"]
+COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
 WORKDIR "/src/Appointments.API"
 

@@ -7,14 +7,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Emails/Emails.API/", "Emails.API/"]
-COPY ["src/Emails/Emails.Application/", "Emails.Application/"]
-COPY ["src/Emails/Emails.Domain/", "Emails.Domain/"]
-COPY ["src/Emails/Emails.Infrastructure/", "Emails.Infrastructure/"]
-COPY ["src/Shared/Shared.API/", "Shared.API/"]
-COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
-COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
-COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+COPY ["src/Emails/Emails.API/", "Emails/Emails.API/"]
+COPY ["src/Emails/Emails.Application/", "Emails/Emails.Application/"]
+COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
 WORKDIR "/src/Emails.API"
 

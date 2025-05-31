@@ -7,11 +7,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Gateway/Gateway.API/", "Gateway.API/"]
-COPY ["src/Shared/Shared.API/", "Shared.API/"]
-COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
-COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
-COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+COPY ["src/Gateway/Gateway.API/", "Gateway/Gateway.API/"]
+COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
 WORKDIR "/src/Gateway.API"
 

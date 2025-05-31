@@ -7,14 +7,14 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["src/Users/Users.API/", "Users.API/"]
-COPY ["src/Users/Users.Application/", "Users.Application/"]
-COPY ["src/Users/Users.Domain/", "Users.Domain/"]
-COPY ["src/Users/Users.Infrastructure/", "Users.Infrastructure/"]
-COPY ["src/Shared/Shared.API/", "Shared.API/"]
-COPY ["src/Shared/Shared.Application/", "Shared.Application/"]
-COPY ["src/Shared/Shared.Domain/", "Shared.Domain/"]
-COPY ["src/Shared/Shared.Infrastructure/", "Shared.Infrastructure/"]
+COPY ["src/Users/Users.API/", "Users/Users.API/"]
+COPY ["src/Users/Users.Application/", "Users/Users.Application/"]
+COPY ["src/Users/Users.Domain/", "Users/Users.Domain/"]
+COPY ["src/Users/Users.Infrastructure/", "Users/Users.Infrastructure/"]
+COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
+COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
+COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
+COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
 WORKDIR "/src/Users.API"
 
