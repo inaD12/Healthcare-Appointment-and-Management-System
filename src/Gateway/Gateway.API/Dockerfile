@@ -12,6 +12,7 @@ COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
 COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
 COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
 COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
+COPY ["src/Shared/Shared/", "Shared/Shared/"]
 
 WORKDIR "/src/Gateway/Gateway.API"
 
