@@ -14,7 +14,7 @@ COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
 COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
 COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
-WORKDIR "/src/Emails.API"
+WORKDIR "/src/Emails/Emails.API"
 
 RUN dotnet restore "Emails.API.csproj"
 
@@ -22,7 +22,7 @@ RUN dotnet build "Emails.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-WORKDIR "/src/Emails.API"
+WORKDIR "/src/Emails/Emails.API"
 RUN dotnet publish "Emails.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
 
 FROM base AS final

@@ -16,7 +16,7 @@ COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
 COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
 COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
-WORKDIR "/src/Users.API"
+WORKDIR "/src/Users/Users.API"
 
 RUN dotnet restore "Users.API.csproj"
 
@@ -24,7 +24,7 @@ RUN dotnet build "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-r
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-WORKDIR "/src/Users.API"
+WORKDIR "/src/Users/Users.API"
 RUN dotnet publish "Users.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
 
 FROM base AS final

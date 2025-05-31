@@ -13,7 +13,7 @@ COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
 COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
 COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 
-WORKDIR "/src/Gateway.API"
+WORKDIR "/src/Gateway/Gateway.API"
 
 RUN dotnet restore "Gateway.API.csproj"
 
@@ -21,7 +21,7 @@ RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-WORKDIR "/src/Gateway.API"
+WORKDIR "/src/Gateway/Gateway.API"
 RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false --no-build
 
 FROM base AS final
