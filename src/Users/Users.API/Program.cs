@@ -39,8 +39,6 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 EndpointMapper.MapAllEndpoints(app);
 
-//app.UseHttpsRedirection();
-
 app.Run();
 
 public partial class Program { }

@@ -7,10 +7,12 @@ services:
       context: .
       dockerfile: src/Appointments/Appointments.API/Dockerfile
     depends_on:
-        - "appointments.database"
+      appointments.database:
+        condition: service_started
+      rabbit.mq:
+        condition: service_healthy
     ports:
       - "5200:5200"
-      - "5201:5201"
     networks:
       - my_network
 
@@ -21,7 +23,6 @@ services:
       dockerfile: src/Gateway/Gateway.API/Dockerfile
     ports:
       - "5000:5000"
-      - "5001:5001"
     networks:
       - my_network
 
@@ -32,7 +33,6 @@ services:
       dockerfile: src/Users/Users.API/Dockerfile
     ports:
       - "5100:5100"
-      - "5101:5101"
     depends_on:
         - "users.database"
     networks:
@@ -45,7 +45,6 @@ services:
       dockerfile: src/Emails/Emails.API/Dockerfile
     ports:
       - "5300:5300"
-      - "5301:5301"
     networks:
       - my_network
 
@@ -80,18 +79,24 @@ services:
       - my_network
 
   rabbit.mq:
-   image: rabbitmq:3.11.7-management
-   container_name: Queue
-   hostname: rabbit-queue
-   volumes:
-   - ./.containers/queue/data/:/var/lib/rabbitmq
-   - ./.containers/queue/log/:/var/log/rabbitmq
-   environment:
+    image: rabbitmq:3.11.7-management
+    container_name: Queue
+    hostname: rabbit-queue
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+    environment:
       RABBITMQ_DEFAULT_USER: GUEST
       RABBITMQ_DEFAULT_PASS: GUEST
-   networks:
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
       - my_network
 
+      
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -104,6 +109,9 @@ services:
     networks:
       - my_network
 
+volumes:
+ rabbitmq_data:
+ rabbitmq_logs:
 
 networks:
   my_network:

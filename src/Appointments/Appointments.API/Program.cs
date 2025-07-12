@@ -42,8 +42,6 @@ app.UseHangfireDashboard();
 
 EndpointMapper.MapAllEndpoints(app);
 
-//app.UseHttpsRedirection();
-
 app.Run();
 
 public partial class Program { }
