@@ -19,34 +19,17 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services
-			.AddOptions<AuthOptions>()
-			.BindConfiguration(nameof(AuthOptions))
+			.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+			.BindConfiguration(nameof(JwtBearerOptions))
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 
-		var tokenOptions = configuration
-			.GetSection(nameof(AuthOptions))
-			.Get<AuthOptions>()!;
-
 		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer(opts =>
-			{
-				byte[] signingKeyBytes = Encoding.UTF8
-					.GetBytes(tokenOptions.SecretKey);
-
-				opts.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuer = true,
-					ValidIssuer = tokenOptions.Issuer,
-					ValidateAudience = true,
-					ValidAudience = tokenOptions.Audience,
-					ValidateLifetime = true,
-					IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
-				};
-			});
+			.AddJwtBearer();
 
 		services
 			.AddAuthorization()
+			.AddHttpContextAccessor()
 			.AddScoped<IClaimsExtractor, ClaimsExtractor>();
 
 		return services;
