@@ -30,8 +30,11 @@ public class TokenFactory : ITokenFactory
 		var expiration = _dateTimeProvider.GetUtcNow(_jwtOptions.SecondsValid);
 
 		var claimsIdentity = new ClaimsIdentity(
-			[new(AppClaims.Id, id),
-			 new(AppClaims.Role, role.ToString())]);
+		[
+			new Claim(AppClaims.Id, id),
+			new Claim(AppClaims.Role, role.ToString())
+		]);
+
 
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{

@@ -1,29 +1,19 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 5000
-EXPOSE 5001
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-
-COPY ["src/Gateway/Gateway.API/", "Gateway/Gateway.API/"]
-COPY ["src/Shared/Shared.API/", "Shared/Shared.API/"]
-COPY ["src/Shared/Shared.Application/", "Shared/Shared.Application/"]
-COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
-COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
-COPY ["src/Shared/Shared/", "Shared/Shared/"]
-
-WORKDIR "/src/Gateway/Gateway.API"
-
-RUN dotnet restore "Gateway.API.csproj"
-
-RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
+COPY ["src/Gateway/Gateway.API/Gateway.API.csproj", "Gateway/Gateway.API/"]
+RUN dotnet restore "./Gateway/Gateway.API/Gateway.API.csproj"
+COPY . .
+WORKDIR "/src/src/Gateway/Gateway.API"
+RUN dotnet build "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-WORKDIR "/src/Gateway/Gateway.API"
-RUN dotnet publish "Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Gateway.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
