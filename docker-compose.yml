@@ -96,7 +96,22 @@ services:
     networks:
       - my_network
 
-      
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: Identity
+    command: start-dev
+    environment:
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files:/opt/keycloak/data/import
+    ports:
+      - "18080:8080"
+    networks:
+      - my_network
+  
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
