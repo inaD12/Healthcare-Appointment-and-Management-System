@@ -9,8 +9,6 @@ namespace Users.Domain.Entities;
 public sealed class User : BaseEntity
 {
 	public string Email { get; private set; }
-	public string PasswordHash { get; private set; }
-	public string Salt { get; private set; }
 	public Roles Role { get; private set; }
 	public string FirstName { get; private set; }
 	public string LastName { get; private set; }
@@ -18,6 +16,7 @@ public sealed class User : BaseEntity
 	public string? PhoneNumber { get; private set; }
 	public string? Address { get; private set; }
 	public bool EmailVerified { get; private set; }
+	public string IdentityId { get; private set; }
 
 	private User()
 	{
@@ -25,19 +24,16 @@ public sealed class User : BaseEntity
 
 	private User(
 		string email,
-		string passwordHash,
-		string salt,
 		Roles role,
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
 		bool emailVerified,
+		string identityId,
 		string? phoneNumber,
 		string? address)
 	{
 		Email = email;
-		PasswordHash = passwordHash;
-		Salt = salt;
 		Role = role;
 		FirstName = firstName;
 		LastName = lastName;
@@ -45,28 +41,27 @@ public sealed class User : BaseEntity
 		PhoneNumber = phoneNumber;
 		Address = address;
 		EmailVerified = emailVerified;
+		IdentityId = identityId;
 	}
 
 	public static User Create(
 		string email,
-		string passwordHash,
-		string salt,
 		Roles role,
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
+		string identityId,
 		string? phoneNumber,
 		string? address)
 	{
 		var user = new User(
 			email,
-			passwordHash,
-			salt,
 			role,
 			firstName,
 			lastName,
 			dateOfBirth,
 			false,
+			identityId,
 			phoneNumber,
 			address);
 

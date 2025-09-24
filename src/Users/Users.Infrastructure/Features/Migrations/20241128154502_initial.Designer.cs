@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Shared.Domain.Enums;
-using Users.Infrastructure.DBContexts;
+using Users.Infrastructure.Features.DBContexts;
 
 #nullable disable
 
 namespace Users.Infrastructure.Migrations;
 
-[DbContext(typeof(UsersDBContext))]
+[DbContext(typeof(UsersDbContext))]
     [Migration("20241128154502_initial")]
     partial class initial
     {
