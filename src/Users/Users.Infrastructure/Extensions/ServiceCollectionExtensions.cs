@@ -5,10 +5,10 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Auth.Abstractions;
+using Users.Domain.Infrastructure.Auth.Options;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Options;
 using Users.Infrastructure.Features.DBContexts;
 using Users.Infrastructure.Features.Identity;
 

@@ -1,4 +1,4 @@
-﻿namespace Users.Domain.Auth.Options;
+﻿namespace Users.Domain.Infrastructure.Auth.Options;
 
 public sealed class KeyCloakOptions
 {

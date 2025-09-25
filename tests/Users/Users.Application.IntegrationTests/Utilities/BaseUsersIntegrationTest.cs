@@ -6,10 +6,10 @@ using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
-using Users.Application.Features.Users.Identity;
-using Users.Domain.Auth.Abstractions;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
+using Users.Domain.Infrastructure.Auth.Abstractions;
+using Users.Domain.Infrastructure.Auth.Models;
 using Users.Domain.Utilities;
 using Users.Infrastructure.Features.DBContexts;
 

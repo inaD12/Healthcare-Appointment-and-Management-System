@@ -1,9 +1,8 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Logging;
 using Shared.Domain.Results;
-using Users.Application.Features.Users.Identity;
-using Users.Domain.Auth;
-using Users.Domain.Auth.Abstractions;
+using Users.Domain.Infrastructure.Auth.Abstractions;
+using Users.Domain.Infrastructure.Auth.Models;
 using Users.Domain.Responses;
 
 namespace Users.Infrastructure.Features.Identity;

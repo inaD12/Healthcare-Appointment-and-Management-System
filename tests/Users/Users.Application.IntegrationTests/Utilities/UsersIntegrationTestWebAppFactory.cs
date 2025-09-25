@@ -19,7 +19,6 @@ using Shared.Application.IntegrationTests.Extentensions;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Users.Application.Features.Users.Consumers;
-using Users.Domain.Auth.Options;
 using Users.Infrastructure.Features.DBContexts;
 using Users.Infrastructure.Features.Identity;
 

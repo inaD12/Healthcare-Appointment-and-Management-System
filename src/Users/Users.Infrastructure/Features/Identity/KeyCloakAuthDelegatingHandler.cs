@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
-using Users.Domain.Auth.Options;
+using Users.Domain.Infrastructure.Auth.Options;
 
 namespace Users.Infrastructure.Features.Identity;
 
