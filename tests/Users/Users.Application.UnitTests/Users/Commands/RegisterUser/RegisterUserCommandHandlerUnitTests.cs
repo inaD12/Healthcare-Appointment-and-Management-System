@@ -16,10 +16,10 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	public RegisterUserCommandHandlerTests()
 	{
 		_commandHandler = new RegisterUserCommandHandler(
-			PasswordManager,
 			HAMSMapper,
 			UnitOfWork,
-			UserRepository
+			UserRepository,
+			IdentityProviderService
 			);
 	}
 
@@ -31,8 +31,8 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 		var command = new RegisterUserCommand(
 			existingUser.Email,
 			UsersTestUtilities.ValidPassword,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
+			existingUser.FirstName,
+			existingUser.LastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
@@ -48,32 +48,9 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallHashPassword_WhenModelIsCorrect()
-	{
-		//Arramge
-		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
-			UsersTestUtilities.ValidPassword,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			Roles.Patient
-		);
-
-		// Act
-		var result = await _commandHandler.Handle(command, CancellationToken);
-
-		// Assert
-		result.IsSuccess.Should().BeTrue();
-		PasswordManager.Received(1).HashPassword(command.Password);
-	}
-
-	[Fact]
 	public async Task Handle_ShouldCallAddAsync_WhenModelIsCorrect()
 	{
-		//Arramge
+		//Arrange
 		var command = new RegisterUserCommand(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPassword,
@@ -103,7 +80,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	[Fact]
 	public async Task Handle_ShouldCallSaveChanges_WhenModelIsCorrect()
 	{
-		//Arramge
+		//Arrange
 		var command = new RegisterUserCommand(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPassword,

@@ -6,7 +6,7 @@ using Shared.Application.Extensions;
 using Shared.Infrastructure.Extensions;
 using Users.Application.Features.Email.Helpers;
 using Users.Application.Features.Email.Helpers.Abstractions;
-using Users.Infrastructure.DBContexts;
+using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Application.Extensions;
 
@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
 			.AddDateTimeProvider()
 			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
 			{
-				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
+				busConfigurator.AddTransactionalOutbox<UsersDbContext>();
 			});
 
 

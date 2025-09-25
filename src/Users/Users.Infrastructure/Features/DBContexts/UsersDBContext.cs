@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Users.Domain.Entities;
 
-namespace Users.Infrastructure.DBContexts;
+namespace Users.Infrastructure.Features.DBContexts;
 
-public class UsersDBContext : DbContext
+public class UsersDbContext : DbContext
 {
 	public DbSet<User> Users { get; set; }
 	public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
 
-	public UsersDBContext(DbContextOptions<UsersDBContext> options) : base(options) { }
+	public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) { }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -19,9 +19,12 @@ public class UsersDBContext : DbContext
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();
 
-		modelBuilder.Entity<User>()
-			.HasIndex(u => u.Email)
-			.IsUnique();
+		modelBuilder.Entity<User>(entity =>
+		{
+			entity.HasKey(e => e.Id);
+			entity.HasIndex(e => e.Email).IsUnique();
+			entity.HasIndex(e => e.IdentityId).IsUnique();
+		});
 
 		modelBuilder.Entity<EmailVerificationToken>(entity =>
 		{

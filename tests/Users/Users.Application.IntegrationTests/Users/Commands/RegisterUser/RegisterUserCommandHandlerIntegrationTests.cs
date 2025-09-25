@@ -74,7 +74,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			null!,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -100,7 +100,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			SharedTestUtilities.GetString(length),
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -124,7 +124,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			null!,
 			UsersTestUtilities.ValidLastName,
@@ -150,7 +150,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			SharedTestUtilities.GetString(length),
 			UsersTestUtilities.ValidLastName,
@@ -174,7 +174,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			null!,
@@ -200,7 +200,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			SharedTestUtilities.GetString(length),
@@ -224,7 +224,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -248,7 +248,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -274,7 +274,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -298,7 +298,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -322,7 +322,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -348,7 +348,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -372,7 +372,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 			UsersTestUtilities.ValidPassword,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
@@ -420,7 +420,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
@@ -444,8 +444,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 							p.PhoneNumber == command.PhoneNumber &&
 							p.DateOfBirth == command.DateOfBirth &&
 							p.Address == command.Address &&
-							p.Role == command.Role &&
-							PasswordManager.VerifyPassword(command.Password, p.PasswordHash, p.Salt));
+							p.Role == command.Role);
 	}
 
 	[Fact]
@@ -453,7 +452,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
@@ -478,7 +477,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
@@ -509,7 +508,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
@@ -539,7 +538,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
@@ -570,7 +569,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 	{
 		// Arrange
 		var command = new RegisterUserCommand(
-				UsersTestUtilities.ValidEmail,
+			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH-10, UsersBusinessConfiguration.EMAIL_MIN_LENGTH)+"@gmail.com",
 				UsersTestUtilities.ValidPassword,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,

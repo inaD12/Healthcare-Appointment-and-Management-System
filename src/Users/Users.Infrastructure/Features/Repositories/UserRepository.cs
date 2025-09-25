@@ -8,15 +8,15 @@ using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Infrastructure.Models;
 using Users.Domain.Responses;
-using Users.Infrastructure.DBContexts;
+using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Infrastructure.Features.Repositories;
 
 internal class UserRepository : GenericRepository<User>, IUserRepository
 {
-	private readonly UsersDBContext _context;
+	private readonly UsersDbContext _context;
 
-	public UserRepository(UsersDBContext context) : base(context)
+	public UserRepository(UsersDbContext context) : base(context)
 	{
 		_context = context;
 	}

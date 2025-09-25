@@ -211,9 +211,7 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -244,9 +242,7 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -277,9 +273,7 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -310,8 +304,6 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 }
