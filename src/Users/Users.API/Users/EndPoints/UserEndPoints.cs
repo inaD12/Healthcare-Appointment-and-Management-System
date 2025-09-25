@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
@@ -7,7 +6,6 @@ using Shared.Application.Abstractions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
-using Users.Application.Features.Users.LoginUser;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.Features.Users.Queries.GetById;
 using Users.Application.Features.Users.UpdateUser;
@@ -21,14 +19,6 @@ internal class UserEndPoints : IEndPoints
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
 		var group = app.MapGroup("api/users");
-
-		group.MapPost("login", Login)
-			.Produces<LoginUserResponse>(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.AllowAnonymous();
 
 		group.MapPost("register", Register)
 			.Produces<UserCommandResponse>(StatusCodes.Status201Created)
@@ -88,21 +78,6 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.WithName("VerifyEmail");
-	}
-
-	public async Task<IResult> Login(
-		[FromBody] LoginUserRequest request,
-		[FromServices] ISender sender,
-		[FromServices] IHAMSMapper mapper,
-		CancellationToken cancellationToken)
-	{
-		var command = mapper.Map<LoginUserCommand>(request);
-		var res = await sender.Send(command, cancellationToken);
-		if (res.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(res);
-
-		var loginUserResponse = mapper.Map<LoginUserResponse>(res.Value!);
-		return ControllerResponse.ParseAndReturnMessage(res, loginUserResponse);
 	}
 
 	public async Task<IResult> Register(

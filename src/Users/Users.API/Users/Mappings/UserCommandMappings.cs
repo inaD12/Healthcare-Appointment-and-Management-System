@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
-using Users.Application.Features.Users.LoginUser;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Users.Models.Requests;
@@ -13,8 +12,6 @@ public class UserCommandMappings : Profile
 {
 	public UserCommandMappings()
 	{
-		CreateMap<LoginUserRequest, LoginUserCommand>();
-
 		CreateMap<RegisterUserRequest, RegisterUserCommand>();
 
 		CreateMap<(UpdateCurrentUserRequest,string id), UpdateUserCommand>()
