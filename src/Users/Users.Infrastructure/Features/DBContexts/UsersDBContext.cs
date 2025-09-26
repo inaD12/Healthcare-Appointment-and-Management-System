@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Users.Domain.Entities;
+using Users.Infrastructure.Features.Configurations;
 
 namespace Users.Infrastructure.Features.DBContexts;
 
@@ -19,22 +20,9 @@ public class UsersDbContext : DbContext
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();
 
-		modelBuilder.Entity<User>(entity =>
-		{
-			entity.HasKey(e => e.Id);
-			entity.HasIndex(e => e.Email).IsUnique();
-			entity.HasIndex(e => e.IdentityId).IsUnique();
-		});
-
-		modelBuilder.Entity<EmailVerificationToken>(entity =>
-		{
-			entity.HasKey(e => e.Id);
-			entity.Property(e => e.UserId).IsRequired();
-
-			entity.HasOne(e => e.User)
-				.WithMany()
-				.HasForeignKey(e => e.UserId)
-				.OnDelete(DeleteBehavior.Cascade);
-		});
+		modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+		modelBuilder.ApplyConfiguration(new RoleConfiguration());
+		modelBuilder.ApplyConfiguration(new EmailVerificationTokenConfiguration());
+		modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 }

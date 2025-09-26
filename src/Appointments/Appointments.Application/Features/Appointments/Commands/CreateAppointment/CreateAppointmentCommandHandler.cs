@@ -7,6 +7,7 @@ using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
@@ -32,7 +33,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 
 		if (doctorData == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.DoctorNotFound);
-		if (doctorData.Role != Roles.Doctor)
+		if (!doctorData.Roles.Contains(Role.Doctor))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.UserIsNotADoctor);
 
 		var patientData = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
@@ -50,7 +51,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 			var appointment = Appointment.Schedule(patientData.UserId, doctorData.UserId, duration);
 
 			await _appointmentRepository.AddAsync(appointment);
-			await _unitOfWork.SaveChangesAsync();
+			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
 			return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);

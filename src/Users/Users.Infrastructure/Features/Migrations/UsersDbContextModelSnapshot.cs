@@ -4,15 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Shared.Domain.Enums;
 using Users.Infrastructure.Features.DBContexts;
 
 #nullable disable
 
-namespace Users.Infrastructure.Migrations
+namespace Users.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDBContextModelSnapshot : ModelSnapshot
+    partial class UsersDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +20,6 @@ namespace Users.Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "roles", new[] { "admin", "doctor", "patient" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -192,6 +190,210 @@ namespace Users.Infrastructure.Migrations
                     b.ToTable("OutboxState");
                 });
 
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.Property<string>("PermissionCode")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("PermissionCode", "RoleName");
+
+                    b.HasIndex("RoleName");
+
+                    b.ToTable("role_permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PermissionCode = "users:read",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:update",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:delete",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:cancel",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:reschedule",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:read",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:read",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:update",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:delete",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:create",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:cancel",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:reschedule",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:read",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:read",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:update",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "users:delete",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:create",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:cancel",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:reschedule",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:read",
+                            RoleName = "Doctor"
+                        });
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.Property<string>("RolesName")
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("role_name");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("RolesName", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_roles", (string)null);
+                });
+
+            modelBuilder.Entity("Shared.Domain.Entities.Permission", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("permissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "users:read"
+                        },
+                        new
+                        {
+                            Code = "users:update"
+                        },
+                        new
+                        {
+                            Code = "users:delete"
+                        },
+                        new
+                        {
+                            Code = "appointment:create"
+                        },
+                        new
+                        {
+                            Code = "appointment:cancel"
+                        },
+                        new
+                        {
+                            Code = "appointment:reschedule"
+                        },
+                        new
+                        {
+                            Code = "appointment:read"
+                        });
+                });
+
+            modelBuilder.Entity("Shared.Domain.Entities.Role", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Name = "Patient"
+                        },
+                        new
+                        {
+                            Name = "Doctor"
+                        },
+                        new
+                        {
+                            Name = "Administrator"
+                        });
+                });
+
             modelBuilder.Entity("Users.Domain.Entities.EmailVerificationToken", b =>
                 {
                     b.Property<string>("Id")
@@ -247,9 +449,6 @@ namespace Users.Infrastructure.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
-                    b.Property<Roles>("Role")
-                        .HasColumnType("roles");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -271,6 +470,36 @@ namespace Users.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("InboxMessageId", "InboxConsumerId")
                         .HasPrincipalKey("MessageId", "ConsumerId");
+                });
+
+            modelBuilder.Entity("PermissionRole", b =>
+                {
+                    b.HasOne("Shared.Domain.Entities.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shared.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.HasOne("Shared.Domain.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Users.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Users.Domain.Entities.EmailVerificationToken", b =>

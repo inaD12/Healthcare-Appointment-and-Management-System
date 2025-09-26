@@ -80,7 +80,7 @@ public class GetUserByIdQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 			a.Email == user.Email &&
 			a.PhoneNumber == user.PhoneNumber &&
 			a.Address == user.Address &&
-			a.Role == user.Role &&
+			a.Roles.SequenceEqual(user.Roles) &&
 			a.EmailVerified == user.EmailVerified
 		);
 	}

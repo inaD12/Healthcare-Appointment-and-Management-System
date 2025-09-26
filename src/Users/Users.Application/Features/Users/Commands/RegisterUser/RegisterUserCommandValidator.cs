@@ -1,10 +1,13 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
+using Shared.Domain.Entities;
 using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;
 
 public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
+	private static HashSet<string> _validRoles;
 	public RegisterUserCommandValidator()
 	{
 		RuleFor(x => x.Email)
@@ -43,7 +46,13 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
 			.MinimumLength(UsersBusinessConfiguration.ADRESS_MIN_LENGTH)
 			.MaximumLength(UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
 
+		_validRoles = typeof(Role)
+			.GetFields(BindingFlags.Public | BindingFlags.Static)
+			.Where(f => f.FieldType == typeof(Role))
+			.Select(f => ((Role)f.GetValue(null)!).Name)
+			.ToHashSet();
+
 		RuleFor(x => x.Role)
-				.IsInEnum();
+			.Must(role => _validRoles.Contains(role.Name));
 	}
 }

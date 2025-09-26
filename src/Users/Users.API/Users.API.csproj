@@ -13,8 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="MassTransit" Version="8.3.7-develop.2215" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.7-develop.2215" />
+    <PackageReference Include="MassTransit" Version="8.5.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>

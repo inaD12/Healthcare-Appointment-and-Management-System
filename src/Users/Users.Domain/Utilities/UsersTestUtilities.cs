@@ -1,10 +1,21 @@
-﻿using Shared.Domain.Enums;
+﻿using System.Reflection;
+using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
 
 namespace Users.Domain.Utilities;
 
 public class UsersTestUtilities : SharedTestUtilities
 {
+	private static readonly ConstructorInfo ctor = typeof(Role).GetConstructor(
+		BindingFlags.Instance | BindingFlags.NonPublic,
+		binder: null,
+		types: [typeof(string)],
+		modifiers: null
+	)!;
+
+	public static readonly Role InvalidRole = (Role)ctor.Invoke(["InvalidRole"]);
+	
 	public static readonly string ValidId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
 	public static readonly string InvalidId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
 	

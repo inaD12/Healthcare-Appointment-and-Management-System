@@ -10,6 +10,7 @@ using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Infrastructure.Clock;
@@ -67,7 +68,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		if (isCanceled)
 			appointment.Cancel(AppointmentsTestUtilities.PastDate);
 
-		var appointmentWithDetailsDTO = new AppointmentWithDetailsModel
+		var appointmentWithDetailsDto = new AppointmentWithDetailsModel
 		{
 			DoctorId = appointment.DoctorId,
 			PatientId = appointment.PatientId,
@@ -85,13 +86,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		var doctorData = new UserData(
 			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.DoctorEmail,
-			Roles.Doctor
+			[Role.Doctor]
 		);
 
 		var patientData = new UserData(
 			AppointmentsTestUtilities.PatientId,
 			AppointmentsTestUtilities.PatientEmail,
-			Roles.Patient
+			[Role.Patient]
 		);
 
 		UserDataRepository.GetUserDataByEmailAsync(Arg.Any<string>()).Returns(callInfo =>
@@ -113,7 +114,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			.Returns(appointment);
 
 		AppointmentRepository.GetAppointmentWithUserDetailsAsync(appointment.Id)
-			.Returns(appointmentWithDetailsDTO);
+			.Returns(appointmentWithDetailsDto);
 
 		AppointmentRepository.GetAllAsync(Arg.Is<AppointmentPagedListQuery>(q => 
 																				q.PatientId == appointment.PatientId &&

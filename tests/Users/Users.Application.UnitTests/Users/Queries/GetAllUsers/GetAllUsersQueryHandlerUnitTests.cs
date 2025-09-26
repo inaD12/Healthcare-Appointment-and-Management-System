@@ -24,7 +24,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			UsersTestUtilities.InvalidEmail,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -50,7 +50,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -70,7 +70,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 			.Received(1)
 			.GetAllAsync(Arg.Is<UserPagedListQuery>(q =>
 																	q.Email == user.Email &&
-																	q.Role == user.Role &&
+																	user.Roles.Contains(q.Role) &&
 																	q.FirstName == user.FirstName &&
 																	q.LastName == user.LastName &&
 																	q.PhoneNumber == user.PhoneNumber &&
@@ -86,7 +86,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -105,7 +105,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 		result.Value!.Items.Should().AllSatisfy(ri =>
 		{
 			ri.Email.Should().Be(user.Email);
-			ri.Role.Should().Be(user.Role);
+			ri.Roles.Should().Contain(user.Roles);
 			ri.FirstName.Should().Be(user.FirstName);
 			ri.LastName.Should().Be(user.LastName);
 			ri.PhoneNumber.Should().Be(user.PhoneNumber);

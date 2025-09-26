@@ -1,4 +1,4 @@
-﻿namespace Users.Domain.Entities;
+﻿namespace Shared.Domain.Entities;
 
 public sealed class Permission
 {

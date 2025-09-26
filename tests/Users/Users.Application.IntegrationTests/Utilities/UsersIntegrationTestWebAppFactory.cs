@@ -1,8 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using DotNet.Testcontainers.Builders;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,16 +7,13 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 using NSubstitute;
 using Shared.Application.IntegrationTests.Extentensions;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Users.Application.Features.Users.Consumers;
 using Users.Infrastructure.Features.DBContexts;
-using Users.Infrastructure.Features.Identity;
 
 namespace Users.Application.IntegrationTests.Utilities;
 
@@ -36,10 +29,6 @@ public class UsersIntegrationTestWebAppFactory: WebApplicationFactory<Program>, 
             .WithDatabase("usersdb")
             .WithUsername("postgres")
             .WithPassword("postgres")
-            .WithWaitStrategy(
-                Wait.ForUnixContainer()
-                    .UntilDatabaseIsAvailable(NpgsqlFactory.Instance)
-            )
             .Build();
 
 
@@ -98,7 +87,7 @@ public class UsersIntegrationTestWebAppFactory: WebApplicationFactory<Program>, 
 
     public new async Task DisposeAsync()
     {
-        await _dbContainer.DisposeAsync();
-        await _keycloakContainer.DisposeAsync();
+        await _dbContainer.DisposeAsync().AsTask();
+        await _keycloakContainer.DisposeAsync().AsTask();
     }
 }

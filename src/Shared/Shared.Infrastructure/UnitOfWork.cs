@@ -9,13 +9,11 @@ namespace Shared.Infrastructure;
 internal class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
 {
 	private readonly TContext _dbContext;
-	private readonly IMediator _notificationPublisher;
 	private readonly IEventBus _eventBus;
 
-	public UnitOfWork(TContext dbContext, IMediator notificationPublisher, IEventBus eventBus)
+	public UnitOfWork(TContext dbContext, IEventBus eventBus)
 	{
 		_dbContext = dbContext;
-		_notificationPublisher = notificationPublisher;
 		_eventBus = eventBus;
 	}
 

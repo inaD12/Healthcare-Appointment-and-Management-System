@@ -1,4 +1,5 @@
 ﻿using Appointments.Domain.Entities;
+using Appointments.Infrastructure.Features.Configuration;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,21 +20,10 @@ public class AppointmentsDBContext : DbContext
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();
 
-		modelBuilder.Entity<Appointment>(entity =>
-		{
-			entity.HasIndex(a => a.Id).IsUnique();
-			
-			entity.OwnsOne(a => a.Duration, duration =>
-			{
-				duration.Property(d => d.Start).HasColumnName("ScheduledStartTime");
-				duration.Property(d => d.End).HasColumnName("ScheduledEndTime");
-			});
-		});
-
-		modelBuilder.Entity<UserData>(entity =>
-		{
-			entity.HasIndex(u => u.Id).IsUnique();
-		});
+		modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+		modelBuilder.ApplyConfiguration(new RoleConfiguration());
+		modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+		modelBuilder.ApplyConfiguration(new UserDataConfiguration());
 	}
 
 }

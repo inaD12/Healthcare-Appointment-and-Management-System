@@ -1,6 +1,6 @@
 ﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Enums;
+using Shared.Domain.Entities;
 
 namespace Users.Domain.Events;
 
-public record UserCreatedDomainEvent(string Id, string Email, Roles Role) :IDomainEvent;
+public record UserCreatedDomainEvent(string Id, string Email, IReadOnlyCollection<Role> Roles) :IDomainEvent;

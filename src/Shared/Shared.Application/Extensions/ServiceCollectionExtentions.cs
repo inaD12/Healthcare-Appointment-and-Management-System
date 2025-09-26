@@ -62,6 +62,9 @@ public static class ServiceCollectionExtentions
 				});
 
 				configurator.ConfigureEndpoints(context);
+				
+				configurator.UseNewtonsoftJsonSerializer();
+				configurator.UseNewtonsoftJsonDeserializer();
 			});
 		});
 

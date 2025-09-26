@@ -1,6 +1,4 @@
-﻿using Shared.Domain.Enums;
-
-namespace Users.Users.Models.Requests;
+﻿namespace Users.Users.Models.Requests;
 
 public class RegisterUserRequest
 {

@@ -6,6 +6,7 @@ using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using AutoMapper;
 using Shared.API.Models;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Utilities;
 
@@ -28,7 +29,7 @@ public class AppointmentsCommandMappings : Profile
 				src.Item2.Claims.GetValueOrDefault(AppClaims.Id)!,
 				src.Item1.ScheduledStartTime,
 				src.Item1.Duration,
-				src.Item2.Claims.GetValueOrDefault(AppClaims.Role)! == Roles.Admin.ToString()));
+				src.Item2.Claims.GetValueOrDefault(AppClaims.Role)! == Role.Administrator.ToString()));
 
 		CreateMap<AppointmentCommandViewModel, AppointmentCommandResponse>();
 	}

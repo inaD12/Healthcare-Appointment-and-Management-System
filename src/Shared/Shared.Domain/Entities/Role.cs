@@ -1,4 +1,6 @@
-﻿namespace Users.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace Shared.Domain.Entities;
 
 public sealed class Role
 {
@@ -11,6 +13,7 @@ public sealed class Role
         Name = name;
     }
 
+    [JsonConstructor]
     private Role()
     {
     }

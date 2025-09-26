@@ -1,11 +1,12 @@
-﻿using Shared.Domain.Enums;
+﻿using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 
 namespace Users.Users.Models.Responses;
 
 public sealed record UserQueryResponse(
 	string Id,
 	string Email,
-	Roles Role,
+	List<Role> Role,
 	string FirstName,
 	string LastName,
 	string PhoneNumber,

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Domain.Entities;
@@ -36,7 +37,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -59,7 +60,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -74,7 +75,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			u.DateOfBirth == command.DateOfBirth &&
 			u.PhoneNumber == command.PhoneNumber &&
 			u.Address == command.Address &&
-			u.Role == command.Role));	
+			u.Roles.Contains(command.Role)));	
 	}
 
 	[Fact]
@@ -89,7 +90,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -112,7 +113,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act

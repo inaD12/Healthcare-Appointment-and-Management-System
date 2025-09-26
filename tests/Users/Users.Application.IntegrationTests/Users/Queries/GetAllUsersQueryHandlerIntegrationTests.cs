@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Utilities;
@@ -24,7 +25,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			SharedTestUtilities.GetString(length),
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -52,7 +53,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			(Roles)99,
+			UsersTestUtilities.InvalidRole,
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -82,7 +83,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			SharedTestUtilities.GetString(length),
 			user.LastName,
 			user.PhoneNumber,
@@ -112,7 +113,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			SharedTestUtilities.GetString(length),
 			user.PhoneNumber,
@@ -142,7 +143,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			SharedTestUtilities.GetString(length),
@@ -172,7 +173,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -200,7 +201,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -228,7 +229,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user = await CreateUserAsync();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -255,7 +256,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Arrange
 		var query = new GetAllUsersQuery(
 			UsersTestUtilities.ValidEmail,
-			Roles.Patient,
+			Role.Patient,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName,
 			UsersTestUtilities.ValidPhoneNumber,
@@ -305,7 +306,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber);
 	}
@@ -318,7 +319,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		var user2 = await CreateUserAsync(UsersTestUtilities.ValidAddEmail);
 		var query = new GetAllUsersQuery(
 			null!,
-			user.Role,
+			user.Roles.First(),
 			null!,
 			null!,
 			null!,
@@ -341,7 +342,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -349,7 +350,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -385,7 +386,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -393,7 +394,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -429,7 +430,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -437,7 +438,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -473,7 +474,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -481,7 +482,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -517,7 +518,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -525,7 +526,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -561,7 +562,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -569,13 +570,13 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
-	public async Task Send_ShouldReturnCorrectResponse_WhenUsersExistAndFirstNameIsNotFulll()
+	public async Task Send_ShouldReturnCorrectResponse_WhenUsersExistAndFirstNameIsNotNulll()
 	{
 		// Arrange
 		var user = await CreateUserAsync();
@@ -605,7 +606,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -613,13 +614,13 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
-	public async Task Send_ShouldReturnCorrectResponse_WhenUsersExistAndLastNameIsNotFulll()
+	public async Task Send_ShouldReturnCorrectResponse_WhenUsersExistAndLastNameIsNotNulll()
 	{
 		// Arrange
 		var user = await CreateUserAsync();
@@ -649,7 +650,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Role == user.Role &&
+											 c.Roles.SequenceEqual(user.Roles) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -657,7 +658,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Role == user2.Role &&
+											 c.Roles.SequenceEqual(user2.Roles) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}

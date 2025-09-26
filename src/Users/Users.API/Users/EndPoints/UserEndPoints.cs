@@ -85,6 +85,7 @@ internal class UserEndPoints : IEndPoints
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
+
 	{
 		var command = mapper.Map<RegisterUserCommand>(request);
 		var res = await sender.Send(command, cancellationToken);

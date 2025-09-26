@@ -1,10 +1,9 @@
-﻿using System.Text.Json;
-using MassTransit.Testing;
+﻿using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
-using Shared.Domain.Enums;
+using Shared.Domain.Entities;
 using Shared.Domain.Utilities;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
@@ -37,7 +36,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		
 		var user = User.Create(
 				UsersTestUtilities.ValidEmail,
-				Roles.Patient,
+				Role.Patient,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
@@ -62,7 +61,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 
 		var user = User.Create(
 				email,
-				Roles.Patient,
+				Role.Patient,
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),

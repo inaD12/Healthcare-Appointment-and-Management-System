@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
+using Shared.Domain.Entities;
 using Users.Domain.Entities;
 using Users.Domain.Utilities;
 
@@ -6,16 +8,25 @@ namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
 public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 {
+	private static HashSet<string> ValidRoles;
+
+	
 	public GetAllUsersQueryValidator()
 	{
+		ValidRoles = typeof(Role)
+			.GetFields(BindingFlags.Public | BindingFlags.Static)
+			.Where(f => f.FieldType == typeof(Role))
+			.Select(f => ((Role)f.GetValue(null)!).Name)
+			.ToHashSet();
+		
 		RuleFor(q => q.Email)
 		   .MinimumLength(UsersBusinessConfiguration.EMAIL_MIN_LENGTH)
 		   .MaximumLength(UsersBusinessConfiguration.EMAIL_MAX_LENGTH)
 		   .When(q => !string.IsNullOrEmpty(q.Email));
 
 		RuleFor(q => q.Role)
-		   .IsInEnum()
-			.When(q => q.Role.HasValue);
+			.Must(role => ValidRoles.Contains(role!.Name))
+			.When(q => q.Role != null);
 
 		RuleFor(q => q.FirstName)
 		   .MinimumLength(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH)

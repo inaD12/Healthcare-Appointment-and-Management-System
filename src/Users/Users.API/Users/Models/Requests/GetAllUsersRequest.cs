@@ -1,4 +1,5 @@
 ﻿using Shared.API.Models.Requests;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 
 namespace Users.Users.Models.Requests;

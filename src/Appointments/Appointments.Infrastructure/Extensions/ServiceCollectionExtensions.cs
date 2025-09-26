@@ -27,8 +27,6 @@ public static class ServiceCollectionExtensions
 			.AddHostedService<HangfireHostedService>()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
-				optionsAction.MapEnum<Roles>("roles");
-
 				optionsAction.MapEnum<AppointmentStatus>("appointmentstatus");
 			});
 

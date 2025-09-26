@@ -1,4 +1,6 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Reflection;
+using FluentValidation.TestHelper;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Queries.GetAllUsers;
@@ -25,7 +27,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			SharedTestUtilities.GetString(length),
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -48,10 +50,15 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 	public void TestValidate_ShouldHaveAnErrorForRole_WhenRoleIsInvalid()
 	{
 		// Arrange
+		var ctor = typeof(Role)
+			.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(string) }, null);
+
+		var invalidRole = (Role)ctor!.Invoke(new object[] { "InvalidRole" });
+
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			(Roles)99,
+			invalidRole,
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -79,7 +86,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			SharedTestUtilities.GetString(length),
 			user.LastName,
 			user.PhoneNumber,
@@ -107,7 +114,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			SharedTestUtilities.GetString(length),
 			user.PhoneNumber,
@@ -135,7 +142,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			SharedTestUtilities.GetString(length),
@@ -163,7 +170,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -189,7 +196,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -215,7 +222,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,
@@ -241,7 +248,7 @@ public class GetAllUsersQueryValidatorUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var query = new GetAllUsersQuery(
 			user.Email,
-			user.Role,
+			user.Roles.First(),
 			user.FirstName,
 			user.LastName,
 			user.PhoneNumber,

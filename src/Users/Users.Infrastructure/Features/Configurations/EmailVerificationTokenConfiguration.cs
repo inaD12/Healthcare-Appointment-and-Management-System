@@ -8,7 +8,12 @@ internal class EmailVerificationTokenConfiguration : IEntityTypeConfiguration<Em
 {
 	public void Configure(EntityTypeBuilder<EmailVerificationToken> builder)
 	{
-		builder.HasKey(x => x.Id);
-		builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+		builder.HasKey(e => e.Id);
+		builder.Property(e => e.UserId).IsRequired();
+
+		builder.HasOne(e => e.User)
+			.WithMany()
+			.HasForeignKey(e => e.UserId)
+			.OnDelete(DeleteBehavior.Cascade);
 	}
 }
