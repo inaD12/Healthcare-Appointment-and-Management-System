@@ -1,6 +1,7 @@
 ﻿using Shared.Domain.Entities;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Enums;
+using Shared.Domain.Extensions;
 using Shared.Domain.Results;
 using Users.Domain.Events;
 using Users.Domain.Responses;
@@ -67,7 +68,7 @@ public sealed class User : BaseEntity
 
 		user._roles.Add(role);
 		
-		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Roles));
+		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
 
 		return user;
 	}

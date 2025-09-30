@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Shared.Domain.Entities;
+using Shared.Domain.Extensions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.Models;
@@ -16,7 +17,7 @@ public class UserCommandMappings : Profile
 	{
 		CreateMap<RegisterUserRequest, RegisterUserCommand>()
 			.ForMember(dest => dest.Role,
-				opt => opt.MapFrom(src => src.Role.MapRole()));
+				opt => opt.MapFrom(src => src.Role.MapToRole()));
 
 		CreateMap<(UpdateCurrentUserRequest,string id), UpdateUserCommand>()
 			.ConstructUsing(src => new(

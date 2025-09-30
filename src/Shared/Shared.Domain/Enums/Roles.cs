@@ -1,4 +1,4 @@
-namespace Users.Users.Models.Requests;
+namespace Shared.Domain.Enums;
 
 public enum Roles
 {

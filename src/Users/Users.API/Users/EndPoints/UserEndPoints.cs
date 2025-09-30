@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
+using Shared.Infrastructure.Authentication;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -98,13 +100,12 @@ internal class UserEndPoints : IEndPoints
 
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = mapper.Map<UpdateUserCommand>((request, userId));
+		var command = mapper.Map<UpdateUserCommand>((request, claims.GetUserId()));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -169,12 +170,11 @@ internal class UserEndPoints : IEndPoints
 	}
 
 	public async Task<IResult> DeleteCurrent(
-		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = new DeleteUserCommand(userId);
+		var command = new DeleteUserCommand(claims.GetUserId().ToString());
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

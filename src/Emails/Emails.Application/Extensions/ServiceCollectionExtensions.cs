@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
+using Shared.Infrastructure.Extensions;
 
 namespace Emails.Application.Extensions;
 

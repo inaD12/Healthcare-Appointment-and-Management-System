@@ -23,13 +23,13 @@ public class AppointmentsCommandMappings : Profile
 				src.Item1.AppointmentId,
 				src.Item2));
 
-		CreateMap<(RescheduleAppointmentRequest, ClaimsExtractorModel), RescheduleAppointmentCommand>()
+		CreateMap<(RescheduleAppointmentRequest, string id, bool isAdmin), RescheduleAppointmentCommand>()
 			.ConstructUsing(src => new(
 				src.Item1.AppointmentID,
-				src.Item2.Claims.GetValueOrDefault(AppClaims.Id)!,
+				src.Item2,
 				src.Item1.ScheduledStartTime,
 				src.Item1.Duration,
-				src.Item2.Claims.GetValueOrDefault(AppClaims.Role)! == Role.Administrator.ToString()));
+				src.Item3));
 
 		CreateMap<AppointmentCommandViewModel, AppointmentCommandResponse>();
 	}

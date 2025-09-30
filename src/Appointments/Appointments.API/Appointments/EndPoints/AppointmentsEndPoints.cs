@@ -1,4 +1,5 @@
-﻿using Appointments.API.Appointments.Models.Requests;
+﻿using System.Security.Claims;
+using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
@@ -10,7 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
+using Shared.Infrastructure.Authentication;
+using Shared.Utilities;
 
 namespace Appointments.API.EndPoints;
 
@@ -80,26 +84,24 @@ internal class AppointmentsEndPoints : IEndPoints
 
 	public async Task<IResult> Cancel(
 		[FromBody] CancelAppointmentRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = mapper.Map<CancelAppointmentCommand>((request, userId));
+		var command = mapper.Map<CancelAppointmentCommand>((request, claims.GetUserId()));
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	public async Task<IResult> Reschedule(
 		[FromBody] RescheduleAppointmentRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var claims = claimsExtractor.GetAllClaims();
-		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims));
+		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims.GetUserId(), claims.GetPermissions().Contains(Role.Administrator.Name)));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

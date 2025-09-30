@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddUnitOfWork<UsersDbContext>()
+			.AddAuth(configuration)
 			.AddDatabaseContext<UsersDbContext>(configuration);
 		
 		services.Configure<KeyCloakOptions>(configuration.GetSection("KeyCloak"));

@@ -10,7 +10,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddAuthentication(configuration)
 			.AddSwagger()
 			.ConfigureCors(configuration)
 			.AddEndpointsApiExplorer()

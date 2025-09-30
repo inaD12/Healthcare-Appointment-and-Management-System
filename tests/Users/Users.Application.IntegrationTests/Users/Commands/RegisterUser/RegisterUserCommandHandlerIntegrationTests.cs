@@ -2,6 +2,7 @@
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Entities;
 using Shared.Domain.Exceptions;
+using Shared.Domain.Extensions;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Application.Features.Users.Models;
@@ -497,7 +498,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		var result = await TestHarness.Published.Any<UserCreatedDomainEvent>(m =>
 							  m.Context.Message.Id == response.Value!.Id &&
 							  m.Context.Message.Email == command.Email &&
-							  m.Context.Message.Roles.Contains(command.Role),
+							  m.Context.Message.Roles.Contains(command.Role.MapToRoleEnum()),
 							  CancellationToken);
 
 		result.Should().BeTrue();
@@ -529,7 +530,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 			.Consumed.Any<UserCreatedDomainEvent>(m =>
 				m.Context.Message.Id == response.Value!.Id &&
 				m.Context.Message.Email == command.Email &&
-				m.Context.Message.Roles.Contains(command.Role),
+				m.Context.Message.Roles.Contains(command.Role.MapToRoleEnum()),
 				CancellationToken);
 		
 		result.Should().BeTrue();

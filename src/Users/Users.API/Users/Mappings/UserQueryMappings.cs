@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.Features.Users.Queries.GetById;
@@ -17,7 +18,7 @@ public class UserQueryMappings : Profile
 
 		CreateMap<GetAllUsersRequest, GetAllUsersQuery>()
 			.ForMember(dest => dest.Role,
-				opt => opt.MapFrom(src => src.Role.MapRole()));
+				opt => opt.MapFrom(src => src.Role.MapToRole()));
 
 		CreateMap<UserQueryViewModel, UserQueryResponse>();
 
