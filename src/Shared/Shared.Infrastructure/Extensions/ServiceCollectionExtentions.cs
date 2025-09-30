@@ -4,11 +4,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+using Shared.Application.Authorization;
+using Shared.Application.Data;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Options;
 using Shared.Infrastructure.Authorization;
 using Shared.Infrastructure.Clock;
+using Shared.Infrastructure.Data;
 using Shared.Infrastructure.MessageBroker;
 
 namespace Shared.Infrastructure.Extensions;
@@ -21,14 +25,15 @@ public static class ServiceCollectionExtentions
 
 		return services;
 	}
+
 	public static IServiceCollection AddUnitOfWork<TContext>(this IServiceCollection services)
-	where TContext : DbContext
+		where TContext : DbContext
 	{
 		services.AddScoped<IUnitOfWork, UnitOfWork<TContext>>();
 
 		return services;
 	}
-	
+
 	public static IServiceCollection AddMessageBroker(
 		this IServiceCollection services,
 		IConfiguration configuration,
@@ -63,7 +68,7 @@ public static class ServiceCollectionExtentions
 				});
 
 				configurator.ConfigureEndpoints(context);
-				
+
 				configurator.UseNewtonsoftJsonSerializer();
 				configurator.UseNewtonsoftJsonDeserializer();
 			});
@@ -76,10 +81,10 @@ public static class ServiceCollectionExtentions
 	}
 
 	public static IServiceCollection AddDatabaseContext<TContext>(
-	   this IServiceCollection services,
-	   IConfiguration configuration,
-	   Action<NpgsqlDbContextOptionsBuilder>? optionsAction = null)
-   where TContext : DbContext
+		this IServiceCollection services,
+		IConfiguration configuration,
+		Action<NpgsqlDbContextOptionsBuilder>? optionsAction = null)
+		where TContext : DbContext
 	{
 		services
 			.AddOptions<DatabaseOptions>()
@@ -88,27 +93,31 @@ public static class ServiceCollectionExtentions
 			.ValidateOnStart();
 
 		var databaseOptions = configuration
-					.GetSection(nameof(DatabaseOptions))
-					.Get<DatabaseOptions>()!;
+			.GetSection(nameof(DatabaseOptions))
+			.Get<DatabaseOptions>()!;
 
 		services.AddDbContext<TContext>(options =>
 		{
 			options.UseNpgsql(
-					databaseOptions.ConnectionString,
-			npgsqlOptions =>
-			{
-				npgsqlOptions.EnableRetryOnFailure();
-				optionsAction?.Invoke(npgsqlOptions);
-			});
+				databaseOptions.ConnectionString,
+				npgsqlOptions =>
+				{
+					npgsqlOptions.EnableRetryOnFailure();
+					optionsAction?.Invoke(npgsqlOptions);
+				});
 		});
 
 		services
 			.AddHealthChecks()
 			.AddDbContextCheck<TContext>();
+		
+		NpgsqlDataSource npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseOptions.ConnectionString).Build();
+		services.AddSingleton<NpgsqlDataSource>(npgsqlDataSource);
+		services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
 		return services;
 	}
-	
+
 	public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
 	{
 		services
@@ -128,6 +137,13 @@ public static class ServiceCollectionExtentions
 		services
 			.AddAuthorizationInternal();
 
+		return services;
+	}
+
+	public static IServiceCollection AddPermissionService(this IServiceCollection services)
+	{
+		services.AddScoped<IPermissionService, PermissionService>();
+		
 		return services;
 	}
 }

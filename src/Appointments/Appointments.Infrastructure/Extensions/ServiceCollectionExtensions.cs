@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddHostedService<HangfireHostedService>()
 			.AddAuth(configuration)
+			.AddPermissionService()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<AppointmentStatus>("appointmentstatus");
