@@ -12,11 +12,9 @@ using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
 using Shared.Domain.Entities;
-using Shared.Domain.Enums;
 using Shared.Infrastructure.Authentication;
-using Shared.Utilities;
 
-namespace Appointments.API.EndPoints;
+namespace Appointments.API.Appointments.EndPoints;
 
 internal class AppointmentsEndPoints : IEndPoints
 {
@@ -30,8 +28,8 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.CreateAppointment);
 
 		group.MapPut("cancel", Cancel)
 			.Produces(StatusCodes.Status200OK)
@@ -40,7 +38,7 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.CancelAppointment);
 
 		group.MapPut("reschedule", Reschedule)
 			.Produces<AppointmentCommandResponse>(StatusCodes.Status200OK)
@@ -49,22 +47,22 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.RescheduleAppointment);
 
 		group.MapGet("get-all", GetAll)
 			.Produces<AppointmentPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetAppointment);
 
 		group.MapGet("get/{id}", GetById)
 			.Produces<AppointmentQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetAppointment);
 	}
 
 	public async Task<IResult> Create(

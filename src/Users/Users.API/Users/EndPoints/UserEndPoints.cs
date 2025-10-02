@@ -36,7 +36,7 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.ModifyUser);
 
 		group.MapPut("update/{id}", Update)
 			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
@@ -44,42 +44,44 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ModifyUser);
 
 		group.MapGet("get-all", GetAll)
 			.Produces<UserPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetUser);
 
 		group.MapGet("get/{id}", GetById)
 			.Produces<UserQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetUser);
 
 		group.MapDelete("delete-current", DeleteCurrent)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.DeleteUser);
 
 		group.MapDelete("delete/{id}", DeleteById)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.DeleteUser);
 
 		group.MapGet("verify-email", VerifyEmails)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.WithName("VerifyEmail");
+			.WithName("VerifyEmail")
+			.AllowAnonymous();
 	}
 
 	public async Task<IResult> Register(
