@@ -6,7 +6,7 @@ using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Domain.Responses;
 
-namespace Users.Application.Features.Users.Commands.GetUserPermissions;
+namespace Users.Application.Features.Users.Queries.GetUserPermissions;
 
 internal sealed class GetUserPermissionsQueryHandler(IDbConnectionFactory dbConnectionFactory)
     : IQueryHandler<GetUserPermissionsQuery, PermissionsResponse>
@@ -20,14 +20,13 @@ internal sealed class GetUserPermissionsQueryHandler(IDbConnectionFactory dbConn
         const string sql =
             $"""
              SELECT DISTINCT
-                 u.id AS {nameof(UserPermission.UserId)},
-                 rp.permission_code AS {nameof(UserPermission.Permission)}
-             FROM users.users u
-             JOIN users.user_roles ur ON ur.user_id = u.id
-             JOIN users.role_permissions rp ON rp.role_name = ur.role_name
-             WHERE u.identity_id = @IdentityId
+                 u."Id" AS {nameof(UserPermission.UserId)},
+                 rp."PermissionCode" AS {nameof(UserPermission.Permission)}
+             FROM "Users" u
+             JOIN "user_roles" ur ON ur."UserId" = u."Id"
+             JOIN "role_permissions" rp ON rp."RoleName" = ur."role_name"
+             WHERE u."IdentityId" = @IdentityId
              """;
-
         List<UserPermission> permissions = (await connection.QueryAsync<UserPermission>(sql, request)).AsList();
 
         if (!permissions.Any())
@@ -40,7 +39,7 @@ internal sealed class GetUserPermissionsQueryHandler(IDbConnectionFactory dbConn
 
     internal sealed class UserPermission
     {
-        internal Guid UserId { get; init; }
+        internal string UserId { get; init; }
 
         internal string Permission { get; init; }
     }

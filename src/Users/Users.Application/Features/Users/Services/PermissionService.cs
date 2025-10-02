@@ -1,7 +1,7 @@
 using MediatR;
 using Shared.Application.Authorization;
 using Shared.Domain.Results;
-using Users.Application.Features.Users.Commands.GetUserPermissions;
+using Users.Application.Features.Users.Queries.GetUserPermissions;
 
 namespace Users.Application.Features.Users.Services;
 
