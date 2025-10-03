@@ -1,4 +1,5 @@
-﻿using Appointments.Domain.Utilities;
+﻿using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
+using Appointments.Domain.Utilities;
 using FluentValidation;
 
 namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
@@ -8,11 +9,6 @@ public class RescheduleAppointmentCommandValidator : AbstractValidator<Reschedul
 	public RescheduleAppointmentCommandValidator()
 	{
 		RuleFor(x => x.AppointmentId)
-			.NotEmpty()
-			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
-			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
-
-		RuleFor(x => x.UserId)
 			.NotEmpty()
 			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
 			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);

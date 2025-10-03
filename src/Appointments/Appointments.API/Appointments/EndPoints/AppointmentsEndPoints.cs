@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
+using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
@@ -83,23 +85,21 @@ internal class AppointmentsEndPoints : IEndPoints
 	public async Task<IResult> Cancel(
 		[FromBody] CancelAppointmentRequest request,
 		[FromServices] ISender sender,
-		[FromServices] ClaimsPrincipal claims,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = mapper.Map<CancelAppointmentCommand>((request, claims.GetUserId()));
+		var command = mapper.Map<CancelAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	public async Task<IResult> Reschedule(
 		[FromBody] RescheduleAppointmentRequest request,
-		[FromServices] ClaimsPrincipal claims,
-		[FromServices] ISender sender,
+		[FromServices] ISender sender,	
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims.GetUserId(), claims.GetPermissions().Contains(Role.Administrator.Name)));
+		var command = mapper.Map<RescheduleAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

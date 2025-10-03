@@ -1,5 +1,7 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
+using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
@@ -18,18 +20,9 @@ public class AppointmentsCommandMappings : Profile
 	{
 		CreateMap<CreateAppointmentRequest, CreateAppointmentCommand>();
 
-		CreateMap<(CancelAppointmentRequest, string id), CancelAppointmentCommand>()
-			.ConstructUsing(src => new(
-				src.Item1.AppointmentId,
-				src.Item2));
+		CreateMap<CancelAppointmentRequest, CancelAppointmentCommand>();
 
-		CreateMap<(RescheduleAppointmentRequest, string id, bool isAdmin), RescheduleAppointmentCommand>()
-			.ConstructUsing(src => new(
-				src.Item1.AppointmentID,
-				src.Item2,
-				src.Item1.ScheduledStartTime,
-				src.Item1.Duration,
-				src.Item3));
+		CreateMap<RescheduleAppointmentRequest, RescheduleAppointmentCommand>();
 
 		CreateMap<AppointmentCommandViewModel, AppointmentCommandResponse>();
 	}

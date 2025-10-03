@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Mappings;
+﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Mappings;
 using Appointments.Application.Features.Mappings;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.ValueObjects;
@@ -6,12 +7,12 @@ using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Utilities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
-using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Infrastructure.Clock;
 
@@ -22,6 +23,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 	protected IDateTimeProvider DateTimeProvider { get; }
 	protected IAppointmentRepository AppointmentRepository { get; }
 	protected IUserDataRepository UserDataRepository { get; }
+	protected IAuthorizationService AuthService { get; }
 
 	protected BaseAppointmentsUnitTest()
 		: base(
@@ -41,6 +43,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		DateTimeProvider = Substitute.For<IDateTimeProvider>();
 		UserDataRepository = Substitute.For<IUserDataRepository>();
 		AppointmentRepository = Substitute.For<IAppointmentRepository>();
+		AuthService = Substitute.For<IAuthorizationService>();
 
 		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.CurrentDate);
 	}
@@ -106,6 +109,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 
 			return null;
 		});
+		
+		AuthService
+			.AuthorizeAsync(
+				Arg.Any<ClaimsPrincipal>(), 
+				Arg.Any<Appointment>(), 
+				Arg.Any<IEnumerable<IAuthorizationRequirement>>())
+			.Returns(Task.FromResult(AuthorizationResult.Success()));
 
 		AppointmentRepository.IsTimeSlotAvailableAsync(appointment.DoctorId, Arg.Any<DateTimeRange>())
 			.Returns(true);
