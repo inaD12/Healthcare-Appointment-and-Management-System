@@ -8,6 +8,7 @@ using Appointments.Infrastructure.Features.UsersData.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
+using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 
 namespace Appointments.Infrastructure.Extensions;
@@ -29,6 +30,7 @@ public static class ServiceCollectionExtensions
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<AppointmentStatus>("appointmentstatus");
+				optionsAction.MapEnum<Roles>("roles");
 			});
 
 		return services;

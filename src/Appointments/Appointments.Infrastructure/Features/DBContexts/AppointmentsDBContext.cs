@@ -20,8 +20,6 @@ public class AppointmentsDBContext : DbContext
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();
 
-		modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-		modelBuilder.ApplyConfiguration(new RoleConfiguration());
 		modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
 		modelBuilder.ApplyConfiguration(new UserDataConfiguration());
 	}

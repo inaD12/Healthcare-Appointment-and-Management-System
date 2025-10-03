@@ -1,20 +1,15 @@
-﻿using System.Security.Claims;
-using Appointments.API.Appointments.Models.Requests;
+﻿using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
-using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
-using Shared.Domain.Entities;
-using Shared.Infrastructure.Authentication;
 
 namespace Appointments.API.Appointments.EndPoints;
 

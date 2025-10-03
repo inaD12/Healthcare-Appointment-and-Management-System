@@ -242,21 +242,6 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "users:read",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:update",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:delete",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -272,26 +257,6 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "appointment:read",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:read",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:update",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:delete",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Doctor"
                         },
@@ -303,11 +268,6 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "appointment:reschedule",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "appointment:read",
                             RoleName = "Doctor"
                         });
                 });

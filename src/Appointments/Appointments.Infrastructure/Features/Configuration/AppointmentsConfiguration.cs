@@ -1,7 +1,6 @@
 ﻿using Appointments.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.Domain.Entities;
 
 namespace Appointments.Infrastructure.Features.Configuration;
 

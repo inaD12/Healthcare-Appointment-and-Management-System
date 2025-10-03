@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Users.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_Database : Migration
+    public partial class create_database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -240,20 +240,12 @@ namespace Users.Infrastructure.Features.Migrations
                     { "appointment:create", "Doctor" },
                     { "appointment:create", "Patient" },
                     { "appointment:read", "Administrator" },
-                    { "appointment:read", "Doctor" },
-                    { "appointment:read", "Patient" },
                     { "appointment:reschedule", "Administrator" },
                     { "appointment:reschedule", "Doctor" },
                     { "appointment:reschedule", "Patient" },
                     { "users:delete", "Administrator" },
-                    { "users:delete", "Doctor" },
-                    { "users:delete", "Patient" },
                     { "users:read", "Administrator" },
-                    { "users:read", "Doctor" },
-                    { "users:read", "Patient" },
-                    { "users:update", "Administrator" },
-                    { "users:update", "Doctor" },
-                    { "users:update", "Patient" }
+                    { "users:update", "Administrator" }
                 });
 
             migrationBuilder.CreateIndex(

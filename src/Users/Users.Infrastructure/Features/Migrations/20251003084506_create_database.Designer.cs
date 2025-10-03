@@ -12,8 +12,8 @@ using Users.Infrastructure.Features.DBContexts;
 namespace Users.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20250926134941_Create_Database")]
-    partial class Create_Database
+    [Migration("20251003084506_create_database")]
+    partial class create_database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,21 +245,6 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "users:read",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:update",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:delete",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -275,26 +260,6 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "appointment:read",
-                            RoleName = "Patient"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:read",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:update",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "users:delete",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Doctor"
                         },
@@ -306,11 +271,6 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "appointment:reschedule",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "appointment:read",
                             RoleName = "Doctor"
                         });
                 });

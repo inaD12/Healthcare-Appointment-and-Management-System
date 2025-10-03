@@ -36,7 +36,7 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.ModifyUser);
+			.RequireAuthorization();
 
 		group.MapPut("update/{id}", Update)
 			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
@@ -67,7 +67,7 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.DeleteUser);
+			.RequireAuthorization();
 
 		group.MapDelete("delete/{id}", DeleteById)
 			.Produces(StatusCodes.Status200OK)

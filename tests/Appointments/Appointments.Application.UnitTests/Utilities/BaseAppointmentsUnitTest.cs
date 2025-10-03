@@ -13,6 +13,7 @@ using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Infrastructure.Clock;
 
@@ -89,13 +90,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		var doctorData = new UserData(
 			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.DoctorEmail,
-			[Role.Doctor]
+			[Roles.Doctor]
 		);
 
 		var patientData = new UserData(
 			AppointmentsTestUtilities.PatientId,
 			AppointmentsTestUtilities.PatientEmail,
-			[Role.Patient]
+			[Roles.Patient]
 		);
 
 		UserDataRepository.GetUserDataByEmailAsync(Arg.Any<string>()).Returns(callInfo =>
