@@ -34,7 +34,7 @@ public class UsersIntegrationTestWebAppFactory: WebApplicationFactory<Program>, 
 
         _keycloakContainer = new KeycloakBuilder()
             .WithImage("quay.io/keycloak/keycloak:latest")
-            .WithResourceMapping("../../../../../../src/Users/Users.Infrastructure/Features/Import/realm-export.json", "/opt/keycloak/data/import")
+            .WithResourceMapping("../../../../../../.files/realm-export.json", "/opt/keycloak/data/import")
             .WithCommand("--import-realm")
             .Build();
     }

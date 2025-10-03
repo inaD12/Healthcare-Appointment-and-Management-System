@@ -99,7 +99,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: Identity
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       - KC_HEALTH_ENABLED=true
       - KEYCLOAK_ADMIN=admin
