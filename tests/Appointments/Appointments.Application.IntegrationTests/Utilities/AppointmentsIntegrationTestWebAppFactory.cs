@@ -21,11 +21,11 @@ public class AppointmentsIntegrationTestWebAppFactory : WebApplicationFactory<Pr
 	public AppointmentsIntegrationTestWebAppFactory()
 	{
 		_dbContainer = new PostgreSqlBuilder()
-		.WithImage("postgres:latest")
-		.WithDatabase("appointmentsdb")
-		.WithUsername("postgres")
-		.WithPassword("postgres")
-		.Build();
+			.WithImage("postgres:latest")
+			.WithDatabase("appointmentsdb")
+			.WithUsername("postgres")
+			.WithPassword("postgres")
+			.Build();
 	}
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{

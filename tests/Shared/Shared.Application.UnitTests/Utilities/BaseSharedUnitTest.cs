@@ -9,9 +9,9 @@ public class BaseSharedUnitTest
 	protected IUnitOfWork UnitOfWork { get; }
 	protected CancellationToken CancellationToken { get; }
 
-	public BaseSharedUnitTest(IHAMSMapper hAMSMapper, IUnitOfWork unitOfWork)
+	public BaseSharedUnitTest(IHAMSMapper hamsMapper, IUnitOfWork unitOfWork)
 	{
-		HAMSMapper = hAMSMapper;
+		HAMSMapper = hamsMapper;
 		UnitOfWork = unitOfWork;
 		CancellationToken = CancellationToken.None;
 	}

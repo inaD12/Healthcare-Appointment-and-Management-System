@@ -6,4 +6,7 @@ public abstract class AppClaims
 
 	public const string Id = nameof(Id);
 	public const string Role = nameof(Role);
+
+	public const string Sub = "sub";
+	public const string Permission = "permission";
 }

@@ -5,7 +5,7 @@ using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Abstractions;
 
-namespace Appointments.Application.Consumers;
+namespace Appointments.Application.Features.Consumers;
 
 public sealed class UserCreatedIntegrationConsumer : IConsumer<UserCreatedIntegrationEvent>
 {
