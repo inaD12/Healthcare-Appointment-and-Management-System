@@ -1,8 +1,11 @@
-﻿using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
+﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 using Appointments.Application.UnitTests.Utilities;
+using Appointments.Domain.Entities;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
 
 namespace Appointments.Application.UnitTests.Commands.CancelAppointment;
@@ -14,16 +17,14 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 
 	public CancelAppointmentCommandHandlerUnitTests()
 	{
-		_handler = new CancelAppointmentCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository);
+		_handler = new CancelAppointmentCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository, AuthService);
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnFaliure_WhenAppointmentIsNotFound()
+	public async Task Handle_ShouldReturnFailure_WhenAppointmentIsNotFound()
 	{
 		//Arrange
-		var command = new CancelAppointmentCommand(
-			AppointmentsTestUtilities.InvalidId,
-			AppointmentsTestUtilities.DoctorId);
+		var command = new CancelAppointmentCommand(AppointmentsTestUtilities.InvalidId);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -35,13 +36,18 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 
 
 	[Fact]
-	public async Task Handle_ShouldReturnFaliure_WhenIdsDontMatch()
+	public async Task Handle_ShouldReturnFailure_WhenIdsDontMatch()
 	{
 		//Arrange
 		var appointment = GetAppointment();
-		var command = new CancelAppointmentCommand(
-			appointment.Id,
-			AppointmentsTestUtilities.InvalidId);
+		var command = new CancelAppointmentCommand(appointment.Id);
+		
+		AuthService
+			.AuthorizeAsync(
+				Arg.Any<ClaimsPrincipal>(), 
+				Arg.Any<Appointment>(), 
+				Arg.Any<IEnumerable<IAuthorizationRequirement>>())
+			.Returns(Task.FromResult(AuthorizationResult.Failed()));
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -52,13 +58,11 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnFaliure_WhenAppointmentIsNotScheduled()
+	public async Task Handle_ShouldReturnFailure_WhenAppointmentIsNotScheduled()
 	{
 		//Arrange
 		var appointment = GetAppointment(true);
-		var command = new CancelAppointmentCommand(
-			appointment.Id,
-			appointment.DoctorId);
+		var command = new CancelAppointmentCommand(appointment.Id);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -69,13 +73,11 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnFaliure_WhenAppointmentAlreadyStarted()
+	public async Task Handle_ShouldReturnFailure_WhenAppointmentAlreadyStarted()
 	{
 		//Arrange
 		var appointment = GetAppointment();
-		var command = new CancelAppointmentCommand(
-			appointment.Id,
-			appointment.DoctorId);
+		var command = new CancelAppointmentCommand(appointment.Id);
 
 		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.FutureDate);
 
@@ -92,9 +94,7 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	{
 		//Arrange
 		var appointment = GetAppointment();
-		var command = new CancelAppointmentCommand(
-			appointment.Id,
-			appointment.DoctorId);
+		var command = new CancelAppointmentCommand(appointment.Id);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -110,9 +110,7 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	{
 		//Arrange
 		var appointment = GetAppointment();
-		var command = new CancelAppointmentCommand(
-			appointment.Id,
-			appointment.DoctorId);
+		var command = new CancelAppointmentCommand(appointment.Id);
 
 		//Act
 		var result = await _handler.Handle(command, CancellationToken);

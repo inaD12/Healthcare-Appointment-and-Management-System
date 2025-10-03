@@ -25,11 +25,12 @@ public static class ServiceCollectionExtensions
 		services
 			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddHostedService<HangfireHostedService>()
+			.AddAuth(configuration)
+			.AddPermissionService()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
-				optionsAction.MapEnum<Roles>("roles");
-
 				optionsAction.MapEnum<AppointmentStatus>("appointmentstatus");
+				optionsAction.MapEnum<Roles>("roles");
 			});
 
 		return services;

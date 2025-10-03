@@ -10,7 +10,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		serviceCollection
-			.AddAuthentication(configuration)
 			.AddSwagger()
 			.ConfigureCors(configuration)
 			.AddMediatR(currentAssembly)

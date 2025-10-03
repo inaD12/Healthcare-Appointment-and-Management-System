@@ -3,6 +3,7 @@ using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
@@ -50,7 +51,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 	{
 		var user = User.Create(
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.EMAIL_MAX_LENGTH, UsersBusinessConfiguration.EMAIL_MIN_LENGTH),
-			Roles.Patient,
+			Role.Patient,
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH),
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH, UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH),
 			UsersTestUtilities.PastDate,

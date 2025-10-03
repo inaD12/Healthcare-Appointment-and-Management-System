@@ -25,10 +25,8 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddUnitOfWork<UsersDbContext>()
-			.AddDatabaseContext<UsersDbContext>(configuration, optionsAction =>
-			{
-				optionsAction.MapEnum<Roles>("roles");
-			});
+			.AddAuth(configuration)
+			.AddDatabaseContext<UsersDbContext>(configuration);
 		
 		services.Configure<KeyCloakOptions>(configuration.GetSection("KeyCloak"));
 

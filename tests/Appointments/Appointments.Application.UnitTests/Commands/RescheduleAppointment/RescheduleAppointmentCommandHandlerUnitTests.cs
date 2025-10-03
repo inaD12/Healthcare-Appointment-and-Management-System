@@ -1,4 +1,6 @@
-﻿using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
+using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
@@ -6,6 +8,7 @@ using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
 
 namespace Appointments.Application.UnitTests.Commands.RescheduleAppointment;
@@ -20,7 +23,8 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 			HAMSMapper,
 			UnitOfWork,
 			AppointmentRepository,
-			DateTimeProvider);
+			DateTimeProvider,
+			AuthService);
 	}
 
 	[Fact]
@@ -30,7 +34,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 			AppointmentsTestUtilities.InvalidId,
-			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -51,10 +54,16 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		AppointmentsTestUtilities.InvalidId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
+		
+		AuthService
+			.AuthorizeAsync(
+				Arg.Any<ClaimsPrincipal>(), 
+				Arg.Any<Appointment>(), 
+				Arg.Any<IEnumerable<IAuthorizationRequirement>>())
+			.Returns(Task.FromResult(AuthorizationResult.Failed()));
 
 		// Act
 		var result = await _handler.Handle(command, CancellationToken);
@@ -72,7 +81,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -95,7 +103,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -116,7 +123,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.FutureDate,
 		AppointmentDuration.OneHour
 		);
@@ -139,7 +145,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -165,7 +170,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -192,7 +196,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -213,7 +216,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);
@@ -234,7 +236,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 		var command = new RescheduleAppointmentCommand
 		(
 		appointment.Id,
-		appointment.DoctorId,
 		AppointmentsTestUtilities.CurrentDate,
 		AppointmentDuration.OneHour
 		);

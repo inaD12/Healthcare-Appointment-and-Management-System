@@ -1,11 +1,11 @@
-﻿using Shared.Domain.Enums;
+﻿using Shared.Domain.Entities;
 
 namespace Users.Application.Features.Users.Models;
 
 public sealed record UserQueryViewModel(
 	string Id,
 	string Email,
-	Roles Role,
+	IReadOnlyCollection<Role> Roles,
 	string FirstName,
 	string LastName,
 	string PhoneNumber,

@@ -1,5 +1,7 @@
-﻿using Shared.Domain.Entities.Base;
+﻿using Shared.Domain.Entities;
+using Shared.Domain.Entities.Base;
 using Shared.Domain.Enums;
+using Shared.Domain.Extensions;
 using Shared.Domain.Results;
 using Users.Domain.Events;
 using Users.Domain.Responses;
@@ -8,8 +10,9 @@ namespace Users.Domain.Entities;
 
 public sealed class User : BaseEntity
 {
+	private readonly List<Role> _roles = [];
+	
 	public string Email { get; private set; }
-	public Roles Role { get; private set; }
 	public string FirstName { get; private set; }
 	public string LastName { get; private set; }
 	public DateTime DateOfBirth { get; private set; }
@@ -17,6 +20,7 @@ public sealed class User : BaseEntity
 	public string? Address { get; private set; }
 	public bool EmailVerified { get; private set; }
 	public string IdentityId { get; private set; }
+	public IReadOnlyCollection<Role> Roles => _roles.ToList();
 
 	private User()
 	{
@@ -24,7 +28,6 @@ public sealed class User : BaseEntity
 
 	private User(
 		string email,
-		Roles role,
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
@@ -34,7 +37,6 @@ public sealed class User : BaseEntity
 		string? address)
 	{
 		Email = email;
-		Role = role;
 		FirstName = firstName;
 		LastName = lastName;
 		DateOfBirth = dateOfBirth;
@@ -46,7 +48,7 @@ public sealed class User : BaseEntity
 
 	public static User Create(
 		string email,
-		Roles role,
+		Role role,
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
@@ -56,7 +58,6 @@ public sealed class User : BaseEntity
 	{
 		var user = new User(
 			email,
-			role,
 			firstName,
 			lastName,
 			dateOfBirth,
@@ -65,7 +66,9 @@ public sealed class User : BaseEntity
 			phoneNumber,
 			address);
 
-		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Role));
+		user._roles.Add(role);
+		
+		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
 
 		return user;
 	}

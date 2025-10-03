@@ -1,18 +1,17 @@
 ﻿using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
+using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
-using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
-using Shared.Domain.Enums;
 
-namespace Appointments.API.EndPoints;
+namespace Appointments.API.Appointments.EndPoints;
 
 internal class AppointmentsEndPoints : IEndPoints
 {
@@ -26,8 +25,8 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.CreateAppointment);
 
 		group.MapPut("cancel", Cancel)
 			.Produces(StatusCodes.Status200OK)
@@ -36,7 +35,7 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.CancelAppointment);
 
 		group.MapPut("reschedule", Reschedule)
 			.Produces<AppointmentCommandResponse>(StatusCodes.Status200OK)
@@ -45,22 +44,22 @@ internal class AppointmentsEndPoints : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+			.RequireAuthorization(Permissions.RescheduleAppointment);
 
 		group.MapGet("get-all", GetAll)
 			.Produces<AppointmentPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetAppointment);
 
 		group.MapGet("get/{id}", GetById)
 			.Produces<AppointmentQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetAppointment);
 	}
 
 	public async Task<IResult> Create(
@@ -80,26 +79,22 @@ internal class AppointmentsEndPoints : IEndPoints
 
 	public async Task<IResult> Cancel(
 		[FromBody] CancelAppointmentRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = mapper.Map<CancelAppointmentCommand>((request, userId));
+		var command = mapper.Map<CancelAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	public async Task<IResult> Reschedule(
 		[FromBody] RescheduleAppointmentRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
-		[FromServices] ISender sender,
+		[FromServices] ISender sender,	
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var claims = claimsExtractor.GetAllClaims();
-		var command = mapper.Map<RescheduleAppointmentCommand>((request, claims));
+		var command = mapper.Map<RescheduleAppointmentCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

@@ -1,8 +1,10 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Application.Abstractions;
+using Shared.Infrastructure.Authentication;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -42,22 +44,23 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ModifyUser);
 
 		group.MapGet("get-all", GetAll)
 			.Produces<UserPaginatedQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetUser);
 
 		group.MapGet("get/{id}", GetById)
 			.Produces<UserQueryResponse>(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.GetUser);
 
 		group.MapDelete("delete-current", DeleteCurrent)
 			.Produces(StatusCodes.Status200OK)
@@ -70,14 +73,15 @@ internal class UserEndPoints : IEndPoints
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError);
-		//.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.DeleteUser);
 
 		group.MapGet("verify-email", VerifyEmails)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.WithName("VerifyEmail");
+			.WithName("VerifyEmail")
+			.AllowAnonymous();
 	}
 
 	public async Task<IResult> Register(
@@ -85,6 +89,7 @@ internal class UserEndPoints : IEndPoints
 		[FromServices] ISender sender,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
+
 	{
 		var command = mapper.Map<RegisterUserCommand>(request);
 		var res = await sender.Send(command, cancellationToken);
@@ -97,13 +102,12 @@ internal class UserEndPoints : IEndPoints
 
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = mapper.Map<UpdateUserCommand>((request, userId));
+		var command = mapper.Map<UpdateUserCommand>((request, claims.GetUserId()));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -168,12 +172,11 @@ internal class UserEndPoints : IEndPoints
 	}
 
 	public async Task<IResult> DeleteCurrent(
-		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ClaimsPrincipal claims,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
-		var command = new DeleteUserCommand(userId);
+		var command = new DeleteUserCommand(claims.GetUserId().ToString());
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

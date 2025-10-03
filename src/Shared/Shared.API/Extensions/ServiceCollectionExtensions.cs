@@ -16,25 +16,6 @@ namespace Shared.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
-	{
-		services
-			.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-			.BindConfiguration(nameof(JwtBearerOptions))
-			.ValidateDataAnnotations()
-			.ValidateOnStart();
-
-		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer();
-
-		services
-			.AddAuthorization()
-			.AddHttpContextAccessor()
-			.AddScoped<IClaimsExtractor, ClaimsExtractor>();
-
-		return services;
-	}
-
 	public static void ConfigureSerilog(this IHostBuilder hostBuilder)
 	{
 		hostBuilder.UseSerilog((context, configuration) =>
