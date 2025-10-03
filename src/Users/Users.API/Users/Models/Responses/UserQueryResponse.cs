@@ -6,7 +6,7 @@ namespace Users.Users.Models.Responses;
 public sealed record UserQueryResponse(
 	string Id,
 	string Email,
-	List<Role> Role,
+	List<Roles> Roles,
 	string FirstName,
 	string LastName,
 	string PhoneNumber,

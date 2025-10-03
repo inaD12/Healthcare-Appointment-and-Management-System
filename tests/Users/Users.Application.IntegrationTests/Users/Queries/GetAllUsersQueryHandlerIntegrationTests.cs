@@ -2,6 +2,7 @@
 using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
+using Shared.Domain.Extensions;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.IntegrationTests.Utilities;
@@ -306,7 +307,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
+											 c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber);
 	}
@@ -342,7 +343,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
+											 c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -350,7 +351,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
+											 c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -386,7 +387,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user.FirstName &&
 											 c.LastName == user.LastName &&
 											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
+											 c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
 											 c.Address == user.Address &&
 											 c.PhoneNumber == user.PhoneNumber)
 									.And.Contain(c =>
@@ -394,7 +395,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 											 c.FirstName == user2.FirstName &&
 											 c.LastName == user2.LastName &&
 											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
+											 c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
 											 c.Address == user2.Address &&
 											 c.PhoneNumber == user2.PhoneNumber);
 	}
@@ -426,21 +427,21 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
@@ -470,21 +471,21 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
@@ -514,21 +515,21 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
@@ -558,21 +559,21 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
@@ -602,21 +603,21 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 
 	[Fact]
@@ -646,20 +647,20 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		response.IsSuccess.Should().BeTrue();
 		response.Value.Should().NotBeNull();
 		response.Value.Items.Should().Contain(c =>
-											 c.Id == user.Id &&
-											 c.FirstName == user.FirstName &&
-											 c.LastName == user.LastName &&
-											 c.Email == user.Email &&
-											 c.Roles.SequenceEqual(user.Roles) &&
-											 c.Address == user.Address &&
-											 c.PhoneNumber == user.PhoneNumber)
-									.And.Contain(c =>
-											 c.Id == user2.Id &&
-											 c.FirstName == user2.FirstName &&
-											 c.LastName == user2.LastName &&
-											 c.Email == user2.Email &&
-											 c.Roles.SequenceEqual(user2.Roles) &&
-											 c.Address == user2.Address &&
-											 c.PhoneNumber == user2.PhoneNumber);
+											c.Id == user.Id &&
+											c.FirstName == user.FirstName &&
+											c.LastName == user.LastName &&
+											c.Email == user.Email &&
+											c.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user.Address &&
+											c.PhoneNumber == user.PhoneNumber)
+										.And.Contain(c =>
+											c.Id == user2.Id &&
+											c.FirstName == user2.FirstName &&
+											c.LastName == user2.LastName &&
+											c.Email == user2.Email &&
+											c.Roles.SequenceEqual(user2.Roles.Select(u => u.MapToRoleEnum())) &&
+											c.Address == user2.Address &&
+											c.PhoneNumber == user2.PhoneNumber);
 	}
 }

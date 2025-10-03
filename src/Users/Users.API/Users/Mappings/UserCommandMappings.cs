@@ -17,6 +17,7 @@ public class UserCommandMappings : Profile
 	public UserCommandMappings()
 	{
 		CreateMap<Roles, Role>().ConvertUsing(role => role.MapToRole());
+		CreateMap<Role, Roles>().ConvertUsing(role => role.MapToRoleEnum());
 		
 		CreateMap<RegisterUserRequest, RegisterUserCommand>();
 

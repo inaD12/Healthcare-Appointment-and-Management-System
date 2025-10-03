@@ -32,9 +32,9 @@ public static class RolesExtensions
 	{
 		return role switch
 		{
-			var r when r == Role.Patient => Roles.Patient,
-			var r when r == Role.Doctor => Roles.Doctor,
-			var r when r == Role.Administrator => Roles.Admin,
+			var r when r.Name == Role.Patient.Name => Roles.Patient,
+			var r when r.Name == Role.Doctor.Name => Roles.Doctor,
+			var r when r.Name == Role.Administrator.Name => Roles.Admin,
 			_ => throw new ArgumentOutOfRangeException(nameof(role), role, "Invalid role")
 		};
 	}

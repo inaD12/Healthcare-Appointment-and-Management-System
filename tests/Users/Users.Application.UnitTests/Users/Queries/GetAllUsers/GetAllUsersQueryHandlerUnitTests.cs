@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Domain.Infrastructure.Models;
 using Users.Domain.Responses;
@@ -105,7 +106,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 		result.Value!.Items.Should().AllSatisfy(ri =>
 		{
 			ri.Email.Should().Be(user.Email);
-			ri.Roles.Should().Contain(user.Roles);
+			ri.Roles.Should().Contain(user.Roles.Select(u => u.MapToRoleEnum()));
 			ri.FirstName.Should().Be(user.FirstName);
 			ri.LastName.Should().Be(user.LastName);
 			ri.PhoneNumber.Should().Be(user.PhoneNumber);

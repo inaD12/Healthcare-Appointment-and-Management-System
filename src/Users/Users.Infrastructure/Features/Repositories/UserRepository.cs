@@ -20,7 +20,9 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
 	{
-		var entitiesQuery = _context.Users.AsQueryable();
+		var entitiesQuery = _context.Users
+			.Include(u => u.Roles)
+			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(query.FirstName))
 			entitiesQuery = entitiesQuery.Where(u => EF.Functions.ILike(u.FirstName, $"{query.FirstName}%"));
@@ -54,7 +56,18 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 	public async Task<User?> GetByEmailAsync(string email)
 	{
-		var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+		var user = await _context.Users
+			.Include(u => u.Roles)
+			.FirstOrDefaultAsync(u => u.Email == email);
+
+		return user;
+	}
+
+	public override async Task<User?> GetByIdAsync(string id)
+	{
+		var user = await _context.Users
+			.Include(u => u.Roles)
+			.FirstOrDefaultAsync(u => u.Id == id);
 
 		return user;
 	}
