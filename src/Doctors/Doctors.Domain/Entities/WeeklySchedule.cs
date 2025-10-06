@@ -11,19 +11,20 @@ public sealed class WeeklySchedule
 
     private WeeklySchedule() { }
 
-    public static Result<WeeklySchedule> Create(IEnumerable<WorkDay> workDays)
+    public static Result<WeeklySchedule> Create(IEnumerable<WorkDay>? workDays)
     {
         var schedule = new WeeklySchedule();
 
-        foreach (var day in workDays)
-        {
-            var res = schedule.AddWorkDay(day);
-
-            if (res.IsFailure)
+        if (workDays != null)
+            foreach (var day in workDays)
             {
-                return Result<WeeklySchedule>.Failure(res.Response);
+                var res = schedule.AddWorkDay(day);
+
+                if (res.IsFailure)
+                {
+                    return Result<WeeklySchedule>.Failure(res.Response);
+                }
             }
-        }
 
         return Result<WeeklySchedule>.Success(schedule);
     }

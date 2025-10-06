@@ -113,6 +113,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doctors", "Doctors", "{F786
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctors.Domain", "src\Doctors\Doctors.Domain\Doctors.Domain.csproj", "{022618C3-5FDA-41E5-BB67-4E6D71842AC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctors.Application", "src\Doctors\Doctors.Application\Doctors.Application.csproj", "{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,10 @@ Global
 		{022618C3-5FDA-41E5-BB67-4E6D71842AC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{022618C3-5FDA-41E5-BB67-4E6D71842AC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{022618C3-5FDA-41E5-BB67-4E6D71842AC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -252,6 +258,7 @@ Global
 		{EC103236-E060-4B68-8782-6AED54DE9064} = {D905681D-E8DF-4A19-A4E0-3429A1DA1F1B}
 		{F78697AF-1762-452F-965C-7866D57DC6B0} = {56459A89-F3E4-4088-88A5-2B5B9B0EBA08}
 		{022618C3-5FDA-41E5-BB67-4E6D71842AC3} = {F78697AF-1762-452F-965C-7866D57DC6B0}
+		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19} = {F78697AF-1762-452F-965C-7866D57DC6B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B125A6E-E48E-43DC-A6A5-52495A64B42D}

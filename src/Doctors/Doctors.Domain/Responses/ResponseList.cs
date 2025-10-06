@@ -12,4 +12,5 @@ public static class ResponseList
 	public static Response ExceptionOverlap => Response.Create(ErrorMessages.ExceptionOverlap, HttpStatusCode.Conflict);
 	public static Response DuplicateWorkDay => Response.Create(ErrorMessages.DuplicateWorkDay, HttpStatusCode.Conflict);
 	public static Response WorkDayNotExist => Response.Create(ErrorMessages.WorkDayNotExist, HttpStatusCode.Conflict);
+	public static Response InvalidTimezone => Response.Create(ErrorMessages.InvalidTimezone, HttpStatusCode.BadRequest);
 }

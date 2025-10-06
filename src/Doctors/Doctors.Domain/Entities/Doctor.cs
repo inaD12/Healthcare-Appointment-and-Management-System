@@ -8,19 +8,15 @@ namespace Doctors.Domain.Entities;
 public sealed class Doctor : BaseEntity
 {
     public string UserId { get; init; }
-    public string FirstName { get; init; }
-    public string LastName { get; init; }
     public List<string> Specialities { get; private set; }
     public List<string> Locations { get; private set; }
-    public string TimeZoneId { get; private set; } = "UTC";
+    public string TimeZoneId { get; private set; }
 
     public WeeklySchedule WeeklySchedule { get; private set; }
     public List<DoctorAvailabilityException> AvailabilityExceptions { get; private set; }
 
     private Doctor(
         string userId,
-        string firstName,
-        string lastName,
         List<string> specialities,
         List<string> locations,
         string timeZoneId,
@@ -28,8 +24,6 @@ public sealed class Doctor : BaseEntity
         List<DoctorAvailabilityException> availabilityExceptions)
     {
         UserId = userId;
-        FirstName = firstName;
-        LastName = lastName;
         Specialities = specialities;
         Locations = locations;
         TimeZoneId = timeZoneId;
@@ -37,25 +31,24 @@ public sealed class Doctor : BaseEntity
         AvailabilityExceptions = availabilityExceptions;
     }
 
-    public static Doctor Create(
+    public static Result<Doctor> Create(
         string userId,
-        string firstName,
-        string lastName,
         List<string> specialities,
         List<string> locations,
         string timeZoneId,
-        WeeklySchedule weeklySchedule,
+        WeeklySchedule? weeklySchedule = null,
         List<DoctorAvailabilityException>? availabilityExceptions = null)
     {
-        return new Doctor(
+        if (!IsValidTimeZone(timeZoneId))
+            return Result<Doctor>.Failure(ResponseList.InvalidTimezone);
+        
+        return  Result<Doctor>.Success(new Doctor(
             userId,
-            firstName,
-            lastName,
             specialities,
             locations,
             timeZoneId,
-            weeklySchedule,
-            availabilityExceptions ?? new List<DoctorAvailabilityException>());
+            weeklySchedule ?? WeeklySchedule.Create(null).Value!,
+            availabilityExceptions ?? new List<DoctorAvailabilityException>()));
     }
     
     public Result AddUnavailability(DateTime start, DateTime end, string reason = "")
@@ -67,7 +60,7 @@ public sealed class Doctor : BaseEntity
     {
         return AddAvailabilityException(DoctorAvailabilityException.Create(start, end, AvailabilityExceptionType.ExtraAvailability, reason));
     }
-    
+
     public Result AddWorkDay(WorkDay workDay)
     {
         var result = WeeklySchedule.AddWorkDay(workDay);
@@ -123,6 +116,19 @@ public sealed class Doctor : BaseEntity
 
         AvailabilityExceptions.Add(exception);
         return Result.Success();
+    }
+    
+    private static bool IsValidTimeZone(string timeZoneId)
+    {
+        try
+        {
+            TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
 

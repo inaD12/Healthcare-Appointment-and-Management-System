@@ -35,7 +35,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		PasswordHashResult passwordHashResult = _passwordManager.HashPassword(request.Password);
 		var user = User.Create(request.Email, passwordHashResult.PasswordHash, passwordHashResult.Salt, request.Role, request.FirstName, request.LastName, request.DateOfBirth, request.PhoneNumber, request.Address);
 		await _userRepository.AddAsync(user);
-		await _unitOfWork.SaveChangesAsync();
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 		var userCommandViewModel = _hamsMapper.Map<UserCommandViewModel>(user);
 		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.RegistrationSuccessful);
