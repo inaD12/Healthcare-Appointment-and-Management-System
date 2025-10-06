@@ -1,7 +1,6 @@
 ﻿using Appointments.Application.Features.Appointments.Mappings;
 using Appointments.Application.Features.Mappings;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Utilities;
@@ -10,6 +9,7 @@ using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
+using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Infrastructure.Clock;

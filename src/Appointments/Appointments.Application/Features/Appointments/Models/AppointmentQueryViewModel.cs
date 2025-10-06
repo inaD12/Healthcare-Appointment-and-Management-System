@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
+using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.Features.Appointments.Models;
 

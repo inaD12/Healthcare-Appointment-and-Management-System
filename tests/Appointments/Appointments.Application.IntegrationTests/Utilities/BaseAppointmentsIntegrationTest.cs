@@ -1,5 +1,4 @@
 ﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Utilities;
 using Appointments.Infrastructure.Features.DBContexts;
@@ -8,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.IntegrationTests.Utilities;
 using Shared.Domain.Abstractions;
+using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.IntegrationTests.Utilities;
 
