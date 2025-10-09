@@ -1,3 +1,4 @@
+using Doctors.Domain.Events;
 using Doctors.Domain.Responses;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
@@ -53,12 +54,26 @@ public sealed class Doctor : BaseEntity
     
     public Result AddUnavailability(DateTime start, DateTime end, string reason = "")
     {
-        return AddAvailabilityException(DoctorAvailabilityException.Create(start, end, AvailabilityExceptionType.Unavailable, reason));
+        var result = AddAvailabilityException(DoctorAvailabilityException.Create(start, end, AvailabilityExceptionType.Unavailable, reason));
+        
+        if (result.IsSuccess)
+        {
+            RaiseDomainEvent(new DoctorAddedUnavailabilityDomainEvent(Id, start, end, reason));
+        }
+        
+        return result;
     }
 
     public Result AddExtraAvailability(DateTime start, DateTime end, string reason = "")
     {
-        return AddAvailabilityException(DoctorAvailabilityException.Create(start, end, AvailabilityExceptionType.ExtraAvailability, reason));
+        var result = AddAvailabilityException(DoctorAvailabilityException.Create(start, end, AvailabilityExceptionType.ExtraAvailability, reason));
+
+        if (result.IsSuccess)
+        {
+            RaiseDomainEvent(new DoctorAddedExtraAvailabilityDomainEvent(Id, start, end, reason));
+        }
+        
+        return result;
     }
 
     public Result AddWorkDay(WorkDay workDay)
@@ -67,6 +82,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
+        RaiseDomainEvent(new WorkDayScheduleAddedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -76,6 +92,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
+        RaiseDomainEvent(new WorkDayScheduleChangedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -85,6 +102,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
+        RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(Id, dayOfWeek));
         return Result.Success();
     }
 
