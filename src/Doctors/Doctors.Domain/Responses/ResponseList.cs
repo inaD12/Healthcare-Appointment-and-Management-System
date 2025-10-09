@@ -13,4 +13,5 @@ public static class ResponseList
 	public static Response DuplicateWorkDay => Response.Create(ErrorMessages.DuplicateWorkDay, HttpStatusCode.Conflict);
 	public static Response WorkDayNotExist => Response.Create(ErrorMessages.WorkDayNotExist, HttpStatusCode.Conflict);
 	public static Response InvalidTimezone => Response.Create(ErrorMessages.InvalidTimezone, HttpStatusCode.BadRequest);
+	public static Response DoctorNotFound => Response.Create(ErrorMessages.DoctorNotFound, HttpStatusCode.NotFound);
 }

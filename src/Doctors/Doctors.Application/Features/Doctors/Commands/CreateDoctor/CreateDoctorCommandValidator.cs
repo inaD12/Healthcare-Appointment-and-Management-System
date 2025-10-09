@@ -10,8 +10,7 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 		RuleFor(x => x.UserId)
 			.NotEmpty()
 			.MinimumLength(DoctorsBusinessConfiguration.ID_MIN_LENGTH)
-			.MaximumLength(DoctorsBusinessConfiguration.ID_MAX_LENGTH)
-			.EmailAddress();
+			.MaximumLength(DoctorsBusinessConfiguration.ID_MAX_LENGTH);
 
 		RuleFor(x => x.TimeZoneId)
 			.NotEmpty()
