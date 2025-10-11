@@ -1,6 +1,4 @@
-﻿using Doctors.Domain.Entities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Entities.ValueObjects;
+﻿using Shared.Domain.Abstractions;
 
 namespace Doctors.Domain.Events;
 
