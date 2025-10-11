@@ -9,12 +9,25 @@ namespace Doctors.Application.Features.Doctors.Commands.CreateDoctor;
 
 public sealed class CreateDoctorCommandHandler(
     IDoctorRepository doctorRepository,
+    ISpecialityRepository specialityRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<CreateDoctorCommand, DoctorCommandViewModel>
 {
     public async Task<Result<DoctorCommandViewModel>> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
     {
-        var doctorResult = Doctor.Create(request.UserId, request.Specialities, request.Locations, request.TimeZoneId);
+        var existingSpecialities = await specialityRepository
+            .GetByNamesAsync(request.Specialities, cancellationToken);
+
+        var doctorSpecialities = new List<Speciality>();
+
+        foreach (var name in request.Specialities)
+        {
+            var speciality = existingSpecialities.FirstOrDefault(s => s.Name == name)
+                             ?? new Speciality(name);
+            doctorSpecialities.Add(speciality);
+        }
+        
+        var doctorResult = Doctor.Create(request.UserId, doctorSpecialities, request.TimeZoneId);
         if (doctorResult.IsFailure)
             return Result<DoctorCommandViewModel>.Failure(doctorResult.Response);
         
