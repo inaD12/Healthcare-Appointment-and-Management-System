@@ -24,11 +24,7 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddMapper(currentAssembly)
-			.AddDateTimeProvider()
-			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
-			{
-				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
-			});
+			.AddDateTimeProvider();
 
 
 

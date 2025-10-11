@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Options;
 using Shared.Infrastructure.Clock;
+using Shared.Infrastructure.MessageBroker;
 
 namespace Shared.Infrastructure.Extensions;
 
@@ -54,6 +57,49 @@ public static class ServiceCollectionExtentions
 		services
 			.AddHealthChecks()
 			.AddDbContextCheck<TContext>();
+
+		return services;
+	}
+	
+	public static IServiceCollection AddMessageBroker(
+		this IServiceCollection services,
+		IConfiguration configuration,
+		Assembly assembly,
+		Action<IBusRegistrationConfigurator>? configure = null
+	)
+	{
+		services
+			.AddOptions<MessageBrokerOptions>()
+			.BindConfiguration(nameof(MessageBrokerOptions))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		var settings = configuration
+			.GetSection(nameof(MessageBrokerOptions))
+			.Get<MessageBrokerOptions>()!;
+
+		services.AddMassTransit(busConfigurator =>
+		{
+			busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+			busConfigurator.AddConsumers(assembly);
+
+			configure?.Invoke(busConfigurator);
+
+			busConfigurator.UsingRabbitMq((context, configurator) =>
+			{
+				configurator.Host(new Uri(settings.Host), h =>
+				{
+					h.Username(settings.Username);
+					h.Password(settings.Password);
+				});
+
+				configurator.ConfigureEndpoints(context);
+			});
+		});
+
+		services
+			.AddScoped<IEventBus, EventBus>();
 
 		return services;
 	}

@@ -1,10 +1,9 @@
-﻿using Emails.Application.Features.Emails.Extensions;
+﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
-using Shared.Infrastructure.Extensions;
 
-namespace Emails.Application.Extensions;
+namespace Doctors.Application.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -13,10 +12,8 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddEmailService(configuration);
-
-		services
-			.AddMessageBroker(configuration, currentAssembly);
+			.AddMediatR(currentAssembly)
+			.AddValidatorsFromAssembly(currentAssembly);
 
 		return services;
 	}

@@ -17,6 +17,8 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
+		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
+		
 		services
 			.AddTransient<IAppointmentRepository, AppointmentRepository>()
 			.AddScoped<IUserDataRepository, UserDataRepository>()
@@ -25,6 +27,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddHostedService<HangfireHostedService>()
+			.AddMessageBroker(configuration, currentAssembly)
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>
 			{
 				optionsAction.MapEnum<Roles>("roles");

@@ -28,49 +28,6 @@ public static class ServiceCollectionExtentions
 		return serviceCollection;
 	}
 
-	public static IServiceCollection AddMessageBroker(
-	   this IServiceCollection services,
-	   IConfiguration configuration,
-		Assembly assembly,
-	   Action<IBusRegistrationConfigurator>? configure = null
-	)
-	{
-		services
-			.AddOptions<MessageBrokerOptions>()
-			.BindConfiguration(nameof(MessageBrokerOptions))
-			.ValidateDataAnnotations()
-			.ValidateOnStart();
-
-		var settings = configuration
-			.GetSection(nameof(MessageBrokerOptions))
-			.Get<MessageBrokerOptions>()!;
-
-		services.AddMassTransit(busConfigurator =>
-		{
-			busConfigurator.SetKebabCaseEndpointNameFormatter();
-
-			busConfigurator.AddConsumers(assembly);
-
-			configure?.Invoke(busConfigurator);
-
-			busConfigurator.UsingRabbitMq((context, configurator) =>
-			{
-				configurator.Host(new Uri(settings.Host), h =>
-				{
-					h.Username(settings.Username);
-					h.Password(settings.Password);
-				});
-
-				configurator.ConfigureEndpoints(context);
-			});
-		});
-
-		services
-		   .AddScoped<IEventBus, EventBus>();
-
-		return services;
-	}
-
 	public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
 	{
 		serviceCollection.AddAutoMapper(assembly);
