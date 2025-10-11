@@ -77,6 +77,21 @@ services:
     restart: always
     networks:
       - my_network
+  
+  doctors.database:
+    image: postgres:latest
+    container_name: doctors.database
+    environment:
+      - POSTGRES_DB=doctorsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/doctors-db:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    restart: always
+    networks:
+      - my_network
 
   rabbit.mq:
     image: rabbitmq:3.11.7-management

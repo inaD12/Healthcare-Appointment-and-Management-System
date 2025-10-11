@@ -115,6 +115,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctors.Domain", "src\Docto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctors.Application", "src\Doctors\Doctors.Application\Doctors.Application.csproj", "{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doctors.Infrastructure", "src\Doctors\Doctors.Infrastructure\Doctors.Infrastructure.csproj", "{51DF4818-0413-4324-BCF9-0A4F70DDC686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -221,6 +223,10 @@ Global
 		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51DF4818-0413-4324-BCF9-0A4F70DDC686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51DF4818-0413-4324-BCF9-0A4F70DDC686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51DF4818-0413-4324-BCF9-0A4F70DDC686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51DF4818-0413-4324-BCF9-0A4F70DDC686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -259,6 +265,7 @@ Global
 		{F78697AF-1762-452F-965C-7866D57DC6B0} = {56459A89-F3E4-4088-88A5-2B5B9B0EBA08}
 		{022618C3-5FDA-41E5-BB67-4E6D71842AC3} = {F78697AF-1762-452F-965C-7866D57DC6B0}
 		{B21FCE0B-6717-4A9C-B5FC-773518EF1A19} = {F78697AF-1762-452F-965C-7866D57DC6B0}
+		{51DF4818-0413-4324-BCF9-0A4F70DDC686} = {F78697AF-1762-452F-965C-7866D57DC6B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B125A6E-E48E-43DC-A6A5-52495A64B42D}
