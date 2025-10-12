@@ -37,6 +37,18 @@ services:
         - "users.database"
     networks:
       - my_network
+        
+  doctors.api:
+    image: ${DOCKER_REGISTRY-}doctorsapi
+    build:
+      context: .
+      dockerfile: src/Doctors/Doctors.API/Dockerfile
+    ports:
+      - "5300:5300"
+    depends_on:
+      - "doctors.database"
+    networks:
+      - my_network
 
   emails.api:
     image: ${DOCKER_REGISTRY-}emailsapi
@@ -131,4 +143,3 @@ volumes:
 networks:
   my_network:
     driver: bridge
-
