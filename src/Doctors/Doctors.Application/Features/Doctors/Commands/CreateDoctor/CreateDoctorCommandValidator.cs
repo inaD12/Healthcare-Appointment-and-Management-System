@@ -19,10 +19,6 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 
 		RuleFor(x => x.Specialities)
 			.NotEmpty();
-		
-		
-		RuleFor(x => x.Locations)
-			.NotEmpty();
 	}
 	
 	private static bool IsValidTimeZone(string timeZoneId)
