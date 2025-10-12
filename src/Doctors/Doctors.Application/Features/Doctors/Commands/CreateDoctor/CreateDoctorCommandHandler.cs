@@ -1,6 +1,7 @@
 using Doctors.Application.Features.Doctors.Models;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Infrastructure.Abstractions.Repositories;
+using Doctors.Domain.Responses;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -15,6 +16,10 @@ public sealed class CreateDoctorCommandHandler(
 {
     public async Task<Result<DoctorCommandViewModel>> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
     {
+        var existingDoctor = await doctorRepository.GetByUserIdAsync(request.UserId, cancellationToken);
+        if (existingDoctor != null)
+            return Result<DoctorCommandViewModel>.Failure(ResponseList.DoctorAlreadyExists);
+        
         var existingSpecialities = await specialityRepository
             .GetByNamesAsync(request.Specialities, cancellationToken);
 

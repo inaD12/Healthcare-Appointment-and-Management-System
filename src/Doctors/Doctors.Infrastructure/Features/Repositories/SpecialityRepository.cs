@@ -17,9 +17,9 @@ public class SpecialityRepository: GenericRepository<Speciality>, ISpecialityRep
 
     public async Task<Speciality?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        var user = await _context.Specialities.FirstOrDefaultAsync(u => u.Name == name, cancellationToken);
+        var speciality = await _context.Specialities.FirstOrDefaultAsync(u => u.Name == name, cancellationToken);
 
-        return user;
+        return speciality;
     }
 
     public async Task<List<Speciality>> GetByNamesAsync(IEnumerable<string> names, CancellationToken cancellationToken = default)
