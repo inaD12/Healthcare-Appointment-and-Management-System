@@ -16,7 +16,7 @@ public sealed class AddWorkDayScheduleCommandHandler(
 {
     public async Task<Result> Handle(AddWorkDayScheduleCommand request, CancellationToken cancellationToken)
     {
-        var doctor = await doctorRepository.GetByIdAsync(request.DoctorId);
+        var doctor = await doctorRepository.GetByUserIdAsync(request.UserId,  cancellationToken);
         if (doctor == null)
             return Result.Failure(ResponseList.DoctorNotFound);
         

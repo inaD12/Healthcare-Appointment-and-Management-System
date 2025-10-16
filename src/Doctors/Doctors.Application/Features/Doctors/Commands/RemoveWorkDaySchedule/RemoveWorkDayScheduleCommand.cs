@@ -4,5 +4,5 @@ using Shared.Domain.Abstractions.Messaging;
 namespace Doctors.Application.Features.Doctors.Commands.RemoveWorkDaySchedule;
 
 public sealed record RemoveWorkDayScheduleCommand(
-    string DoctorId,
+    string UserId,
     DayOfWeek DayOfWeek) : ICommand;

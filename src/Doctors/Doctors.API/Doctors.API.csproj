@@ -14,6 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared.API\Shared.API.csproj" />
+      <ProjectReference Include="..\Doctors.Application\Doctors.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>

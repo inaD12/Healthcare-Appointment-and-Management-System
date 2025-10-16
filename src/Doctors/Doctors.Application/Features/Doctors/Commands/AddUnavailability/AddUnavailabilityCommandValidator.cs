@@ -7,7 +7,7 @@ public class AddUnavailabilityCommandValidator : AbstractValidator<AddUnavailabi
 {
     public AddUnavailabilityCommandValidator()
     {
-        RuleFor(x => x.DoctorId)
+        RuleFor(x => x.UserId)
             .NotEmpty()
             .MinimumLength(DoctorsBusinessConfiguration.ID_MIN_LENGTH)
             .MaximumLength(DoctorsBusinessConfiguration.ID_MAX_LENGTH);  

@@ -13,7 +13,7 @@ public sealed class AddExtraAvailabilityCommandHandler(
 {
     public async Task<Result> Handle(AddExtraAvailabilityCommand request, CancellationToken cancellationToken)
     {
-        var doctor = await doctorRepository.GetByIdAsync(request.DoctorId);
+        var doctor = await doctorRepository.GetByUserIdAsync(request.UserId, cancellationToken);
         if (doctor == null)
             return Result.Failure(ResponseList.DoctorNotFound);
         

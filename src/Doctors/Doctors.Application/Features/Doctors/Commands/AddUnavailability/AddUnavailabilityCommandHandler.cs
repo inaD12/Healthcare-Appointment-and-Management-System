@@ -13,7 +13,7 @@ public sealed class AddDoctorUnavailabilityCommandHandler(
 {
     public async Task<Result> Handle(AddUnavailabilityCommand request, CancellationToken cancellationToken)
     {
-        var doctor = await doctorRepository.GetByIdAsync(request.DoctorId);
+        var doctor = await doctorRepository.GetByUserIdAsync(request.UserId, cancellationToken);
         if (doctor == null)
             return Result.Failure(ResponseList.DoctorNotFound);
         
