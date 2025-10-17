@@ -15,6 +15,8 @@ public sealed class Doctor : BaseEntity
     public WeeklySchedule WeeklySchedule { get; private set; }
     public List<DoctorAvailabilityException> AvailabilityExceptions { get; private set; }
 
+    private Doctor(){}
+    
     private Doctor(
         string userId,
         List<Speciality> specialities,

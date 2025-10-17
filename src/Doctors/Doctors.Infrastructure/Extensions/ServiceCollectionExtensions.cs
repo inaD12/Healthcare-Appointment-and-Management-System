@@ -1,4 +1,5 @@
-﻿using Doctors.Domain.Infrastructure.Abstractions.Repositories;
+﻿using Doctors.Domain.Entities;
+using Doctors.Domain.Infrastructure.Abstractions.Repositories;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Helpers;
 using Doctors.Infrastructure.Features.Repositories;
@@ -26,7 +27,11 @@ public static class ServiceCollectionExtensions
 			{
 				busConfigurator.AddTransactionalOutbox<DoctorsDbContext>();
 			})
-			.AddDatabaseContext<DoctorsDbContext>(configuration);
+			.AddDatabaseContext<DoctorsDbContext>(configuration, optionsAction =>
+			{
+				optionsAction.MapEnum<DayOfWeek>("dayofweek");
+				optionsAction.MapEnum<AvailabilityExceptionType>("availabilityexceptiontype");
+			});
 
 		return services;
 	}

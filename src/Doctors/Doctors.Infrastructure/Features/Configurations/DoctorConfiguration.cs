@@ -52,7 +52,6 @@ internal class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
                 wd.OwnsMany(w => w.WorkTimes, wt =>
                 {
                     wt.ToTable("WorkTimeRanges");
-                    wt.WithOwner().HasForeignKey("WorkDayId");
                     wt.Property(p => p.Start)
                         .IsRequired();
                     wt.Property(p => p.End)
