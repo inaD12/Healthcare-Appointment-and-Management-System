@@ -20,4 +20,14 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
 
         return doctor;
     }
+
+    public override async Task<Doctor?> GetByIdAsync(string id)
+    {
+        var doctor = await _context.Doctors
+            .Include(d => d.Specialities)
+            .FirstOrDefaultAsync(d => d.Id == id);
+
+        return doctor;
+    }
+
 }

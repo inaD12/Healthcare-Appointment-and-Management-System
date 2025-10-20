@@ -1,6 +1,7 @@
 using Doctors.API.Doctors.Mappers;
 using Doctors.API.Doctors.Models.Requests;
 using Doctors.API.Doctors.Models.Responses;
+using Doctors.Application.Features.Doctors.Queries.GetDoctorById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
@@ -57,6 +58,17 @@ public class DoctorsEndPoints  : IEndPoints
 		
 		group.MapPost("/availability/unavailable", AddUnavailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
+		var adminGroup = app.MapGroup("/api/doctors")
+			.RequireAuthorization();
+		
+		adminGroup.MapGet("{doctorId}", GetByIdAsync)
+			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -138,5 +150,19 @@ public class DoctorsEndPoints  : IEndPoints
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> GetByIdAsync(
+		[FromRoute] string doctorId,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = new GetDoctorByIdQuery(doctorId);
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var queryResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
 	}
 }

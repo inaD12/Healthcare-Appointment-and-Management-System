@@ -1,4 +1,4 @@
-using Doctors.Application.Features.Doctors.Models;
+using Doctors.Application.Features.Doctors.Dtos;
 using Shared.Domain.Abstractions.Messaging;
 
 namespace Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;

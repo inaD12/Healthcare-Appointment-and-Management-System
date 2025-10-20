@@ -1,3 +1,4 @@
+using Doctors.Application.Features.Doctors.Dtos;
 using Doctors.Application.Features.Doctors.Models;
 using Shared.Domain.Abstractions.Messaging;
 

@@ -14,4 +14,6 @@ public sealed class Speciality : BaseEntity
     {
         Name = name;
     }
+    
+    public override string ToString() => Name;
 }

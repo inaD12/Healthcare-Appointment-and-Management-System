@@ -1,12 +1,12 @@
-using Doctors.API.Doctors.Models;
 using Doctors.API.Doctors.Models.Requests;
+using Doctors.API.Doctors.Models.Responses;
 using Doctors.Application.Features.Doctors.Commands.AddExtraAvailability;
 using Doctors.Application.Features.Doctors.Commands.AddUnavailability;
 using Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.ChangeWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.CreateDoctor;
 using Doctors.Application.Features.Doctors.Commands.RemoveWorkDaySchedule;
-using Doctors.Application.Features.Doctors.Models;
+using Doctors.Application.Features.Doctors.Dtos;
 
 namespace Doctors.API.Doctors.Mappers;
 
