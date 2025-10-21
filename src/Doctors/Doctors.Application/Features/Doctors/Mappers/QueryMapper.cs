@@ -1,6 +1,9 @@
 using Doctors.Application.Features.Doctors.Dtos;
 using Doctors.Application.Features.Doctors.Models;
+using Doctors.Application.Features.Doctors.Queries.GetAllDoctors;
 using Doctors.Domain.Entities;
+using Doctors.Domain.Infrastructure.Models;
+using Shared.Domain.Models;
 
 namespace Doctors.Application.Features.Doctors.Mappers;
 
@@ -35,4 +38,24 @@ public static class QueryMapper
             exception.Range.End,
             exception.Reason,
             exception.Type);
+
+    public static DoctorPagedListQuery ToInfraQuery(
+        this GetAllDoctorsQuery query)
+        => new(
+            query.Speciality,
+            query.TimeZoneId,
+            query.SortOrder,
+            query.SortPropertyName,
+            query.Page,
+            query.PageSize);
+    
+    public static DoctorPaginatedQueryViewModel ToViewModel(
+        this PagedList<Doctor> pagedList)
+        => new(
+            pagedList.Items.Select(i => i.ToQueryViewModel()).ToList(),
+            pagedList.Page,
+            pagedList.PageSize,
+            pagedList.TotalCount,
+            pagedList.HasNextPage,
+            pagedList.HasPreviousPage);
 }

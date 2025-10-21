@@ -74,6 +74,14 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
+		
+		adminGroup.MapGet("", GetAllAsync)
+			.Produces<DoctorPaginatedQueryResponse>()
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
 	}
 
 	private async Task<IResult> CreateDoctorAsync(
@@ -164,5 +172,19 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var queryResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
+	}
+	
+	private async Task<IResult> GetAllAsync(
+		[AsParameters] GetAllDoctorsRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery();
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var userCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 }
