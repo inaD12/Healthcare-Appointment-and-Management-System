@@ -72,6 +72,40 @@ public sealed class Doctor : BaseEntity
         
         return result;
     }
+    
+    public Result RemoveUnavailability(DateTime start, DateTime end)
+    {
+        var exceptions = RemoveAvailabilityExceptions(
+            DateTimeRange.Create(start, end),
+            AvailabilityExceptionType.Unavailable);
+        
+        if (!exceptions.Any())
+            return Result.Failure(ResponseList.ExceptionNotFound);
+
+        foreach (var exception in exceptions)
+            AvailabilityExceptions.Remove(exception);
+
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        return Result.Success();
+        
+    }
+
+    public Result RemoveExtraAvailability(DateTime start, DateTime end)
+    {
+        var exceptions = RemoveAvailabilityExceptions(
+            DateTimeRange.Create(start, end),
+            AvailabilityExceptionType.ExtraAvailability);
+        
+        if (!exceptions.Any())
+            return Result.Failure(ResponseList.ExceptionNotFound);
+
+        foreach (var exception in exceptions)
+            AvailabilityExceptions.Remove(exception);
+
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        return Result.Success();
+        
+    }
 
     public Result AddWorkDay(WorkDay workDay)
     {
@@ -132,6 +166,16 @@ public sealed class Doctor : BaseEntity
         AvailabilityExceptions.Add(exception);
         return Result.Success();
     }
+    
+    private List<DoctorAvailabilityException> RemoveAvailabilityExceptions(DateTimeRange range, AvailabilityExceptionType type)
+    {
+        var overlapping = AvailabilityExceptions
+            .Where(e => e.Type == type && e.Overlaps(range))
+            .ToList();
+
+        return overlapping;
+    }
+
     
     private static bool IsValidTimeZone(string timeZoneId)
     {
