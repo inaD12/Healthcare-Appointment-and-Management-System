@@ -31,6 +31,14 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
+		
+		group.MapDelete("/specialities", DeleteSpecialityAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
 
 		group.MapPost("/schedule/workdays", AddWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -135,7 +143,19 @@ public class DoctorsEndPoints  : IEndPoints
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
-
+	
+	private async Task<IResult> DeleteSpecialityAsync(
+		[FromBody] RemoveSpecialityRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = request.ToCommand(userId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
 	private async Task<IResult> AddWorkDayScheduleAsync(
 		[FromBody] AddWorkDayScheduleRequest request,
 		[FromServices] IClaimsExtractor claimsExtractor,

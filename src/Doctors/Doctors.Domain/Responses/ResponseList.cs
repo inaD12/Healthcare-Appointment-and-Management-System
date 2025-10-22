@@ -11,6 +11,7 @@ public static class ResponseList
 	// Error Responses
 	public static Response ExceptionOverlap => Response.Create(ErrorMessages.ExceptionOverlap, HttpStatusCode.Conflict);
 	public static Response SpecialityExists => Response.Create(ErrorMessages.SpecialityExists, HttpStatusCode.Conflict);
+	public static Response SpecialityNotExists => Response.Create(ErrorMessages.SpecialityNotExists, HttpStatusCode.NotFound);
 	public static Response ExceptionNotFound => Response.Create(ErrorMessages.ExceptionNotFound, HttpStatusCode.NotFound);
 	public static Response DuplicateWorkDay => Response.Create(ErrorMessages.DuplicateWorkDay, HttpStatusCode.Conflict);
 	public static Response WorkDayNotExist => Response.Create(ErrorMessages.WorkDayNotExist, HttpStatusCode.Conflict);

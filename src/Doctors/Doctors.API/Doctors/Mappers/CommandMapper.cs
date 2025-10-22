@@ -7,6 +7,7 @@ using Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.ChangeWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.CreateDoctor;
 using Doctors.Application.Features.Doctors.Commands.RemoveExtraAvailability;
+using Doctors.Application.Features.Doctors.Commands.RemoveSpeciality;
 using Doctors.Application.Features.Doctors.Commands.RemoveUnavailability;
 using Doctors.Application.Features.Doctors.Commands.RemoveWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Dtos;
@@ -88,6 +89,13 @@ public static class CommandMapper
     
     public static AddSpecialityCommand ToCommand(
         this AddSpecialityRequest request,
+        string userId)
+        => new(
+            userId,
+            request.Speciality);
+    
+    public static RemoveSpecialityCommand ToCommand(
+        this RemoveSpecialityRequest request,
         string userId)
         => new(
             userId,

@@ -147,6 +147,17 @@ public sealed class Doctor : BaseEntity
 
         return Result.Success();
     }
+    
+    public Result RemoveSpeciality(string name)
+    {
+        var speciality = Specialities.Find(p => p.Name == name);
+        if (speciality == null)
+            return Result.Failure(ResponseList.SpecialityNotExists);
+        
+        Specialities.Remove(speciality);
+
+        return Result.Success();
+    }
 
     public bool IsAvailable(DateTimeRange range)
     {
@@ -186,7 +197,6 @@ public sealed class Doctor : BaseEntity
 
         return overlapping;
     }
-
     
     private static bool IsValidTimeZone(string timeZoneId)
     {

@@ -10,4 +10,5 @@ public static class ErrorMessages
 	public const string DoctorNotFound = "Doctor not found";
 	public const string DoctorAlreadyExists = "Doctor already exists";
 	public const string SpecialityExists = "This speciality already belongs to this doctor";
+	public const string SpecialityNotExists = "This speciality doesn't belong to this doctor";
 }
