@@ -136,6 +136,17 @@ public sealed class Doctor : BaseEntity
         RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(Id, dayOfWeek));
         return Result.Success();
     }
+    
+    public Result AddSpeciality(Speciality speciality)
+    {
+        var exists = Specialities.Exists(p => p.Name == speciality.Name);
+        if (exists)
+            return Result.Failure(ResponseList.SpecialityExists);
+        
+        Specialities.Add(speciality);
+
+        return Result.Success();
+    }
 
     public bool IsAvailable(DateTimeRange range)
     {

@@ -1,6 +1,7 @@
 using Doctors.API.Doctors.Models.Requests;
 using Doctors.API.Doctors.Models.Responses;
 using Doctors.Application.Features.Doctors.Commands.AddExtraAvailability;
+using Doctors.Application.Features.Doctors.Commands.AddSpeciality;
 using Doctors.Application.Features.Doctors.Commands.AddUnavailability;
 using Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.ChangeWorkDaySchedule;
@@ -84,4 +85,11 @@ public static class CommandMapper
             userId,
             request.Start,
             request.End);
+    
+    public static AddSpecialityCommand ToCommand(
+        this AddSpecialityRequest request,
+        string userId)
+        => new(
+            userId,
+            request.Speciality);
 }
