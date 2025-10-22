@@ -24,6 +24,13 @@ public static class CommandMapper
             request.Specialities,
             request.TimeZoneId);
     
+    public static CreateDoctorCommand ToCommand(
+        this CreateDoctorByAdminRequest request)
+        => new(
+            request.UserId,
+            request.Specialities,
+            request.TimeZoneId);
+    
     public static AddWorkDayScheduleCommand ToCommand(
         this AddWorkDayScheduleRequest request,
         string userId)

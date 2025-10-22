@@ -99,6 +99,14 @@ public class DoctorsEndPoints  : IEndPoints
 		var adminGroup = app.MapGroup("/api/doctors")
 			.RequireAuthorization();
 		
+		adminGroup.MapPost("", CreateDoctorByAdminAsync)
+			.Produces<DoctorCommandResponse>()
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
 		adminGroup.MapGet("{doctorId}", GetByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
@@ -130,6 +138,19 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var doctorCommandResponse = new DoctorCommandResponse(res.Value!.Id);
 		return ControllerResponse.ParseAndReturnMessage(res, doctorCommandResponse);
+	}
+	
+	private async Task<IResult> CreateDoctorByAdminAsync(
+		[FromBody] CreateDoctorByAdminRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = request.ToCommand();
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		return ControllerResponse.ParseAndReturnMessage(res, new DoctorCommandResponse(res.Value!.Id));
 	}
 	
 	private async Task<IResult> AddSpecialityAsync(
