@@ -5,6 +5,8 @@ using Doctors.Application.Features.Doctors.Commands.AddUnavailability;
 using Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.ChangeWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Commands.CreateDoctor;
+using Doctors.Application.Features.Doctors.Commands.RemoveExtraAvailability;
+using Doctors.Application.Features.Doctors.Commands.RemoveUnavailability;
 using Doctors.Application.Features.Doctors.Commands.RemoveWorkDaySchedule;
 using Doctors.Application.Features.Doctors.Dtos;
 
@@ -61,9 +63,25 @@ public static class CommandMapper
             request.End,
             request.Reason);
 
-    private static WorkTimeRangeDto ToDto(
+    public static WorkTimeRangeDto ToDto(
         this WorkTimeRangeModel model)
         => new(
             model.Start,
             model.End);
+    
+    public static RemoveUnavailabilityCommand ToCommand(
+        this RemoveUnavailabilityRequest request,
+        string userId)
+        => new(
+            userId,
+            request.Start,
+            request.End);
+    
+    public static RemoveExtraAvailabilityCommand ToCommand(
+        this RemoveExtraAvailabilityRequest request,
+        string userId)
+        => new(
+            userId,
+            request.Start,
+            request.End);
 }

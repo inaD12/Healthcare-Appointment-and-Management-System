@@ -64,6 +64,22 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
 		
+		group.MapDelete("/availability/extra", DeleteExtraAvailabilityAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
+		group.MapDelete("/availability/unavailable", DeleteUnavailabilityAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
 		var adminGroup = app.MapGroup("/api/doctors")
 			.RequireAuthorization();
 		
@@ -150,6 +166,30 @@ public class DoctorsEndPoints  : IEndPoints
 
 	private async Task<IResult> AddUnavailabilityAsync(
 		[FromBody] AddUnavailabilityRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = request.ToCommand(userId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> DeleteExtraAvailabilityAsync(
+		[FromBody] RemoveExtraAvailabilityRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = request.ToCommand(userId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+
+	private async Task<IResult> DeleteUnavailabilityAsync(
+		[FromBody] RemoveUnavailabilityRequest request,
 		[FromServices] IClaimsExtractor claimsExtractor,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
