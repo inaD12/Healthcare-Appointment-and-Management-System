@@ -21,6 +21,7 @@ public static class CommandMapper
         string userId)
         => new(
             userId,
+            request.Bio,
             request.Specialities,
             request.TimeZoneId);
     
@@ -28,6 +29,7 @@ public static class CommandMapper
         this CreateDoctorByAdminRequest request)
         => new(
             request.UserId,
+            request.Bio,
             request.Specialities,
             request.TimeZoneId);
     
