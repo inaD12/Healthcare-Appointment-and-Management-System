@@ -143,10 +143,13 @@ public sealed class Doctor : BaseEntity
     
     public void UpdateProfile(string? timeZoneId, string? bio)
     {
-        TimeZoneId = timeZoneId ?? TimeZoneId;
-        Bio = bio ?? Bio;
+        if (!string.IsNullOrWhiteSpace(timeZoneId))
+            TimeZoneId = timeZoneId;
+
+        if (!string.IsNullOrWhiteSpace(bio))
+            Bio = bio;
     }
-    
+
     public Result AddSpeciality(Speciality speciality)
     {
         var exists = Specialities.Exists(p => p.Name == speciality.Name);

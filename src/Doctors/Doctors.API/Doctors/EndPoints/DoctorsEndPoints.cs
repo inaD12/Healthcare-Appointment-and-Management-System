@@ -2,6 +2,7 @@ using Doctors.API.Doctors.Mappers;
 using Doctors.API.Doctors.Models.Requests;
 using Doctors.API.Doctors.Models.Responses;
 using Doctors.Application.Features.Doctors.Queries.GetDoctorById;
+using Doctors.Application.Features.Doctors.Queries.GetDoctorByUserId;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
@@ -26,6 +27,14 @@ public class DoctorsEndPoints  : IEndPoints
 		
 		group.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
+		group.MapGet("", GetDoctorAsync)
+			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -123,15 +132,24 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
 		
-		adminGroup.MapGet("{doctorId}", GetByIdAsync)
+		adminGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
+
+		adminGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
+			.Produces<DoctorQueryResponse>()
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+
 		
-		adminGroup.MapGet("", GetAllAsync)
+		adminGroup.MapGet("", GetAllDoctorsAsync)
 			.Produces<DoctorPaginatedQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -189,6 +207,21 @@ public class DoctorsEndPoints  : IEndPoints
 		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> GetDoctorAsync(
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = new GetDoctorByUserIdQuery(userId);
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var queryResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
 	}
 	
 	private async Task<IResult> AddSpecialityAsync(
@@ -299,7 +332,7 @@ public class DoctorsEndPoints  : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 	
-	private async Task<IResult> GetByIdAsync(
+	private async Task<IResult> GetDoctorByIdAsync(
 		[FromRoute] string doctorId,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -313,7 +346,21 @@ public class DoctorsEndPoints  : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
 	}
 	
-	private async Task<IResult> GetAllAsync(
+	private async Task<IResult> GetDoctorByUserIdAsync(
+		[FromRoute] string userId,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = new GetDoctorByUserIdQuery(userId);
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var queryResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
+	}
+	
+	private async Task<IResult> GetAllDoctorsAsync(
 		[AsParameters] GetAllDoctorsRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)

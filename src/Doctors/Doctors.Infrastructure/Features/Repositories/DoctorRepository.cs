@@ -19,7 +19,9 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
 
     public async Task<Doctor?> GetByUserIdAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var doctor = await _context.Doctors.FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
+        var doctor = await _context.Doctors
+            .Include(d => d.Specialities)
+            .FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
 
         return doctor;
     }
