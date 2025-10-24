@@ -13,6 +13,7 @@ public static class QueryMapper
         => new(
             doctor.Id,
             doctor.UserId,
+            doctor.Bio,
             doctor.TimeZoneId,
             doctor.Specialities.Select(s => s.ToString()).ToList(),
             doctor.WorkDays.Select(s => s.ToResponse()).ToList(),

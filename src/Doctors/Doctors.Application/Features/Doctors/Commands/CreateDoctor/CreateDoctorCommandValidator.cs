@@ -17,8 +17,21 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 			.Must(IsValidTimeZone)
 			.WithMessage("Invalid timezone ID.");
 
+		RuleFor(x => x.Bio)
+			.NotEmpty()
+			.MinimumLength(DoctorsBusinessConfiguration.BIO_MIN_LENGTH)
+			.MaximumLength(DoctorsBusinessConfiguration.BIO_MAX_LENGTH);
+		
 		RuleFor(x => x.Specialities)
-			.NotEmpty();
+			.NotEmpty()
+			.WithMessage("At least one speciality is required.");
+
+		RuleForEach(x => x.Specialities)
+			.NotEmpty().WithMessage("Speciality cannot be empty.")
+			.MinimumLength(DoctorsBusinessConfiguration.SPECIALITY_MIN_LENGTH)
+			.MaximumLength(DoctorsBusinessConfiguration.SPECIALITY_MAX_LENGTH);
+
+
 	}
 	
 	private static bool IsValidTimeZone(string timeZoneId)

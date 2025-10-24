@@ -24,6 +24,14 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
 		
+		group.MapPut("", UpdateDoctorInfoAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
 		group.MapPost("/specialities", AddSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -107,6 +115,14 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError);
 		
+		adminGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError);
+		
 		adminGroup.MapGet("{doctorId}", GetByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
@@ -151,6 +167,28 @@ public class DoctorsEndPoints  : IEndPoints
 			return ControllerResponse.ParseAndReturnMessage(res);
 
 		return ControllerResponse.ParseAndReturnMessage(res, new DoctorCommandResponse(res.Value!.Id));
+	}
+	
+	private async Task<IResult> UpdateDoctorInfoAsync(
+		[FromBody] UpdateDoctorInfoRequest request,
+		[FromServices] IClaimsExtractor claimsExtractor,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = claimsExtractor.GetUserId();
+		var command = request.ToCommand(userId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> UpdateDoctorInfoByAdminAsync(
+		[FromBody] UpdateDoctorInfoByAdminRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = request.ToCommand();
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 	
 	private async Task<IResult> AddSpecialityAsync(

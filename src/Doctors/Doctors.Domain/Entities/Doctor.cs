@@ -141,6 +141,12 @@ public sealed class Doctor : BaseEntity
         return Result.Success();
     }
     
+    public void UpdateProfile(string? timeZoneId, string? bio)
+    {
+        TimeZoneId = timeZoneId ?? TimeZoneId;
+        Bio = bio ?? Bio;
+    }
+    
     public Result AddSpeciality(Speciality speciality)
     {
         var exists = Specialities.Exists(p => p.Name == speciality.Name);

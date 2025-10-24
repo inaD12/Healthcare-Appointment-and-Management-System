@@ -14,6 +14,7 @@ public static class QueryMapper
         => new(
             doctor.Id,
             doctor.UserId,
+            doctor.Bio,
             doctor.TimeZoneId,
             doctor.Specialities.Select(s => s.ToString()).ToList(),
             doctor.WeeklySchedule.WorkDays.Select(s => s.ToDto()).ToList(),

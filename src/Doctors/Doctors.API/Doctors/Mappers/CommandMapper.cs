@@ -10,6 +10,7 @@ using Doctors.Application.Features.Doctors.Commands.RemoveExtraAvailability;
 using Doctors.Application.Features.Doctors.Commands.RemoveSpeciality;
 using Doctors.Application.Features.Doctors.Commands.RemoveUnavailability;
 using Doctors.Application.Features.Doctors.Commands.RemoveWorkDaySchedule;
+using Doctors.Application.Features.Doctors.Commands.UpdateDoctorInfo;
 using Doctors.Application.Features.Doctors.Dtos;
 
 namespace Doctors.API.Doctors.Mappers;
@@ -32,6 +33,21 @@ public static class CommandMapper
             request.Bio,
             request.Specialities,
             request.TimeZoneId);
+    
+    public static UpdateDoctorInfoCommand ToCommand(
+        this UpdateDoctorInfoRequest request,
+        string userId)
+        => new(
+            userId,
+            request.NewBio,
+            request.NewTimeZoneId);
+    
+    public static UpdateDoctorInfoCommand ToCommand(
+        this UpdateDoctorInfoByAdminRequest request)
+        => new(
+            request.UserId,
+            request.NewBio,
+            request.NewTimeZoneId);
     
     public static AddWorkDayScheduleCommand ToCommand(
         this AddWorkDayScheduleRequest request,
