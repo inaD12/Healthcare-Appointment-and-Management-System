@@ -1,12 +1,26 @@
-﻿using Shared.Domain.Enums;
+﻿using System.Reflection;
+using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
 
 namespace Users.Domain.Utilities;
 
 public class UsersTestUtilities : SharedTestUtilities
 {
+	private static readonly ConstructorInfo ctor = typeof(Role).GetConstructor(
+		BindingFlags.Instance | BindingFlags.NonPublic,
+		binder: null,
+		types: [typeof(string)],
+		modifiers: null
+	)!;
+
+	public static readonly Role InvalidRole = (Role)ctor.Invoke(["InvalidRole"]);
+	
 	public static readonly string ValidId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
 	public static readonly string InvalidId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
+	
+	public static readonly string ValidIdentityId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
+	public static readonly string InvalidIdentityId = GetAverageString(UsersBusinessConfiguration.ID_MIN_LENGTH, UsersBusinessConfiguration.ID_MAX_LENGTH);
 
 	public static readonly string ValidFirstName = GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH);
 	public static readonly string ValidLastName = GetAverageString(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH, UsersBusinessConfiguration.LASTNAME_MAX_LENGTH);
@@ -21,8 +35,6 @@ public class UsersTestUtilities : SharedTestUtilities
 	public static readonly string ValidPhoneNumber = GetAverageLong(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH).ToString();
 	public static readonly string InvalidPhoneNumber = GetAverageLong(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH, UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH - 4).ToString() + "abcd";
 	public static readonly string ValidAdress = GetAverageString(UsersBusinessConfiguration.ADRESS_MIN_LENGTH, UsersBusinessConfiguration.ADRESS_MAX_LENGTH);
-	public static readonly string ValidPasswordHash = GetString();
-	public static readonly string ValidSalt = GetString();
 
 	public static readonly string ValidAddEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";
 	public static readonly string ValidUpdateEmail = GetAverageString(UsersBusinessConfiguration.EMAIL_MIN_LENGTH, UsersBusinessConfiguration.EMAIL_MAX_LENGTH - 12) + "@gmail.com";

@@ -1,5 +1,6 @@
-﻿using FluentValidation.TestHelper;
-using Shared.Domain.Enums;
+﻿using System.Reflection;
+using FluentValidation.TestHelper;
+using Shared.Domain.Entities;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Domain.Utilities;
@@ -28,7 +29,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -52,7 +53,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -74,7 +75,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -98,7 +99,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -120,7 +121,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -144,7 +145,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -166,7 +167,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -190,7 +191,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -212,7 +213,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.FutureDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -234,7 +235,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			null!,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -258,7 +259,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			SharedTestUtilities.GetLong(length).ToString(),
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -280,7 +281,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.InvalidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -302,7 +303,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			null!,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -326,7 +327,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			SharedTestUtilities.GetString(length),
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -340,6 +341,12 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 	public void TestValidate_ShouldHaveAnErrorForRole_WhenRoleIsInvalid()
 	{
 		// Arrange
+		var ctor = typeof(Role)
+			.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, new[] { typeof(string) }, null);
+
+		var invalidRole = (Role)ctor!.Invoke(new object[] { "InvalidRole" });
+
+		
 		var command = new RegisterUserCommand(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPassword,
@@ -348,7 +355,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			(Roles)99
+			invalidRole
 		);
 
 		// Act
@@ -370,7 +377,7 @@ public class RegisterUserCommandValidatorUnitTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act

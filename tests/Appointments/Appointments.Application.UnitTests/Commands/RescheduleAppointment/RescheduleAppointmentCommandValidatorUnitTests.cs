@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+﻿using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
+using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Utilities;
@@ -22,7 +23,6 @@ public class RescheduleAppointmentCommandValidatorUnitTests : BaseAppointmentsUn
 		// Arrange
 		var command = new RescheduleAppointmentCommand(
 			null!,
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.FutureDate,
 			AppointmentDuration.OneHour
 		);
@@ -43,7 +43,6 @@ public class RescheduleAppointmentCommandValidatorUnitTests : BaseAppointmentsUn
 		// Arrange
 		var command = new RescheduleAppointmentCommand(
 			SharedTestUtilities.GetString(length),
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.FutureDate,
 			AppointmentDuration.OneHour
 		);
@@ -56,50 +55,10 @@ public class RescheduleAppointmentCommandValidatorUnitTests : BaseAppointmentsUn
 	}
 
 	[Fact]
-	public void TestValidate_ShouldHaveAnErrorForUserId_WhenUserIdIsNull()
-	{
-		// Arrange
-		var command = new RescheduleAppointmentCommand(
-			AppointmentsTestUtilities.ValidId,
-			null!,
-			AppointmentsTestUtilities.FutureDate,
-			AppointmentDuration.OneHour
-		);
-
-		// Act
-		var result = _validator.TestValidate(command);
-
-		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.UserId);
-	}
-
-	[Theory]
-	[InlineData(default(int))]
-	[InlineData(AppointmentsBusinessConfiguration.ID_MIN_LENGTH - 1)]
-	[InlineData(AppointmentsBusinessConfiguration.ID_MAX_LENGTH + 1)]
-	public void TestValidate_ShouldHaveAnErrorForUserId_WhenUserIdLengthIsInvalid(int length)
-	{
-		// Arrange
-		var command = new RescheduleAppointmentCommand(
-			AppointmentsTestUtilities.ValidId,
-			SharedTestUtilities.GetString(length),
-			AppointmentsTestUtilities.FutureDate,
-			AppointmentDuration.OneHour
-		);
-
-		// Act
-		var result = _validator.TestValidate(command);
-
-		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.UserId);
-	}
-
-	[Fact]
 	public void TestValidate_ShouldHaveAnErrorForScheduledStartTime_WhenScheduledStartTimeIsInThePast()
 	{
 		// Arrange
 		var command = new RescheduleAppointmentCommand(
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.PastDate,
 			AppointmentDuration.OneHour
@@ -118,7 +77,6 @@ public class RescheduleAppointmentCommandValidatorUnitTests : BaseAppointmentsUn
 		// Arrange
 		var command = new RescheduleAppointmentCommand(
 			AppointmentsTestUtilities.ValidId,
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.FutureDate,
 			(AppointmentDuration)999
 		);
@@ -135,7 +93,6 @@ public class RescheduleAppointmentCommandValidatorUnitTests : BaseAppointmentsUn
 	{
 		// Arrange
 		var command = new RescheduleAppointmentCommand(
-			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.ValidId,
 			AppointmentsTestUtilities.FutureDate,
 			AppointmentDuration.OneHour

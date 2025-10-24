@@ -2,27 +2,21 @@
 using Appointments.Domain.Entities.Enums;
 using Shared.Domain.Abstractions.Messaging;
 
-namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 
 public sealed class RescheduleAppointmentCommand : ICommand<AppointmentCommandViewModel>
 {
 	public string AppointmentId { get; private set; }
-	public string UserId { get; private set; }
 	public DateTime ScheduledStartTime { get; private set; }
 	public AppointmentDuration Duration { get; private set; }
-	public bool IsAdmin { get; set; }
 
 	public RescheduleAppointmentCommand(
-		string appointmentID,
-		string userId,
+		string appointmentId,
 		DateTime scheduledStartTime,
-		AppointmentDuration duration,
-		bool isAdmin = false)
+		AppointmentDuration duration)
 	{
-		AppointmentId = appointmentID;
-		UserId = userId;
+		AppointmentId = appointmentId;
 		ScheduledStartTime = scheduledStartTime;
 		Duration = duration;
-		IsAdmin = isAdmin;
 	}
 }

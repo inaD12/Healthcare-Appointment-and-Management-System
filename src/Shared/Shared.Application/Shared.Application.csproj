@@ -28,11 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <Folder Include="Helpers\Abstractions\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\Abstractions\" />
+    <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
 </Project>

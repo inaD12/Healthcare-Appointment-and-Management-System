@@ -1,15 +1,16 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Users.Domain.Entities;
+using Users.Infrastructure.Features.Configurations;
 
-namespace Users.Infrastructure.DBContexts;
+namespace Users.Infrastructure.Features.DBContexts;
 
-public class UsersDBContext : DbContext
+public class UsersDbContext : DbContext
 {
 	public DbSet<User> Users { get; set; }
 	public DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
 
-	public UsersDBContext(DbContextOptions<UsersDBContext> options) : base(options) { }
+	public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) { }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -19,19 +20,9 @@ public class UsersDBContext : DbContext
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();
 
-		modelBuilder.Entity<User>()
-			.HasIndex(u => u.Email)
-			.IsUnique();
-
-		modelBuilder.Entity<EmailVerificationToken>(entity =>
-		{
-			entity.HasKey(e => e.Id);
-			entity.Property(e => e.UserId).IsRequired();
-
-			entity.HasOne(e => e.User)
-				.WithMany()
-				.HasForeignKey(e => e.UserId)
-				.OnDelete(DeleteBehavior.Cascade);
-		});
+		modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+		modelBuilder.ApplyConfiguration(new RoleConfiguration());
+		modelBuilder.ApplyConfiguration(new EmailVerificationTokenConfiguration());
+		modelBuilder.ApplyConfiguration(new UserConfiguration());
 	}
 }

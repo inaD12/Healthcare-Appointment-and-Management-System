@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Shared.Domain.Exceptions;
+using Shared.Domain.Extensions;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetById;
@@ -80,7 +81,7 @@ public class GetUserByIdQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 			a.Email == user.Email &&
 			a.PhoneNumber == user.PhoneNumber &&
 			a.Address == user.Address &&
-			a.Role == user.Role &&
+			a.Roles.SequenceEqual(user.Roles.Select(u => u.MapToRoleEnum())) &&
 			a.EmailVerified == user.EmailVerified
 		);
 	}

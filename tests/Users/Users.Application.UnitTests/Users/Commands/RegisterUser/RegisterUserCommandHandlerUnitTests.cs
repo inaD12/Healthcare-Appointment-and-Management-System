@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Users.Application.Features.Users.Commands.RegisterUser;
 using Users.Domain.Entities;
@@ -16,10 +17,10 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	public RegisterUserCommandHandlerTests()
 	{
 		_commandHandler = new RegisterUserCommandHandler(
-			PasswordManager,
 			HAMSMapper,
 			UnitOfWork,
-			UserRepository
+			UserRepository,
+			IdentityProviderService
 			);
 	}
 
@@ -31,12 +32,12 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 		var command = new RegisterUserCommand(
 			existingUser.Email,
 			UsersTestUtilities.ValidPassword,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
+			existingUser.FirstName,
+			existingUser.LastName,
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -48,32 +49,9 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallHashPassword_WhenModelIsCorrect()
-	{
-		//Arramge
-		var command = new RegisterUserCommand(
-			UsersTestUtilities.ValidEmail,
-			UsersTestUtilities.ValidPassword,
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName,
-			UsersTestUtilities.PastDate,
-			UsersTestUtilities.ValidPhoneNumber,
-			UsersTestUtilities.ValidAdress,
-			Roles.Patient
-		);
-
-		// Act
-		var result = await _commandHandler.Handle(command, CancellationToken);
-
-		// Assert
-		result.IsSuccess.Should().BeTrue();
-		PasswordManager.Received(1).HashPassword(command.Password);
-	}
-
-	[Fact]
 	public async Task Handle_ShouldCallAddAsync_WhenModelIsCorrect()
 	{
-		//Arramge
+		//Arrange
 		var command = new RegisterUserCommand(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPassword,
@@ -82,7 +60,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -97,13 +75,13 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			u.DateOfBirth == command.DateOfBirth &&
 			u.PhoneNumber == command.PhoneNumber &&
 			u.Address == command.Address &&
-			u.Role == command.Role));	
+			u.Roles.Contains(command.Role)));	
 	}
 
 	[Fact]
 	public async Task Handle_ShouldCallSaveChanges_WhenModelIsCorrect()
 	{
-		//Arramge
+		//Arrange
 		var command = new RegisterUserCommand(
 			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidPassword,
@@ -112,7 +90,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act
@@ -135,7 +113,7 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 			UsersTestUtilities.PastDate,
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress,
-			Roles.Patient
+			Role.Patient
 		);
 
 		// Act

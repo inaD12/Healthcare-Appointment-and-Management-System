@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
-using Users.Infrastructure.DBContexts;
+using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Infrastructure.Features.Helpers;
 
@@ -9,8 +9,8 @@ internal class DatabaseInitializer : IDatabaseInitializer
 {
 	public async Task ApplyMigrationsAsync(IServiceScope scope)
 	{
-		UsersDBContext dBContext =
-		   scope.ServiceProvider.GetRequiredService<UsersDBContext>();
+		UsersDbContext dBContext =
+		   scope.ServiceProvider.GetRequiredService<UsersDbContext>();
 
 		var pendingMigrations = await dBContext.Database.GetPendingMigrationsAsync();
 

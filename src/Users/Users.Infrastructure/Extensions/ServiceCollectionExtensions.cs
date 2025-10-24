@@ -1,14 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Infrastructure.DBContexts;
+using Users.Domain.Infrastructure.Auth.Abstractions;
+using Users.Domain.Infrastructure.Auth.Options;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Infrastructure.Features.Auth;
+using Users.Infrastructure.Features.DBContexts;
+using Users.Infrastructure.Features.Identity;
 
 namespace Users.Infrastructure.Extensions;
 
@@ -19,8 +21,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 		
 		services
-			.AddTransient<IPasswordManager, PasswordManager>()
-			.AddTransient<ITokenFactory, TokenFactory>()
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
@@ -32,9 +32,25 @@ public static class ServiceCollectionExtensions
 				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
 			})
 			.AddDatabaseContext<UsersDBContext>(configuration, optionsAction =>
+			.AddUnitOfWork<UsersDbContext>()
+			.AddAuth(configuration)
+			.AddDatabaseContext<UsersDbContext>(configuration);
+		
+		services.Configure<KeyCloakOptions>(configuration.GetSection("KeyCloak"));
+
+		services.AddTransient<KeyCloakAuthDelegatingHandler>();
+
+		services
+			.AddHttpClient<KeyCloakClient>((serviceProvider, httpClient) =>
 			{
-				optionsAction.MapEnum<Roles>("roles");
-			});
+				KeyCloakOptions keycloakOptions = serviceProvider
+					.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
+
+				httpClient.BaseAddress = new Uri(keycloakOptions.AdminUrl);
+			})
+			.AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
+
+		services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 
 		return services;
 	}

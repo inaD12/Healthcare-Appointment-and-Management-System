@@ -2,4 +2,4 @@
 
 namespace Shared.Application.IntegrationEvents;
 
-public record UserCreatedIntegrationEvent(string Id, string Email, Roles Role);
+public record UserCreatedIntegrationEvent(string Id, string Email, IReadOnlyCollection<Roles> Roles);

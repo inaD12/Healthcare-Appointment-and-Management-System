@@ -1,4 +1,4 @@
-using Appointments.API.Extentions;
+using Appointments.API.Extensions;
 using Appointments.Application.Extensions;
 using Appointments.Infrastructure.Extensions;
 using Hangfire;
@@ -17,7 +17,7 @@ builder.Host.ConfigureSerilog();
 builder.Services
 	.AddApplicationLayer(config)
 	.AddInfrastructureLayer(config)
-	.AddAPILayer(config);
+	.AddApiLayer(config);
 
 var app = builder.Build();
 

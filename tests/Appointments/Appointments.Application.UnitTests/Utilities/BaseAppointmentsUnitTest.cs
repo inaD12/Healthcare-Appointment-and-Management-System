@@ -1,10 +1,12 @@
-﻿using Appointments.Application.Features.Appointments.Mappings;
+﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Mappings;
 using Appointments.Application.Features.Mappings;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Utilities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
 using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
@@ -21,6 +23,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 	protected IDateTimeProvider DateTimeProvider { get; }
 	protected IAppointmentRepository AppointmentRepository { get; }
 	protected IUserDataRepository UserDataRepository { get; }
+	protected IAuthorizationService AuthService { get; }
 
 	protected BaseAppointmentsUnitTest()
 		: base(
@@ -40,6 +43,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		DateTimeProvider = Substitute.For<IDateTimeProvider>();
 		UserDataRepository = Substitute.For<IUserDataRepository>();
 		AppointmentRepository = Substitute.For<IAppointmentRepository>();
+		AuthService = Substitute.For<IAuthorizationService>();
 
 		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.CurrentDate);
 	}
@@ -67,7 +71,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		if (isCanceled)
 			appointment.Cancel(AppointmentsTestUtilities.PastDate);
 
-		var appointmentWithDetailsDTO = new AppointmentWithDetailsModel
+		var appointmentWithDetailsDto = new AppointmentWithDetailsModel
 		{
 			DoctorId = appointment.DoctorId,
 			PatientId = appointment.PatientId,
@@ -85,13 +89,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		var doctorData = new UserData(
 			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.DoctorEmail,
-			Roles.Doctor
+			[Roles.Doctor]
 		);
 
 		var patientData = new UserData(
 			AppointmentsTestUtilities.PatientId,
 			AppointmentsTestUtilities.PatientEmail,
-			Roles.Patient
+			[Roles.Patient]
 		);
 
 		UserDataRepository.GetUserDataByEmailAsync(Arg.Any<string>()).Returns(callInfo =>
@@ -105,6 +109,13 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 
 			return null;
 		});
+		
+		AuthService
+			.AuthorizeAsync(
+				Arg.Any<ClaimsPrincipal>(), 
+				Arg.Any<Appointment>(), 
+				Arg.Any<IEnumerable<IAuthorizationRequirement>>())
+			.Returns(Task.FromResult(AuthorizationResult.Success()));
 
 		AppointmentRepository.IsTimeSlotAvailableAsync(appointment.DoctorId, Arg.Any<DateTimeRange>())
 			.Returns(true);
@@ -113,7 +124,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			.Returns(appointment);
 
 		AppointmentRepository.GetAppointmentWithUserDetailsAsync(appointment.Id)
-			.Returns(appointmentWithDetailsDTO);
+			.Returns(appointmentWithDetailsDto);
 
 		AppointmentRepository.GetAllAsync(Arg.Is<AppointmentPagedListQuery>(q => 
 																				q.PatientId == appointment.PatientId &&

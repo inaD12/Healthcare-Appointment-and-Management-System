@@ -207,13 +207,11 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Email == command.NewEmail &&
 									  p.FirstName == command.FirstName &&
 									  p.LastName == command.LastName &&
-									  p.Role == user.Role &&
+									  p.Roles.SequenceEqual(user.Roles) &&
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -240,13 +238,10 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Email == command.NewEmail &&
 									  p.FirstName == user.FirstName &&
 									  p.LastName == user.LastName &&
-									  p.Role == user.Role &&
-									  p.Address == user.Address &&
+									  p.Roles.SequenceEqual(user.Roles) &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -273,13 +268,11 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Email == user.Email &&
 									  p.FirstName == command.FirstName &&
 									  p.LastName == user.LastName &&
-									  p.Role == user.Role &&
+									  p.Roles.SequenceEqual(user.Roles) &&
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 
 	[Fact]
@@ -306,12 +299,10 @@ public class UpdateUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 									  p.Email == user.Email &&
 									  p.FirstName == user.FirstName &&
 									  p.LastName == command.LastName &&
-									  p.Role == user.Role &&
+									  p.Roles.SequenceEqual(user.Roles) &&
 									  p.Address == user.Address &&
 									  p.PhoneNumber == user.PhoneNumber &&
 									  p.DateOfBirth == user.DateOfBirth &&
-									  p.PasswordHash == user.PasswordHash &&
-									  p.Salt == user.Salt
-									  );
+									  p.IdentityId == user.IdentityId);
 	}
 }
