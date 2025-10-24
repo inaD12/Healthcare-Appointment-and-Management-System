@@ -103,11 +103,12 @@ internal class UserEndPoints : IEndPoints
 	public async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
 		[FromServices] ISender sender,
-		[FromServices] ClaimsPrincipal claims,
+		HttpContext httpContext,
 		[FromServices] IHAMSMapper mapper,
 		CancellationToken cancellationToken)
 	{
-		var command = mapper.Map<UpdateUserCommand>((request, claims.GetUserId()));
+		var userId = httpContext.User.GetUserId();
+		var command = mapper.Map<UpdateUserCommand>((request, userId));
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -172,11 +173,12 @@ internal class UserEndPoints : IEndPoints
 	}
 
 	public async Task<IResult> DeleteCurrent(
-		[FromServices] ClaimsPrincipal claims,
+		HttpContext httpContext,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var command = new DeleteUserCommand(claims.GetUserId().ToString());
+		var userId = httpContext.User.GetUserId();
+		var command = new DeleteUserCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

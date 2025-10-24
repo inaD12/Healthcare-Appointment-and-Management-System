@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Doctors.API.Doctors.Mappers;
 using Doctors.API.Doctors.Models.Requests;
 using Doctors.API.Doctors.Models.Responses;
@@ -7,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
+using Shared.Infrastructure.Authentication;
 
 namespace Doctors.API.Doctors.EndPoints;
 
@@ -160,11 +162,11 @@ public class DoctorsEndPoints  : IEndPoints
 
 	private async Task<IResult> CreateDoctorAsync(
 		[FromBody] CreateDoctorRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
@@ -189,11 +191,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> UpdateDoctorInfoAsync(
 		[FromBody] UpdateDoctorInfoRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -210,11 +212,11 @@ public class DoctorsEndPoints  : IEndPoints
 	}
 	
 	private async Task<IResult> GetDoctorAsync(
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = new GetDoctorByUserIdQuery(userId);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
@@ -226,11 +228,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> AddSpecialityAsync(
 		[FromBody] AddSpecialityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -238,11 +240,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> DeleteSpecialityAsync(
 		[FromBody] RemoveSpecialityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -250,11 +252,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> AddWorkDayScheduleAsync(
 		[FromBody] AddWorkDayScheduleRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -262,11 +264,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> ChangeWorkDayScheduleAsync(
 		[FromBody] ChangeWorkDayScheduleRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -274,11 +276,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> RemoveWorkDayScheduleAsync(
 		[FromBody] RemoveWorkDayScheduleRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -286,11 +288,11 @@ public class DoctorsEndPoints  : IEndPoints
 
 	private async Task<IResult> AddExtraAvailabilityAsync(
 		[FromBody] AddExtraAvailabilityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -298,11 +300,11 @@ public class DoctorsEndPoints  : IEndPoints
 
 	private async Task<IResult> AddUnavailabilityAsync(
 		[FromBody] AddUnavailabilityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -310,11 +312,11 @@ public class DoctorsEndPoints  : IEndPoints
 	
 	private async Task<IResult> DeleteExtraAvailabilityAsync(
 		[FromBody] RemoveExtraAvailabilityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
@@ -322,11 +324,11 @@ public class DoctorsEndPoints  : IEndPoints
 
 	private async Task<IResult> DeleteUnavailabilityAsync(
 		[FromBody] RemoveUnavailabilityRequest request,
-		[FromServices] IClaimsExtractor claimsExtractor,
+		HttpContext httpContext,   
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var userId = claimsExtractor.GetUserId();
+		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);

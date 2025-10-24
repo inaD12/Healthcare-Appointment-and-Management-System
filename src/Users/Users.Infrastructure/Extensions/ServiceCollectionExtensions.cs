@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Abstractions;
-using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Infrastructure.Auth.Abstractions;
 using Users.Domain.Infrastructure.Auth.Options;
+using Users.Infrastructure.Features.Consumers;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
 using Users.Infrastructure.Features.DBContexts;
@@ -26,15 +27,15 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
-			.AddUnitOfWork<UsersDBContext>()
 			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
 			{
-				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
+				busConfigurator.AddTransactionalOutbox<UsersDbContext>();
+				
+				ConfigureConsumers(busConfigurator, instanceId: "users-service");
 			})
-			.AddDatabaseContext<UsersDBContext>(configuration, optionsAction =>
+			.AddDatabaseContext<UsersDbContext>(configuration)
 			.AddUnitOfWork<UsersDbContext>()
-			.AddAuth(configuration)
-			.AddDatabaseContext<UsersDbContext>(configuration);
+			.AddAuth(configuration);
 		
 		services.Configure<KeyCloakOptions>(configuration.GetSection("KeyCloak"));
 
@@ -53,5 +54,11 @@ public static class ServiceCollectionExtensions
 		services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 
 		return services;
+	}
+	
+	private static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
+	{
+		registrationConfigurator.AddConsumer<GetUserPermissionsRequestConsumer>()
+			.Endpoint(c => c.InstanceId = instanceId);
 	}
 }

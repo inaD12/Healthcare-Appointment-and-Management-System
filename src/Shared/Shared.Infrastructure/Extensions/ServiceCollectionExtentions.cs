@@ -130,63 +130,20 @@ public static class ServiceCollectionExtentions
 			.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer();
 
-		services
-			.AddAuthorization()
-			.AddHttpContextAccessor();
+		services.AddAuthorization();
 
-		services
-			.AddAuthorizationInternal();
+		services.AddHttpContextAccessor();
+
+		services.AddAuthorizationInternal();
 
 		return services;
 	}
+
 
 	public static IServiceCollection AddPermissionService(this IServiceCollection services)
 	{
 		services.AddScoped<IPermissionService, PermissionService>();
 		
-		return services;
-	}
-	
-	public static IServiceCollection AddMessageBroker(
-		this IServiceCollection services,
-		IConfiguration configuration,
-		Assembly assembly,
-		Action<IBusRegistrationConfigurator>? configure = null
-	)
-	{
-		services
-			.AddOptions<MessageBrokerOptions>()
-			.BindConfiguration(nameof(MessageBrokerOptions))
-			.ValidateDataAnnotations()
-			.ValidateOnStart();
-
-		var settings = configuration
-			.GetSection(nameof(MessageBrokerOptions))
-			.Get<MessageBrokerOptions>()!;
-
-		services.AddMassTransit(busConfigurator =>
-		{
-			busConfigurator.SetKebabCaseEndpointNameFormatter();
-
-			busConfigurator.AddConsumers(assembly);
-
-			configure?.Invoke(busConfigurator);
-
-			busConfigurator.UsingRabbitMq((context, configurator) =>
-			{
-				configurator.Host(new Uri(settings.Host), h =>
-				{
-					h.Username(settings.Username);
-					h.Password(settings.Password);
-				});
-
-				configurator.ConfigureEndpoints(context);
-			});
-		});
-
-		services
-			.AddScoped<IEventBus, EventBus>();
-
 		return services;
 	}
 }

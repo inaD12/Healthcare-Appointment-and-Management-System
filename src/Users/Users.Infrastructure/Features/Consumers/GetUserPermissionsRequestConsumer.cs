@@ -3,7 +3,7 @@ using Shared.Application.Authorization;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Results;
 
-namespace Users.Application.Features.Users.Consumers;
+namespace Users.Infrastructure.Features.Consumers;
 
 public class GetUserPermissionsRequestConsumer(IPermissionService permissionService) : IConsumer<GetUserPermissionsRequest>
 {
