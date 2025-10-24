@@ -38,11 +38,13 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
     public async Task<PagedList<Doctor>?> GetAllAsync(DoctorPagedListQuery query, CancellationToken cancellationToken = default)
     {
         var entitiesQuery = _context.Doctors
+            .AsNoTracking()
             .Include(d => d.Specialities)
             .Include(d => d.WeeklySchedule)
-            .ThenInclude(ws => ws.WorkDays)
-            .ThenInclude(wd => wd.WorkTimes)
+                .ThenInclude(ws => ws.WorkDays)
+                    .ThenInclude(wd => wd.WorkTimes)
             .Include(d => d.AvailabilityExceptions)
+            .AsSplitQuery()
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(query.Speciality))
