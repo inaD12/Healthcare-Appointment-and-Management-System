@@ -37,6 +37,18 @@ services:
         - "users.database"
     networks:
       - my_network
+        
+  doctors.api:
+    image: ${DOCKER_REGISTRY-}doctorsapi
+    build:
+      context: .
+      dockerfile: src/Doctors/Doctors.API/Dockerfile
+    ports:
+      - "5400:5400"
+    depends_on:
+      - "doctors.database"
+    networks:
+      - my_network
 
   emails.api:
     image: ${DOCKER_REGISTRY-}emailsapi
@@ -74,6 +86,21 @@ services:
       - ./.containers/users-db:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    restart: always
+    networks:
+      - my_network
+  
+  doctors.database:
+    image: postgres:latest
+    container_name: doctors.database
+    environment:
+      - POSTGRES_DB=doctorsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/doctors-db:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
     restart: always
     networks:
       - my_network
@@ -131,4 +158,3 @@ volumes:
 networks:
   my_network:
     driver: bridge
-

@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace Shared.Application.Extensions;
+namespace Shared.Infrastructure.Extensions;
 
 public static class BusRegistrationConfiguratorExtensions
 {

@@ -21,10 +21,17 @@ services:
       - ASPNETCORE_HTTP_PORTS=5100
     ports:
       - "5100:5100"
+        
+  doctors.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5400
+    ports:
+      - "5400:5400"
 
   emails.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTP_PORTS=5300
     ports:
-      - "8080"
+      - "5300:5300"

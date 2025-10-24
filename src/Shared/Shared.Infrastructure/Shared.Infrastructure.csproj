@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.4" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.4" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.4" />
     <PackageReference Include="MassTransit" Version="8.5.3" />
     <PackageReference Include="MassTransit.Newtonsoft" Version="8.5.3" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.3" />

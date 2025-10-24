@@ -3,11 +3,11 @@ using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.UnitTests.Commands.CreateAppointment;
 

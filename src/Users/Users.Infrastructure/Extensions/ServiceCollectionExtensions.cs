@@ -18,12 +18,20 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
+		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
+		
 		services
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
+			.AddUnitOfWork<UsersDBContext>()
+			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
+			{
+				busConfigurator.AddTransactionalOutbox<UsersDBContext>();
+			})
+			.AddDatabaseContext<UsersDBContext>(configuration, optionsAction =>
 			.AddUnitOfWork<UsersDbContext>()
 			.AddAuth(configuration)
 			.AddDatabaseContext<UsersDbContext>(configuration);

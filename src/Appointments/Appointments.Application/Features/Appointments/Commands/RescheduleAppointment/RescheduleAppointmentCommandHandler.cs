@@ -2,13 +2,14 @@
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Extensions;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
@@ -46,7 +47,7 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
 		}
 
-		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
+		var duration = DateTimeRangeFactory.FromDuration(request.ScheduledStartTime, request.Duration);
 
 		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(detailedAppointment.DoctorId, duration, cancellationToken))
 		{

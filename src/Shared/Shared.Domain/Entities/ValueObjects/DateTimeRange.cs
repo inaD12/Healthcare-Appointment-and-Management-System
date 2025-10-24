@@ -1,7 +1,6 @@
-﻿using Appointments.Domain.Entities.Enums;
-using Shared.Domain.Exceptions;
+﻿using Shared.Domain.Exceptions;
 
-namespace Appointments.Domain.Entities.ValueObjects;
+namespace Shared.Domain.Entities.ValueObjects;
 
 public sealed record DateTimeRange
 {
@@ -25,12 +24,5 @@ public sealed record DateTimeRange
 			Start = start.ToUniversalTime(),
 			End = end.ToUniversalTime()
 		};
-	}
-
-	public static DateTimeRange Create(DateTime start, AppointmentDuration duration)
-	{
-		DateTime end = start.AddMinutes((int)duration);
-
-		return Create(start, end);
 	}
 }

@@ -28,7 +28,6 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(dbOptions.ConnectionString)
-			.AddMessageBroker(configuration, currentAssembly)
 			.AddMapper(currentAssembly)
 			.AddDateTimeProvider();
 

@@ -1,12 +1,13 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.ValueObjects;
+using Appointments.Domain.Extensions;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
+using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
@@ -40,7 +41,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 		if (patientData == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.PatientNotFound);
 
-		var duration = DateTimeRange.Create(request.ScheduledStartTime, request.Duration);
+		var duration = DateTimeRangeFactory.FromDuration(request.ScheduledStartTime, request.Duration);
 
 		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.UserId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);

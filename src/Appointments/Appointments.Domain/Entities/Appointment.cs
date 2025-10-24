@@ -1,7 +1,7 @@
 ﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
 using Appointments.Domain.Responses;
 using Shared.Domain.Entities.Base;
+using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;
 
 namespace Appointments.Domain.Entities;
@@ -28,7 +28,8 @@ public sealed class Appointment : BaseEntity
 	public static Appointment Schedule(string patientId, string doctorId, DateTimeRange duration)
 	{
 		var appointment =  new Appointment(
-			patientId, doctorId,
+			patientId,
+			doctorId,
 			AppointmentStatus.Scheduled,
 			duration);
 
