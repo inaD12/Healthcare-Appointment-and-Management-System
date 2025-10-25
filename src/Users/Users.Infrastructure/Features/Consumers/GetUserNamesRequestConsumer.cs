@@ -1,6 +1,6 @@
 using MassTransit;
-using Shared.Application.Authorization;
 using Shared.Application.IntegrationEvents;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Results;
 using Users.Domain.Infrastructure.Abstractions;
 

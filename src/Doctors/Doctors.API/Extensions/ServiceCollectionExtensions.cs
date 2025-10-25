@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
 			.AddSwagger()
 			.ConfigureCors(configuration)
 			.AddMediatR(currentAssembly)
-			.AddEndpointsApiExplorer().AddHttpContextAccessor();
+			.AddEndpointsApiExplorer();
 
 		return serviceCollection;
 	}

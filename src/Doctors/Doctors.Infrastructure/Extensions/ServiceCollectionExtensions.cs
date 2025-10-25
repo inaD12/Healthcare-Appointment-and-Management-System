@@ -3,6 +3,7 @@ using Doctors.Domain.Infrastructure.Abstractions.Repositories;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Helpers;
 using Doctors.Infrastructure.Features.Repositories;
+using Doctors.Infrastructure.Features.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
@@ -15,11 +16,12 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
-		
+
 		services
 			.AddScoped<IDoctorRepository, DoctorRepository>()
 			.AddScoped<ISpecialityRepository, SpecialityRepository>()
-			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+			.AddScoped<IDatabaseInitializer, DatabaseInitializer>()
+			.AddTransient<INamesService, NamesService>();
 
 		services
 			.AddUnitOfWork<DoctorsDbContext>()

@@ -1,7 +1,7 @@
 using Shared.Domain.Results;
 using Users.Domain.Infrastructure.Models;
 
-namespace Users.Domain.Infrastructure.Abstractions;
+namespace Shared.Domain.Abstractions;
 
 public interface INamesService
 {
