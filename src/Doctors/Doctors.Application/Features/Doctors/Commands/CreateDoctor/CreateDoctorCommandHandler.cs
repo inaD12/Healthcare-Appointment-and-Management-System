@@ -32,7 +32,7 @@ public sealed class CreateDoctorCommandHandler(
             doctorSpecialities.Add(speciality);
         }
         
-        var doctorResult = Doctor.Create(request.UserId, request.Bio, doctorSpecialities, request.TimeZoneId);
+        var doctorResult = Doctor.Create(request.UserId, "","", request.Bio, doctorSpecialities, request.TimeZoneId);
         if (doctorResult.IsFailure)
             return Result<DoctorCommandViewModel>.Failure(doctorResult.Response);
         

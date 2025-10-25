@@ -9,6 +9,8 @@ namespace Doctors.Domain.Entities;
 public sealed class Doctor : BaseEntity
 {
     public string UserId { get; init; }
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
     public string Bio { get; private set; }
     public string TimeZoneId { get; private set; }
     public List<Speciality> Specialities { get; private set; }
@@ -19,6 +21,8 @@ public sealed class Doctor : BaseEntity
     
     private Doctor(
         string userId,
+        string firstName,
+        string lastName,
         string bio,
         List<Speciality> specialities,
         string timeZoneId,
@@ -26,6 +30,8 @@ public sealed class Doctor : BaseEntity
         List<DoctorAvailabilityException> availabilityExceptions)
     {
         UserId = userId;
+        FirstName = firstName;
+        LastName = lastName;
         Bio = bio;
         Specialities = specialities;
         TimeZoneId = timeZoneId;
@@ -35,6 +41,8 @@ public sealed class Doctor : BaseEntity
 
     public static Result<Doctor> Create(
         string userId,
+        string firstName,
+        string lastName,
         string bio,
         List<Speciality> specialities,
         string timeZoneId,
@@ -47,6 +55,8 @@ public sealed class Doctor : BaseEntity
         return  Result<Doctor>.Success(new Doctor(
             userId,
             bio,
+            firstName,
+            lastName,
             specialities,
             timeZoneId,
             weeklySchedule ?? WeeklySchedule.Create(null).Value!,
