@@ -159,6 +159,15 @@ public sealed class Doctor : BaseEntity
         if (!string.IsNullOrWhiteSpace(bio))
             Bio = bio;
     }
+    
+    public void UpdateNames(string? firstName, string? lastName)
+    {
+        if (!string.IsNullOrWhiteSpace(firstName))
+            FirstName = firstName;
+
+        if (!string.IsNullOrWhiteSpace(lastName))
+            LastName = lastName;
+    }
 
     public Result AddSpeciality(Speciality speciality)
     {
