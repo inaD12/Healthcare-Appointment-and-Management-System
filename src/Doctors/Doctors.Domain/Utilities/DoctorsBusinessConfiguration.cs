@@ -12,4 +12,10 @@ public class DoctorsBusinessConfiguration
 	public const int BIO_MAX_LENGTH = 500;
 	
 	public const int REASON_MAX_LENGTH = 200;
+	
+	public const int FIRSTNAME_MIN_LENGTH = 3;
+	public const int FIRSTNAME_MAX_LENGTH = 30;
+
+	public const int LASTTNAME_MIN_LENGTH = 3;
+	public const int LASTNAME_MAX_LENGTH = 30;
 }

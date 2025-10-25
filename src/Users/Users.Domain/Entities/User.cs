@@ -85,9 +85,29 @@ public sealed class User : BaseEntity
 
 	public void UpdateProfile(string? newEmail, string? firstName, string? lastName)
 	{
-		FirstName = firstName ?? FirstName;
-		LastName = lastName ?? LastName;
-		Email = newEmail ?? Email;
+		bool namesChanged = false;
+		
+		if (!string.IsNullOrWhiteSpace(newEmail))
+		{
+			Email = newEmail;
+		}
+		
+		if (!string.IsNullOrWhiteSpace(firstName))
+		{
+			FirstName = firstName;
+			namesChanged = true;
+		}
+
+		if (!string.IsNullOrWhiteSpace(lastName))
+		{
+			LastName = lastName;
+			namesChanged = true;
+		}
+
+		if (namesChanged)
+		{
+			RaiseDomainEvent(new UserUpdatedNamesDomainEvent(Id, FirstName, LastName));
+		}
 	}
 }
 

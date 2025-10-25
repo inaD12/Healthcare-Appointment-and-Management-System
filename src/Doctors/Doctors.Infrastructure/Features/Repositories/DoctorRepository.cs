@@ -47,16 +47,16 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
             .AsSplitQuery()
             .AsQueryable();
 
+        
+        if (!string.IsNullOrWhiteSpace(query.FirstName))
+            entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.FirstName, $"{query.FirstName}%"));
+        if (!string.IsNullOrWhiteSpace(query.LastName))
+            entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.LastName, $"{query.LastName}%"));
         if (!string.IsNullOrWhiteSpace(query.Speciality))
-        {
             entitiesQuery = entitiesQuery.Where(d =>
                 d.Specialities.Any(s => EF.Functions.ILike(s.Name, $"{query.Speciality}%")));
-        }
-
         if (!string.IsNullOrWhiteSpace(query.TimeZoneId))
-        {
             entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.TimeZoneId, $"{query.TimeZoneId}%"));
-        }
 
         entitiesQuery = entitiesQuery.ApplySorting(query.SortPropertyName, query.SortOrder);
 

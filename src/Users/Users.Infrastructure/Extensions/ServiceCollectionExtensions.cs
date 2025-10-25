@@ -60,5 +60,8 @@ public static class ServiceCollectionExtensions
 	{
 		registrationConfigurator.AddConsumer<GetUserPermissionsRequestConsumer>()
 			.Endpoint(c => c.InstanceId = instanceId);
+		
+		registrationConfigurator.AddConsumer<GetUserNamesRequestConsumer>()
+			.Endpoint(c => c.InstanceId = instanceId);
 	}
 }
