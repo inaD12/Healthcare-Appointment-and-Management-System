@@ -13,6 +13,8 @@ public static class QueryMapper
         this Doctor doctor)
         => new(
             doctor.Id,
+            doctor.FirstName,
+            doctor.LastName,
             doctor.UserId,
             doctor.Bio,
             doctor.TimeZoneId,
@@ -43,6 +45,8 @@ public static class QueryMapper
     public static DoctorPagedListQuery ToInfraQuery(
         this GetAllDoctorsQuery query)
         => new(
+            query.FirstName,
+            query.LastName,
             query.Speciality,
             query.TimeZoneId,
             query.SortOrder,

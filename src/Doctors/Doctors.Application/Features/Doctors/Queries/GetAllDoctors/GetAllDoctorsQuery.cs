@@ -5,6 +5,8 @@ using Shared.Domain.Enums;
 namespace Doctors.Application.Features.Doctors.Queries.GetAllDoctors;
 
 public sealed record GetAllDoctorsQuery(
+	string? FirstName,
+	string? LastName,
 	string? Speciality,
 	string? TimeZoneId,
 	SortOrder SortOrder,

@@ -5,6 +5,8 @@ namespace Doctors.API.Doctors.Models.Requests;
 
 public record GetAllDoctorsRequest
 (
+	string FirstName = "",
+	string LastName = "",
 	string Speciality = "",
 	string TimeZoneId  = "",
 	SortOrder SortOrder = SortOrder.ASC,

@@ -4,6 +4,8 @@ namespace Doctors.Application.Features.Doctors.Models;
 
 public sealed record DoctorQueryViewModel(
 	string Id,
+	string FirstName,
+	string LastName,
 	string UserId,
 	string Bio,
 	string TimeZoneId,
