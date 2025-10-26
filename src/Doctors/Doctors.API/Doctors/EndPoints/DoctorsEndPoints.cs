@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Doctors.API.Doctors.Mappers;
 using Doctors.API.Doctors.Models.Requests;
 using Doctors.API.Doctors.Models.Responses;
@@ -16,8 +15,7 @@ public class DoctorsEndPoints  : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var group = app.MapGroup("/api/doctors/me")
-			.RequireAuthorization();
+		var group = app.MapGroup("/api/doctors/me");
 
 		group.MapPost("", CreateDoctorAsync)
 			.Produces<DoctorCommandResponse>()
@@ -25,7 +23,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.CreateDoctor);
 		
 		group.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -33,7 +32,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.UpdateDoctor);
 		
 		group.MapGet("", GetDoctorAsync)
 			.Produces<DoctorQueryResponse>()
@@ -41,7 +41,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ViewDoctor);
 		
 		group.MapPost("/specialities", AddSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -49,7 +50,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.AddSpeciality);
 		
 		group.MapDelete("/specialities", DeleteSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -57,7 +59,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.RemoveSpeciality);
 
 		group.MapPost("/schedule/workdays", AddWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -65,7 +68,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.AddWorkDaySchedule);
 		
 		group.MapPut("/schedule/workdays", ChangeWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -73,7 +77,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ChangeWorkDaySchedule);
 		
 		group.MapDelete("/schedule/workdays", RemoveWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -81,7 +86,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.RemoveWorkDaySchedule);
 		
 		group.MapPost("/availability/extra", AddExtraAvailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -89,7 +95,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.AddExtraAvailability);
 		
 		group.MapPost("/availability/unavailable", AddUnavailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -97,7 +104,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.AddUnavailability);
 		
 		group.MapDelete("/availability/extra", DeleteExtraAvailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -105,7 +113,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.RemoveExtraAvailability);
 		
 		group.MapDelete("/availability/unavailable", DeleteUnavailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -113,10 +122,10 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
-		
-		var adminGroup = app.MapGroup("/api/doctors")
-			.RequireAuthorization();
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.RemoveUnavailability);
+
+		var adminGroup = app.MapGroup("/api/doctors");
 		
 		adminGroup.MapPost("", CreateDoctorByAdminAsync)
 			.Produces<DoctorCommandResponse>()
@@ -124,7 +133,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.CreateDoctorByAdmin);
 		
 		adminGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -132,7 +142,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.UpdateDoctorByAdmin);
 		
 		adminGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()
@@ -140,7 +151,8 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
 
 		adminGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
 			.Produces<DoctorQueryResponse>()
@@ -148,16 +160,17 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
 
-		
 		adminGroup.MapGet("", GetAllDoctorsAsync)
 			.Produces<DoctorPaginatedQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError);
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ViewAllDoctors);
 	}
 
 	private async Task<IResult> CreateDoctorAsync(
