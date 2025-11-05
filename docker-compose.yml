@@ -139,10 +139,33 @@ services:
     networks:
       - my_network
   
+  ollama:
+    container_name: ollama
+    image: docker.io/ollama/ollama:latest
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    ports:
+      - 7869:11434
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - ollama-docker
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    restart: unless-stopped
+    
 volumes:
- rabbitmq_data:
- rabbitmq_logs:
+  rabbitmq_data:
+  rabbitmq_logs:
+  ollama-data:
 
 networks:
+  ollama-docker:
+    external: false
   my_network:
     driver: bridge
