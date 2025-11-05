@@ -16,6 +16,8 @@ public class DoctorsDbContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
+		modelBuilder.HasPostgresExtension("vector");
+		
 		modelBuilder.AddInboxStateEntity();
 		modelBuilder.AddOutboxMessageEntity();
 		modelBuilder.AddOutboxStateEntity();

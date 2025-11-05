@@ -20,6 +20,7 @@
     <ItemGroup>
       <PackageReference Include="MassTransit" Version="8.5.4" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.4" />
+      <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.2" />
     </ItemGroup>
 
 </Project>

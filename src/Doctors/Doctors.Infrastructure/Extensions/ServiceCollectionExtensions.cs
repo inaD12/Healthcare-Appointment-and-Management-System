@@ -1,5 +1,7 @@
 ﻿using Doctors.Domain.Entities;
 using Doctors.Domain.Infrastructure.Abstractions.Repositories;
+using Doctors.Domain.Options;
+using Doctors.Infrastructure.Features.Clients;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Helpers;
 using Doctors.Infrastructure.Features.Repositories;
@@ -36,6 +38,21 @@ public static class ServiceCollectionExtensions
 				optionsAction.MapEnum<DayOfWeek>("dayofweek");
 				optionsAction.MapEnum<AvailabilityExceptionType>("availabilityexceptiontype");
 			});
+		
+		services
+			.AddOptions<OllamaOptions>()
+			.BindConfiguration(nameof(OllamaOptions))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		services.AddHttpClient<EmbeddingClient>(client =>
+		{
+			var settings = configuration
+				.GetSection(nameof(OllamaOptions))
+				.Get<OllamaOptions>()!;
+		
+			client.BaseAddress = new Uri(settings.Url);
+		});
 
 		return services;
 	}
