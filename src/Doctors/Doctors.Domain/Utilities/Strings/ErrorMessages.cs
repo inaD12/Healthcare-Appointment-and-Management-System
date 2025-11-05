@@ -9,6 +9,7 @@ public static class ErrorMessages
 	public const string InvalidTimezone = "Invalid timezone";
 	public const string DoctorNotFound = "Doctor not found";
 	public const string DoctorAlreadyExists = "Doctor already exists";
-	public const string SpecialityExists = "This speciality already belongs to this doctor";
-	public const string SpecialityNotExists = "This speciality doesn't belong to this doctor";
+	public const string SpecialityBelongsToDoctor = "This speciality already belongs to this doctor";
+	public const string SpecialityNotBelongToDoctor = "This speciality doesn't belong to this doctor";
+	public const string SpecialityNotExists = "The following specialities do not exist: {0}";
 }

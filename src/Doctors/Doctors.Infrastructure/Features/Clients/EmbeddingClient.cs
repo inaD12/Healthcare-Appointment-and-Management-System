@@ -1,11 +1,12 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using Doctors.Domain.Infrastructure.Abstractions;
 using Doctors.Domain.Options;
 using Microsoft.Extensions.Options;
 
 namespace Doctors.Infrastructure.Features.Clients;
 
-public class EmbeddingClient(HttpClient client, IOptions<OllamaOptions> options)
+public class EmbeddingClient(HttpClient client, IOptions<OllamaOptions> options): IEmbeddingClient
 {
     private readonly OllamaOptions _options = options.Value;
     

@@ -2,20 +2,22 @@
 using Doctors.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
 
 namespace Doctors.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Create_Database : Migration
+    public partial class Add_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:availabilityexceptiontype", "extra_availability,unavailable")
-                .Annotation("Npgsql:Enum:dayofweek", "friday,monday,saturday,sunday,thursday,tuesday,wednesday");
+                .Annotation("Npgsql:Enum:dayofweek", "friday,monday,saturday,sunday,thursday,tuesday,wednesday")
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
 
             migrationBuilder.CreateTable(
                 name: "Doctors",
@@ -23,6 +25,9 @@ namespace Doctors.Infrastructure.Features.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Bio = table.Column<string>(type: "text", nullable: false),
                     TimeZoneId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -74,7 +79,8 @@ namespace Doctors.Infrastructure.Features.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Embedding = table.Column<Vector>(type: "vector(1024)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -265,6 +271,15 @@ namespace Doctors.Infrastructure.Features.Migrations
                 name: "IX_OutboxState_Created",
                 table: "OutboxState",
                 column: "Created");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Specialities_Embedding",
+                table: "Specialities",
+                column: "Embedding")
+                .Annotation("Npgsql:IndexMethod", "hnsw")
+                .Annotation("Npgsql:IndexOperators", new[] { "vector_l2_ops" })
+                .Annotation("Npgsql:StorageParameter:ef_construction", 64)
+                .Annotation("Npgsql:StorageParameter:m", 16);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Specialities_Name",

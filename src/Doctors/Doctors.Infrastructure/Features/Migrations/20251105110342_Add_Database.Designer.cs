@@ -7,14 +7,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
 
 namespace Doctors.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(DoctorsDbContext))]
-    [Migration("20251023163829_Add_Bio")]
-    partial class Add_Bio
+    [Migration("20251105110342_Add_Database")]
+    partial class Add_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +27,7 @@ namespace Doctors.Infrastructure.Features.Migrations
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "availabilityexceptiontype", new[] { "extra_availability", "unavailable" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "dayofweek", new[] { "friday", "monday", "saturday", "sunday", "thursday", "tuesday", "wednesday" });
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("DoctorSpecialities", b =>
@@ -52,6 +54,14 @@ namespace Doctors.Infrastructure.Features.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("TimeZoneId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -70,11 +80,22 @@ namespace Doctors.Infrastructure.Features.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<Vector>("Embedding")
+                        .IsRequired()
+                        .HasColumnType("vector(1024)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Embedding")
+                        .HasAnnotation("Npgsql:StorageParameter:ef_construction", 64)
+                        .HasAnnotation("Npgsql:StorageParameter:m", 16);
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Embedding"), "hnsw");
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Embedding"), new[] { "vector_l2_ops" });
 
                     b.HasIndex("Name")
                         .IsUnique();

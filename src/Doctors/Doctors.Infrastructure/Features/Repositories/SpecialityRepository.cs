@@ -22,20 +22,24 @@ public class SpecialityRepository: GenericRepository<Speciality>, ISpecialityRep
         return speciality;
     }
 
-    public async Task<List<Speciality>> GetByNamesAsync(IEnumerable<string> names, CancellationToken cancellationToken = default)
+    public async Task<(List<Speciality> Found, List<string> Missing)> GetByNamesAsync(
+        IEnumerable<string> names, 
+        CancellationToken cancellationToken = default)
     {
-        if (names == null || !names.Any())
-            return new List<Speciality>();
-
         var normalizedNames = names
             .Where(n => !string.IsNullOrWhiteSpace(n))
             .Select(n => n.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        return await _context.Specialities
+        var found = await _context.Specialities
             .Where(s => normalizedNames.Contains(s.Name))
             .ToListAsync(cancellationToken);
+
+        var foundNames = found.Select(s => s.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var missing = normalizedNames.Except(foundNames, StringComparer.OrdinalIgnoreCase).ToList();
+
+        return (found, missing);
     }
 
 }

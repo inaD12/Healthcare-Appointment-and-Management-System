@@ -6,5 +6,5 @@ namespace Doctors.Domain.Infrastructure.Abstractions.Repositories;
 public interface ISpecialityRepository : IGenericRepository<Speciality>
 {
     Task<Speciality?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
-    Task<List<Speciality>> GetByNamesAsync(IEnumerable<string> names, CancellationToken cancellationToken = default);
+    Task<(List<Speciality> Found, List<string> Missing)> GetByNamesAsync(IEnumerable<string> names, CancellationToken cancellationToken = default);
 }

@@ -21,6 +21,7 @@
       <PackageReference Include="MassTransit" Version="8.5.4" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.4" />
       <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.2" />
+      <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
     </ItemGroup>
 
 </Project>
