@@ -1,6 +1,8 @@
+using Pgvector;
+
 namespace Doctors.Domain.Infrastructure.Abstractions;
 
 public interface IEmbeddingClient
 {
-    Task<float[]> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default);
+    Task<Vector> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default);
 }

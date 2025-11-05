@@ -149,7 +149,7 @@ services:
     environment:
       - OLLAMA_KEEP_ALIVE=24h
     networks:
-      - ollama-docker
+      - my_network
     deploy:
       resources:
         reservations:
@@ -168,7 +168,5 @@ volumes:
   users-db:
 
 networks:
-  ollama-docker:
-    external: false
   my_network:
     driver: bridge

@@ -3,6 +3,7 @@ using System.Text.Json;
 using Doctors.Domain.Infrastructure.Abstractions;
 using Doctors.Domain.Options;
 using Microsoft.Extensions.Options;
+using Pgvector;
 
 namespace Doctors.Infrastructure.Features.Clients;
 
@@ -10,7 +11,7 @@ public class EmbeddingClient(HttpClient client, IOptions<OllamaOptions> options)
 {
     private readonly OllamaOptions _options = options.Value;
     
-    public async Task<float[]> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default)
+    public async Task<Vector> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default)
     {
         var payload = new
         {
@@ -30,10 +31,12 @@ public class EmbeddingClient(HttpClient client, IOptions<OllamaOptions> options)
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         var json = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken);
 
-        return json.RootElement
-            .GetProperty("embedding")
+        var floats = json.RootElement
+            .GetProperty("embeddings")[0]
             .EnumerateArray()
             .Select(e => e.GetSingle())
             .ToArray();
+
+        return new Vector(floats);
     }
 }

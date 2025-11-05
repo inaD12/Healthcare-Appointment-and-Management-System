@@ -6,6 +6,7 @@ using Doctors.Infrastructure.Features.Clients;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Helpers;
 using Doctors.Infrastructure.Features.Repositories;
+using Doctors.Infrastructure.Features.Seed;
 using Doctors.Infrastructure.Features.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +41,8 @@ public static class ServiceCollectionExtensions
 				optionsAction.UseVector();
 				optionsAction.MapEnum<DayOfWeek>("dayofweek");
 				optionsAction.MapEnum<AvailabilityExceptionType>("availabilityexceptiontype");
-			});
+			})
+			.AddHostedService<SpecialitySeederHostedService>();;
 		
 		services
 			.AddOptions<OllamaOptions>()
