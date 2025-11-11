@@ -15,9 +15,19 @@ public class DoctorsEndPoints  : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var group = app.MapGroup("/api/doctors/me");
+		var specialitiesGroup = app.MapGroup("/api/specialities");
+		
+		specialitiesGroup.MapPost("/recommend", RecommendSpecialityAsync)
+			.Produces(StatusCodes.Status200OK)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.RequestRecommendations);
+		
+		var meGroup = app.MapGroup("/api/doctors/me");
 
-		group.MapPost("", CreateDoctorAsync)
+		meGroup.MapPost("", CreateDoctorAsync)
 			.Produces<DoctorCommandResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -26,7 +36,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.CreateDoctor);
 		
-		group.MapPut("", UpdateDoctorInfoAsync)
+		meGroup.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -35,7 +45,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.UpdateDoctor);
 		
-		group.MapGet("", GetDoctorAsync)
+		meGroup.MapGet("", GetDoctorAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -44,7 +54,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctor);
 		
-		group.MapPost("/specialities", AddSpecialityAsync)
+		meGroup.MapPost("/specialities", AddSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -53,7 +63,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.AddSpeciality);
 		
-		group.MapDelete("/specialities", DeleteSpecialityAsync)
+		meGroup.MapDelete("/specialities", DeleteSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -62,7 +72,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveSpeciality);
 
-		group.MapPost("/schedule/workdays", AddWorkDayScheduleAsync)
+		meGroup.MapPost("/schedule/workdays", AddWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -71,7 +81,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.AddWorkDaySchedule);
 		
-		group.MapPut("/schedule/workdays", ChangeWorkDayScheduleAsync)
+		meGroup.MapPut("/schedule/workdays", ChangeWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -80,7 +90,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ChangeWorkDaySchedule);
 		
-		group.MapDelete("/schedule/workdays", RemoveWorkDayScheduleAsync)
+		meGroup.MapDelete("/schedule/workdays", RemoveWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -89,7 +99,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveWorkDaySchedule);
 		
-		group.MapPost("/availability/extra", AddExtraAvailabilityAsync)
+		meGroup.MapPost("/availability/extra", AddExtraAvailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -98,7 +108,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.AddExtraAvailability);
 		
-		group.MapPost("/availability/unavailable", AddUnavailabilityAsync)
+		meGroup.MapPost("/availability/unavailable", AddUnavailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -107,7 +117,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.AddUnavailability);
 		
-		group.MapDelete("/availability/extra", DeleteExtraAvailabilityAsync)
+		meGroup.MapDelete("/availability/extra", DeleteExtraAvailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -116,7 +126,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveExtraAvailability);
 		
-		group.MapDelete("/availability/unavailable", DeleteUnavailabilityAsync)
+		meGroup.MapDelete("/availability/unavailable", DeleteUnavailabilityAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -173,6 +183,20 @@ public class DoctorsEndPoints  : IEndPoints
 			.RequireAuthorization(Permissions.ViewAllDoctors);
 	}
 
+	private async Task<IResult> RecommendSpecialityAsync(
+		[FromBody] RecommendSpecialityRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = request.ToCommand();
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var recommendSpecialityResponse = new RecommendSpecialityResponse(res.Value!);
+		return ControllerResponse.ParseAndReturnMessage(res, recommendSpecialityResponse);
+	}
+	
 	private async Task<IResult> CreateDoctorAsync(
 		[FromBody] CreateDoctorRequest request,
 		HttpContext httpContext,   

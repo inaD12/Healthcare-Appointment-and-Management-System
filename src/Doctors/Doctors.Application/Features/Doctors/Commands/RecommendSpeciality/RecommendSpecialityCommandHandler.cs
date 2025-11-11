@@ -36,7 +36,7 @@ public sealed class RecommendSpecialityCommandHandler(
 
         foreach (var speciality in matches)
         {
-            if (speciality.Distance <= 0.3)
+            if (speciality.Distance <= 0.45)
             {
                 validSpecialities.Add(speciality.ToViewModel());
             }
