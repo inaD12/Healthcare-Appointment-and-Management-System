@@ -24,22 +24,22 @@ public class SpecialitySeederHostedService(
             .Select(s => s.Name)
             .ToListAsync(cancellationToken);
 
-        var namesToAdd = Specialities.MedicalSpecialties
-            .Except(existingNames, StringComparer.OrdinalIgnoreCase)
+        var specialtiesToAdd = Specialities.MedicalSpecialties
+            .Where(speciality => !existingNames.Contains(speciality.Key, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
-        if (namesToAdd.Count == 0)
+        if (specialtiesToAdd.Count == 0)
         {
             Log.Information("Specialities already seeded.");
             return;
         }
 
-        Log.Information($"Seeding {namesToAdd.Count} specialities...");
+        Log.Information($"Seeding {specialtiesToAdd.Count} specialities...");
 
-        var tasks = namesToAdd.Select(async name =>
+        var tasks = specialtiesToAdd.Select(async speciality =>
         {
-            var embedding = await embeddingClient.GenerateEmbeddingAsync(name, cancellationToken);
-            return Speciality.Create(name, embedding);
+            var embedding = await embeddingClient.GenerateEmbeddingAsync(speciality.Value, cancellationToken);
+            return Speciality.Create(speciality.Key, speciality.Value, embedding);
         });
 
         var specialities = await Task.WhenAll(tasks);
