@@ -19,6 +19,9 @@
       <Reference Include="MassTransit.Abstractions">
         <HintPath>..\..\..\..\..\..\.nuget\packages\masstransit.abstractions\8.3.7-develop.2215\lib\net8.0\MassTransit.Abstractions.dll</HintPath>
       </Reference>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\mediatr\13.1.0\lib\net8.0\MediatR.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <ItemGroup>

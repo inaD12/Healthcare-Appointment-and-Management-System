@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using Shared.Domain.Exceptions;
 
 namespace Doctors.Domain.Entities;
@@ -14,7 +15,11 @@ public sealed class WorkDay
     public static WorkDay Create(DayOfWeek dayOfWeek, IEnumerable<WorkTimeRange> workTimes)
     {
         if (workTimes == null || !workTimes.Any())
-            throw new HAMSValidationException("WorkDay", "At least one work time is required");
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "WorkDay", "At least one work time is required")
+            });
 
         var sortedTimes = workTimes.OrderBy(w => w.Start).ToList();
 
@@ -24,10 +29,12 @@ public sealed class WorkDay
             var current = sortedTimes[i];
 
             if (prev.Overlaps(current))
-                throw new HAMSValidationException(
-                    "WorkDay",
-                    $"Overlapping work time ranges on {dayOfWeek}: {prev.Start}-{prev.End} and {current.Start}-{current.End}"
-                );
+                throw new HamsValidationException(new[]
+                {
+                    new ValidationFailure(
+                        "WorkDay",
+                        $"Overlapping work time ranges on {dayOfWeek}: {prev.Start}-{prev.End} and {current.Start}-{current.End}")
+                });
         }
 
         return new WorkDay

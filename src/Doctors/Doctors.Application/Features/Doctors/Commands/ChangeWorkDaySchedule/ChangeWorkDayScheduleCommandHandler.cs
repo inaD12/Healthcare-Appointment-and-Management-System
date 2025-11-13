@@ -29,7 +29,7 @@ public sealed class ChangeWorkDayScheduleCommandHandler(
         {
             workDay = WorkDay.Create(request.DayOfWeek, workTimeRanges);
         }
-        catch (HAMSValidationException ex)
+        catch (HamsValidationException ex)
         {
             return Result.Failure(Response.Create(ex.Message, HttpStatusCode.Conflict));
         }

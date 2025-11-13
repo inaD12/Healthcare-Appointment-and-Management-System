@@ -5,7 +5,6 @@ using Hangfire;
 using Serilog;
 using Shared.API.Extensions;
 using Shared.API.Helpers;
-using Shared.API.Middlewares;
 using Shared.API.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +35,7 @@ app.UseCors(AppPolicies.CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseExceptionHandler();
 
 app.UseHangfireDashboard();
 

@@ -130,7 +130,7 @@ public class UpdateUserCommandValidatorUnitTests
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveAnyValidationError();
+		result.ShouldHaveValidationErrors();
 	}
 
 	[Fact]

@@ -41,7 +41,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -67,7 +67,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -91,7 +91,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -117,7 +117,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -141,7 +141,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -167,7 +167,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -191,7 +191,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -217,7 +217,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -241,7 +241,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -265,7 +265,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -291,7 +291,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -315,7 +315,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -339,7 +339,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -365,7 +365,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -389,7 +389,7 @@ public class RegisterUserCommandHandlerIntegrationTests : BaseUsersIntegrationTe
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]

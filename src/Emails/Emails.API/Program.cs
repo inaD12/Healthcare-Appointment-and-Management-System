@@ -2,7 +2,6 @@ using Emails.API.Extensions;
 using Emails.Application.Extensions;
 using Serilog;
 using Shared.API.Extensions;
-using Shared.API.Middlewares;
 using Shared.API.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +26,6 @@ app.UseSerilogRequestLogging();
 
 app.UseCors(AppPolicies.CorsPolicy);
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseExceptionHandler();
 
 app.Run();

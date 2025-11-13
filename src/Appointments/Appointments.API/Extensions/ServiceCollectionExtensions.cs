@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
 			.AddSwagger()
 			.ConfigureCors(configuration)
 			.AddEndpointsApiExplorer()
+			.AddExceptionHandling()
 			.AddMapper(currentAssembly);
 		
 		services

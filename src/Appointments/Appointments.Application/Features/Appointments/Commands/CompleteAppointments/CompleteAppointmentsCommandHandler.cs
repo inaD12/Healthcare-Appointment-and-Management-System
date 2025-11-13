@@ -26,7 +26,7 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 		var appointmentsToComplete = await _appointmentRepository
 			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow);
 
-		if (appointmentsToComplete.IsNullOrEmpty())
+		if (appointmentsToComplete == null || appointmentsToComplete.Count == 0)
 			return Result.Success();
 
 		foreach (var appointment in appointmentsToComplete!)

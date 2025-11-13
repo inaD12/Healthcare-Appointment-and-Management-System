@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;

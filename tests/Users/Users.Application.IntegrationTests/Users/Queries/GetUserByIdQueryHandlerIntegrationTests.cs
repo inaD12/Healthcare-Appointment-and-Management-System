@@ -28,7 +28,7 @@ public class GetUserByIdQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -45,7 +45,7 @@ public class GetUserByIdQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]

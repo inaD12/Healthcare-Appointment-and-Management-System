@@ -44,7 +44,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -72,7 +72,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -102,7 +102,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -132,7 +132,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -162,7 +162,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -192,7 +192,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -220,7 +220,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
@@ -248,7 +248,7 @@ public class GetAllUsersQueryHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]

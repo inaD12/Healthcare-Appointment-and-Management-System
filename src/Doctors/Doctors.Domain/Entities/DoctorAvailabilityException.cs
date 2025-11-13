@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Exceptions;
 
@@ -18,7 +19,10 @@ public sealed class DoctorAvailabilityException
         string reason = "")
     {
         if (start >= end)
-            throw new HAMSValidationException(nameof(DoctorAvailabilityException), "Start must be before end");
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(nameof(DoctorAvailabilityException), "Start must be before end")
+            });
 
         return new DoctorAvailabilityException
         {

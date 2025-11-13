@@ -28,7 +28,7 @@ public class DeleteUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Theory]
@@ -47,7 +47,7 @@ public class DeleteUserCommandHandlerIntegrationTests : BaseUsersIntegrationTest
 		// Assert
 		await action
 			.Should()
-			.ThrowAsync<HAMSValidationException>();
+			.ThrowAsync<HamsValidationException>();
 	}
 
 	[Fact]
