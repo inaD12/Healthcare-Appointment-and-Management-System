@@ -16,6 +16,7 @@ internal static class Permissions
     // Specialities
     internal const string AddSpeciality = "doctor:speciality:add";
     internal const string RemoveSpeciality = "doctor:speciality:remove";
+    internal const string RequestRecommendations = "doctor:speciality:recommend";
 
     // Schedule (Workdays)
     internal const string AddWorkDaySchedule = "doctor:schedule:workday:add";

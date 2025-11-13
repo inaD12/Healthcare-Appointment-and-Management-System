@@ -173,7 +173,7 @@ public sealed class Doctor : BaseEntity
     {
         var exists = Specialities.Exists(p => p.Name == speciality.Name);
         if (exists)
-            return Result.Failure(ResponseList.SpecialityExists);
+            return Result.Failure(ResponseList.SpecialityBelongsToDoctor);
         
         Specialities.Add(speciality);
 
@@ -184,7 +184,7 @@ public sealed class Doctor : BaseEntity
     {
         var speciality = Specialities.Find(p => p.Name == name);
         if (speciality == null)
-            return Result.Failure(ResponseList.SpecialityNotExists);
+            return Result.Failure(ResponseList.SpecialityNotBelongDoctor);
         
         Specialities.Remove(speciality);
 

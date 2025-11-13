@@ -5,21 +5,14 @@
 namespace Doctors.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_FirstName_LastName : Migration
+    public partial class Add_Description_To_Speciality : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "FirstName",
-                table: "Doctors",
-                type: "text",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "LastName",
-                table: "Doctors",
+                name: "Description",
+                table: "Specialities",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
@@ -29,12 +22,8 @@ namespace Doctors.Infrastructure.Features.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "FirstName",
-                table: "Doctors");
-
-            migrationBuilder.DropColumn(
-                name: "LastName",
-                table: "Doctors");
+                name: "Description",
+                table: "Specialities");
         }
     }
-}
+}   

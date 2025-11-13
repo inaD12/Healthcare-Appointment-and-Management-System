@@ -68,7 +68,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/appointments-db:/var/lib/postgresql/data
+      - appointments-db:/var/lib/postgresql/data
     ports:
       - "5434:5432"
     restart: always
@@ -83,7 +83,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/users-db:/var/lib/postgresql/data
+      - users-db:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     restart: always
@@ -91,14 +91,14 @@ services:
       - my_network
   
   doctors.database:
-    image: postgres:latest
+    image: pgvector/pgvector:pg18-trixie
     container_name: doctors.database
     environment:
       - POSTGRES_DB=doctorsdb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/doctors-db:/var/lib/postgresql/data
+      - doctors-db:/var/lib/postgresql/data
     ports:
       - "5435:5432"
     restart: always
@@ -139,9 +139,33 @@ services:
     networks:
       - my_network
   
+  ollama:
+    container_name: ollama
+    image: docker.io/ollama/ollama:latest
+    volumes:
+      - ./ollama/ollama:/root/.ollama
+    ports:
+      - "7869:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+    networks:
+      - my_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    restart: unless-stopped
+    
 volumes:
- rabbitmq_data:
- rabbitmq_logs:
+  rabbitmq_data:
+  rabbitmq_logs:
+  ollama-data:
+  doctors-db:
+  appointments-db:
+  users-db:
 
 networks:
   my_network:

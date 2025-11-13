@@ -36,6 +36,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.ViewAllDoctors,
             Permission.AddSpeciality,
             Permission.RemoveSpeciality,
+            Permission.RequestRecommendations,
             Permission.AddWorkDaySchedule,
             Permission.ChangeWorkDaySchedule,
             Permission.RemoveWorkDaySchedule,
@@ -73,6 +74,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.ViewAllDoctors),
                     CreateRolePermission(Role.Administrator, Permission.AddSpeciality),
                     CreateRolePermission(Role.Administrator, Permission.RemoveSpeciality),
+                    CreateRolePermission(Role.Administrator, Permission.RequestRecommendations),
                     CreateRolePermission(Role.Administrator, Permission.AddWorkDaySchedule),
                     CreateRolePermission(Role.Administrator, Permission.ChangeWorkDaySchedule),
                     CreateRolePermission(Role.Administrator, Permission.RemoveWorkDaySchedule),
@@ -90,6 +92,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Doctor, Permission.ViewDoctor),
                     CreateRolePermission(Role.Doctor, Permission.AddSpeciality),
                     CreateRolePermission(Role.Doctor, Permission.RemoveSpeciality),
+                    CreateRolePermission(Role.Doctor, Permission.RequestRecommendations),
                     CreateRolePermission(Role.Doctor, Permission.AddWorkDaySchedule),
                     CreateRolePermission(Role.Doctor, Permission.ChangeWorkDaySchedule),
                     CreateRolePermission(Role.Doctor, Permission.RemoveWorkDaySchedule),
@@ -101,7 +104,8 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     // --- Patient permissions ---
                     CreateRolePermission(Role.Patient, Permission.CreateAppointment),
                     CreateRolePermission(Role.Patient, Permission.CancelAppointment),
-                    CreateRolePermission(Role.Patient, Permission.RescheduleAppointment)
+                    CreateRolePermission(Role.Patient, Permission.RescheduleAppointment),
+                    CreateRolePermission(Role.Patient, Permission.RequestRecommendations)
                 );
             });
     }

@@ -30,21 +30,17 @@ public sealed class CreateDoctorCommandHandler(
             return Result<DoctorCommandViewModel>.Failure(SharedResponses.InternalError);
         }
         
-        var existingSpecialities = await specialityRepository
+        var (found, missing) = await specialityRepository
             .GetByNamesAsync(request.Specialities, cancellationToken);
 
-        var doctorSpecialities = new List<Speciality>();
-
-        foreach (var name in request.Specialities)
+        if (missing.Any())
         {
-            var speciality = existingSpecialities.FirstOrDefault(s => s.Name == name)
-                             ?? new Speciality(name);
-            doctorSpecialities.Add(speciality);
+            return Result<DoctorCommandViewModel>.Failure(ResponseList.SpecialityNotFound(missing));
         }
         
         var names = namesResult.Value!;
         
-        var doctorResult = Doctor.Create(request.UserId, names.FirstName,names.LastName, request.Bio, doctorSpecialities, request.TimeZoneId);
+        var doctorResult = Doctor.Create(request.UserId, names.FirstName,names.LastName, request.Bio, found, request.TimeZoneId);
         if (doctorResult.IsFailure)
             return Result<DoctorCommandViewModel>.Failure(doctorResult.Response);
         

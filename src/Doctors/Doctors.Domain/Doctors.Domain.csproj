@@ -10,4 +10,13 @@
       <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Utilities/specialities.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
+
 </Project>

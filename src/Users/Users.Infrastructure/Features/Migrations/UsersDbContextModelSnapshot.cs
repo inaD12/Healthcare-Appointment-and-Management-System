@@ -287,6 +287,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:speciality:recommend",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "doctor:schedule:workday:add",
                             RoleName = "Administrator"
                         },
@@ -362,6 +367,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:speciality:recommend",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "doctor:schedule:workday:add",
                             RoleName = "Doctor"
                         },
@@ -408,6 +418,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "appointment:reschedule",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:recommend",
                             RoleName = "Patient"
                         });
                 });
@@ -502,6 +517,10 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "doctor:speciality:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:speciality:recommend"
                         },
                         new
                         {
