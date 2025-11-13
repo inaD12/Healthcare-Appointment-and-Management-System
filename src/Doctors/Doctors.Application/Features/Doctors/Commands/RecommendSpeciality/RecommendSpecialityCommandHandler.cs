@@ -44,7 +44,6 @@ public sealed class RecommendSpecialityCommandHandler(
 
         if (validSpecialities.Count == 0)
         {
-            Log.Warning($"Symptoms in RecommendSpecialityCommandHandler do not match any speciality closely enough: {request.Symptoms}");
             return Result<List<SpecialityViewModel>>.Failure(ResponseList.NoCloseSpecialities);
         }
         

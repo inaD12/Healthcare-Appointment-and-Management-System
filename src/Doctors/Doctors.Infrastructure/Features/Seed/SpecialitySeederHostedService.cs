@@ -1,7 +1,8 @@
+using System.Text.Json;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Infrastructure.Abstractions;
-using Doctors.Domain.Utilities.Strings;
 using Doctors.Infrastructure.Features.DBContexts;
+using Doctors.Infrastructure.Features.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,8 +25,18 @@ public class SpecialitySeederHostedService(
             .Select(s => s.Name)
             .ToListAsync(cancellationToken);
 
-        var specialtiesToAdd = Specialities.MedicalSpecialties
-            .Where(speciality => !existingNames.Contains(speciality.Key, StringComparer.OrdinalIgnoreCase))
+        var path = Path.Combine(AppContext.BaseDirectory, "Utilities", "specialities.json");
+        var json = await File.ReadAllTextAsync(path, cancellationToken);
+        var data = JsonSerializer.Deserialize<List<SpecialitySeed>>(json);
+        
+        if (data is null)
+        {
+            Log.Error("No data found for speciality seeder");
+            return;
+        }
+        
+        var specialtiesToAdd = data
+            .Where(speciality => !existingNames.Contains(speciality.name, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
         if (specialtiesToAdd.Count == 0)
@@ -38,8 +49,8 @@ public class SpecialitySeederHostedService(
 
         var tasks = specialtiesToAdd.Select(async speciality =>
         {
-            var embedding = await embeddingClient.GenerateEmbeddingAsync(speciality.Value, cancellationToken);
-            return Speciality.Create(speciality.Key, speciality.Value, embedding);
+            var embedding = await embeddingClient.GenerateEmbeddingAsync(speciality.description, cancellationToken);
+            return Speciality.Create(speciality.name, speciality.description, embedding);
         });
 
         var specialities = await Task.WhenAll(tasks);

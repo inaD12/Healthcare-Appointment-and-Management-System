@@ -26,4 +26,4 @@ namespace Doctors.Infrastructure.Features.Migrations
                 table: "Specialities");
         }
     }
-}
+}   
