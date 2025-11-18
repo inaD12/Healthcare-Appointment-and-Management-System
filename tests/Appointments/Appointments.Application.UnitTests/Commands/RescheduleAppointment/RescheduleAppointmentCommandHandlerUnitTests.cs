@@ -20,7 +20,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public RescheduleAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
-			HAMSMapper,
 			UnitOfWork,
 			AppointmentRepository,
 			DateTimeProvider,

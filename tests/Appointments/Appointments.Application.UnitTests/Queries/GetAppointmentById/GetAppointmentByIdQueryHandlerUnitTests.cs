@@ -15,7 +15,7 @@ public class GetAppointmentByIdQueryHandlerUnitTests: BaseAppointmentsUnitTest
 
 	public GetAppointmentByIdQueryHandlerUnitTests()
 	{
-		_handler = new GetAppointmentByIdQueryHandler(AppointmentRepository, HAMSMapper);
+		_handler = new GetAppointmentByIdQueryHandler(AppointmentRepository);
 	}
 
 	[Fact]

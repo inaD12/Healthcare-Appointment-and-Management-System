@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using Appointments.Application.Features.Appointments.Mappings;
-using Appointments.Application.Features.Mappings;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
@@ -31,9 +29,6 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 				new Mapper(
 					new MapperConfiguration(cfg =>
 					{
-						cfg.AddProfile<AppointmentCommandProfile>();
-						cfg.AddProfile<AppointmentQueryProfile>();
-						cfg.AddProfile<AppointmentProfile>();
 					})
 				)
 			),

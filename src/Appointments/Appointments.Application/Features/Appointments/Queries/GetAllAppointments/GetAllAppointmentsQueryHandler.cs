@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Models;
+﻿using Appointments.Application.Features.Appointments.Mappers;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
@@ -10,23 +11,21 @@ namespace Appointments.Application.Features.Appointments.Queries.GetAppointments
 
 public class GetAllAppointmentsQueryHandler : IQueryHandler<GetAllAppointmentsQuery, AppointmentPaginatedQueryViewModel>
 {
-	private readonly IHAMSMapper _hamsMapper;
 	private readonly IAppointmentRepository _appointmentRepository;
 
-	public GetAllAppointmentsQueryHandler(IHAMSMapper hamsMapper, IAppointmentRepository appointmentRepository)
+	public GetAllAppointmentsQueryHandler(IAppointmentRepository appointmentRepository)
 	{
-		_hamsMapper = hamsMapper;
 		_appointmentRepository = appointmentRepository;
 	}
 
 	public async Task<Result<AppointmentPaginatedQueryViewModel>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
 	{
-		var appointmentPagedListQuery = _hamsMapper.Map<AppointmentPagedListQuery>(request);
+		var appointmentPagedListQuery = request.ToPagedListQuery();
 		var appointmentPagedList = await _appointmentRepository.GetAllAsync(appointmentPagedListQuery, cancellationToken);
 		if (appointmentPagedList == null)
 			return Result<AppointmentPaginatedQueryViewModel>.Failure(ResponseList.NoAppointmentsFound);
 
-		var appointmentPaginatedQueryViewModel = _hamsMapper.Map<AppointmentPaginatedQueryViewModel>(appointmentPagedList);
+		var appointmentPaginatedQueryViewModel = appointmentPagedList.ToViewModel();
 		return Result<AppointmentPaginatedQueryViewModel>.Success(appointmentPaginatedQueryViewModel);
 	}
 }

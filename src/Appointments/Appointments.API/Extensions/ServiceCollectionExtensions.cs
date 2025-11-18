@@ -15,8 +15,7 @@ public static class ServiceCollectionExtensions
 			.AddSwagger()
 			.ConfigureCors(configuration)
 			.AddEndpointsApiExplorer()
-			.AddExceptionHandling()
-			.AddMapper(currentAssembly);
+			.AddExceptionHandling();
 		
 		services
 			.AddScoped<IAuthorizationHandler, ModifyAppointmentHandler>();

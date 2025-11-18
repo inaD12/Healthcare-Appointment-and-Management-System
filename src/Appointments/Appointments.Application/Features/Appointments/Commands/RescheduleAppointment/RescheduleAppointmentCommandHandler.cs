@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
 using Appointments.Domain.Entities;
@@ -18,13 +19,11 @@ namespace Appointments.Application.Features.Appointments.Commands.RescheduleAppo
 public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<RescheduleAppointmentCommand, AppointmentCommandViewModel>
 {
 	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IHAMSMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IDateTimeProvider _dateTimeProvider;
 	private readonly IAuthorizationService _authService;
-	public RescheduleAppointmentCommandHandler(IHAMSMapper mapper, IUnitOfWork unitOfWork, IAppointmentRepository appointmentRepository, IDateTimeProvider dateTimeProvider, IAuthorizationService authService)
+	public RescheduleAppointmentCommandHandler(IUnitOfWork unitOfWork, IAppointmentRepository appointmentRepository, IDateTimeProvider dateTimeProvider, IAuthorizationService authService)
 	{
-		_mapper = mapper;
 		_unitOfWork = unitOfWork;
 		_appointmentRepository = appointmentRepository;
 		_dateTimeProvider = dateTimeProvider;
@@ -66,7 +65,7 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 
 		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-		var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+		var appointmentCommandViewModel = appointment.ToCommandViewModel();
 		return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
 	}
 }

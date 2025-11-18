@@ -11,7 +11,7 @@ public sealed record GetAllAppointmentsQuery(
 	AppointmentStatus? Status,
 	DateTime? FromTime,
 	DateTime? ToTime,
-	SortOrder? SortOrder,
+	SortOrder SortOrder,
 	string SortPropertyName,
 	int Page,
 	int PageSize) : IQuery<AppointmentPaginatedQueryViewModel>;

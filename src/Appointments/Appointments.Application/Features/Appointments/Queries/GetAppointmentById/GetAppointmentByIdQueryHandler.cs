@@ -1,8 +1,8 @@
-﻿using Appointments.Application.Features.Appointments.Models;
+﻿using Appointments.Application.Features.Appointments.Mappers;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
-using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
@@ -11,12 +11,10 @@ namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointme
 public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
 {
 	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IHAMSMapper _mapper;
 
-	public GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository, IHAMSMapper mapper)
+	public GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository)
 	{
 		_appointmentRepository = appointmentRepository;
-		_mapper = mapper;
 	}
 
 	public async Task<Result<AppointmentQueryViewModel>> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
@@ -25,7 +23,7 @@ public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmen
 		if (appointment == null)
 			return Result<AppointmentQueryViewModel>.Failure(ResponseList.AppointmentNotFound);
 
-		var appointmentQueryViewModel = _mapper.Map<AppointmentQueryViewModel>(appointment);
+		var appointmentQueryViewModel = appointment.ToQueryViewModel();
 		return Result<AppointmentQueryViewModel>.Success(appointmentQueryViewModel);
 	}
 }

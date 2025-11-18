@@ -1,4 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Models;
+﻿using Appointments.Application.Features.Appointments.Mappers;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Extensions;
@@ -18,11 +19,9 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 {
 	private readonly IUserDataRepository _userDataRepository;
 	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IHAMSMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
-	public CreateAppointmentCommandHandler(IHAMSMapper mapper, IUnitOfWork unitOfWork, IUserDataRepository userDataRepository, IAppointmentRepository appointmentRepository)
+	public CreateAppointmentCommandHandler(IUnitOfWork unitOfWork, IUserDataRepository userDataRepository, IAppointmentRepository appointmentRepository)
 	{
-		_mapper = mapper;
 		_unitOfWork = unitOfWork;
 		_userDataRepository = userDataRepository;
 		_appointmentRepository = appointmentRepository;
@@ -53,7 +52,7 @@ public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppo
 			await _appointmentRepository.AddAsync(appointment);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-			var appointmentCommandViewModel = _mapper.Map<AppointmentCommandViewModel>(appointment);
+			var appointmentCommandViewModel = appointment.ToCommandViewModel();
 			return Result<AppointmentCommandViewModel>.Success(appointmentCommandViewModel, ResponseList.AppointmentCreated);
 		}
 		catch (ConcurrencyException)
