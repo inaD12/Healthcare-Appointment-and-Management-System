@@ -19,12 +19,12 @@ public sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand
 
 	public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.GetByIdAsync(request.Id);
+		var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (user == null)
 			return Result.Failure(ResponseList.UserNotFound);
 
 		_userRepository.Delete(user);
-		await _unitOfWork.SaveChangesAsync();
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
 		return Result.Success();
 	}
 }

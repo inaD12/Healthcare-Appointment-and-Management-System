@@ -21,7 +21,7 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 
 	public async Task<Result<UserCommandViewModel>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.GetByIdAsync(request.Id);
+		var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (user == null)
 			return Result<UserCommandViewModel>.Failure(ResponseList.UserNotFound);
 

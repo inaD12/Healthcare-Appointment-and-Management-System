@@ -15,11 +15,11 @@ internal class EmailVerificationTokenRepository : GenericRepository<EmailVerific
 		_context = context;
 	}
 
-	public override async Task<EmailVerificationToken?> GetByIdAsync(string id)
+	public override async Task<EmailVerificationToken?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
 		EmailVerificationToken? token = await _context.EmailVerificationTokens
 			.Include(x => x.User)
-			.FirstOrDefaultAsync(x => x.Id == id);
+			.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
 		return token;
 	}

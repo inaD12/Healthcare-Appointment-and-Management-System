@@ -63,22 +63,22 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		return user;
 	}
 
-	public override async Task<User?> GetByIdAsync(string id)
+	public override async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
 		var user = await _context.Users
 			.Include(u => u.Roles)
-			.FirstOrDefaultAsync(u => u.Id == id);
+			.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
 		return user;
 	}
 
-	public override Task AddAsync(User entity)
+	public override Task AddAsync(User entity, CancellationToken cancellationToken = default)
 	{
 		foreach (var role in entity.Roles)
 		{
 			_context.Attach(role);
 		}
 
-		return base.AddAsync(entity);
+		return base.AddAsync(entity, cancellationToken);
 	}
 }

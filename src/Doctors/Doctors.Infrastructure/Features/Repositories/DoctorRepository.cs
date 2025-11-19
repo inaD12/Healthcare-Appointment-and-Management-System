@@ -26,11 +26,11 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
         return doctor;
     }
 
-    public override async Task<Doctor?> GetByIdAsync(string id)
+    public override async Task<Doctor?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         var doctor = await _context.Doctors
             .Include(d => d.Specialities)
-            .FirstOrDefaultAsync(d => d.Id == id);
+            .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
 
         return doctor;
     }

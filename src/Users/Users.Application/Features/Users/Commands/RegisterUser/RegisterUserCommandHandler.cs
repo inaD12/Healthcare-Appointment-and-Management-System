@@ -34,7 +34,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 			return Result<UserCommandViewModel>.Failure(identityResult.Response);
 
 		var user = User.Create(request.Email, request.Role, request.FirstName, request.LastName,  request.DateOfBirth, identityResult.Value!, request.PhoneNumber, request.Address);
-		await _userRepository.AddAsync(user);
+		await _userRepository.AddAsync(user, cancellationToken);
 		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 		var userCommandViewModel = user.ToCommandViewModel();

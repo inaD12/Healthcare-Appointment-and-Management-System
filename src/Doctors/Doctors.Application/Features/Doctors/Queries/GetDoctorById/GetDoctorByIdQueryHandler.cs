@@ -13,7 +13,7 @@ public sealed class GetDoctorByIdQueryHandler(
 {
 	public async Task<Result<DoctorQueryViewModel>> Handle(GetDoctorByIdQuery request, CancellationToken cancellationToken)
 	{
-		var doctor = await doctorRepository.GetByIdAsync(request.Id);
+		var doctor = await doctorRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (doctor == null)
 			return Result<DoctorQueryViewModel>.Failure(ResponseList.DoctorNotFound);
 

@@ -24,7 +24,7 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 
 	public async Task<Result> Handle(HandleEmailCommand request, CancellationToken cancellationToken)
 	{
-		var token = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId);
+		var token = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId, cancellationToken);
 
 		if (token == null)
 			return Result.Failure(ResponseList.InvalidVerificationToken);
@@ -36,7 +36,7 @@ public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailComma
 		token.User.VerifyEmail();
 		 _userRepository.Update(token.User);
 
-		await _unitOfWork.SaveChangesAsync();
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
 		return Result.Success();
 	}
 }
