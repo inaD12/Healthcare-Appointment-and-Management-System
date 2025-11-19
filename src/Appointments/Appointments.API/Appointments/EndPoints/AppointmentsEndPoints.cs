@@ -1,16 +1,11 @@
 ﻿using Appointments.API.Appointments.Mappers;
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
-using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
-using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
-using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
-using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
-using Shared.Application.Abstractions;
 
 namespace Appointments.API.Appointments.EndPoints;
 

@@ -15,7 +15,7 @@ public class GetAllUsersQueryHandlerUnitTests : BaseUsersUnitTest
 
 	public GetAllUsersQueryHandlerUnitTests()
 	{
-		_handler = new GetAllUsersQueryHandler(UserRepository, HAMSMapper);
+		_handler = new GetAllUsersQueryHandler(UserRepository);
 	}
 
 	[Fact]

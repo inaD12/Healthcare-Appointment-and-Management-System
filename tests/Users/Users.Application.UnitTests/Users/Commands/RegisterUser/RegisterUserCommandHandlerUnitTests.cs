@@ -17,7 +17,6 @@ public class RegisterUserCommandHandlerTests : BaseUsersUnitTest
 	public RegisterUserCommandHandlerTests()
 	{
 		_commandHandler = new RegisterUserCommandHandler(
-			HAMSMapper,
 			UnitOfWork,
 			UserRepository,
 			IdentityProviderService

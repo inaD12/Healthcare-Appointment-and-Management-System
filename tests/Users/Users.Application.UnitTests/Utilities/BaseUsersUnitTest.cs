@@ -1,15 +1,11 @@
-﻿using AutoMapper;
-using NSubstitute;
-using Shared.Application.Helpers;
+﻿using NSubstitute;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
-using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Domain.Utilities;
 using Shared.Infrastructure.Clock;
-using Users.Application.Features.Users.Mappings;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Domain.Infrastructure.Auth.Abstractions;
@@ -26,13 +22,6 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 	protected IDateTimeProvider DateTimeProvider { get; }
 
 	public BaseUsersUnitTest() : base(
-		new HAMSMapper(
-			new Mapper(
-				new MapperConfiguration(cfg =>
-				{
-					cfg.AddProfile<UserCommandProfile>();
-					cfg.AddProfile<UserQueryProfile>();
-				}))),
 		Substitute.For<IUnitOfWork>())
 	{
 		IdentityProviderService = Substitute.For<IIdentityProviderService>();

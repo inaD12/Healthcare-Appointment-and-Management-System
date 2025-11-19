@@ -1,8 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Application.Abstractions;
-using Shared.Application.Helpers;
 using Shared.Application.PipelineBehaviors;
 using System.Reflection;
 
@@ -19,15 +17,6 @@ public static class ServiceCollectionExtentions
 
 				cf.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
 			});
-
-		return serviceCollection;
-	}
-
-	public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
-	{
-		serviceCollection.AddAutoMapper(assembly);
-
-		serviceCollection.AddScoped<IHAMSMapper, HAMSMapper>();
 
 		return serviceCollection;
 	}

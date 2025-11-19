@@ -1,7 +1,7 @@
-﻿using Shared.Application.Abstractions;
-using Shared.Domain.Abstractions;
+﻿using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
@@ -14,13 +14,11 @@ namespace Users.Application.Features.Users.Commands.RegisterUser;
 public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, UserCommandViewModel>
 {
 	private readonly IUserRepository _userRepository;
-	private readonly IHAMSMapper _hamsMapper;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IIdentityProviderService _identityProviderService;
 
-	public RegisterUserCommandHandler(IHAMSMapper hamsMapper, IUnitOfWork unitOfWork, IUserRepository userRepository, IIdentityProviderService identityProviderService)
+	public RegisterUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository, IIdentityProviderService identityProviderService)
 	{
-		_hamsMapper = hamsMapper;
 		_unitOfWork = unitOfWork;
 		_userRepository = userRepository;
 		_identityProviderService = identityProviderService;
@@ -39,7 +37,7 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 		await _userRepository.AddAsync(user);
 		await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-		var userCommandViewModel = _hamsMapper.Map<UserCommandViewModel>(user);
+		var userCommandViewModel = user.ToCommandViewModel();
 		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.RegistrationSuccessful);
 	}
 }

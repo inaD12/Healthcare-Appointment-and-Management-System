@@ -7,10 +7,8 @@ using Appointments.Domain.Extensions;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
 using Microsoft.AspNetCore.Authorization;
-using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 

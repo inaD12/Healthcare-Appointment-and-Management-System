@@ -1,7 +1,7 @@
-﻿using Shared.Application.Abstractions;
-using Shared.Domain.Abstractions;
+﻿using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.UpdateUser;
 using Users.Domain.Infrastructure.Abstractions.Repositories;
@@ -13,11 +13,9 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 {
 	private readonly IUserRepository _userRepository;
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IHAMSMapper _mapper;
-	public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IHAMSMapper mapper, IUserRepository userRepository)
+	public UpdateUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository)
 	{
 		_unitOfWork = unitOfWork;
-		_mapper = mapper;
 		_userRepository = userRepository;
 	}
 
@@ -37,8 +35,8 @@ public sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand
 
 		_userRepository.Update(user);
 
-		await _unitOfWork.SaveChangesAsync();
-		var userCommandViewModel = _mapper.Map<UserCommandViewModel>(user);
+		await _unitOfWork.SaveChangesAsync(cancellationToken);
+		var userCommandViewModel = user.ToCommandViewModel();
 		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.UpdateSuccessful);
 	}
 }

@@ -14,7 +14,7 @@ public class GetUserByIdQueryHandlerUnitTests : BaseUsersUnitTest
 
 	public GetUserByIdQueryHandlerUnitTests()
 	{
-		_handler = new GetUserByIdQueryHandler(UserRepository, HAMSMapper);
+		_handler = new GetUserByIdQueryHandler(UserRepository);
 	}
 
 	[Fact]

@@ -1,9 +1,7 @@
 ﻿using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Responses;
-using Shared.Application.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 

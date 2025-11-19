@@ -3,10 +3,8 @@ using Appointments.Domain.Entities;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Infrastructure.Models;
 using Appointments.Domain.Utilities;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
-using Shared.Application.Helpers;
 using Shared.Application.UnitTests.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities.ValueObjects;
@@ -25,13 +23,6 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 
 	protected BaseAppointmentsUnitTest()
 		: base(
-			new HAMSMapper(
-				new Mapper(
-					new MapperConfiguration(cfg =>
-					{
-					})
-				)
-			),
 			Substitute.For<IUnitOfWork>()
 		)
 	{

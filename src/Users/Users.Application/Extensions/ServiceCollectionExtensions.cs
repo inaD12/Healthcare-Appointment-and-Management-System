@@ -27,7 +27,6 @@ public static class ServiceCollectionExtensions
 		services
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
-			.AddMapper(currentAssembly)
 			.AddDateTimeProvider();
 		
 		return services;
