@@ -14,10 +14,10 @@ internal class UserDataRepository : GenericRepository<UserData>, IUserDataReposi
 		_dbContext = context;
 	}
 
-	public async Task<UserData?> GetUserDataByEmailAsync(string email)
+	public async Task<UserData?> GetUserDataByEmailAsync(string email, CancellationToken cancellationToken = default)
 	{
 		var user = await _dbContext.UserData
-			.FirstOrDefaultAsync(u => u.Email == email);
+			.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
 		return user!;
 	}

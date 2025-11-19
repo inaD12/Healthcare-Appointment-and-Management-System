@@ -10,6 +10,6 @@ public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
 	Task<PagedList<Appointment>?> GetAllAsync(AppointmentPagedListQuery query, CancellationToken cancellationToken = default);
 	Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default);
-	Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId);
-	Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime);
+	Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId, CancellationToken cancellationToken = default);
+	Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime, CancellationToken cancellationToken = default);
 }

@@ -8,6 +8,6 @@ namespace Users.Domain.Infrastructure.Abstractions.Repositories;
 
 public interface IUserRepository : IGenericRepository<User>
 {
-	Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken);
-	Task<User?> GetByEmailAsync(string email);
+	Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken = default);
+	Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 }

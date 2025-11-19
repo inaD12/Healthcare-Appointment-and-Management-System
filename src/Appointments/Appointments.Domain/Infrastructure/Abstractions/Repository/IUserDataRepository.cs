@@ -5,5 +5,5 @@ namespace Appointments.Domain.Infrastructure.Abstractions.Repository;
 
 public interface IUserDataRepository : IGenericRepository<UserData>
 {
-	Task<UserData?> GetUserDataByEmailAsync(string id);
+	Task<UserData?> GetUserDataByEmailAsync(string id, CancellationToken cancellationToken = default);
 }

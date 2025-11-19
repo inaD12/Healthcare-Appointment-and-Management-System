@@ -18,7 +18,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		_context = context;
 	}
 
-	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
+	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken = default)
 	{
 		var entitiesQuery = _context.Users
 			.Include(u => u.Roles)
@@ -54,11 +54,11 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		return users;
 	}
 
-	public async Task<User?> GetByEmailAsync(string email)
+	public async Task<User?> GetByEmailAsync(string email,  CancellationToken cancellationToken = default)
 	{
 		var user = await _context.Users
 			.Include(u => u.Roles)
-			.FirstOrDefaultAsync(u => u.Email == email);
+			.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
 		return user;
 	}

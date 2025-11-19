@@ -24,7 +24,7 @@ public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<Complet
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
 	{
 		var appointmentsToComplete = await _appointmentRepository
-			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow);
+			.GetAppointmentsToCompleteAsync(_dateTimeProvider.UtcNow, cancellationToken);
 
 		if (appointmentsToComplete == null || appointmentsToComplete.Count == 0)
 			return Result.Success();

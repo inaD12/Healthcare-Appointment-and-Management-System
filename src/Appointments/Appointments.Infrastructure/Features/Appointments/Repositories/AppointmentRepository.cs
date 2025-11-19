@@ -49,7 +49,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		return !isSlotTaken;
 	}
 
-	public async Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId)
+	public async Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId, CancellationToken cancellationToken = default)
 	{
 		var result = await (
 		from appointment in _context.Appointments
@@ -69,16 +69,16 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 			Appointment = appointment
 
 		}
-		).FirstOrDefaultAsync();
+		).FirstOrDefaultAsync(cancellationToken);
 
 		return result!;
 	}
 
-	public async Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime)
+	public async Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime, CancellationToken cancellationToken = default)
 	{
 		var res = await _context.Appointments
 		.Where(a => a.Duration.End <= currentTime && a.Status == AppointmentStatus.Scheduled)
-		.ToListAsync();
+		.ToListAsync(cancellationToken);
 
 		return res;
 	}
