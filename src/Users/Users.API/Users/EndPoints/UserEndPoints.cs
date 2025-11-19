@@ -25,7 +25,7 @@ internal class UserEndPoints : IEndPoints
 			.AllowAnonymous();
 
 		group.MapPut("update-current", UpdateCurrent)
-			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
+			.Produces<UserCommandResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -34,7 +34,7 @@ internal class UserEndPoints : IEndPoints
 			.RequireAuthorization();
 
 		group.MapPut("update/{id}", Update)
-			.Produces<UserCommandResponse>(StatusCodes.Status200OK)
+			.Produces<UserCommandResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -43,14 +43,14 @@ internal class UserEndPoints : IEndPoints
 			.RequireAuthorization(Permissions.ModifyUser);
 
 		group.MapGet("get-all", GetAll)
-			.Produces<UserPaginatedQueryResponse>(StatusCodes.Status200OK)
+			.Produces<UserPaginatedQueryResponse>()
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.GetUser);
 
 		group.MapGet("get/{id}", GetById)
-			.Produces<UserQueryResponse>(StatusCodes.Status200OK)
+			.Produces<UserQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -79,7 +79,7 @@ internal class UserEndPoints : IEndPoints
 			.AllowAnonymous();
 	}
 
-	public async Task<IResult> Register(
+	private async Task<IResult> Register(
 		[FromBody] RegisterUserRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -94,7 +94,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> UpdateCurrent(
+	private async Task<IResult> UpdateCurrent(
 		[FromBody] UpdateCurrentUserRequest request,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
@@ -110,7 +110,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> Update(
+	private async Task<IResult> Update(
 		[FromRoute] string id,
 		[FromBody] UpdateUserRequest request,
 		[FromServices] ISender sender,
@@ -125,7 +125,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> GetById(
+	private async Task<IResult> GetById(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -138,7 +138,7 @@ internal class UserEndPoints : IEndPoints
 		var appointmentCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
-	public async Task<IResult> GetAll(
+	private async Task<IResult> GetAll(
 		[AsParameters] GetAllUsersRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -152,7 +152,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	public async Task<IResult> DeleteById(
+	private async Task<IResult> DeleteById(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -162,7 +162,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
-	public async Task<IResult> DeleteCurrent(
+	private async Task<IResult> DeleteCurrent(
 		HttpContext httpContext,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -173,7 +173,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
-	public async Task<IResult> VerifyEmails(
+	private async Task<IResult> VerifyEmails(
 		[FromBody] VerifyEmailRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)

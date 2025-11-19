@@ -34,7 +34,7 @@ internal class AppointmentsEndPoints : IEndPoints
 			.RequireAuthorization(Permissions.CancelAppointment);
 
 		group.MapPut("reschedule", Reschedule)
-			.Produces<AppointmentCommandResponse>(StatusCodes.Status200OK)
+			.Produces<AppointmentCommandResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -43,14 +43,14 @@ internal class AppointmentsEndPoints : IEndPoints
 			.RequireAuthorization(Permissions.RescheduleAppointment);
 
 		group.MapGet("get-all", GetAll)
-			.Produces<AppointmentPaginatedQueryResponse>(StatusCodes.Status200OK)
+			.Produces<AppointmentPaginatedQueryResponse>()
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.GetAppointment);
 
 		group.MapGet("get/{id}", GetById)
-			.Produces<AppointmentQueryResponse>(StatusCodes.Status200OK)
+			.Produces<AppointmentQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
 			.Produces(StatusCodes.Status404NotFound)
@@ -58,7 +58,7 @@ internal class AppointmentsEndPoints : IEndPoints
 			.RequireAuthorization(Permissions.GetAppointment);
 	}
 
-	public async Task<IResult> Create(
+	private async Task<IResult> Create(
 		[FromBody] CreateAppointmentRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -72,7 +72,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
-	public async Task<IResult> Cancel(
+	private async Task<IResult> Cancel(
 		[FromBody] CancelAppointmentRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -82,7 +82,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
-	public async Task<IResult> Reschedule(
+	private async Task<IResult> Reschedule(
 		[FromBody] RescheduleAppointmentRequest request,
 		[FromServices] ISender sender,	
 		CancellationToken cancellationToken)
@@ -96,7 +96,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
-	public async Task<IResult> GetAll(
+	private async Task<IResult> GetAll(
 		[AsParameters] GetAllAppointmentsRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -109,7 +109,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		var appointmentCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
-	public async Task<IResult> GetById(
+	private async Task<IResult> GetById(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
