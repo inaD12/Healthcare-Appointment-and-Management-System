@@ -16,8 +16,8 @@ public sealed class User : BaseEntity
 	public string FirstName { get; private set; }
 	public string LastName { get; private set; }
 	public DateTime DateOfBirth { get; private set; }
-	public string? PhoneNumber { get; private set; }
-	public string? Address { get; private set; }
+	public string PhoneNumber { get; private set; }
+	public string Address { get; private set; }
 	public bool EmailVerified { get; private set; }
 	public string IdentityId { get; private set; }
 	public IReadOnlyCollection<Role> Roles => _roles.ToList();
