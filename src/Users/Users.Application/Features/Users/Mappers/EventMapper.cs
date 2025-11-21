@@ -11,4 +11,11 @@ public static class EventMapper
             domainEvent.Id,
             domainEvent.FirstName,
             domainEvent.LastName);
+    
+    public static UserCreatedIntegrationEvent ToIntEvent(
+        this UserCreatedDomainEvent domainEvent)
+        => new(
+            domainEvent.Id,
+            domainEvent.Email,
+            domainEvent.Roles);
 }
