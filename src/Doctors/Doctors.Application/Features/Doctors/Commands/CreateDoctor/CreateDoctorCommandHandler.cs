@@ -23,7 +23,7 @@ public sealed class CreateDoctorCommandHandler(
         if (existingDoctor != null)
             return Result<DoctorCommandViewModel>.Failure(ResponseList.DoctorAlreadyExists);
         
-        var namesResult = await namesService.GetUserNamesAsync(request.UserId);
+        var namesResult = await namesService.GetUserNamesAsync(request.UserId, cancellationToken);
         if (namesResult.IsFailure)
         {
             Log.Error($"User id {request.UserId} from JWT does not return names");

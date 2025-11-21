@@ -8,7 +8,6 @@ namespace Appointments.Infrastructure.Features.DBContexts;
 public class AppointmentsDBContext : DbContext
 {
 	public DbSet<Appointment> Appointments { get; set; }
-	public DbSet<UserData> UserData { get; set; }
 
 	public AppointmentsDBContext(DbContextOptions<AppointmentsDBContext> options) : base(options) { }
 
@@ -21,7 +20,5 @@ public class AppointmentsDBContext : DbContext
 		modelBuilder.AddOutboxStateEntity();
 
 		modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
-		modelBuilder.ApplyConfiguration(new UserDataConfiguration());
 	}
-
 }

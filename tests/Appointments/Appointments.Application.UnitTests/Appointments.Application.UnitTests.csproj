@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Appointments\Appointments.Application\Appointments.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\Users\Users.Domain\Users.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Application.UnitTests\Shared.Application.UnitTests.csproj" />
   </ItemGroup>
 

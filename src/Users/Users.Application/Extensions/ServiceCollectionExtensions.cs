@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
 			.AddScoped<IPermissionService, PermissionService>()
+			.AddScoped<IRolesService, RolesService>()
 			.AddTransient<INamesService, NamesService>();
 
 		services

@@ -9,7 +9,7 @@ using Shared.Domain.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 
-namespace Appointments.Infrastructure.Features.Appointments.Repositories;
+namespace Appointments.Infrastructure.Features.Repositories;
 
 internal class AppointmentRepository : GenericRepository<Appointment>, IAppointmentRepository
 {
@@ -47,31 +47,6 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 				cancellationToken);
 
 		return !isSlotTaken;
-	}
-
-	public async Task<AppointmentWithDetailsModel?> GetAppointmentWithUserDetailsAsync(string appointmentId, CancellationToken cancellationToken = default)
-	{
-		var result = await (
-		from appointment in _context.Appointments
-		join doctor in _context.UserData on appointment.DoctorId equals doctor.UserId
-		join patient in _context.UserData on appointment.PatientId equals patient.UserId
-		where appointment.Id == appointmentId
-		select new AppointmentWithDetailsModel
-		{
-			AppointmentId = appointment.Id,
-			ScheduledStartTime = appointment.Duration.Start,
-			ScheduledEndTime = appointment.Duration.End,
-			Status = appointment.Status,
-			DoctorEmail = doctor.Email,
-			PatientEmail = patient.Email,
-			DoctorId = doctor.UserId,
-			PatientId = patient.UserId,
-			Appointment = appointment
-
-		}
-		).FirstOrDefaultAsync(cancellationToken);
-
-		return result!;
 	}
 
 	public async Task<List<Appointment>?> GetAppointmentsToCompleteAsync(DateTime currentTime, CancellationToken cancellationToken = default)

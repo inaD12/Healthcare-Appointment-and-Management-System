@@ -10,7 +10,9 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Enums;
 using Shared.Domain.Models;
+using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
+using Users.Domain.Responses;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
@@ -18,7 +20,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 {
 	protected IDateTimeProvider DateTimeProvider { get; }
 	protected IAppointmentRepository AppointmentRepository { get; }
-	protected IUserDataRepository UserDataRepository { get; }
+	protected IRolesService RolesService { get; }
 	protected IAuthorizationService AuthService { get; }
 
 	protected BaseAppointmentsUnitTest()
@@ -27,11 +29,14 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		)
 	{
 		DateTimeProvider = Substitute.For<IDateTimeProvider>();
-		UserDataRepository = Substitute.For<IUserDataRepository>();
+		RolesService = Substitute.For<IRolesService>();
 		AppointmentRepository = Substitute.For<IAppointmentRepository>();
 		AuthService = Substitute.For<IAuthorizationService>();
 
 		DateTimeProvider.UtcNow.Returns(AppointmentsTestUtilities.CurrentDate);
+		
+		RolesService.GetUserRolesAsync(AppointmentsTestUtilities.InvalidId, Arg.Any<CancellationToken>())
+			.Returns(Result<RolesResponse>.Failure(ResponseList.UserNotFound));
 	}
 
 	public List<Appointment> GetAppointmentList()
@@ -57,13 +62,6 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		if (isCanceled)
 			appointment.Cancel(AppointmentsTestUtilities.PastDate);
 
-		var appointmentWithDetailsDto = new AppointmentWithDetailsModel
-		{
-			DoctorId = appointment.DoctorId,
-			PatientId = appointment.PatientId,
-			Appointment = appointment
-		};
-
 		var scheduledAppointmentList = new List<Appointment> { appointment };
 
 		var pagedList = new PagedList<Appointment>(
@@ -72,30 +70,14 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 			AppointmentsTestUtilities.ValidPageSizeValue,
 			scheduledAppointmentList.Count);
 
-		var doctorData = new UserData(
-			AppointmentsTestUtilities.DoctorId,
-			AppointmentsTestUtilities.DoctorEmail,
-			[Roles.Doctor]
+		var doctorRoles = new RolesResponse(
+			new HashSet<string>([nameof(Roles.Doctor)])
 		);
 
-		var patientData = new UserData(
-			AppointmentsTestUtilities.PatientId,
-			AppointmentsTestUtilities.PatientEmail,
-			[Roles.Patient]
+		var patientRoles = new RolesResponse(
+			new HashSet<string>([nameof(Roles.Patient)])
 		);
 
-		UserDataRepository.GetUserDataByEmailAsync(Arg.Any<string>()).Returns(callInfo =>
-		{
-			string email = callInfo.ArgAt<string>(0);
-
-			if (email == AppointmentsTestUtilities.PatientEmail)
-				return patientData;
-			if (email == AppointmentsTestUtilities.DoctorEmail)
-				return doctorData;
-
-			return null;
-		});
-		
 		AuthService
 			.AuthorizeAsync(
 				Arg.Any<ClaimsPrincipal>(), 
@@ -109,8 +91,11 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 		AppointmentRepository.GetByIdAsync(appointment.Id)
 			.Returns(appointment);
 
-		AppointmentRepository.GetAppointmentWithUserDetailsAsync(appointment.Id)
-			.Returns(appointmentWithDetailsDto);
+		RolesService.GetUserRolesAsync(appointment.DoctorId, Arg.Any<CancellationToken>())
+			.Returns(Result<RolesResponse>.Success(doctorRoles));
+		
+		RolesService.GetUserRolesAsync(appointment.PatientId, Arg.Any<CancellationToken>())
+			.Returns(Result<RolesResponse>.Success(patientRoles));
 
 		AppointmentRepository.GetAllAsync(Arg.Is<AppointmentPagedListQuery>(q => 
 																				q.PatientId == appointment.PatientId &&

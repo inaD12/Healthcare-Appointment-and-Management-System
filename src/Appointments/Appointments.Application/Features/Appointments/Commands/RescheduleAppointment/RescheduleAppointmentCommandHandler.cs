@@ -3,6 +3,7 @@ using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
 using Appointments.Domain.Entities;
+using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Extensions;
 using Appointments.Domain.Infrastructure.Abstractions.Repository;
 using Appointments.Domain.Responses;
@@ -30,15 +31,15 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 
 	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var detailedAppointment = await _appointmentRepository.GetAppointmentWithUserDetailsAsync(request.AppointmentId, cancellationToken);
-		if (detailedAppointment == null)
+		var existingAppointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId, cancellationToken);
+		if (existingAppointment == null)
 		{
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
 		}
 
 		var requirement = new ModifyAppointmentRequirement();
 
-		var authResult = await _authService.AuthorizeAsync(ClaimsPrincipal.Current!, detailedAppointment.Appointment, requirement );
+		var authResult = await _authService.AuthorizeAsync(ClaimsPrincipal.Current!, existingAppointment, requirement );
 		if (!authResult.Succeeded)
 		{
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
@@ -46,16 +47,16 @@ public sealed class RescheduleAppointmentCommandHandler : ICommandHandler<Resche
 
 		var duration = DateTimeRangeFactory.FromDuration(request.ScheduledStartTime, request.Duration);
 
-		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(detailedAppointment.DoctorId, duration, cancellationToken))
+		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(existingAppointment.DoctorId, duration, cancellationToken))
 		{
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 		}
 
-		var appointment = Appointment.Schedule(detailedAppointment.PatientId, detailedAppointment.DoctorId, duration);
+		var appointment = Appointment.Schedule(existingAppointment.PatientId, existingAppointment.DoctorId, duration);
 
-		await _appointmentRepository.AddAsync(appointment);
+		await _appointmentRepository.AddAsync(appointment, cancellationToken);
 
-		var result = detailedAppointment.Appointment.Reschedule(_dateTimeProvider.UtcNow);
+		var result = existingAppointment.Reschedule(_dateTimeProvider.UtcNow);
 		if (result.IsFailure)
 		{
 			return Result<AppointmentCommandViewModel>.Failure(result.Response);

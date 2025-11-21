@@ -15,39 +15,39 @@ namespace Appointments.Application.Features.Appointments.Commands.CreateAppointm
 
 public sealed class CreateAppointmentCommandHandler : ICommandHandler<CreateAppointmentCommand, AppointmentCommandViewModel>
 {
-	private readonly IUserDataRepository _userDataRepository;
 	private readonly IAppointmentRepository _appointmentRepository;
 	private readonly IUnitOfWork _unitOfWork;
-	public CreateAppointmentCommandHandler(IUnitOfWork unitOfWork, IUserDataRepository userDataRepository, IAppointmentRepository appointmentRepository)
+	private readonly IRolesService _rolesService;
+	public CreateAppointmentCommandHandler(IUnitOfWork unitOfWork, IAppointmentRepository appointmentRepository, IRolesService rolesService)
 	{
 		_unitOfWork = unitOfWork;
-		_userDataRepository = userDataRepository;
 		_appointmentRepository = appointmentRepository;
+		_rolesService = rolesService;
 	}
 	public async Task<Result<AppointmentCommandViewModel>> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var doctorData = await _userDataRepository.GetUserDataByEmailAsync(request.DoctorEmail);
-
-		if (doctorData == null)
+		var doctorResult = await _rolesService.GetUserRolesAsync(request.DoctorUserId, cancellationToken);
+		
+		if (doctorResult.IsFailure)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.DoctorNotFound);
-		if (!doctorData.Roles.Contains(Roles.Doctor))
+		if (!doctorResult.Value!.Roles.Contains(nameof(Roles.Doctor)))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.UserIsNotADoctor);
 
-		var patientData = await _userDataRepository.GetUserDataByEmailAsync(request.PatientEmail);
+		var patientData = await _rolesService.GetUserRolesAsync(request.PatientUserId, cancellationToken);
 
-		if (patientData == null)
+		if (patientData.IsFailure)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.PatientNotFound);
 
 		var duration = DateTimeRangeFactory.FromDuration(request.ScheduledStartTime, request.Duration);
 
-		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(doctorData.UserId, duration, cancellationToken))
+		if (!await _appointmentRepository.IsTimeSlotAvailableAsync(request.DoctorUserId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
 
 		try
 		{
-			var appointment = Appointment.Schedule(patientData.UserId, doctorData.UserId, duration);
+			var appointment = Appointment.Schedule(request.PatientUserId, request.DoctorUserId, duration);
 
-			await _appointmentRepository.AddAsync(appointment);
+			await _appointmentRepository.AddAsync(appointment, cancellationToken);
 			await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 			var appointmentCommandViewModel = appointment.ToCommandViewModel();

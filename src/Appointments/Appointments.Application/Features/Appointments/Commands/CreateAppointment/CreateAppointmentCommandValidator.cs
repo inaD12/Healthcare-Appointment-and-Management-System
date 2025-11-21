@@ -7,13 +7,13 @@ public class CreateAppointmentCommandValidator : AbstractValidator<CreateAppoint
 {
 	public CreateAppointmentCommandValidator()
 	{
-		RuleFor(x => x.PatientEmail)
+		RuleFor(x => x.PatientUserId)
 				.NotEmpty()
 				.MinimumLength(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH)
 				.MaximumLength(AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH)
 				.EmailAddress();
 
-		RuleFor(x => x.DoctorEmail)
+		RuleFor(x => x.DoctorUserId)
 				.NotEmpty()
 				.MinimumLength(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH)
 				.MaximumLength(AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH)
