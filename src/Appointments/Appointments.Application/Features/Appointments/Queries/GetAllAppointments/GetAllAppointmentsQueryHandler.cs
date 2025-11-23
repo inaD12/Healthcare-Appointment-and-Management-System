@@ -1,11 +1,11 @@
 ﻿using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Abstractions;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 
 public class GetAllAppointmentsQueryHandler : IQueryHandler<GetAllAppointmentsQuery, AppointmentPaginatedQueryViewModel>
 {

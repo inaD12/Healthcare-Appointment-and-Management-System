@@ -3,8 +3,8 @@ using NSubstitute;
 using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Users.Application.Features.Users.Commands.RegisterUser;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Entities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;
 

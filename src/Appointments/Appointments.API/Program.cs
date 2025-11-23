@@ -43,4 +43,7 @@ EndpointMapper.MapAllEndpoints(app);
 
 app.Run();
 
-public partial class Program { }
+namespace Appointments.API
+{
+	public partial class Program { }
+}

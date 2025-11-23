@@ -2,7 +2,7 @@ using MediatR;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
-using Users.Application.Features.Users.Queries.GetById;
+using Users.Application.Features.Users.Queries.GetUserById;
 
 namespace Users.Application.Features.Users.Services;
 

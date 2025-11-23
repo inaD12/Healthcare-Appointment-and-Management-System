@@ -1,7 +1,6 @@
-﻿using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+﻿using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.UnitTests.Utilities;
-using Appointments.Domain.Infrastructure.Models;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Models;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;

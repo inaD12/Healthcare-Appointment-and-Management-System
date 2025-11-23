@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Infrastructure.Repositories;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
 using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Infrastructure.Features.Repositories;

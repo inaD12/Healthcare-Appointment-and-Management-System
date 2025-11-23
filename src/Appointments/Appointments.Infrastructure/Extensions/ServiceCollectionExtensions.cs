@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Domain.Abstractions;
+using Appointments.Domain.Entities.Enums;
 using Appointments.Infrastructure.Features.BackgroundJobs;
 using Appointments.Infrastructure.Features.DBContexts;
 using Appointments.Infrastructure.Features.Helpers;

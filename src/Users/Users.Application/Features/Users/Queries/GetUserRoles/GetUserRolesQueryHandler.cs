@@ -5,7 +5,7 @@ using Shared.Application.Dtos;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
-using Users.Domain.Responses;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Queries.GetUserRoles;
 

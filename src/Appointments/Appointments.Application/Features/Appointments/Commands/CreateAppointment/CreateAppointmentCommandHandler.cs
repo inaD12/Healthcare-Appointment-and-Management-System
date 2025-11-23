@@ -1,10 +1,8 @@
 ﻿using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+using Appointments.Domain.Abstractions;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Extensions;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;

@@ -6,7 +6,6 @@ using Shared.Domain.Extensions;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.IntegrationTests.Utilities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 namespace Users.Application.IntegrationTests.Users.Queries;

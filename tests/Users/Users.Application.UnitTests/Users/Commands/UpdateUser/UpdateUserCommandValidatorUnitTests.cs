@@ -2,7 +2,7 @@
 using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Commands.RegisterUser;
-using Users.Application.Features.Users.UpdateUser;
+using Users.Application.Features.Users.Commands.UpdateUser;
 using Users.Domain.Utilities;
 using Xunit;
 

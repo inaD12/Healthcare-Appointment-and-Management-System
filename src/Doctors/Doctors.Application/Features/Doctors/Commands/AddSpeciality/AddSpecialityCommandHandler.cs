@@ -1,7 +1,7 @@
+using Doctors.Domain.Abstractions;
+using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;

@@ -2,7 +2,7 @@
 using Appointments.Domain.Entities.Enums;
 using Shared.Domain.Abstractions.Messaging;
 
-namespace Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 
 public sealed record CreateAppointmentCommand(
 string PatientUserId,

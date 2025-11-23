@@ -6,13 +6,14 @@ using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Domain.Utilities;
 using Shared.Infrastructure.Clock;
+using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Infrastructure.Auth.Abstractions;
-using Users.Domain.Infrastructure.Auth.Models;
-using Users.Domain.Infrastructure.Models;
-using Users.Domain.Responses;
+using Users.Domain.Models;
 using Users.Domain.Utilities;
+
+namespace Users.Application.UnitTests.Utilities;
 
 public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 {
@@ -47,7 +48,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.ID_MAX_LENGTH, UsersBusinessConfiguration.ID_MIN_LENGTH),
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress
-			);
+		);
 
 		var usersList = new List<User> { user };
 
@@ -58,16 +59,16 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			usersList.Count);
 
 		UserRepository.GetByEmailAsync(user.Email)
-		.Returns(user);
+			.Returns(user);
 
 		UserRepository.GetByIdAsync(user.Id)
-		.Returns(user);
+			.Returns(user);
 
 		UserRepository.GetAllAsync(Arg.Is<UserPagedListQuery>(q =>
-																				q.Email == user.Email &&
-																				q.FirstName == user.FirstName &&
-																				q.LastName == user.LastName),
-																				CancellationToken)
+					q.Email == user.Email &&
+					q.FirstName == user.FirstName &&
+					q.LastName == user.LastName),
+				CancellationToken)
 			.Returns(pagedList);
 
 		IdentityProviderService.RegisterUserAsync(
@@ -88,7 +89,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			UsersTestUtilities.CurrentDate,
 			UsersTestUtilities.SoonDate,
 			user
-			);
+		);
 
 		EmailVerificationTokenRepository.GetByIdAsync(emailVerificationToken.Id)
 			.Returns(emailVerificationToken);

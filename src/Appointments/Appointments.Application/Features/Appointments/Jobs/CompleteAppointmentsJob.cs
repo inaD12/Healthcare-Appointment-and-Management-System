@@ -1,8 +1,8 @@
-﻿using Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
-using Appointments.Domain.Infrastructure.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Commands.CompleteAppointments;
+using Appointments.Domain.Abstractions;
 using MediatR;
 
-namespace Appointments.Application.Features.Jobs;
+namespace Appointments.Application.Features.Appointments.Jobs;
 
 internal class CompleteAppointmentsJob : ICompleteAppointmentsJob
 {

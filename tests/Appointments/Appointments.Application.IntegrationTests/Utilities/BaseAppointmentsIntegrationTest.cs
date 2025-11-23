@@ -1,5 +1,5 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
+﻿using Appointments.Domain.Abstractions;
+using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Appointments.Infrastructure.Features.DBContexts;
 using MassTransit.Testing;

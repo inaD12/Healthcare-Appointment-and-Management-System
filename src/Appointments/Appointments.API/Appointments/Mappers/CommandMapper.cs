@@ -1,9 +1,9 @@
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
+using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 
 namespace Appointments.API.Appointments.Mappers;
 

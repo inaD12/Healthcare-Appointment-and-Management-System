@@ -1,7 +1,7 @@
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 
 namespace Appointments.API.Appointments.Mappers;
 

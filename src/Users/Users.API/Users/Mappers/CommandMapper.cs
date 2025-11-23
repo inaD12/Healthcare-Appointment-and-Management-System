@@ -1,8 +1,8 @@
 using Shared.Domain.Extensions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
+using Users.Application.Features.Users.Commands.UpdateUser;
 using Users.Application.Features.Users.Models;
-using Users.Application.Features.Users.UpdateUser;
 using Users.Users.Models.Requests;
 using Users.Users.Models.Responses;
 

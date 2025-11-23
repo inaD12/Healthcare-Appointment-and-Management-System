@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Abstractions;
+using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

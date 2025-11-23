@@ -1,12 +1,11 @@
 ﻿using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Abstractions;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointmentById;
+namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 
 public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
 {

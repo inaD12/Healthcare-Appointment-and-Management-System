@@ -2,7 +2,6 @@
 using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;

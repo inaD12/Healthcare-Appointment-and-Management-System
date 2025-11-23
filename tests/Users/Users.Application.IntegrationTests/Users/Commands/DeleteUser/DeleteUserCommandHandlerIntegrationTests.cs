@@ -3,7 +3,6 @@ using Shared.Domain.Exceptions;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.IntegrationTests.Utilities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 namespace Users.Application.IntegrationTests.Users.Commands.DeleteUser;

@@ -3,11 +3,11 @@ using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;
+using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Infrastructure.Auth.Abstractions;
-using Users.Domain.Infrastructure.Auth.Models;
-using Users.Domain.Responses;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;
 

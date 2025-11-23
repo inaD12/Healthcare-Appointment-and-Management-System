@@ -1,8 +1,7 @@
-﻿using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
-using Appointments.Domain.Utilities;
+﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 
 public class RescheduleAppointmentCommandValidator : AbstractValidator<RescheduleAppointmentCommand>
 {

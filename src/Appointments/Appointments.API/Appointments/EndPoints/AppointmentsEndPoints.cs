@@ -1,7 +1,7 @@
 ﻿using Appointments.API.Appointments.Mappers;
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
-using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
+using Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;

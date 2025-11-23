@@ -1,12 +1,10 @@
-﻿using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
-using Microsoft.IdentityModel.Tokens;
+﻿using Appointments.Domain.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
-namespace Appointments.Application.Features.Commands.Appointments.CompleteAppointments;
+namespace Appointments.Application.Features.Appointments.Commands.CompleteAppointments;
 
 public sealed class CompleteAppointmentsCommandHandler : ICommandHandler<CompleteAppointmentsCommand>
 {

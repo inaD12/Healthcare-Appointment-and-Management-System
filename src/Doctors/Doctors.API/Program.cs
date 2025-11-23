@@ -40,4 +40,7 @@ EndpointMapper.MapAllEndpoints(app);
 
 app.Run();
 
-public partial class Program {}
+namespace Doctors.API
+{
+    public partial class Program {}
+}

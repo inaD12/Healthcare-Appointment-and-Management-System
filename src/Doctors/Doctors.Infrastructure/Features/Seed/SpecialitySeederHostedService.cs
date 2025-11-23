@@ -1,6 +1,6 @@
 using System.Text.Json;
+using Doctors.Domain.Abstractions;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Dtos;
 using Microsoft.EntityFrameworkCore;

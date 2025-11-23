@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.IntegrationTests.Utilities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 namespace Users.Application.IntegrationTests.Email.Commands;

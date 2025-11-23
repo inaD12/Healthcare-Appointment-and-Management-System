@@ -3,10 +3,10 @@ using Shared.Application.IntegrationEvents;
 using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Clock;
 using Users.Application.Features.Email.Helpers.Abstractions;
-using Users.Application.Features.Users.Mappings;
+using Users.Application.Features.Users.Mappers;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
 using Users.Domain.Events;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
 
 namespace Users.Application.Features.Users.Consumers;
 

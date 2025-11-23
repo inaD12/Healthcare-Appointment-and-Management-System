@@ -2,11 +2,10 @@
 using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
+using Appointments.Domain.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Extensions;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

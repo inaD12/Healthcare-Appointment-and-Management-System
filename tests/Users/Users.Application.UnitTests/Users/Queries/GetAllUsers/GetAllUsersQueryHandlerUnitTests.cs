@@ -2,8 +2,8 @@
 using NSubstitute;
 using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Queries.GetAllUsers;
-using Users.Domain.Infrastructure.Models;
-using Users.Domain.Responses;
+using Users.Application.UnitTests.Utilities;
+using Users.Domain.Models;
 using Users.Domain.Utilities;
 using Xunit;
 

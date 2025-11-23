@@ -4,7 +4,7 @@ using Shared.Domain.Enums;
 using Shared.Domain.Extensions;
 using Shared.Domain.Results;
 using Users.Domain.Events;
-using Users.Domain.Responses;
+using Users.Domain.Utilities;
 
 namespace Users.Domain.Entities;
 

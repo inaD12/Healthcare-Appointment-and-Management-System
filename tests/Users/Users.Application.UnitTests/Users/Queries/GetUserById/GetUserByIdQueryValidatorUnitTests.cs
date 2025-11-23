@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using Shared.Domain.Utilities;
-using Users.Application.Features.Users.Queries.GetById;
 using Users.Application.Features.Users.Queries.GetUserById;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Utilities;
 using Xunit;
 

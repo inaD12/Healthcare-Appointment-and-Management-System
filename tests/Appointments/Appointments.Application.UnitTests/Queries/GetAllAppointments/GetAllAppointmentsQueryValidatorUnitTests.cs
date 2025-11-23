@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+﻿using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Utilities;

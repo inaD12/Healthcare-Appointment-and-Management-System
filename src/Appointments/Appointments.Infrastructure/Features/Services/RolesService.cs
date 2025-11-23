@@ -11,6 +11,8 @@ public class RolesService(IRequestClient<GetUserRolesRequest> requestClient): IR
 {
     public async Task<Result<RolesResponse>> GetUserRolesAsync(string userId, CancellationToken cancellationToken = default)
     {
+        //TODO: Cache
+        
         var request = new GetUserRolesRequest(userId);
         
         Response<RolesResponse, Result> response =

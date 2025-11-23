@@ -1,7 +1,7 @@
 using Shared.Application.IntegrationEvents;
 using Users.Domain.Events;
 
-namespace Users.Application.Features.Users.Mappings;
+namespace Users.Application.Features.Users.Mappers;
 
 public static class EventMapper
 {

@@ -1,8 +1,7 @@
-﻿using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
-using Appointments.Domain.Utilities;
+﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointmentById;
+namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 
 public class GetAppointmentByIdQueryValidator : AbstractValidator<GetAppointmentByIdQuery>
 {

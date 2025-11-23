@@ -1,10 +1,9 @@
 ﻿using FluentAssertions;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Utilities;
-using Users.Application.Features.Users.UpdateUser;
+using Users.Application.Features.Users.Commands.UpdateUser;
 using Users.Application.IntegrationTests.Utilities;
 using Users.Domain.Entities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 namespace Users.Application.IntegrationTests.Users.Commands.UpdateUser;

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
+using Appointments.Domain.Abstractions;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Infrastructure.Models;
+using Appointments.Domain.Models;
 using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
@@ -12,7 +12,7 @@ using Shared.Domain.Enums;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
-using Users.Domain.Responses;
+using ResponseList = Users.Domain.Utilities.ResponseList;
 
 namespace Appointments.Application.UnitTests.Utilities;
 
