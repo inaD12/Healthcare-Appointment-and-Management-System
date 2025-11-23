@@ -11,22 +11,15 @@ using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;
 
-public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, UserCommandViewModel>
+public sealed class RegisterUserCommandHandler(
+	IUnitOfWork unitOfWork,
+	IUserRepository userRepository,
+	IIdentityProviderService identityProviderService)
+	: ICommandHandler<RegisterUserCommand, UserCommandViewModel>
 {
-	private readonly IUserRepository _userRepository;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IIdentityProviderService _identityProviderService;
-
-	public RegisterUserCommandHandler(IUnitOfWork unitOfWork, IUserRepository userRepository, IIdentityProviderService identityProviderService)
-	{
-		_unitOfWork = unitOfWork;
-		_userRepository = userRepository;
-		_identityProviderService = identityProviderService;
-	}
-
 	public async Task<Result<UserCommandViewModel>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
 	{
-		Result<string> identityResult = await _identityProviderService.RegisterUserAsync(
+		Result<string> identityResult = await identityProviderService.RegisterUserAsync(
 			new UserModel(request.Email, request.Password, request.FirstName, request.LastName),
 			cancellationToken);
 
@@ -34,8 +27,8 @@ public sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCom
 			return Result<UserCommandViewModel>.Failure(identityResult.Response);
 
 		var user = User.Create(request.Email, request.Role, request.FirstName, request.LastName,  request.DateOfBirth, identityResult.Value!, request.PhoneNumber, request.Address);
-		await _userRepository.AddAsync(user, cancellationToken);
-		await _unitOfWork.SaveChangesAsync(cancellationToken);
+		await userRepository.AddAsync(user, cancellationToken);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 
 		var userCommandViewModel = user.ToCommandViewModel();
 		return Result<UserCommandViewModel>.Success(userCommandViewModel, ResponseList.RegistrationSuccessful);

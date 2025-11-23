@@ -25,7 +25,7 @@ public static class CommandMapper
     public static RescheduleAppointmentCommand ToCommand(
         this RescheduleAppointmentRequest request)
         => new(
-            request.AppointmentID,
+            request.AppointmentId,
             request.ScheduledStartTime,
             request.Duration);
     

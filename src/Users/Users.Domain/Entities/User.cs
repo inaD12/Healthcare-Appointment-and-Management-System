@@ -1,6 +1,5 @@
 ﻿using Shared.Domain.Entities;
 using Shared.Domain.Entities.Base;
-using Shared.Domain.Enums;
 using Shared.Domain.Extensions;
 using Shared.Domain.Results;
 using Users.Domain.Events;
@@ -33,8 +32,8 @@ public sealed class User : BaseEntity
 		DateTime dateOfBirth,
 		bool emailVerified,
 		string identityId,
-		string? phoneNumber,
-		string? address)
+		string phoneNumber,
+		string address)
 	{
 		Email = email;
 		FirstName = firstName;
@@ -53,8 +52,8 @@ public sealed class User : BaseEntity
 		string lastName,
 		DateTime dateOfBirth,
 		string identityId,
-		string? phoneNumber,
-		string? address)
+		string phoneNumber,
+		string address)
 	{
 		var user = new User(
 			email,

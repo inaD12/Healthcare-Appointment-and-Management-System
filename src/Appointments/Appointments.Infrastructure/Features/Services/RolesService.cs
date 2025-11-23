@@ -18,12 +18,12 @@ public class RolesService(IRequestClient<GetUserRolesRequest> requestClient): IR
         Response<RolesResponse, Result> response =
             await requestClient.GetResponse<RolesResponse, Result>(request, cancellationToken);
 
-        if (response.Is(out Response<Result> errorResponse))
+        if (response.Is(out Response<Result>? errorResponse))
         {
             return Result<RolesResponse>.Failure(errorResponse.Message.Response);
         }
         
-        if (response.Is(out Response<RolesResponse> permissionResponse))
+        if (response.Is(out Response<RolesResponse>? permissionResponse))
         {
             
             return Result<RolesResponse>.Success(permissionResponse.Message);

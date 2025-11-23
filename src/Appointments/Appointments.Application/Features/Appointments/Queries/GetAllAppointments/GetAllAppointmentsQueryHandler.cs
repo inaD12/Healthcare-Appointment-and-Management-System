@@ -7,19 +7,13 @@ using Shared.Domain.Results;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 
-public class GetAllAppointmentsQueryHandler : IQueryHandler<GetAllAppointmentsQuery, AppointmentPaginatedQueryViewModel>
+public class GetAllAppointmentsQueryHandler(IAppointmentRepository appointmentRepository)
+	: IQueryHandler<GetAllAppointmentsQuery, AppointmentPaginatedQueryViewModel>
 {
-	private readonly IAppointmentRepository _appointmentRepository;
-
-	public GetAllAppointmentsQueryHandler(IAppointmentRepository appointmentRepository)
-	{
-		_appointmentRepository = appointmentRepository;
-	}
-
 	public async Task<Result<AppointmentPaginatedQueryViewModel>> Handle(GetAllAppointmentsQuery request, CancellationToken cancellationToken)
 	{
 		var appointmentPagedListQuery = request.ToPagedListQuery();
-		var appointmentPagedList = await _appointmentRepository.GetAllAsync(appointmentPagedListQuery, cancellationToken);
+		var appointmentPagedList = await appointmentRepository.GetAllAsync(appointmentPagedListQuery, cancellationToken);
 		if (appointmentPagedList == null)
 			return Result<AppointmentPaginatedQueryViewModel>.Failure(ResponseList.NoAppointmentsFound);
 

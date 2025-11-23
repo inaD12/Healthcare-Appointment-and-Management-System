@@ -85,7 +85,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 		var unitOfWork = ServiceScope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 		var token = await CreateEmailVerificationTokenAsync();
 
-		token.User.VerifyEmail();
+		token.User!.VerifyEmail();
 		UserRepository.Update(token.User);
 		await unitOfWork.SaveChangesAsync();
 

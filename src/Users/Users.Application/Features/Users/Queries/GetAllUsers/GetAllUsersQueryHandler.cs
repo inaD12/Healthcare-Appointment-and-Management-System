@@ -7,19 +7,13 @@ using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
-public class GetAllUsersQueryHandler : IQueryHandler<GetAllUsersQuery, UserPaginatedQueryViewModel>
+public class GetAllUsersQueryHandler(IUserRepository userRepository)
+	: IQueryHandler<GetAllUsersQuery, UserPaginatedQueryViewModel>
 {
-	private readonly IUserRepository _userRepository;
-
-	public GetAllUsersQueryHandler(IUserRepository userRepository)
-	{
-		_userRepository = userRepository;
-	}
-
 	public async Task<Result<UserPaginatedQueryViewModel>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
 	{
 		var userPagedListQuery = request.ToPagedListQuery();
-		var usersPagedList = await _userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
+		var usersPagedList = await userRepository.GetAllAsync(userPagedListQuery, cancellationToken);
 		if (usersPagedList == null)
 			return Result<UserPaginatedQueryViewModel>.Failure(ResponseList.NoUsersFound);
 

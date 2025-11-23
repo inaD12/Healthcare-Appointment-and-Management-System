@@ -21,7 +21,7 @@ public sealed class RemoveSpecialityCommandHandler(
         if (result.IsFailure)
             return result;
         
-        await doctorRepository.AddAsync(doctor);
+        await doctorRepository.AddAsync(doctor, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

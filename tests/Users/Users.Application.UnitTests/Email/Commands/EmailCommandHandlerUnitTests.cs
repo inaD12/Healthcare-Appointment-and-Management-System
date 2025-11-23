@@ -90,7 +90,7 @@ public class EmailCommandHandlerUnitTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		token.User.EmailVerified.Should().BeTrue();
+		token.User!.EmailVerified.Should().BeTrue();
 	}
 
 	[Fact]

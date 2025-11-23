@@ -27,12 +27,12 @@ public sealed class PermissionService(
         Response<PermissionsResponse, Result> response =
             await requestClient.GetResponse<PermissionsResponse, Result>(request, cancellationToken);
 
-        if (response.Is(out Response<Result> errorResponse))
+        if (response.Is(out Response<Result>? errorResponse))
         {
             return Result<PermissionsResponse>.Failure(errorResponse.Message.Response);
         }
 
-        if (response.Is(out Response<PermissionsResponse> permissionResponse))
+        if (response.Is(out Response<PermissionsResponse>? permissionResponse))
         {
             /*await cacheService.SetAsync(
                 CreateCacheKey(identityId),

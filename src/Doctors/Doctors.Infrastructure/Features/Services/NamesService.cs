@@ -16,12 +16,12 @@ public class NamesService(IRequestClient<GetUserNamesRequest> requestClient): IN
         Response<NamesResponse, Result> response =
             await requestClient.GetResponse<NamesResponse, Result>(request, cancellationToken);
 
-        if (response.Is(out Response<Result> errorResponse))
+        if (response.Is(out Response<Result>? errorResponse))
         {
             return Result<NamesResponse>.Failure(errorResponse.Message.Response);
         }
         
-        if (response.Is(out Response<NamesResponse> permissionResponse))
+        if (response.Is(out Response<NamesResponse>? permissionResponse))
         {
             
             return Result<NamesResponse>.Success(permissionResponse.Message);

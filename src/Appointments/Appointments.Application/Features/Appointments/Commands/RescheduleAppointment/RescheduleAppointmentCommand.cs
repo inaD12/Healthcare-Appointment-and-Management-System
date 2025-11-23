@@ -4,19 +4,7 @@ using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
 
-public sealed class RescheduleAppointmentCommand : ICommand<AppointmentCommandViewModel>
-{
-	public string AppointmentId { get; private set; }
-	public DateTime ScheduledStartTime { get; private set; }
-	public AppointmentDuration Duration { get; private set; }
-
-	public RescheduleAppointmentCommand(
-		string appointmentId,
-		DateTime scheduledStartTime,
-		AppointmentDuration duration)
-	{
-		AppointmentId = appointmentId;
-		ScheduledStartTime = scheduledStartTime;
-		Duration = duration;
-	}
-}
+public sealed record RescheduleAppointmentCommand(
+	string AppointmentId,
+	DateTime ScheduledStartTime,
+	AppointmentDuration Duration) : ICommand<AppointmentCommandViewModel>;

@@ -16,11 +16,6 @@ public class HamsValidationException : Exception
 			.Select(f => new ValidationError(f.PropertyName, f.ErrorMessage))
 			.ToArray();
 	}
-
-	protected HamsValidationException(System.Runtime.Serialization.SerializationInfo info,
-		System.Runtime.Serialization.StreamingContext context)
-		: base(info, context) { }
-
 	private static string CreateMessage(IEnumerable<ValidationFailure> failures)
 	{
 		var errors = failures?

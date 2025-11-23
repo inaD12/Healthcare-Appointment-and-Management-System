@@ -7,18 +7,12 @@ using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Queries.GetUserById;
 
-public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserQueryViewModel>
+public sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
+	: IQueryHandler<GetUserByIdQuery, UserQueryViewModel>
 {
-	private readonly IUserRepository _userRepository;
-
-	public GetUserByIdQueryHandler(IUserRepository userRepository)
-	{
-		_userRepository = userRepository;
-	}
-
 	public async Task<Result<UserQueryViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.GetByIdAsync(request.Id, cancellationToken);
+		var user = await userRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (user == null)
 			return Result<UserQueryViewModel>.Failure(ResponseList.UserNotFound);
 

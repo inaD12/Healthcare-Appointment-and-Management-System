@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using Dapper;
 using Shared.Application.Data;
-using Shared.Application.Dtos;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Models;
 using Shared.Domain.Results;
@@ -38,6 +37,6 @@ internal sealed class GetUserRolesQueryHandler(IDbConnectionFactory dbConnection
 
     internal sealed class UserRole
     {
-        internal string Role { get; init; }
+        internal string Role { get; init; } = null!;
     }
 }

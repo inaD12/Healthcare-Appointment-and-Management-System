@@ -64,7 +64,7 @@ public class HandleEmailCommandHandlerIntegrationTests : BaseUsersIntegrationTes
 
 		// Act
 		var result = await Sender.Send(command, CancellationToken);
-		var user = await UserRepository.GetByIdAsync(token.User.Id);
+		var user = await UserRepository.GetByIdAsync(token.User!.Id);
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();

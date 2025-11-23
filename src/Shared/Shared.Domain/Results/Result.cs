@@ -20,12 +20,11 @@ public class Result<T>
 }
 public class Result
 {
-	private Result(bool isSuccess, Response? response)
+	private Result(bool isSuccess, Response response)
 	{
 
 		IsSuccess = isSuccess;
 		Response = response;
-		//Object = obj;
 	}
 	public bool IsSuccess { get; }
 
@@ -33,7 +32,6 @@ public class Result
 
 	public Response Response { get; }
 
-	//public object Object { get; }
 
 	public static Result Success(Response response) => new(true, response);
 	public static Result Success() => new(true, Response.Ok);

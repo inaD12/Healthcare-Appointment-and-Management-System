@@ -39,8 +39,8 @@ internal sealed class GetUserPermissionsQueryHandler(IDbConnectionFactory dbConn
 
     internal sealed class UserPermission
     {
-        internal string UserId { get; init; }
+        internal string UserId { get; init; } = null!;
 
-        internal string Permission { get; init; }
+        internal string Permission { get; init; } = null!;
     }
 }

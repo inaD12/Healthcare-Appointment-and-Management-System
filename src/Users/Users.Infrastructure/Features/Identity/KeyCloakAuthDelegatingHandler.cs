@@ -53,6 +53,6 @@ internal sealed class KeyCloakAuthDelegatingHandler(IOptions<KeyCloakOptions> op
     internal sealed class AuthToken
     {
         [JsonPropertyName("access_token")]
-        public string AccessToken { get; init; }
+        public required string AccessToken { get; init; }
     }
 }

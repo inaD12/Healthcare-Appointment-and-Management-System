@@ -10,22 +10,16 @@ using Shared.Infrastructure.Clock;
 
 namespace Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 
-public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppointmentCommand>
+public sealed class CancelAppointmentCommandHandler(
+	IUnitOfWork unitOfWork,
+	IDateTimeProvider dateTimeProvider,
+	IAppointmentRepository repositoryManager,
+	IAuthorizationService authService)
+	: ICommandHandler<CancelAppointmentCommand>
 {
-	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IDateTimeProvider _dateTimeProvider;
-	private readonly IAuthorizationService _authService;
-	public CancelAppointmentCommandHandler(IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider, IAppointmentRepository repositoryManager, IAuthorizationService authService)
-	{
-		_unitOfWork = unitOfWork;
-		_dateTimeProvider = dateTimeProvider;
-		_appointmentRepository = repositoryManager;
-		_authService = authService;
-	}
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
 	{
-		var appointment = await _appointmentRepository.GetByIdAsync(request.AppointmentId);
+		var appointment = await repositoryManager.GetByIdAsync(request.AppointmentId, cancellationToken);
 		if (appointment == null)
 		{
 			return Result.Failure(ResponseList.AppointmentNotFound);
@@ -33,19 +27,19 @@ public sealed class CancelAppointmentCommandHandler : ICommandHandler<CancelAppo
 
 		var requirement = new ModifyAppointmentRequirement();
 
-		var authResult = await _authService.AuthorizeAsync(ClaimsPrincipal.Current!, appointment, requirement );
+		var authResult = await authService.AuthorizeAsync(ClaimsPrincipal.Current!, appointment, requirement );
 		if (!authResult.Succeeded)
 		{
 			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
 		}
 
-		var res = appointment.Cancel(_dateTimeProvider.UtcNow);
+		var res = appointment.Cancel(dateTimeProvider.UtcNow);
 		if (res.IsFailure)
 		{
 			return res;
 		}
 
-		await _unitOfWork.SaveChangesAsync(cancellationToken);
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 		return Result.Success();
 	}
 }

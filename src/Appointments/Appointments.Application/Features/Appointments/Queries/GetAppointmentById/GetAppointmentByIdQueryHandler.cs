@@ -7,18 +7,12 @@ using Shared.Domain.Results;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 
-public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
+public sealed class GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository)
+	: IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
 {
-	private readonly IAppointmentRepository _appointmentRepository;
-
-	public GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository)
-	{
-		_appointmentRepository = appointmentRepository;
-	}
-
 	public async Task<Result<AppointmentQueryViewModel>> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
 	{
-		var appointment = await _appointmentRepository.GetByIdAsync(request.Id);
+		var appointment = await appointmentRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (appointment == null)
 			return Result<AppointmentQueryViewModel>.Failure(ResponseList.AppointmentNotFound);
 
