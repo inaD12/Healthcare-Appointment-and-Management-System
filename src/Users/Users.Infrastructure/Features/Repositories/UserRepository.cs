@@ -2,9 +2,9 @@
 using Shared.Domain.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
+using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Infrastructure.Models;
+using Users.Domain.Models;
 using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Infrastructure.Features.Repositories;
@@ -18,7 +18,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		_context = context;
 	}
 
-	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken)
+	public async Task<PagedList<User>?> GetAllAsync(UserPagedListQuery query, CancellationToken cancellationToken = default)
 	{
 		var entitiesQuery = _context.Users
 			.Include(u => u.Roles)
@@ -54,31 +54,31 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 		return users;
 	}
 
-	public async Task<User?> GetByEmailAsync(string email)
+	public async Task<User?> GetByEmailAsync(string email,  CancellationToken cancellationToken = default)
 	{
 		var user = await _context.Users
 			.Include(u => u.Roles)
-			.FirstOrDefaultAsync(u => u.Email == email);
+			.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
 		return user;
 	}
 
-	public override async Task<User?> GetByIdAsync(string id)
+	public override async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
 		var user = await _context.Users
 			.Include(u => u.Roles)
-			.FirstOrDefaultAsync(u => u.Id == id);
+			.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
 		return user;
 	}
 
-	public override Task AddAsync(User entity)
+	public override Task AddAsync(User entity, CancellationToken cancellationToken = default)
 	{
 		foreach (var role in entity.Roles)
 		{
 			_context.Attach(role);
 		}
 
-		return base.AddAsync(entity);
+		return base.AddAsync(entity, cancellationToken);
 	}
 }

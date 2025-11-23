@@ -2,7 +2,7 @@ using Doctors.Application.Features.Doctors.Dtos;
 using Doctors.Application.Features.Doctors.Models;
 using Doctors.Application.Features.Doctors.Queries.GetAllDoctors;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Models;
+using Doctors.Domain.Models;
 using Shared.Domain.Models;
 
 namespace Doctors.Application.Features.Doctors.Mappers;

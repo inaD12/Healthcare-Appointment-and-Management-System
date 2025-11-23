@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Extensions;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Infrastructure.Auth.Abstractions;
-using Users.Domain.Infrastructure.Auth.Options;
+using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Options;
 using Users.Infrastructure.Features.Consumers;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
@@ -62,6 +62,9 @@ public static class ServiceCollectionExtensions
 			.Endpoint(c => c.InstanceId = instanceId);
 		
 		registrationConfigurator.AddConsumer<GetUserNamesRequestConsumer>()
+			.Endpoint(c => c.InstanceId = instanceId);
+		
+		registrationConfigurator.AddConsumer<GetUserRolesRequestConsumer>()
 			.Endpoint(c => c.InstanceId = instanceId);
 	}
 }

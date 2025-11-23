@@ -1,7 +1,7 @@
 using System.Net;
+using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Exceptions;
@@ -29,7 +29,7 @@ public sealed class ChangeWorkDayScheduleCommandHandler(
         {
             workDay = WorkDay.Create(request.DayOfWeek, workTimeRanges);
         }
-        catch (HAMSValidationException ex)
+        catch (HamsValidationException ex)
         {
             return Result.Failure(Response.Create(ex.Message, HttpStatusCode.Conflict));
         }

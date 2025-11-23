@@ -18,5 +18,11 @@
         <None Include="Utilities/specialities.json" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="FluentValidation">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\fluentvalidation\11.11.0\lib\net8.0\FluentValidation.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 
 </Project>

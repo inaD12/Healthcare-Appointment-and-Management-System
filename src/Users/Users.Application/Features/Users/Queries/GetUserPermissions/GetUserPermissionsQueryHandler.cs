@@ -4,7 +4,7 @@ using Shared.Application.Authorization;
 using Shared.Application.Data;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Users.Domain.Responses;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Queries.GetUserPermissions;
 
@@ -39,8 +39,8 @@ internal sealed class GetUserPermissionsQueryHandler(IDbConnectionFactory dbConn
 
     internal sealed class UserPermission
     {
-        internal string UserId { get; init; }
+        internal string UserId { get; init; } = null!;
 
-        internal string Permission { get; init; }
+        internal string Permission { get; init; } = null!;
     }
 }

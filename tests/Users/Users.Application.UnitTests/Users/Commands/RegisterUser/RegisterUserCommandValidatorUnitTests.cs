@@ -3,6 +3,7 @@ using FluentValidation.TestHelper;
 using Shared.Domain.Entities;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Commands.RegisterUser;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Utilities;
 using Xunit;
 

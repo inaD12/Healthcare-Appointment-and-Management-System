@@ -1,7 +1,7 @@
 using Doctors.Application.Features.Doctors.Models;
+using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Utilities;
 using Serilog;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
@@ -23,7 +23,7 @@ public sealed class CreateDoctorCommandHandler(
         if (existingDoctor != null)
             return Result<DoctorCommandViewModel>.Failure(ResponseList.DoctorAlreadyExists);
         
-        var namesResult = await namesService.GetUserNamesAsync(request.UserId);
+        var namesResult = await namesService.GetUserNamesAsync(request.UserId, cancellationToken);
         if (namesResult.IsFailure)
         {
             Log.Error($"User id {request.UserId} from JWT does not return names");
@@ -46,7 +46,7 @@ public sealed class CreateDoctorCommandHandler(
         
         var doctor = doctorResult.Value!;
 
-        await doctorRepository.AddAsync(doctor);
+        await doctorRepository.AddAsync(doctor, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result<DoctorCommandViewModel>.Success(new DoctorCommandViewModel(doctor.Id));

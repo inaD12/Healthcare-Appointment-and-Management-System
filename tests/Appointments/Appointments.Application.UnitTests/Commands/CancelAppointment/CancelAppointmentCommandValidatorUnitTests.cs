@@ -1,5 +1,4 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
-using Appointments.Application.Features.Commands.Appointments.CancelAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Utilities;
 using FluentValidation.TestHelper;

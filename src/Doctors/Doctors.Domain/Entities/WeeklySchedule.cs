@@ -1,4 +1,4 @@
-using Doctors.Domain.Responses;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Results;
 
 namespace Doctors.Domain.Entities;

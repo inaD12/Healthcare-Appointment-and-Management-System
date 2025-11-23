@@ -2,7 +2,7 @@
 using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 
 public class GetAllAppointmentsQueryValidator : AbstractValidator<GetAllAppointmentsQuery>
 {

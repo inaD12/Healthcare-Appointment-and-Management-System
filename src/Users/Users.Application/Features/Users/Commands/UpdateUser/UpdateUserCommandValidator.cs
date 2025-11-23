@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Users.Domain.Utilities;
 
-namespace Users.Application.Features.Users.UpdateUser;
+namespace Users.Application.Features.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {

@@ -1,7 +1,7 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Users.Application.Features.Users.Models;
 
-namespace Users.Application.Features.Users.UpdateUser;
+namespace Users.Application.Features.Users.Commands.UpdateUser;
 
 public sealed record UpdateUserCommand(
 	string Id,

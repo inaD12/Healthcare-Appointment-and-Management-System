@@ -1,5 +1,4 @@
-﻿using Appointments.Application.Features.Appointments.Queries.GetAllAppointmentById;
-using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
+﻿using Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Utilities;
 using FluentValidation.TestHelper;

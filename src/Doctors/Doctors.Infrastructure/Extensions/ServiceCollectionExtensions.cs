@@ -1,6 +1,6 @@
-﻿using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
+﻿using Doctors.Domain.Abstractions;
+using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Domain.Entities;
 using Doctors.Domain.Options;
 using Doctors.Infrastructure.Features.Clients;
 using Doctors.Infrastructure.Features.DBContexts;

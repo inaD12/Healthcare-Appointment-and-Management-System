@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Infrastructure.Abstractions;
+﻿using Appointments.Domain.Abstractions;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;

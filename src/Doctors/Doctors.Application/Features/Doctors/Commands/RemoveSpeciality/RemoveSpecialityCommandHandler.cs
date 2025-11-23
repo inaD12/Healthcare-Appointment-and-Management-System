@@ -1,5 +1,5 @@
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -21,7 +21,7 @@ public sealed class RemoveSpecialityCommandHandler(
         if (result.IsFailure)
             return result;
         
-        await doctorRepository.AddAsync(doctor);
+        await doctorRepository.AddAsync(doctor, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

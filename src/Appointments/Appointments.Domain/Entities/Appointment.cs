@@ -1,5 +1,5 @@
 ﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;

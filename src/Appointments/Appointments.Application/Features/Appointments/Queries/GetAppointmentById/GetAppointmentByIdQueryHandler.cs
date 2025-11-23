@@ -1,31 +1,22 @@
-﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Domain.Responses;
-using Shared.Application.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Mappers;
+using Appointments.Application.Features.Appointments.Models;
+using Appointments.Domain.Abstractions;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointmentById;
+namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 
-public sealed class GetAppointmentByIdQueryHandler : IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
+public sealed class GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository)
+	: IQueryHandler<GetAppointmentByIdQuery, AppointmentQueryViewModel>
 {
-	private readonly IAppointmentRepository _appointmentRepository;
-	private readonly IHAMSMapper _mapper;
-
-	public GetAppointmentByIdQueryHandler(IAppointmentRepository appointmentRepository, IHAMSMapper mapper)
-	{
-		_appointmentRepository = appointmentRepository;
-		_mapper = mapper;
-	}
-
 	public async Task<Result<AppointmentQueryViewModel>> Handle(GetAppointmentByIdQuery request, CancellationToken cancellationToken)
 	{
-		var appointment = await _appointmentRepository.GetByIdAsync(request.Id);
+		var appointment = await appointmentRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (appointment == null)
 			return Result<AppointmentQueryViewModel>.Failure(ResponseList.AppointmentNotFound);
 
-		var appointmentQueryViewModel = _mapper.Map<AppointmentQueryViewModel>(appointment);
+		var appointmentQueryViewModel = appointment.ToQueryViewModel();
 		return Result<AppointmentQueryViewModel>.Success(appointmentQueryViewModel);
 	}
 }

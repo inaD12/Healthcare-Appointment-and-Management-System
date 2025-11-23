@@ -8,12 +8,9 @@ namespace Users.Application.Features.Users.Queries.GetAllUsers;
 
 public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 {
-	private static HashSet<string> ValidRoles;
-
-	
 	public GetAllUsersQueryValidator()
 	{
-		ValidRoles = typeof(Role)
+		var roles = typeof(Role)
 			.GetFields(BindingFlags.Public | BindingFlags.Static)
 			.Where(f => f.FieldType == typeof(Role))
 			.Select(f => ((Role)f.GetValue(null)!).Name)
@@ -25,7 +22,7 @@ public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 		   .When(q => !string.IsNullOrEmpty(q.Email));
 
 		RuleFor(q => q.Role)
-			.Must(role => ValidRoles.Contains(role!.Name))
+			.Must(role => roles.Contains(role!.Name))
 			.When(q => q.Role != null);
 
 		RuleFor(q => q.FirstName)

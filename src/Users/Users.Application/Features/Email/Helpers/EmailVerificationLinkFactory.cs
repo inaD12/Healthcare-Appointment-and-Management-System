@@ -17,6 +17,6 @@ internal class EmailVerificationLinkFactory(IHttpContextAccessor httpContextAcce
 		if (verificationLink == null)
 			throw new InvalidOperationException("Failed to create email verification link.");
 
-		return verificationLink!;
+		return verificationLink;
 	}
 }

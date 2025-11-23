@@ -1,8 +1,6 @@
 ﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Entities;
-using Shared.Domain.Enums;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Entities;
 
 namespace Users.Application.Features.Users.Commands.RegisterUser;
 

@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using Shared.Domain.Exceptions;
 
 namespace Doctors.Domain.Entities;
@@ -12,7 +13,11 @@ public sealed class WorkTimeRange
     public static WorkTimeRange Create(TimeSpan start, TimeSpan end)
     {
         if (start >= end)
-            throw new HAMSValidationException("WorkTimeRange", "Start time must be before end time");
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "WorkTimeRange", "Start time must be before end time")
+            });
 
         return new WorkTimeRange
         {

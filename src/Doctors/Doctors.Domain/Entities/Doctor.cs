@@ -1,5 +1,5 @@
 using Doctors.Domain.Events;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;

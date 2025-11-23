@@ -4,37 +4,32 @@ using Shared.Domain.Exceptions;
 
 namespace Shared.Application.PipelineBehaviors;
 
-public sealed class ValidationPipelineBehavior<TRequest, TResponse>
+internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
+	IEnumerable<IValidator<TRequest>> validators)
 	: IPipelineBehavior<TRequest, TResponse>
 	where TRequest : notnull
 {
-	private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-	public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
-	{
-		_validators = validators;
-	}
-
 	public async Task<TResponse> Handle(
 		TRequest request,
 		RequestHandlerDelegate<TResponse> next,
 		CancellationToken cancellationToken)
 	{
-		var validationContext = new ValidationContext<TRequest>(request);
+		if (!validators.Any())
+			return await next(cancellationToken);
+
+		var context = new ValidationContext<TRequest>(request);
 
 		var validationResults = await Task.WhenAll(
-			_validators.Select(v => v.ValidateAsync(validationContext)));
+			validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
-		var firstFailure = validationResults
-		.Where(vr => !vr.IsValid)
-		.SelectMany(vr => vr.Errors)
-		.FirstOrDefault();
+		var failures = validationResults
+			.Where(r => !r.IsValid)
+			.SelectMany(r => r.Errors)
+			.ToArray();
 
-		if (firstFailure != null)
-		{
-			throw new HAMSValidationException(firstFailure.PropertyName, firstFailure.ErrorMessage);
-		}
+		if (failures.Length != 0)
+			throw new HamsValidationException(failures);
 
-		return await next();
+		return await next(cancellationToken);
 	}
 }

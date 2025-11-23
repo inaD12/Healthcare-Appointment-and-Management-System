@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
-using Users.Domain.Infrastructure.Auth.Options;
+using Users.Domain.Auth.Options;
 
 namespace Users.Infrastructure.Features.Identity;
 
@@ -53,6 +53,6 @@ internal sealed class KeyCloakAuthDelegatingHandler(IOptions<KeyCloakOptions> op
     internal sealed class AuthToken
     {
         [JsonPropertyName("access_token")]
-        public string AccessToken { get; init; }
+        public required string AccessToken { get; init; }
     }
 }

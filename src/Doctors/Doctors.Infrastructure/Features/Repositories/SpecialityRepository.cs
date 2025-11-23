@@ -1,6 +1,6 @@
+using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Dtos;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
 using Doctors.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Pgvector;

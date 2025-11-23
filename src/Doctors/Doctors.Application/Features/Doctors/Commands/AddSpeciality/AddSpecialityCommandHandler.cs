@@ -1,7 +1,5 @@
-using Doctors.Domain.Entities;
-using Doctors.Domain.Infrastructure.Abstractions;
-using Doctors.Domain.Infrastructure.Abstractions.Repositories;
-using Doctors.Domain.Responses;
+using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -11,7 +9,6 @@ namespace Doctors.Application.Features.Doctors.Commands.AddSpeciality;
 public sealed class AddSpecialityCommandHandler(
     IDoctorRepository doctorRepository,
     ISpecialityRepository specialityRepository,
-    IEmbeddingClient  embeddingClient,
     IUnitOfWork unitOfWork)
     : ICommandHandler<AddSpecialityCommand>
 {
@@ -29,7 +26,7 @@ public sealed class AddSpecialityCommandHandler(
         if (result.IsFailure)
             return result;
         
-        await doctorRepository.AddAsync(doctor);
+        await doctorRepository.AddAsync(doctor, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return Result.Success();

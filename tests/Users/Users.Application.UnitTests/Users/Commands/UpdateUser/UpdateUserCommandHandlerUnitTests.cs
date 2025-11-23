@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Users.Application.Features.Users.Commands.UpdateUser;
-using Users.Application.Features.Users.UpdateUser;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Entities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 using Xunit;
 
@@ -15,7 +14,7 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 
 	public UpdateUserCommandHandlerUnitTests()
 	{
-		_commandHandler = new UpdateUserCommandHandler(UnitOfWork, HAMSMapper, UserRepository);
+		_commandHandler = new UpdateUserCommandHandler(UnitOfWork, UserRepository);
 	}
 
 	[Fact]

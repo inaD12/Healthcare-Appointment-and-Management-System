@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Exceptions;
+﻿using FluentValidation.Results;
+using Shared.Domain.Exceptions;
 
 namespace Shared.Domain.Entities.ValueObjects;
 
@@ -16,7 +17,10 @@ public sealed record DateTimeRange
 	{
 		if (start > end)
 		{
-			throw new HAMSValidationException("EndTime" ,"End date precedes start date");
+			throw new HamsValidationException(new[]
+			{
+				new ValidationFailure("EndTime", "End date precedes start date")
+			});
 		}
 
 		return new DateTimeRange

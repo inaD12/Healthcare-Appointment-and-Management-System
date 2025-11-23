@@ -1,10 +1,9 @@
 ﻿using Shared.Domain.Entities;
 using Shared.Domain.Entities.Base;
-using Shared.Domain.Enums;
 using Shared.Domain.Extensions;
 using Shared.Domain.Results;
 using Users.Domain.Events;
-using Users.Domain.Responses;
+using Users.Domain.Utilities;
 
 namespace Users.Domain.Entities;
 
@@ -16,8 +15,8 @@ public sealed class User : BaseEntity
 	public string FirstName { get; private set; }
 	public string LastName { get; private set; }
 	public DateTime DateOfBirth { get; private set; }
-	public string? PhoneNumber { get; private set; }
-	public string? Address { get; private set; }
+	public string PhoneNumber { get; private set; }
+	public string Address { get; private set; }
 	public bool EmailVerified { get; private set; }
 	public string IdentityId { get; private set; }
 	public IReadOnlyCollection<Role> Roles => _roles.ToList();
@@ -33,8 +32,8 @@ public sealed class User : BaseEntity
 		DateTime dateOfBirth,
 		bool emailVerified,
 		string identityId,
-		string? phoneNumber,
-		string? address)
+		string phoneNumber,
+		string address)
 	{
 		Email = email;
 		FirstName = firstName;
@@ -53,8 +52,8 @@ public sealed class User : BaseEntity
 		string lastName,
 		DateTime dateOfBirth,
 		string identityId,
-		string? phoneNumber,
-		string? address)
+		string phoneNumber,
+		string address)
 	{
 		var user = new User(
 			email,

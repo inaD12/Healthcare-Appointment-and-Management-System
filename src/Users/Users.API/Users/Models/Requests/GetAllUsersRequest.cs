@@ -1,10 +1,9 @@
 ﻿using Shared.API.Models.Requests;
-using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 
 namespace Users.Users.Models.Requests;
 
-public record GetAllUsersRequest
+public sealed record GetAllUsersRequest
 (
 	string Email = "",
 	Roles? Role = null,

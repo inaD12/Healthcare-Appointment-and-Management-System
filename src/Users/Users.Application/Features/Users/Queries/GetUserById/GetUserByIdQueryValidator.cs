@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Users.Application.Features.Users.Queries.GetById;
 using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Queries.GetUserById;

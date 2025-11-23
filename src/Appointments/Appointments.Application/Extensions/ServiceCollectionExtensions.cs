@@ -1,5 +1,5 @@
-﻿using Appointments.Application.Features.Jobs;
-using Appointments.Domain.Infrastructure.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Jobs;
+using Appointments.Domain.Abstractions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +28,6 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddValidatorsFromAssembly(currentAssembly)
 			.AddHangFire(dbOptions.ConnectionString)
-			.AddMapper(currentAssembly)
 			.AddDateTimeProvider();
 
 
