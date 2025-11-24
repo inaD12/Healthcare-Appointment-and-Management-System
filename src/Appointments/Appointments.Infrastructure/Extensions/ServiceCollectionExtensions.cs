@@ -20,7 +20,8 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 		
 		services
-			.AddTransient<IAppointmentRepository, AppointmentRepository>()
+			.AddScoped<IAppointmentRepository, AppointmentRepository>()
+			.AddScoped<IDoctorScheduleRepository, DoctorScheduleRepository>()
 			.AddTransient<IRolesService, RolesService>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 

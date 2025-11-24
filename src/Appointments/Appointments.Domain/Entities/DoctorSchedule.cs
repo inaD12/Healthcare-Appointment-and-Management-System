@@ -1,9 +1,9 @@
+using Shared.Domain.Entities.Base;
+
 namespace Appointments.Domain.Entities;
 
-public class DoctorSchedule
+public class DoctorSchedule: BaseEntity
 {
-    public string DoctorId { get; set; }
-
     public WeeklySchedule WeeklySchedule { get; set; } = new();
 
     public List<AvailabilityException> AvailabilityExceptions { get; set; } = new();

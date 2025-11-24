@@ -10,7 +10,7 @@ internal class DoctorScheduleConfiguration : IEntityTypeConfiguration<DoctorSche
     public void Configure(EntityTypeBuilder<DoctorSchedule> builder)
     {
         builder.ToTable("DoctorSchedules");
-        builder.HasKey(d => d.DoctorId);
+        builder.HasKey(d => d.Id).HasName("ID");
 
         builder.OwnsOne(d => d.WeeklySchedule, schedule =>
         {
