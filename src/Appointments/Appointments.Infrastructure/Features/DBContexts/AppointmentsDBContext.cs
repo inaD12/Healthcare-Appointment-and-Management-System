@@ -20,5 +20,6 @@ public class AppointmentsDBContext : DbContext
 		modelBuilder.AddOutboxStateEntity();
 
 		modelBuilder.ApplyConfiguration(new AppointmentConfiguration());
+		modelBuilder.ApplyConfiguration(new DoctorScheduleConfiguration());
 	}
 }
