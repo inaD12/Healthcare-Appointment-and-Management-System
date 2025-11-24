@@ -15,71 +15,73 @@ internal class UserEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var group = app.MapGroup("api/users");
+	    var group = app.MapGroup("api/users");
 
-		group.MapPost("register", Register)
-			.Produces<UserCommandResponse>(StatusCodes.Status201Created)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.AllowAnonymous();
+	    group.MapPost("/", RegisterAsync)
+	        .Produces<UserCommandResponse>(StatusCodes.Status201Created)
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status409Conflict)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .AllowAnonymous();
 
-		group.MapPut("update-current", UpdateCurrent)
-			.Produces<UserCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
+	    group.MapGet("/", GetAllAsync)
+	        .Produces<UserPaginatedQueryResponse>()
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.GetUser);
 
-		group.MapPut("update/{id}", Update)
-			.Produces<UserCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.ModifyUser);
+	    group.MapGet("/{id}", GetByIdAsync)
+	        .Produces<UserQueryResponse>()
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.GetUser);
 
-		group.MapGet("get-all", GetAll)
-			.Produces<UserPaginatedQueryResponse>()
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.GetUser);
+	    group.MapPut("/{id}", UpdateAsync)
+	        .Produces<UserCommandResponse>()
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status409Conflict)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.ModifyUser);
 
-		group.MapGet("get/{id}", GetById)
-			.Produces<UserQueryResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.GetUser);
+	    group.MapDelete("/{id}", DeleteByIdAsync)
+	        .Produces(StatusCodes.Status200OK)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.DeleteUser);
 
-		group.MapDelete("delete-current", DeleteCurrent)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization();
-
-		group.MapDelete("delete/{id}", DeleteById)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.DeleteUser);
-
-		group.MapGet("verify-email", VerifyEmails)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.WithName("VerifyEmail")
-			.AllowAnonymous();
+	    group.MapGet("verify-email", VerifyEmailAsync)
+	        .Produces(StatusCodes.Status200OK)
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .WithName("VerifyEmail")
+	        .AllowAnonymous();
+	    
+	    var meGroup = app.MapGroup("/api/users/me");
+	    
+	    meGroup.MapDelete("/", DeleteCurrentAsync)
+		    .Produces(StatusCodes.Status200OK)
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization();
+	    
+	    meGroup.MapPut("/", UpdateCurrentAsync)
+		    .Produces<UserCommandResponse>()
+		    .Produces(StatusCodes.Status400BadRequest)
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status409Conflict)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization();
 	}
 
-	private async Task<IResult> Register(
+	private async Task<IResult> RegisterAsync(
 		[FromBody] RegisterUserRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -94,7 +96,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	private async Task<IResult> UpdateCurrent(
+	private async Task<IResult> UpdateCurrentAsync(
 		[FromBody] UpdateCurrentUserRequest request,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
@@ -110,7 +112,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	private async Task<IResult> Update(
+	private async Task<IResult> UpdateAsync(
 		[FromRoute] string id,
 		[FromBody] UpdateUserRequest request,
 		[FromServices] ISender sender,
@@ -125,7 +127,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	private async Task<IResult> GetById(
+	private async Task<IResult> GetByIdAsync(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -138,7 +140,7 @@ internal class UserEndPoints : IEndPoints
 		var appointmentCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
-	private async Task<IResult> GetAll(
+	private async Task<IResult> GetAllAsync(
 		[AsParameters] GetAllUsersRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -152,7 +154,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
 	}
 
-	private async Task<IResult> DeleteById(
+	private async Task<IResult> DeleteByIdAsync(
 		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -162,7 +164,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
-	private async Task<IResult> DeleteCurrent(
+	private async Task<IResult> DeleteCurrentAsync(
 		HttpContext httpContext,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
@@ -173,7 +175,7 @@ internal class UserEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
-	private async Task<IResult> VerifyEmails(
+	private async Task<IResult> VerifyEmailAsync(
 		[FromBody] VerifyEmailRequest request,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
