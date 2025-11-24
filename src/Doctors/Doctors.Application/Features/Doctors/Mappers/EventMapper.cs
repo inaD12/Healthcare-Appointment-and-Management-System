@@ -23,6 +23,20 @@ public static class EventMapper
             domainEvent.End,
             domainEvent.Reason);
     
+    public static DoctorRemovedExtraAvailabilityIntegrationEvent ToIntegrationEvent(
+        this DoctorRemovedExtraAvailabilityDomainEvent domainEvent)
+        => new(
+            domainEvent.DoctorId,
+            domainEvent.Start,
+            domainEvent.End);
+    
+    public static DoctorRemovedUnavailabilityIntegrationEvent ToIntegrationEvent(
+        this DoctorRemovedUnavailabilityDomainEvent domainEvent)
+        => new(
+            domainEvent.DoctorId,
+            domainEvent.Start,
+            domainEvent.End);
+    
     public static WorkDayScheduleAddedIntegrationEvent ToIntegrationEvent(
         this WorkDayScheduleAddedDomainEvent domainEvent)
         => new(
