@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\DoctorSchedule\Commands\" />
     <Folder Include="Features\DoctorSchedule\Consumers\" />
   </ItemGroup>
 
