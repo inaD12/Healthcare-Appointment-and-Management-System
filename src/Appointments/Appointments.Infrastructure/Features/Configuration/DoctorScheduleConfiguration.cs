@@ -33,6 +33,9 @@ internal class DoctorScheduleConfiguration : IEntityTypeConfiguration<DoctorSche
 
             });
         });
+        
+        builder.Navigation(d => d.WeeklySchedule)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.OwnsMany(d => d.AvailabilityExceptions, a =>
         {

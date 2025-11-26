@@ -2,6 +2,8 @@ namespace Appointments.Domain.Entities;
 
 public class WeeklySchedule
 {
+    public WeeklySchedule() { }
+    
     private readonly List<WorkDaySchedule> _workDays = new();
 
     public IReadOnlyCollection<WorkDaySchedule> WorkDays => _workDays;

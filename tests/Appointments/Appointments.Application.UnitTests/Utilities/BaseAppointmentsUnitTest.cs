@@ -20,6 +20,7 @@ public abstract class BaseAppointmentsUnitTest : BaseSharedUnitTest
 {
 	protected IDateTimeProvider DateTimeProvider { get; }
 	protected IAppointmentRepository AppointmentRepository { get; }
+	protected IDoctorScheduleRepository DoctorScheduleRepository { get; }
 	protected IRolesService RolesService { get; }
 	protected IAuthorizationService AuthService { get; }
 

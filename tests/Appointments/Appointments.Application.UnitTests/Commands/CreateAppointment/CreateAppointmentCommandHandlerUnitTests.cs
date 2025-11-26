@@ -18,6 +18,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		_handler = new CreateAppointmentCommandHandler(
 			UnitOfWork,
 			AppointmentRepository,
+			DoctorScheduleRepository,
 			RolesService);
 	}
 

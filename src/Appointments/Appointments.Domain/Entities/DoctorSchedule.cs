@@ -5,12 +5,14 @@ namespace Appointments.Domain.Entities;
 
 public class DoctorSchedule : BaseEntity
 {
-    public WeeklySchedule WeeklySchedule => new();
-    
+    private readonly WeeklySchedule _weeklySchedule = new WeeklySchedule();
+    public WeeklySchedule WeeklySchedule => _weeklySchedule;
+
     private readonly List<AvailabilityException> _availabilityExceptions = new();
     public IReadOnlyCollection<AvailabilityException> AvailabilityExceptions => _availabilityExceptions;
 
     public DoctorSchedule(string id) { Id = id;}
+    private DoctorSchedule() { }
 
     public bool IsSlotAvailable(DateTime start, DateTime end)
     {
@@ -27,19 +29,19 @@ public class DoctorSchedule : BaseEntity
         var endTime = TimeOnly.FromDateTime(end);
         var day = start.DayOfWeek;
 
-        return WeeklySchedule.IsWithinWorkHours(startTime, endTime, day);
+        return _weeklySchedule.IsWithinWorkHours(startTime, endTime, day);
     }
     
     public void AddOrUpdateWorkDay(
         DayOfWeek day, 
         IEnumerable<WorkTimeRange> workTimes)
     {
-        WeeklySchedule.AddOrUpdateWorkDay(day, workTimes);
+        _weeklySchedule.AddOrUpdateWorkDay(day, workTimes);
     }
 
     public void RemoveWorkDay(DayOfWeek day)
     {
-        WeeklySchedule.RemoveWorkDay(day);
+        _weeklySchedule.RemoveWorkDay(day);
     }
 
     public void AddExtraAvailability(DateTime start, DateTime end, string reason)

@@ -7,6 +7,8 @@ public class WorkDaySchedule
     public DayOfWeek DayOfWeek { get; private set; }
     public IReadOnlyCollection<WorkTimeRange> WorkTimes => _workTimes;
 
+    private WorkDaySchedule() { }
+    
     public WorkDaySchedule(DayOfWeek day, IEnumerable<WorkTimeRange> workTimes)
     {
         DayOfWeek = day;
