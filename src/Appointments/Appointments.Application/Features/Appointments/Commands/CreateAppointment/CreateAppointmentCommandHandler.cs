@@ -14,6 +14,7 @@ namespace Appointments.Application.Features.Appointments.Commands.CreateAppointm
 public sealed class CreateAppointmentCommandHandler(
 	IUnitOfWork unitOfWork,
 	IAppointmentRepository appointmentRepository,
+	IDoctorScheduleRepository doctorScheduleRepository,
 	IRolesService rolesService)
 	: ICommandHandler<CreateAppointmentCommand, AppointmentCommandViewModel>
 {
@@ -35,7 +36,14 @@ public sealed class CreateAppointmentCommandHandler(
 
 		if (!await appointmentRepository.IsTimeSlotAvailableAsync(request.DoctorUserId, duration, cancellationToken))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.TimeSlotNotAvailable);
-
+		
+		var doctorSchedule = await doctorScheduleRepository.GetByIdAsync(request.DoctorUserId, cancellationToken);
+		if (doctorSchedule == null)
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.ScheduleNotFound);
+		
+		if(doctorSchedule.IsSlotAvailable(duration.Start, duration.End))
+			return Result<AppointmentCommandViewModel>.Failure(ResponseList.NotWorkHours);
+		
 		try
 		{
 			var appointment = Appointment.Schedule(request.PatientUserId, request.DoctorUserId, duration);

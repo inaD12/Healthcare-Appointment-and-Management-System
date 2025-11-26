@@ -9,12 +9,12 @@ namespace Appointments.Application.Features.Appointments.Commands.CompleteAppoin
 public sealed class CompleteAppointmentsCommandHandler(
 	IUnitOfWork unitOfWork,
 	IDateTimeProvider dateTimeProvider,
-	IAppointmentRepository repositoryManager)
+	IAppointmentRepository appointmentRepository)
 	: ICommandHandler<CompleteAppointmentsCommand>
 {
 	public async Task<Result> Handle(CompleteAppointmentsCommand request, CancellationToken cancellationToken)
 	{
-		var appointmentsToComplete = await repositoryManager
+		var appointmentsToComplete = await appointmentRepository
 			.GetAppointmentsToCompleteAsync(dateTimeProvider.UtcNow, cancellationToken);
 
 		if (appointmentsToComplete == null || appointmentsToComplete.Count == 0)
