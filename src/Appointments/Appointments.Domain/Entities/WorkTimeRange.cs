@@ -5,12 +5,12 @@ namespace Appointments.Domain.Entities;
 
 public sealed class WorkTimeRange
 {
-    public TimeSpan Start { get; init; }
-    public TimeSpan End { get; init; }
+    public TimeOnly Start { get; init; }
+    public TimeOnly End { get; init; }
 
     private WorkTimeRange() { }
 
-    public static WorkTimeRange Create(TimeSpan start, TimeSpan end)
+    public static WorkTimeRange Create(TimeOnly start, TimeOnly end)
     {
         if (start >= end)
             throw new HamsValidationException(new[]

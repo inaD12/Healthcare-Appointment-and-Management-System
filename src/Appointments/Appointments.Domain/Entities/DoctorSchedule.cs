@@ -12,6 +12,24 @@ public class DoctorSchedule : BaseEntity
 
     public DoctorSchedule(string id) { Id = id;}
 
+    public bool IsSlotAvailable(DateTime start, DateTime end)
+    {
+        if (start >= end)
+            return false;
+
+        if (IsInUnavailablePeriod(start, end))
+            return false;
+
+        if (IsInExtraAvailability(start, end))
+            return true;
+        
+        var startTime = TimeOnly.FromDateTime(start);
+        var endTime = TimeOnly.FromDateTime(end);
+        var day = start.DayOfWeek;
+
+        return WeeklySchedule.IsWithinWorkHours(startTime, endTime, day);
+    }
+    
     public void AddOrUpdateWorkDay(
         DayOfWeek day, 
         IEnumerable<WorkTimeRange> workTimes)
@@ -65,5 +83,17 @@ public class DoctorSchedule : BaseEntity
             .ToList();
 
         return overlapping;
+    }
+    
+    private bool IsInUnavailablePeriod(DateTime start, DateTime end)
+    {
+        return AvailabilityExceptions.Any(p =>
+            start < p.End && end > p.Start && p.Type == ExceptionType.Unavailability);
+    }
+    
+    private bool IsInExtraAvailability(DateTime start, DateTime end)
+    {
+        return AvailabilityExceptions.Any(a => 
+            start >= a.Start && end <= a.End && a.Type == ExceptionType.ExtraAvailability);
     }
 }

@@ -33,4 +33,16 @@ public class WeeklySchedule
         if (daySchedule != null)
             _workDays.Remove(daySchedule);
     }
+    
+    public bool IsWithinWorkHours(TimeOnly start, TimeOnly end, DayOfWeek day)
+    {
+        var workDay = _workDays.FirstOrDefault(w => w.DayOfWeek == day);
+        if (workDay is null) 
+            return false;
+
+        return workDay.WorkTimes.Any(range =>
+            start >= range.Start &&
+            end   <= range.End
+        );
+    }
 }
