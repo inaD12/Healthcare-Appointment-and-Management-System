@@ -44,6 +44,6 @@ public sealed class WorkDay
         };
     }
 
-    public bool IsWithinWorkingHours(TimeSpan timeOfDay)
+    public bool IsWithinWorkingHours(TimeOnly timeOfDay)
         => _workTimes.Any(range => range.Contains(timeOfDay));
 }

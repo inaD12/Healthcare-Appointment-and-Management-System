@@ -62,7 +62,7 @@ public sealed class WeeklySchedule
     public bool IsWorkingAt(DateTime dateTimeUtc)
     {
         var localDay = dateTimeUtc.DayOfWeek;
-        var localTime = dateTimeUtc.TimeOfDay;
+        var localTime = TimeOnly.FromDateTime(dateTimeUtc);;
 
         var workDay = _workDays.FirstOrDefault(d => d.DayOfWeek == localDay);
         return workDay?.IsWithinWorkingHours(localTime) ?? false;

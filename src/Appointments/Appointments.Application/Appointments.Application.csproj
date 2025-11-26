@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Appointments.Infrastructure\Appointments.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\DoctorSchedule\Consumers\" />
-  </ItemGroup>
-
 </Project>
