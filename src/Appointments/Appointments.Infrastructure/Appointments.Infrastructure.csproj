@@ -27,8 +27,4 @@
     <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Migrations\" />
-  </ItemGroup>
-
 </Project>

@@ -12,8 +12,8 @@ public static class CommandMapper
     public static CreateAppointmentCommand ToCommand(
         this CreateAppointmentRequest request)
         => new(
-            request.PatientEmail,
-            request.DoctorEmail,
+            request.PatientId,
+            request.DoctorId,
             request.ScheduledStartTime,
             request.Duration);
     

@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Appointments.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(AppointmentsDBContext))]
-    [Migration("20251124162045_Add_DoctorSchedule")]
-    partial class Add_DoctorSchedule
+    [Migration("20251127143031_Add_Database")]
+    partial class Add_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,10 +54,11 @@ namespace Appointments.Infrastructure.Features.Migrations
 
             modelBuilder.Entity("Appointments.Domain.Entities.DoctorSchedule", b =>
                 {
-                    b.Property<string>("DoctorId")
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.HasKey("DoctorId");
+                    b.HasKey("Id")
+                        .HasName("ID");
 
                     b.ToTable("DoctorSchedules", (string)null);
                 });
@@ -294,15 +295,15 @@ namespace Appointments.Infrastructure.Features.Migrations
 
                     b.OwnsOne("Appointments.Domain.Entities.WeeklySchedule", "WeeklySchedule", b1 =>
                         {
-                            b1.Property<string>("DoctorScheduleDoctorId")
+                            b1.Property<string>("DoctorScheduleId")
                                 .HasColumnType("text");
 
-                            b1.HasKey("DoctorScheduleDoctorId");
+                            b1.HasKey("DoctorScheduleId");
 
                             b1.ToTable("WeeklySchedules", (string)null);
 
                             b1.WithOwner()
-                                .HasForeignKey("DoctorScheduleDoctorId");
+                                .HasForeignKey("DoctorScheduleId");
 
                             b1.OwnsMany("Appointments.Domain.Entities.WorkDaySchedule", "WorkDays", b2 =>
                                 {
@@ -339,11 +340,11 @@ namespace Appointments.Infrastructure.Features.Migrations
 
                                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b3.Property<int>("Id"));
 
-                                            b3.Property<TimeSpan>("End")
-                                                .HasColumnType("interval");
+                                            b3.Property<TimeOnly>("End")
+                                                .HasColumnType("time without time zone");
 
-                                            b3.Property<TimeSpan>("Start")
-                                                .HasColumnType("interval");
+                                            b3.Property<TimeOnly>("Start")
+                                                .HasColumnType("time without time zone");
 
                                             b3.HasKey("WorkDayScheduleWeeklyScheduleId", "WorkDayScheduleId", "Id");
 
