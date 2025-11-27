@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using Appointments.Domain.Entities.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Shared.Domain.Enums;
 
 #nullable disable
 
 namespace Appointments.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class create_database : Migration
+    public partial class Add_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +31,17 @@ namespace Appointments.Infrastructure.Features.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Appointments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorSchedules",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("ID", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,17 +84,43 @@ namespace Appointments.Infrastructure.Features.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserData",
+                name: "DoctorAvailabilityExceptions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    Roles = table.Column<List<Roles>>(type: "roles[]", nullable: false)
+                    DoctorId = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    End = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Reason = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserData", x => x.Id);
+                    table.PrimaryKey("PK_DoctorAvailabilityExceptions", x => new { x.DoctorId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_DoctorAvailabilityExceptions_DoctorSchedules_DoctorId",
+                        column: x => x.DoctorId,
+                        principalTable: "DoctorSchedules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WeeklySchedules",
+                columns: table => new
+                {
+                    DoctorScheduleId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeeklySchedules", x => x.DoctorScheduleId);
+                    table.ForeignKey(
+                        name: "FK_WeeklySchedules_DoctorSchedules_DoctorScheduleId",
+                        column: x => x.DoctorScheduleId,
+                        principalTable: "DoctorSchedules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -130,6 +165,48 @@ namespace Appointments.Infrastructure.Features.Migrations
                         principalColumn: "OutboxId");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "WorkDays",
+                columns: table => new
+                {
+                    WeeklyScheduleId = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DayOfWeek = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkDays", x => new { x.WeeklyScheduleId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_WorkDays_WeeklySchedules_WeeklyScheduleId",
+                        column: x => x.WeeklyScheduleId,
+                        principalTable: "WeeklySchedules",
+                        principalColumn: "DoctorScheduleId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkTimeRanges",
+                columns: table => new
+                {
+                    WorkDayScheduleWeeklyScheduleId = table.Column<string>(type: "text", nullable: false),
+                    WorkDayScheduleId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Start = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    End = table.Column<TimeOnly>(type: "time without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkTimeRanges", x => new { x.WorkDayScheduleWeeklyScheduleId, x.WorkDayScheduleId, x.Id });
+                    table.ForeignKey(
+                        name: "FK_WorkTimeRanges_WorkDays_WorkDayScheduleWeeklyScheduleId_Wor~",
+                        columns: x => new { x.WorkDayScheduleWeeklyScheduleId, x.WorkDayScheduleId },
+                        principalTable: "WorkDays",
+                        principalColumns: new[] { "WeeklyScheduleId", "Id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_Id",
                 table: "Appointments",
@@ -167,12 +244,6 @@ namespace Appointments.Infrastructure.Features.Migrations
                 name: "IX_OutboxState_Created",
                 table: "OutboxState",
                 column: "Created");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserData_Id",
-                table: "UserData",
-                column: "Id",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -182,16 +253,28 @@ namespace Appointments.Infrastructure.Features.Migrations
                 name: "Appointments");
 
             migrationBuilder.DropTable(
+                name: "DoctorAvailabilityExceptions");
+
+            migrationBuilder.DropTable(
                 name: "OutboxMessage");
 
             migrationBuilder.DropTable(
-                name: "UserData");
+                name: "WorkTimeRanges");
 
             migrationBuilder.DropTable(
                 name: "InboxState");
 
             migrationBuilder.DropTable(
                 name: "OutboxState");
+
+            migrationBuilder.DropTable(
+                name: "WorkDays");
+
+            migrationBuilder.DropTable(
+                name: "WeeklySchedules");
+
+            migrationBuilder.DropTable(
+                name: "DoctorSchedules");
         }
     }
 }

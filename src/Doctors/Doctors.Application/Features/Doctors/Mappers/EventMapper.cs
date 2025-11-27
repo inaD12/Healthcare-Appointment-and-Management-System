@@ -42,14 +42,14 @@ public static class EventMapper
         => new(
             domainEvent.DoctorId,
             domainEvent.DayOfWeek,
-            domainEvent.WorkTimes.Select(range => range.ToTimeSpanRangeDto()).ToList());
+            domainEvent.WorkTimes.Select(range => range.ToTimeRangeRangeDto()).ToList());
     
     public static WorkDayScheduleChangedIntegrationEvent ToIntegrationEvent(
         this WorkDayScheduleChangedDomainEvent domainEvent)
         => new(
             domainEvent.DoctorId,
             domainEvent.DayOfWeek,
-            domainEvent.WorkTimes.Select(range => range.ToTimeSpanRangeDto()).ToList());
+            domainEvent.WorkTimes.Select(range => range.ToTimeRangeRangeDto()).ToList());
     
     public static WorkDayScheduleRemovedIntegrationEvent ToIntegrationEvent(
         this WorkDayScheduleRemovedDomainEvent domainEvent)
@@ -57,7 +57,7 @@ public static class EventMapper
             domainEvent.DoctorId,
             domainEvent.DayOfWeek);
     
-    public static TimeSpanRangeDto ToTimeSpanRangeDto(
+    public static TimeRangeDto ToTimeRangeRangeDto(
         this WorkTimeRange workTimeRange)
         => new(
             workTimeRange.Start,

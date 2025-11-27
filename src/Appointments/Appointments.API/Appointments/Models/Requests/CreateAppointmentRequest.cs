@@ -3,8 +3,8 @@
 namespace Appointments.API.Appointments.Models.Requests;
 
 public sealed record CreateAppointmentRequest(
-	string PatientEmail,
-	string DoctorEmail,
+	string PatientId,
+	string DoctorId,
 	DateTime ScheduledStartTime,
 	AppointmentDuration Duration
 );

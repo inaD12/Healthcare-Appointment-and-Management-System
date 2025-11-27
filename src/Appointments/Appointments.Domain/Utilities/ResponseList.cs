@@ -13,6 +13,8 @@ public static class ResponseList
 	// Error Responses
 	public static Response AppointmentNotFound => Response.Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 	public static Response DoctorNotFound => Response.Create(ErrorMessages.DoctorNotFound, HttpStatusCode.NotFound);
+	public static Response ScheduleNotFound => Response.Create(ErrorMessages.ScheduleNotFound, HttpStatusCode.NotFound);
+	public static Response NotWorkHours => Response.Create(ErrorMessages.NotWorkHours, HttpStatusCode.NotFound);
 	public static Response PatientNotFound => Response.Create(ErrorMessages.PatientNotFound, HttpStatusCode.NotFound);
 	public static Response EntityNotFound => Response.Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 	public static Response TimeSlotNotAvailable => Response.Create(ErrorMessages.TimeSlotNotAvailable, HttpStatusCode.Conflict);

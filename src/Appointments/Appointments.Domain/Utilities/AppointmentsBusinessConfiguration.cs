@@ -13,4 +13,6 @@ public class AppointmentsBusinessConfiguration
 
 	public const int EMAIL_MIN_LENGTH = 9;
 	public const int EMAIL_MAX_LENGTH = 40;
+	
+	public const int REASON_MAX_LENGTH = 200;
 }

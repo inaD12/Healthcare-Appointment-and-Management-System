@@ -49,6 +49,17 @@ namespace Appointments.Infrastructure.Features.Migrations
                     b.ToTable("Appointments");
                 });
 
+            modelBuilder.Entity("Appointments.Domain.Entities.DoctorSchedule", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id")
+                        .HasName("ID");
+
+                    b.ToTable("DoctorSchedules", (string)null);
+                });
+
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
                 {
                     b.Property<long>("Id")
@@ -241,6 +252,114 @@ namespace Appointments.Infrastructure.Features.Migrations
                         });
 
                     b.Navigation("Duration")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Appointments.Domain.Entities.DoctorSchedule", b =>
+                {
+                    b.OwnsMany("Appointments.Domain.Entities.AvailabilityException", "AvailabilityExceptions", b1 =>
+                        {
+                            b1.Property<string>("DoctorId")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("End")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<string>("Reason")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)");
+
+                            b1.Property<DateTime>("Start")
+                                .HasColumnType("timestamp with time zone");
+
+                            b1.Property<int>("Type")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("DoctorId", "Id");
+
+                            b1.ToTable("DoctorAvailabilityExceptions", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("DoctorId");
+                        });
+
+                    b.OwnsOne("Appointments.Domain.Entities.WeeklySchedule", "WeeklySchedule", b1 =>
+                        {
+                            b1.Property<string>("DoctorScheduleId")
+                                .HasColumnType("text");
+
+                            b1.HasKey("DoctorScheduleId");
+
+                            b1.ToTable("WeeklySchedules", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("DoctorScheduleId");
+
+                            b1.OwnsMany("Appointments.Domain.Entities.WorkDaySchedule", "WorkDays", b2 =>
+                                {
+                                    b2.Property<string>("WeeklyScheduleId")
+                                        .HasColumnType("text");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("integer");
+
+                                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b2.Property<int>("Id"));
+
+                                    b2.Property<int>("DayOfWeek")
+                                        .HasColumnType("integer");
+
+                                    b2.HasKey("WeeklyScheduleId", "Id");
+
+                                    b2.ToTable("WorkDays", (string)null);
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("WeeklyScheduleId");
+
+                                    b2.OwnsMany("Appointments.Domain.Entities.WorkTimeRange", "WorkTimes", b3 =>
+                                        {
+                                            b3.Property<string>("WorkDayScheduleWeeklyScheduleId")
+                                                .HasColumnType("text");
+
+                                            b3.Property<int>("WorkDayScheduleId")
+                                                .HasColumnType("integer");
+
+                                            b3.Property<int>("Id")
+                                                .ValueGeneratedOnAdd()
+                                                .HasColumnType("integer");
+
+                                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b3.Property<int>("Id"));
+
+                                            b3.Property<TimeOnly>("End")
+                                                .HasColumnType("time without time zone");
+
+                                            b3.Property<TimeOnly>("Start")
+                                                .HasColumnType("time without time zone");
+
+                                            b3.HasKey("WorkDayScheduleWeeklyScheduleId", "WorkDayScheduleId", "Id");
+
+                                            b3.ToTable("WorkTimeRanges", (string)null);
+
+                                            b3.WithOwner()
+                                                .HasForeignKey("WorkDayScheduleWeeklyScheduleId", "WorkDayScheduleId");
+                                        });
+
+                                    b2.Navigation("WorkTimes");
+                                });
+
+                            b1.Navigation("WorkDays");
+                        });
+
+                    b.Navigation("AvailabilityExceptions");
+
+                    b.Navigation("WeeklySchedule")
                         .IsRequired();
                 });
 

@@ -4,6 +4,8 @@ public static class ErrorMessages
 {
 	public const string AppointmentNotFound = "Appointment not found";
 	public const string DoctorNotFound = "Doctor not found";
+	public const string ScheduleNotFound = "Schedule not found";
+	public const string NotWorkHours = "The requested appointment is not in the doctor's work hours";
 	public const string PatientNotFound = "Patient not found";
 	public const string EntityNotFound = "Entity not found";
 	public const string TimeSlotNotAvailable = "Time slot is not available";

@@ -20,7 +20,7 @@ internal sealed class GetUserRolesQueryHandler(IDbConnectionFactory dbConnection
         const string sql =
             $"""
              SELECT DISTINCT
-                 u."Role" AS {nameof(UserRole.Role)},
+                 ur."role_name" AS {nameof(UserRole.Role)}
              FROM "Users" u
              JOIN "user_roles" ur ON ur."UserId" = u."Id"
              WHERE u."Id" = @UserId
