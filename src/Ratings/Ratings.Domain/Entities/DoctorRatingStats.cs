@@ -1,8 +1,9 @@
+using Shared.Domain.Entities.Base;
+
 namespace Ratings.Domain.Entities;
 
-public sealed class DoctorRatingStats
+public sealed class DoctorRatingStats: BaseEntity
 {
-    public string DoctorId { get; private set; }
     public double AverageRating { get; private set; }
     public int RatingsCount { get; private set; }
 
@@ -10,7 +11,7 @@ public sealed class DoctorRatingStats
 
     private DoctorRatingStats(string doctorId)
     {
-        DoctorId = doctorId;
+        Id = doctorId;
         AverageRating = 0;
         RatingsCount = 0;
     }

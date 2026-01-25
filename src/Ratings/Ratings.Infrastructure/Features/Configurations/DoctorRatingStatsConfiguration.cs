@@ -9,7 +9,7 @@ internal sealed class DoctorRatingStatsConfiguration
 {
     public void Configure(EntityTypeBuilder<DoctorRatingStats> builder)
     {
-        builder.HasKey(x => x.DoctorId);
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.AverageRating)
             .IsRequired();
