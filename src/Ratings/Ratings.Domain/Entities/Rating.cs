@@ -1,5 +1,7 @@
+using FluentValidation.Results;
 using Ratings.Domain.Utilities;
 using Shared.Domain.Entities.Base;
+using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
 
 namespace Ratings.Domain.Entities;
@@ -30,7 +32,7 @@ public sealed class Rating: BaseEntity
         Comment = comment;
     }
 
-    public static Result<Rating> Create(
+    public static Rating Create(
         string doctorId,
         string patientId,
         string appointmentId,
@@ -38,13 +40,17 @@ public sealed class Rating: BaseEntity
         string? comment)
     {
         if (score < 1 || score > 5)
-            return Result<Rating>.Failure(ResponseList.InvalidRatingScore);
-
-        return Result<Rating>.Success(new Rating(
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Rating", "Rating score must be between 1 and 5.")
+            });
+        
+        return new Rating(
             doctorId,
             patientId,
             appointmentId,
             score,
-            comment));
+            comment);
     }
 }

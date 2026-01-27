@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Ratings.Application.Features.Ratings.Commands.AddRating;
 using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Domain.Entities;
 using Shared.Domain.Abstractions;
@@ -24,7 +23,7 @@ public sealed class AddAppointmentCommandHandler(
 
         try
         {
-            await repository.AddAsync(entity, cancellationToken);
+            repository.AddAsync(entity, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException)

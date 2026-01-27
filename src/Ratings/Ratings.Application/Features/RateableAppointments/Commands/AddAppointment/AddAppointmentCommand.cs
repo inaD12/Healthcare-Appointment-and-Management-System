@@ -2,7 +2,7 @@ using Shared.Domain.Abstractions.Messaging;
 
 namespace Ratings.Application.Features.RateableAppointments.Commands.AddAppointment;
 
-public sealed record AddRatingCommand(
+public sealed record AddAppointmentCommand(
     string AppointmentId,
-    int Score,
-    string? Comment) : ICommand;
+    string DoctorId,
+    string PatientId) : ICommand;
