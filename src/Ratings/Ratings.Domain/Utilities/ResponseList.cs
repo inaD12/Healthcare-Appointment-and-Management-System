@@ -13,4 +13,6 @@ public static class ResponseList
 	public static Response AppointmentNotFound => Response.Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 	public static Response AppointmentNotYours => Response.Create(ErrorMessages.AppointmentNotYours, HttpStatusCode.Forbidden);
 	public static Response AlreadyRated => Response.Create(ErrorMessages.AlreadyRated, HttpStatusCode.Conflict);
+	public static Response RatingNotFound => Response.Create(ErrorMessages.RatingNotFound, HttpStatusCode.NotFound);
+	public static Response RatingNotYours => Response.Create(ErrorMessages.RatingNotYours, HttpStatusCode.Forbidden);
 }

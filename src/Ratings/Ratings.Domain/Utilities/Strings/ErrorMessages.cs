@@ -6,4 +6,6 @@ public static class ErrorMessages
 	public const string AppointmentNotFound = "Appointment not found";
 	public const string AppointmentNotYours = "You can't rate an appointment that is not yours";
 	public const string AlreadyRated = "This appointment was already rated";
+	public const string RatingNotFound = "Rating not found";
+	public const string RatingNotYours = "You can't remove a rating that is not yours";
 }
