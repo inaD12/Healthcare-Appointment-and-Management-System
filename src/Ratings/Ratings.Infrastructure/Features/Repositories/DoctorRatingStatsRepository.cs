@@ -10,7 +10,7 @@ namespace Ratings.Infrastructure.Features.Repositories;
 public class DoctorRatingStatsRepository(RatingsDbContext context)
     : GenericRepository<DoctorRatingStats>(context), IDoctorRatingStatsRepository
 {
-    public override async Task<DoctorRatingStats?> GetByIdAsync(
+    public async Task<DoctorRatingStats> GetOrCreateByIdAsync(
         string doctorId,
         CancellationToken cancellationToken = default)
     {

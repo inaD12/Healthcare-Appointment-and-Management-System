@@ -1,8 +1,6 @@
 using FluentValidation.Results;
-using Ratings.Domain.Utilities;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Exceptions;
-using Shared.Domain.Results;
 
 namespace Ratings.Domain.Entities;
 

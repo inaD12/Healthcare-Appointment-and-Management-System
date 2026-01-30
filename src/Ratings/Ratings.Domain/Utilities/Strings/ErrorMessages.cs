@@ -7,5 +7,6 @@ public static class ErrorMessages
 	public const string AppointmentNotYours = "This appointment is not yours";
 	public const string AlreadyRated = "This appointment was already rated";
 	public const string RatingNotFound = "Rating not found";
+	public const string DoctorRatingStatsNotFound = "Doctor rating stats not found";
 	public const string RatingNotYours = "This rating is not yours";
 }

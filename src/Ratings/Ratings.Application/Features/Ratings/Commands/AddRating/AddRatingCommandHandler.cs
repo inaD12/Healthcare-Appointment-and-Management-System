@@ -33,8 +33,8 @@ public sealed class AddRatingCommandHandler(
         
         await ratingRepository.AddAsync(rating, cancellationToken);
         
-        var doctorRatingStats = await doctorRatingStatsRepository.GetByIdAsync(rating.DoctorId, cancellationToken);
-        doctorRatingStats!.ApplyNewRating(request.Score);
+        var doctorRatingStats = await doctorRatingStatsRepository.GetOrCreateByIdAsync(rating.DoctorId, cancellationToken);
+        doctorRatingStats.ApplyNewRating(request.Score);
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();

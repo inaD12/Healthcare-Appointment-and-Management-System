@@ -23,7 +23,13 @@ public sealed class EditRatingCommandHandler(
         if (request.Score != null)
         {
             var doctorRatingStats = await doctorRatingStatsRepository.GetByIdAsync(rating.DoctorId, cancellationToken);
-            doctorRatingStats!.RemoveRating(rating.Score);
+            if (doctorRatingStats == null)
+            {
+                throw new ApplicationException(
+                    $"Invariant violated: DoctorRatingStats must exist before editing ratings. DoctorId='{rating.DoctorId}'.");
+            }
+            
+            doctorRatingStats.RemoveRating(rating.Score);
             
             rating.UpdateScore(request.Score.Value);
             doctorRatingStats!.ApplyNewRating(request.Score.Value);
