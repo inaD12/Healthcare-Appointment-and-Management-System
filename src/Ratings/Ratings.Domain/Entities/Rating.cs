@@ -53,4 +53,21 @@ public sealed class Rating: BaseEntity
             score,
             comment);
     }
+
+    public void UpdateScore(int score)
+    {
+        if (score < 1 || score > 5)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Rating", "Rating score must be between 1 and 5.")
+            });
+        
+        Score = score;
+    }
+
+    public void UpdateComment(string comment)
+    {
+        Comment = comment;
+    }
 }

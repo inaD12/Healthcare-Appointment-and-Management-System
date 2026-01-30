@@ -23,7 +23,7 @@ public sealed class AddAppointmentCommandHandler(
 
         try
         {
-            repository.AddAsync(entity, cancellationToken);
+            await repository.AddAsync(entity, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException)
