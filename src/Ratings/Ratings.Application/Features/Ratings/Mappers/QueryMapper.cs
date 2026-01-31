@@ -15,7 +15,7 @@ public static class QueryMapper
             rating.Score,
             rating.Comment);
     
-    public static DoctorRatingStatsRatingQueryViewModel ToQueryViewModel(
+    public static DoctorRatingStatsQueryViewModel ToQueryViewModel(
         this DoctorRatingStats ratingStats)
         => new(
             ratingStats.Id,

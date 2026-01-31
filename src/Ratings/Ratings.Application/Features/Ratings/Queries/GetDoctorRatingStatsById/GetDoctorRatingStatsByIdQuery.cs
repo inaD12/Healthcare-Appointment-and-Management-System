@@ -3,4 +3,4 @@ using Shared.Domain.Abstractions.Messaging;
 
 namespace Ratings.Application.Features.Ratings.Queries.GetDoctorRatingStatsById;
 
-public sealed record GetDoctorRatingStatsByIdQuery(string Id) : IQuery<DoctorRatingStatsRatingQueryViewModel>;
+public sealed record GetDoctorRatingStatsByIdQuery(string Id) : IQuery<DoctorRatingStatsQueryViewModel>;

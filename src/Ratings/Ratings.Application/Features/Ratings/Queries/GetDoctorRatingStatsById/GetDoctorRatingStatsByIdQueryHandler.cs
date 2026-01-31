@@ -8,15 +8,15 @@ using Shared.Domain.Results;
 namespace Ratings.Application.Features.Ratings.Queries.GetDoctorRatingStatsById;
 
 public sealed class GetDoctorRatingStatsByIdQueryHandler(IDoctorRatingStatsRepository ratingStatsRepository)
-	: IQueryHandler<GetDoctorRatingStatsByIdQuery, DoctorRatingStatsRatingQueryViewModel>
+	: IQueryHandler<GetDoctorRatingStatsByIdQuery, DoctorRatingStatsQueryViewModel>
 {
-	public async Task<Result<DoctorRatingStatsRatingQueryViewModel>> Handle(GetDoctorRatingStatsByIdQuery request, CancellationToken cancellationToken)
+	public async Task<Result<DoctorRatingStatsQueryViewModel>> Handle(GetDoctorRatingStatsByIdQuery request, CancellationToken cancellationToken)
 	{
 		var ratingStats = await ratingStatsRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (ratingStats == null)
-			return Result<DoctorRatingStatsRatingQueryViewModel>.Failure(ResponseList.DoctorRatingStatsNotFound);
+			return Result<DoctorRatingStatsQueryViewModel>.Failure(ResponseList.DoctorRatingStatsNotFound);
 
 		var doctorRatingStatsQueryViewModel = ratingStats.ToQueryViewModel();
-		return Result<DoctorRatingStatsRatingQueryViewModel>.Success(doctorRatingStatsQueryViewModel);
+		return Result<DoctorRatingStatsQueryViewModel>.Success(doctorRatingStatsQueryViewModel);
 	}
 }

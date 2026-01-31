@@ -1,3 +1,5 @@
+using Ratings.Application.Features.Ratings.Mappers;
+using Ratings.Application.Features.Ratings.Models;
 using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Domain.Entities;
 using Ratings.Domain.Utilities;
@@ -12,17 +14,17 @@ public sealed class AddRatingCommandHandler(
     IDoctorRatingStatsRepository doctorRatingStatsRepository,
     IRateableAppointmentRepository rateableAppointmentRepository,
     IUnitOfWork unitOfWork)
-    : ICommandHandler<AddRatingCommand>
+    : ICommandHandler<AddRatingCommand, RatingCommandViewModel>
 {
-    public async Task<Result> Handle(AddRatingCommand request, CancellationToken cancellationToken)
+    public async Task<Result<RatingCommandViewModel>> Handle(AddRatingCommand request, CancellationToken cancellationToken)
     {
         var rateableAppointment = await rateableAppointmentRepository.GetAsync(request.AppointmentId, cancellationToken);
         if (rateableAppointment == null)
-            return Result.Failure(ResponseList.AppointmentNotFound);
+            return Result<RatingCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
         if(rateableAppointment.PatientId != request.UserId)
-            return Result.Failure(ResponseList.AppointmentNotYours);
+            return Result<RatingCommandViewModel>.Failure(ResponseList.AppointmentNotYours);
         if(rateableAppointment.IsConsumed)
-            return Result.Failure(ResponseList.AlreadyRated);
+            return Result<RatingCommandViewModel>.Failure(ResponseList.AlreadyRated);
         
         var rating = Rating.Create(
             rateableAppointment.DoctorId,
@@ -37,6 +39,8 @@ public sealed class AddRatingCommandHandler(
         doctorRatingStats.ApplyNewRating(request.Score);
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        
+        var ratingCommandViewModel = rating.ToCommandViewModel();
+        return Result<RatingCommandViewModel>.Success(ratingCommandViewModel);
     }
 }
