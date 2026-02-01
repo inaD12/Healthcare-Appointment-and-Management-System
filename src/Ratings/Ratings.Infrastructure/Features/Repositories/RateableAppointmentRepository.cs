@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ratings.Infrastructure.Features.Repositories;
 
-public sealed class RateableAppointmentStore(RatingsDbContext context) : IRateableAppointmentRepository
+public sealed class RateableAppointmentsRepository(RatingsDbContext context) : IRateableAppointmentRepository
 {
     public Task<RateableAppointment?> GetAsync(string appointmentId, CancellationToken ct)
     {

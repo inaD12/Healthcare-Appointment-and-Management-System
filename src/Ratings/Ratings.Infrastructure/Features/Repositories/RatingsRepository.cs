@@ -6,7 +6,7 @@ using Shared.Infrastructure.Repositories;
 
 namespace Ratings.Infrastructure.Features.Repositories;
 
-public class RatingRepository(RatingsDbContext context)
+public class RatingsRepository(RatingsDbContext context)
     : GenericRepository<Rating>(context), IRatingRepository
 {
     public async Task<bool> ExistsForAppointmentAsync(
