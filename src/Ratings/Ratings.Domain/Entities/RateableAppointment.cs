@@ -7,6 +7,8 @@ public sealed class RateableAppointment: BaseEntity
     public string DoctorId { get; private set; }
     public string PatientId { get; private set; }
     public bool IsConsumed { get; private set; }
+
+    private RateableAppointment() { }
     
     private RateableAppointment(string appointmentId, string doctorId, string patientId)
     {

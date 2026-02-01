@@ -16,7 +16,6 @@ COPY ["src/Shared/Shared.Domain/", "Shared/Shared.Domain/"]
 COPY ["src/Shared/Shared.Infrastructure/", "Shared/Shared.Infrastructure/"]
 COPY ["src/Shared/Shared/", "Shared/Shared/"]
 
-
 WORKDIR "/src/Ratings/Ratings.API"
 
 RUN dotnet restore "Ratings.API.csproj"
