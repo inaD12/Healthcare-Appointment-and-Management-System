@@ -1,4 +1,5 @@
 ﻿using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Events;
 using Appointments.Domain.Utilities;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
@@ -69,6 +70,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Completed;
 
+		RaiseDomainEvent(new AppointmentCompletedDomainEvent(Id, DoctorId, PatientId)); 
 		return Result.Success();
 	}
 }
