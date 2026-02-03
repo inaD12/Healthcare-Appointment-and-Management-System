@@ -34,7 +34,10 @@ services:
     ports:
       - "5100:5100"
     depends_on:
-        - "users.database"
+      users.database:
+        condition: service_started
+      rabbit.mq:
+        condition: service_healthy
     networks:
       - my_network
         
@@ -46,7 +49,25 @@ services:
     ports:
       - "5400:5400"
     depends_on:
-      - "doctors.database"
+      doctors.database:
+        condition: service_started
+      rabbit.mq:
+        condition: service_healthy
+    networks:
+      - my_network
+        
+  ratings.api:
+    image: ${DOCKER_REGISTRY-}ratingsapi
+    build:
+      context: .
+      dockerfile: src/Ratings/Ratings.API/Dockerfile
+    ports:
+      - "5500:5500"
+    depends_on:
+      ratings.database:
+        condition: service_started
+      rabbit.mq:
+        condition: service_healthy
     networks:
       - my_network
 
@@ -101,6 +122,21 @@ services:
       - doctors-db:/var/lib/postgresql/data
     ports:
       - "5435:5432"
+    restart: always
+    networks:
+      - my_network
+        
+  ratings.database:
+    image: postgres:latest
+    container_name: ratings.database
+    environment:
+      - POSTGRES_DB=ratingsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ratings-db:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
     restart: always
     networks:
       - my_network
@@ -166,6 +202,7 @@ volumes:
   doctors-db:
   appointments-db:
   users-db:
+  ratings-db:
 
 networks:
   my_network:

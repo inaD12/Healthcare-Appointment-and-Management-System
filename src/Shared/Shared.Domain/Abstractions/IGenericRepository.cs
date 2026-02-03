@@ -1,6 +1,4 @@
-﻿using Shared.Domain.Results;
-
-namespace Shared.Domain.Abstractions;
+﻿namespace Shared.Domain.Abstractions;
 
 public interface IGenericRepository<T> where T : class
 {

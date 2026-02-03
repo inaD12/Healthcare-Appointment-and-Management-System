@@ -15,11 +15,13 @@ internal sealed class GlobalExceptionHandler(
     {
         Log.Error(exception, "Unhandled exception occurred");
 
-        httpContext.Response.StatusCode = exception switch
-        {
-            ApplicationException => StatusCodes.Status400BadRequest,
-            _ => StatusCodes.Status500InternalServerError
-        };
+        //httpContext.Response.StatusCode = exception switch
+        //{
+        //    ApplicationException => StatusCodes.Status400BadRequest,
+        //    _ => StatusCodes.Status500InternalServerError
+        //};
+
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
