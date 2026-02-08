@@ -43,7 +43,15 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.AddExtraAvailability,
             Permission.RemoveExtraAvailability,
             Permission.AddUnavailability,
-            Permission.RemoveUnavailability
+            Permission.RemoveUnavailability,
+            
+            // Rating Permissions
+            Permission.AddRating,
+            Permission.RemoveRating,
+            Permission.EditRating,
+            Permission.GetRating,
+            Permission.GetRatingStats
+            
         );
 
         builder
@@ -55,16 +63,16 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
 
                 joinBuilder.HasData(
                     // --- Admin permissions ---
-                    // Doctor user permissions
+                    // Admin user permissions
                     CreateRolePermission(Role.Administrator, Permission.GetUser),
                     CreateRolePermission(Role.Administrator, Permission.ModifyUser),
                     CreateRolePermission(Role.Administrator, Permission.DeleteUser),
-                    // Doctor appointment permissions
+                    // Admin appointment permissions
                     CreateRolePermission(Role.Administrator, Permission.CreateAppointment),
                     CreateRolePermission(Role.Administrator, Permission.CancelAppointment),
                     CreateRolePermission(Role.Administrator, Permission.RescheduleAppointment),
                     CreateRolePermission(Role.Administrator, Permission.GetAppointment),
-                    // Doctor admin permissions
+                    // Admin doctor permissions
                     CreateRolePermission(Role.Administrator, Permission.CreateDoctor),
                     CreateRolePermission(Role.Administrator, Permission.UpdateDoctor),
                     CreateRolePermission(Role.Administrator, Permission.ViewDoctor),
@@ -82,6 +90,12 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.RemoveExtraAvailability),
                     CreateRolePermission(Role.Administrator, Permission.AddUnavailability),
                     CreateRolePermission(Role.Administrator, Permission.RemoveUnavailability),
+                    // Admin rating permissions
+                    CreateRolePermission(Role.Administrator, Permission.AddRating),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveRating),
+                    CreateRolePermission(Role.Administrator, Permission.EditRating),
+                    CreateRolePermission(Role.Administrator, Permission.GetRating),
+                    CreateRolePermission(Role.Administrator, Permission.GetRatingStats),
 
                     // --- Doctor permissions ---
                     CreateRolePermission(Role.Doctor, Permission.CreateAppointment),
@@ -100,12 +114,19 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Doctor, Permission.RemoveExtraAvailability),
                     CreateRolePermission(Role.Doctor, Permission.AddUnavailability),
                     CreateRolePermission(Role.Doctor, Permission.RemoveUnavailability),
+                    CreateRolePermission(Role.Doctor, Permission.GetRating),
+                    CreateRolePermission(Role.Doctor, Permission.GetRatingStats),
 
                     // --- Patient permissions ---
                     CreateRolePermission(Role.Patient, Permission.CreateAppointment),
                     CreateRolePermission(Role.Patient, Permission.CancelAppointment),
                     CreateRolePermission(Role.Patient, Permission.RescheduleAppointment),
-                    CreateRolePermission(Role.Patient, Permission.RequestRecommendations)
+                    CreateRolePermission(Role.Patient, Permission.RequestRecommendations),
+                    CreateRolePermission(Role.Patient, Permission.AddRating),
+                    CreateRolePermission(Role.Patient, Permission.RemoveRating),
+                    CreateRolePermission(Role.Patient, Permission.EditRating),
+                    CreateRolePermission(Role.Patient, Permission.GetRating),
+                    CreateRolePermission(Role.Patient, Permission.GetRatingStats)
                 );
             });
     }

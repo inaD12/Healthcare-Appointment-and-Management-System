@@ -39,7 +39,14 @@ public sealed class Permission
     public static readonly Permission RemoveExtraAvailability = new("doctor:availability:extra:remove");
     public static readonly Permission AddUnavailability = new("doctor:availability:unavailable:add");
     public static readonly Permission RemoveUnavailability = new("doctor:availability:unavailable:remove");
-
+    
+    // Ratings
+    public static readonly Permission AddRating = new("ratings:create");
+    public static readonly Permission EditRating = new("ratings:update");
+    public static readonly Permission RemoveRating = new("ratings:delete");
+    public static readonly Permission GetRating = new("ratings:read");
+    public static readonly Permission GetRatingStats = new("ratingStats:read");
+    
     public Permission(string code)
     {
         Code = code;
