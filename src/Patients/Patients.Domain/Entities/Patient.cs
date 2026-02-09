@@ -12,14 +12,15 @@ public sealed class Patient : BaseConcurrencyEntity
 
     private Patient() { }
 
-    public Patient(string id, string firstName, string lastName, DateOnly birthDate)
+    private Patient(string userId, string firstName, string lastName, DateOnly birthDate)
     {
-        Id = id;
+        UserId = userId;
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;
     }
 
+    public string UserId { get; private set; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public DateOnly BirthDate { get; private set; }
@@ -27,7 +28,13 @@ public sealed class Patient : BaseConcurrencyEntity
     public IReadOnlyCollection<Allergy> Allergies => _allergies;
     public IReadOnlyCollection<ChronicCondition> Conditions => _conditions;
 
-
+    public static Patient Register(
+        string id,
+        string firstName,
+        string lastName,
+        DateOnly birthDate)
+        => new(id, firstName, lastName, birthDate);
+    
     public Result AddAllergy(string substance, string reaction)
     {
         if (_allergies.Any(a => a.Substance == substance))

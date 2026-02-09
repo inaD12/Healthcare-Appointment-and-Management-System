@@ -15,6 +15,10 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.Property(p => p.Id)
             .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
             .IsRequired();;
+        
+        builder.Property(p => p.UserId)
+            .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+            .IsRequired();;
 
         builder.Property(p => p.FirstName)
             .HasMaxLength(PatientsBusinessConfiguration.FIRSTNAME_MAX_LENGTH)
