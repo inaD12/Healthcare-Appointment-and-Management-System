@@ -10,4 +10,6 @@ public static class ErrorMessages
 	public const string UseNormalNotesBeforeFinalization = "Use normal notes before finalization";
 	public const string AllergyAlreadyAdded = "Allergy is already recorded";
 	public const string ConditionAlreadyAdded = "Condition is already recorded";
+	public const string UserIdAlreadyInUse = "UserId is already in use";
+	public const string PatientNotFound = "Patient not found";
 }

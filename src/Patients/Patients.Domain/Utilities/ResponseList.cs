@@ -17,4 +17,6 @@ public static class ResponseList
 	public static Response UseNormalNotesBeforeFinalization => Response.Create(ErrorMessages.UseNormalNotesBeforeFinalization, HttpStatusCode.Forbidden);
 	public static Response ConditionAlreadyAdded => Response.Create(ErrorMessages.ConditionAlreadyAdded, HttpStatusCode.Conflict);
 	public static Response AllergyAlreadyAdded => Response.Create(ErrorMessages.AllergyAlreadyAdded, HttpStatusCode.Conflict);
+	public static Response UserIdAlreadyInUse => Response.Create(ErrorMessages.UserIdAlreadyInUse, HttpStatusCode.Conflict);
+	public static Response PatientNotFound => Response.Create(ErrorMessages.PatientNotFound, HttpStatusCode.NotFound);
 }
