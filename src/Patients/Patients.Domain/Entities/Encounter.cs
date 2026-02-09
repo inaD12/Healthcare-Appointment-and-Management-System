@@ -6,7 +6,7 @@ using Shared.Domain.Results;
 
 namespace Patients.Domain.Entities;
 
-public sealed class Encounter : BaseEntity
+public sealed class Encounter : BaseConcurrencyEntity
 {
     private readonly List<ClinicalNote> _notes = new();
     private readonly List<Diagnosis> _diagnoses = new();

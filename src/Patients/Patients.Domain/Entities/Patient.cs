@@ -5,7 +5,7 @@ using Shared.Domain.Results;
 
 namespace Patients.Domain.Entities;
 
-public sealed class Patient : BaseEntity
+public sealed class Patient : BaseConcurrencyEntity
 {
     private readonly List<Allergy> _allergies = new();
     private readonly List<ChronicCondition> _conditions = new();

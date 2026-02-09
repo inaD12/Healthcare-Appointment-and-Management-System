@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Ratings.Domain.Entities;
 using Ratings.Infrastructure.Features.Configurations;
 
@@ -12,6 +13,10 @@ public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options)
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		modelBuilder.AddInboxStateEntity();
+		modelBuilder.AddOutboxMessageEntity();
+		modelBuilder.AddOutboxStateEntity();
+		
 		modelBuilder.ApplyConfiguration(new RatingConfiguration());
 		modelBuilder.ApplyConfiguration(new DoctorRatingStatsConfiguration());
 		modelBuilder.ApplyConfiguration(new RateableAppointmentConfiguration());
