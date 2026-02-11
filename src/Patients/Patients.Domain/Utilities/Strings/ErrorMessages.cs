@@ -12,4 +12,6 @@ public static class ErrorMessages
 	public const string ConditionAlreadyAdded = "Condition is already recorded";
 	public const string UserIdAlreadyInUse = "UserId is already in use";
 	public const string PatientNotFound = "Patient not found";
+	public const string EncounterAlreadyExists = "An encounter for this appointment already exists";
+	public const string EncounterNotFound = "Encounter not found";
 }

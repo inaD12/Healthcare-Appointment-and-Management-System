@@ -1,0 +1,8 @@
+using Patients.Application.Features.Encounters.Models;
+using Shared.Domain.Abstractions.Messaging;
+
+namespace Patients.Application.Features.Encounters.Commands.AddNote;
+
+public sealed record AddNoteCommand(
+    string EncounterId,
+    string Note) : ICommand;

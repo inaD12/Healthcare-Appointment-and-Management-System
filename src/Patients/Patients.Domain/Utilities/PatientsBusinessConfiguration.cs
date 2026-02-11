@@ -29,14 +29,14 @@ public class PatientsBusinessConfiguration
 	public const int DIAGNOSIS_DESCTIPTION_MIN_LENGTH = 5;
 	public const int DIAGNOSIS_DESCTIPTION_MAX_LENGTH = 500;
 	
-	public const int PERSCRIPTION_NAME_MIN_LENGTH = 5;
-	public const int PERSCRIPTION_NAME_MAX_LENGTH = 200;
+	public const int PRESCRIPTION_NAME_MIN_LENGTH = 5;
+	public const int PRESCRIPTION_NAME_MAX_LENGTH = 200;
 	
-	public const int PERSCRIPTION_DOSAGE_MIN_LENGTH = 1;
-	public const int PERSCRIPTION_DOSAGE_MAX_LENGTH = 100;
+	public const int PRESCRIPTION_DOSAGE_MIN_LENGTH = 1;
+	public const int PRESCRIPTION_DOSAGE_MAX_LENGTH = 100;
 
-	public const int PERSCRIPTION_INSTRUCTIONS_MIN_LENGTH = 5;
-	public const int PERSCRIPTION_INSTRUCTIONS_MAX_LENGTH = 1000;
+	public const int PRESCRIPTION_INSTRUCTIONS_MIN_LENGTH = 5;
+	public const int PRESCRIPTION_INSTRUCTIONS_MAX_LENGTH = 1000;
 		
 	public const int ADDENDUM_NOTE_TEXT_MIN_LENGTH = 5;
 	public const int ADDENDUM_NOTE_TEXT_MAX_LENGTH = 400;

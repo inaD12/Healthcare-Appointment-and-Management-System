@@ -88,15 +88,15 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
             p.HasKey("Id");
 
             p.Property(x => x.MedicationName)
-                .HasMaxLength(PatientsBusinessConfiguration.PERSCRIPTION_NAME_MAX_LENGTH)
+                .HasMaxLength(PatientsBusinessConfiguration.PRESCRIPTION_NAME_MAX_LENGTH)
                 .IsRequired();
 
             p.Property(x => x.Dosage)
-                .HasMaxLength(PatientsBusinessConfiguration.PERSCRIPTION_DOSAGE_MAX_LENGTH)
+                .HasMaxLength(PatientsBusinessConfiguration.PRESCRIPTION_DOSAGE_MAX_LENGTH)
                 .IsRequired();
 
             p.Property(x => x.Instructions)
-                .HasMaxLength(PatientsBusinessConfiguration.PERSCRIPTION_INSTRUCTIONS_MAX_LENGTH)
+                .HasMaxLength(PatientsBusinessConfiguration.PRESCRIPTION_INSTRUCTIONS_MAX_LENGTH)
                 .IsRequired();
         });
 

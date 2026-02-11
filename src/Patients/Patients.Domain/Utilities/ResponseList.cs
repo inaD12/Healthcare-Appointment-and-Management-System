@@ -19,4 +19,6 @@ public static class ResponseList
 	public static Response AllergyAlreadyAdded => Response.Create(ErrorMessages.AllergyAlreadyAdded, HttpStatusCode.Conflict);
 	public static Response UserIdAlreadyInUse => Response.Create(ErrorMessages.UserIdAlreadyInUse, HttpStatusCode.Conflict);
 	public static Response PatientNotFound => Response.Create(ErrorMessages.PatientNotFound, HttpStatusCode.NotFound);
+	public static Response EncounterAlreadyExists => Response.Create(ErrorMessages.EncounterAlreadyExists, HttpStatusCode.Forbidden);
+	public static Response EncounterNotFound => Response.Create(ErrorMessages.EncounterNotFound, HttpStatusCode.NotFound);
 }
