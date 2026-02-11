@@ -81,6 +81,45 @@ public sealed class Encounter : BaseConcurrencyEntity
         return Result.Success();
     }
 
+    public Result RemoveNote(string noteId)
+    {
+        if (Status != EncounterStatus.InProgress)
+            return Result.Failure(ResponseList.EncounterNotEditable);
+
+        var note = _notes.FirstOrDefault(n => n.Id == noteId);
+        if (note is null)
+            return Result.Failure(ResponseList.NoteNotFound);
+        
+        _notes.Remove(note);
+        return Result.Success();
+    }
+    
+    public Result RemoveDiagnosis(string diagnosisId)
+    {
+        if (Status != EncounterStatus.InProgress)
+            return Result.Failure(ResponseList.EncounterNotEditable);
+
+        var diagnoses = _diagnoses.FirstOrDefault(n => n.Id == diagnosisId);
+        if (diagnoses is null)
+            return Result.Failure(ResponseList.DiagnosisNotFound);
+
+        _diagnoses.Remove(diagnoses);
+        return Result.Success();
+    }
+    
+    public Result RemovePrescription(string prescriptionId)
+    {
+        if (Status != EncounterStatus.InProgress)
+            return Result.Failure(ResponseList.EncounterNotEditable);
+
+        var prescription = _prescriptions.FirstOrDefault(n => n.Id == prescriptionId);
+        if (prescription is null)
+            return Result.Failure(ResponseList.PrescriptionNotFound);
+
+        _prescriptions.Remove(prescription);
+        return Result.Success();
+    }
+
     public Result Finalize(DateTime utcNow)
     {
         if (!_diagnoses.Any())

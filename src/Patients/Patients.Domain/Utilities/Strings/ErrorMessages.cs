@@ -14,4 +14,9 @@ public static class ErrorMessages
 	public const string PatientNotFound = "Patient not found";
 	public const string EncounterAlreadyExists = "An encounter for this appointment already exists";
 	public const string EncounterNotFound = "Encounter not found";
+	public const string NoteNotFound = "Note not found";
+	public const string PrescriptionNotFound = "Prescription not found";
+	public const string DiagnosisNotFound = "Diagnosis not found";
+	public const string AllergyNotFound = "Allergy not found";
+	public const string ConditionNotFound = "Condition not found";
 }

@@ -52,4 +52,24 @@ public sealed class Patient : BaseConcurrencyEntity
         _conditions.Add(new ChronicCondition(name));
         return Result.Success();
     }
+    
+    public Result RemoveAllergy(string allergyId)
+    {
+        var allergy = _allergies.FirstOrDefault(n => n.Id == allergyId);
+        if (allergy is null)
+            return Result.Failure(ResponseList.AllergyNotFound);
+        
+        _allergies.Remove(allergy);
+        return Result.Success();
+    }
+    
+    public Result RemoveCondition(string conditionId)
+    {
+        var condition = _conditions.FirstOrDefault(n => n.Id == conditionId);
+        if (condition is null)
+            return Result.Failure(ResponseList.ConditionNotFound);
+        
+        _conditions.Remove(condition);
+        return Result.Success();
+    }
 }

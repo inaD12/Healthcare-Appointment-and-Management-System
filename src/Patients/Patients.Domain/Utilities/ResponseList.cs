@@ -21,4 +21,9 @@ public static class ResponseList
 	public static Response PatientNotFound => Response.Create(ErrorMessages.PatientNotFound, HttpStatusCode.NotFound);
 	public static Response EncounterAlreadyExists => Response.Create(ErrorMessages.EncounterAlreadyExists, HttpStatusCode.Forbidden);
 	public static Response EncounterNotFound => Response.Create(ErrorMessages.EncounterNotFound, HttpStatusCode.NotFound);
+	public static Response NoteNotFound => Response.Create(ErrorMessages.NoteNotFound, HttpStatusCode.NotFound);
+	public static Response PrescriptionNotFound => Response.Create(ErrorMessages.PrescriptionNotFound, HttpStatusCode.NotFound);
+	public static Response DiagnosisNotFound => Response.Create(ErrorMessages.DiagnosisNotFound, HttpStatusCode.NotFound);
+	public static Response AllergyNotFound => Response.Create(ErrorMessages.AllergyNotFound, HttpStatusCode.NotFound);
+	public static Response ConditionNotFound => Response.Create(ErrorMessages.ConditionNotFound, HttpStatusCode.NotFound);
 }
