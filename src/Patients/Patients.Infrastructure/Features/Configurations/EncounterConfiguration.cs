@@ -28,6 +28,9 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
             .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
             .IsRequired();
 
+        builder.HasIndex(e => e.AppointmentId)
+            .IsUnique();
+
         builder.Property(e => e.Status)
             .HasConversion<int>()
             .IsRequired();
