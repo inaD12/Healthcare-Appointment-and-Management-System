@@ -37,12 +37,15 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
 
         builder.OwnsMany<Allergy>("_allergies", a =>
         {
+            a.ToTable("PatientAllergies");
+            
             a.WithOwner().HasForeignKey("PatientId");
 
-            a.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            a.HasKey(x => x.Id);
 
-            a.HasKey("Id");
+            a.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             a.Property(x => x.Substance)
                 .HasMaxLength(PatientsBusinessConfiguration.SUBSTANCE_MAX_LENGTH)
@@ -55,12 +58,15 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
 
         builder.OwnsMany<ChronicCondition>("_conditions", c =>
         {
+            c.ToTable("PatientConditions");
+            
             c.WithOwner().HasForeignKey("PatientId");
 
-            c.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            c.HasKey(x => x.Id);
 
-            c.HasKey("Id");
+            c.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             c.Property(x => x.Name)
                 .HasMaxLength(PatientsBusinessConfiguration.CHRONIC_CONDITION_NAME_MAX_LENGTH)

@@ -45,12 +45,15 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
         builder.OwnsMany<ClinicalNote>("_notes", n =>
         {
+            n.ToTable("EncounterNotes");
+            
             n.WithOwner().HasForeignKey("EncounterId");
 
-            n.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            n.HasKey(x => x.Id);
 
-            n.HasKey("Id");
+            n.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             n.Property(x => x.Text)
                 .HasMaxLength(PatientsBusinessConfiguration.CLINICAL_NOTE_TEXT_MAX_LENGTH)
@@ -62,12 +65,15 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
         builder.OwnsMany<Diagnosis>("_diagnoses", d =>
         {
+            d.ToTable("EncounterDiagnoses");
+            
             d.WithOwner().HasForeignKey("EncounterId");
 
-            d.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            d.HasKey(x => x.Id);
 
-            d.HasKey("Id");
+            d.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             d.Property(x => x.IcdCode)
                 .HasMaxLength(PatientsBusinessConfiguration.ICD_MAX_LENGTH)
@@ -80,12 +86,15 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
         builder.OwnsMany<Prescription>("_prescriptions", p =>
         {
+            p.ToTable("EncounterPrescriptions");
+            
             p.WithOwner().HasForeignKey("EncounterId");
 
-            p.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            p.HasKey(x => x.Id);
 
-            p.HasKey("Id");
+            p.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             p.Property(x => x.MedicationName)
                 .HasMaxLength(PatientsBusinessConfiguration.PRESCRIPTION_NAME_MAX_LENGTH)
@@ -102,12 +111,15 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
         builder.OwnsMany<AddendumNote>("_addendums", a =>
         {
+            a.ToTable("EncounterAddendums");
+            
             a.WithOwner().HasForeignKey("EncounterId");
 
-            a.Property<string>("Id")
-                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH);
+            a.HasKey(x => x.Id);
 
-            a.HasKey("Id");
+            a.Property(x => x.Id)
+                .HasMaxLength(PatientsBusinessConfiguration.ID_MAX_LENGTH)
+                .ValueGeneratedNever();
 
             a.Property(x => x.Text)
                 .HasMaxLength(PatientsBusinessConfiguration.ADDENDUM_NOTE_TEXT_MAX_LENGTH)
