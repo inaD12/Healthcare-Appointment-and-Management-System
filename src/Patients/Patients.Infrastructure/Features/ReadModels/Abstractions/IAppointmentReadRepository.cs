@@ -4,9 +4,9 @@ public interface IAppointmentReadRepository
 {
     Task<AppointmentProjection?> GetAsync(string id, CancellationToken ct);
 
-    Task<IReadOnlyList<AppointmentProjection>> GetPatientAppointmentsAsync(string patientId, CancellationToken ct);
+    Task UpsertAsync(AppointmentProjection projection, CancellationToken ct);
 
-    Task AddOrUpdateAsync(AppointmentProjection appointment, CancellationToken ct);
+    Task UpdateAsync(string id, Action<AppointmentProjection> update, CancellationToken ct);
 
-    Task RemoveAsync(string appointmentId, CancellationToken ct);
+    Task RemoveAsync(string id, CancellationToken ct);
 }
