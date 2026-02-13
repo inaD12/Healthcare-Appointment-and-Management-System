@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Infrastructure.Features.DBContexts;
 using Patients.Infrastructure.Features.Helpers;
+using Patients.Infrastructure.Features.ReadModels.Abstractions;
 using Patients.Infrastructure.Features.Repositories;
 using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Extensions;
@@ -18,6 +19,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddScoped<IPatientRepository, PatientRepository>()
 			.AddScoped<IEncounterRepository, EncounterRepository>()
+			.AddScoped<IAppointmentReadRepository, AppointmentReadRepository>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 		
 		services

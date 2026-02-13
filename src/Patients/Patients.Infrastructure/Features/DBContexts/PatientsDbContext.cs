@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.Configurations;
+using Patients.Infrastructure.Features.ReadModels;
 
 namespace Patients.Infrastructure.Features.DBContexts;
 
@@ -9,6 +10,8 @@ public sealed class PatientsDbContext(DbContextOptions<PatientsDbContext> option
 {
 	public DbSet<Patient> Patients => Set<Patient>();
 	public DbSet<Encounter> Encounters => Set<Encounter>();
+	public DbSet<AppointmentProjection> AppointmentProjections => Set<AppointmentProjection>();
+
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
@@ -18,5 +21,6 @@ public sealed class PatientsDbContext(DbContextOptions<PatientsDbContext> option
 		
 		modelBuilder.ApplyConfiguration(new PatientConfiguration());
 		modelBuilder.ApplyConfiguration(new EncounterConfiguration());
+		modelBuilder.ApplyConfiguration(new AppointmentProjectionConfiguration());
 	}
 }
