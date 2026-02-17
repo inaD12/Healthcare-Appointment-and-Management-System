@@ -19,4 +19,5 @@ public static class ErrorMessages
 	public const string DiagnosisNotFound = "Diagnosis not found";
 	public const string AllergyNotFound = "Allergy not found";
 	public const string ConditionNotFound = "Condition not found";
+	public const string AppointmentNotFound = "Appointment not found";
 }

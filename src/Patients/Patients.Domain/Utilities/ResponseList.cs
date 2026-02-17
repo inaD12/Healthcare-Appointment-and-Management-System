@@ -26,4 +26,5 @@ public static class ResponseList
 	public static Response DiagnosisNotFound => Response.Create(ErrorMessages.DiagnosisNotFound, HttpStatusCode.NotFound);
 	public static Response AllergyNotFound => Response.Create(ErrorMessages.AllergyNotFound, HttpStatusCode.NotFound);
 	public static Response ConditionNotFound => Response.Create(ErrorMessages.ConditionNotFound, HttpStatusCode.NotFound);
+	public static Response AppointmentNotFound => Response.Create(ErrorMessages.AppointmentNotFound, HttpStatusCode.NotFound);
 }
