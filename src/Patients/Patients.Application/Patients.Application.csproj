@@ -16,6 +16,11 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="12.1.1" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+      <PackageReference Include="GreenDonut" Version="15.1.12" />
+      <PackageReference Include="HotChocolate" Version="15.1.12" />
+      <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.12" />
+      <PackageReference Include="HotChocolate.Data" Version="15.1.12" />
+      <PackageReference Include="HotChocolate.Utilities.DependencyInjection" Version="15.1.12" />
       <PackageReference Include="MediatR" Version="13.1.0" />
     </ItemGroup>
 
