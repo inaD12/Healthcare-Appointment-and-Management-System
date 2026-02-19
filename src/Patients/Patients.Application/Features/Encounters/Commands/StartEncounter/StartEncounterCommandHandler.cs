@@ -6,7 +6,6 @@ using Patients.Domain.Utilities;
 using Patients.Infrastructure.Features.ReadModels.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.StartEncounter;
@@ -18,15 +17,15 @@ public sealed class StartEncounterCommandHandler(
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<StartEncounterCommand, EncounterCommandViewModel>
 {
-    public async Task<Result<EncounterCommandViewModel>> Handle(StartEncounterCommand request, CancellationToken cancellationToken)
+    public async Task<Shared.Domain.Results.Result<EncounterCommandViewModel>> Handle(StartEncounterCommand request, CancellationToken cancellationToken)
     {
         var encounter = await encounterRepository.GetByAppointmentId(request.AppointmentId, cancellationToken);
         if (encounter is not null)
-            return Result<EncounterCommandViewModel>.Failure(ResponseList.EncounterAlreadyExists);
+            return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.EncounterAlreadyExists);
         
         var appointment = await appointmentRepository.GetAsync(request.AppointmentId, cancellationToken);
         if (appointment is null)
-            return Result<EncounterCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
+            return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
         
         encounter = Encounter.Start(request.PatientId, request.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow);
         
@@ -34,6 +33,6 @@ public sealed class StartEncounterCommandHandler(
        await unitOfWork.SaveChangesAsync(cancellationToken);
 
        var viewModel = encounter.ToCommandViewModel();
-       return Result<EncounterCommandViewModel>.Success(viewModel);
+       return Shared.Domain.Results.Result<EncounterCommandViewModel>.Success(viewModel);
     }
 }
