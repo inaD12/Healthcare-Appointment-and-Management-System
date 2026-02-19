@@ -27,7 +27,8 @@ public static class ServiceCollectionExtensions
 			.AddMessageBroker(configuration, currentAssembly)
 			.AddAuth(configuration)
 			.AddPermissionService()
-			.AddDatabaseContext<PatientsDbContext>(configuration);
+			.AddDatabaseContext<PatientsDbContext>(configuration)
+			.AddDatabaseContext<PatientsReadDbContext>(configuration);
 
 		return services;
 	}
