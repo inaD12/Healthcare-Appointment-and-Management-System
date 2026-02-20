@@ -1,3 +1,4 @@
+using Patients.Application.Features.Encounters.Models;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
@@ -11,23 +12,23 @@ public sealed class AddNoteCommandHandler(
     IEncounterRepository encounterRepository,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider)
-    : ICommandHandler<AddNoteCommand>
+    : ICommandHandler<AddNoteCommand, NoteCommandViewModel>
 {
-    public async Task<Result> Handle(AddNoteCommand request, CancellationToken cancellationToken)
+    public async Task<Shared.Domain.Results.Result<NoteCommandViewModel>> Handle(AddNoteCommand request, CancellationToken cancellationToken)
     {
         var encounter = await encounterRepository.GetByIdAsync(request.EncounterId, cancellationToken);
         if (encounter is  null)
-            return Result.Failure(ResponseList.EncounterNotFound);
+            return Shared.Domain.Results.Result<NoteCommandViewModel>.Failure(ResponseList.EncounterNotFound);
         
         if(encounter.DoctorId != request.UserId)
-            return Result.Failure(ResponseList.NotTheDoctor);
+            return Shared.Domain.Results.Result<NoteCommandViewModel>.Failure(ResponseList.NotTheDoctor);
         
         var result = encounter.AddNote(request.Note, dateTimeProvider.UtcNow);
         if (result.IsFailure)
-            return result;
+            return Shared.Domain.Results.Result<NoteCommandViewModel>.Failure(result.Response);
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Shared.Domain.Results.Result<NoteCommandViewModel>.Success(new NoteCommandViewModel(result.Value!));
     }
 }

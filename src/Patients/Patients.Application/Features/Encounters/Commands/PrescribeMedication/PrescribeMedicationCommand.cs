@@ -1,3 +1,4 @@
+using Patients.Application.Features.Encounters.Models;
 using Shared.Domain.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Encounters.Commands.PrescribeMedication;
@@ -7,4 +8,4 @@ public sealed record PrescribeMedicationCommand(
     string EncounterId,
     string Name,
     string Dosage,
-    string Instructions) : ICommand;
+    string Instructions) : ICommand<PrescriptionCommandViewModel>;

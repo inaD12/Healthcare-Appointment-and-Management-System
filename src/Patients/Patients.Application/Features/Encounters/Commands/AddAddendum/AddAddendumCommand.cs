@@ -1,3 +1,4 @@
+using Patients.Application.Features.Encounters.Models;
 using Shared.Domain.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Encounters.Commands.AddAddendum;
@@ -5,4 +6,4 @@ namespace Patients.Application.Features.Encounters.Commands.AddAddendum;
 public sealed record AddAddendumCommand(
     string UserId,
     string EncounterId,
-    string Note) : ICommand;
+    string Note) : ICommand<AddendumCommandViewModel>;

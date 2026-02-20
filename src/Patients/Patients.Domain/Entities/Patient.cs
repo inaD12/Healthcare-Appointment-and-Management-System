@@ -35,22 +35,26 @@ public sealed class Patient : BaseConcurrencyEntity
         DateOnly birthDate)
         => new(id, firstName, lastName, birthDate);
     
-    public Result AddAllergy(string substance, string reaction)
+    public Result<string> AddAllergy(string substance, string reaction)
     {
         if (_allergies.Any(a => a.Substance == substance))
-            return Result.Failure(ResponseList.AllergyAlreadyAdded);
+            return Result<string>.Failure(ResponseList.AllergyAlreadyAdded);
 
-        _allergies.Add(new Allergy(substance, reaction));
-        return Result.Success();
+        var allergy = new Allergy(substance, reaction);
+        
+        _allergies.Add(allergy);
+        return Result<string>.Success(allergy.Id);
     }
 
-    public Result AddChronicCondition(string name)
+    public Result<string> AddChronicCondition(string name)
     {
         if (_conditions.Any(c => c.Name == name))
-            return Result.Failure(ResponseList.ConditionAlreadyAdded);
+            return Result<string>.Failure(ResponseList.ConditionAlreadyAdded);
 
-        _conditions.Add(new ChronicCondition(name));
-        return Result.Success();
+        var condition = new ChronicCondition(name);
+        
+        _conditions.Add(condition);
+        return Result<string>.Success(condition.Id);
     }
     
     public Result RemoveAllergy(string allergyId)

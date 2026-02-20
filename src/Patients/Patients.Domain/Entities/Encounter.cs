@@ -51,34 +51,40 @@ public sealed class Encounter : BaseConcurrencyEntity
         DateTime utcNow)
         => new(patientId, doctorId, appointmentId, utcNow);
     
-    public Result AddNote(string text, DateTime utcNow)
+    public Result<string> AddNote(string text, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
-            return Result.Failure(ResponseList.EncounterNotEditable);
+            return Result<string>.Failure(ResponseList.EncounterNotEditable);
+
+        var note = new ClinicalNote(text, utcNow);
         
-        _notes.Add(new ClinicalNote(text, utcNow));
-        return Result.Success();
+        _notes.Add(note);
+        return Result<string>.Success(note.Id);
     }
 
-    public Result AddDiagnosis(string icdCode, string description)
+    public Result<string> AddDiagnosis(string icdCode, string description)
     {
         if (Status != EncounterStatus.InProgress)
-            return Result.Failure(ResponseList.EncounterNotEditable);
+            return Result<string>.Failure(ResponseList.EncounterNotEditable);
 
         if (_diagnoses.Any(d => d.IcdCode == icdCode))
-            return Result.Failure(ResponseList.DiagnosisAlreadyAdded);
+            return Result<string>.Failure(ResponseList.DiagnosisAlreadyAdded);
 
-        _diagnoses.Add(new Diagnosis(icdCode, description));
-        return Result.Success();
+        var diagnosis = new Diagnosis(icdCode, description);
+        
+        _diagnoses.Add(diagnosis);
+        return Result<string>.Success(diagnosis.Id);
     }
 
-    public Result PrescribeMedication(string name, string dosage, string instructions)
+    public Result<string> PrescribeMedication(string name, string dosage, string instructions)
     {
         if (Status != EncounterStatus.InProgress)
-            return Result.Failure(ResponseList.EncounterNotEditable);
+            return Result<string>.Failure(ResponseList.EncounterNotEditable);
+
+        var presctiption = new Prescription(name, dosage, instructions);
         
-        _prescriptions.Add(new Prescription(name, dosage, instructions));
-        return Result.Success();
+        _prescriptions.Add(presctiption);
+        return Result<string>.Success(presctiption.Id);
     }
 
     public Result RemoveNote(string noteId)
@@ -140,15 +146,17 @@ public sealed class Encounter : BaseConcurrencyEntity
         return Result.Success();
     }
 
-    public Result AddAddendum(string text, DateTime utcNow)
+    public Result<string> AddAddendum(string text, DateTime utcNow)
     {
         if (Status == EncounterStatus.Locked)
-            return Result.Failure(ResponseList.EncounterLocked);
+            return Result<string>.Failure(ResponseList.EncounterLocked);
 
         if (Status == EncounterStatus.InProgress)
-            return Result.Failure(ResponseList.UseNormalNotesBeforeFinalization);
+            return Result<string>.Failure(ResponseList.UseNormalNotesBeforeFinalization);
 
-        _addendums.Add(new AddendumNote(text, utcNow));
-        return Result.Success();
+        var addendum = new AddendumNote(text, utcNow);
+        
+        _addendums.Add(addendum);
+        return Result<string>.Success(addendum.Id);
     }
 }

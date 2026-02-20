@@ -1,28 +1,27 @@
-using Patients.Application.Features.Patients.Commands.AddAllergy;
+using Patients.Application.Features.Patients.Models;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Results;
 
 namespace Patients.Application.Features.Patients.Commands.AddChronicCondition;
 
 public sealed class AAddChronicConditionCommandHandler(
     IPatientRepository patientRepository,
     IUnitOfWork unitOfWork)
-    : ICommandHandler<AddChronicConditionCommand>
+    : ICommandHandler<AddChronicConditionCommand, ConditionCommandViewModel>
 {
-    public async Task<Result> Handle(AddChronicConditionCommand request, CancellationToken cancellationToken)
+    public async Task<Shared.Domain.Results.Result<ConditionCommandViewModel>> Handle(AddChronicConditionCommand request, CancellationToken cancellationToken)
     {
         var patient = await patientRepository.GetByIdAsync(request.Id, cancellationToken);
         if (patient == null)
-            return Result.Failure(ResponseList.PatientNotFound);
+            return Shared.Domain.Results.Result<ConditionCommandViewModel>.Failure(ResponseList.PatientNotFound);
         
         var result = patient.AddChronicCondition(request.Name);
         if (result.IsFailure)
-            return result;
+            return Shared.Domain.Results.Result<ConditionCommandViewModel>.Failure(result.Response);
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        return Shared.Domain.Results.Result<ConditionCommandViewModel>.Success(new ConditionCommandViewModel(result.Value!));
     }
 }
