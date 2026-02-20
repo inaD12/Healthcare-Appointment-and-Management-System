@@ -19,6 +19,9 @@ public sealed class LockEncounterCommandHandler(
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         
+        if(encounter.DoctorId != request.UserId)
+            return Result.Failure(ResponseList.NotTheDoctor);
+        
         var result = encounter.Lock(dateTimeProvider.UtcNow);
         if (result.IsFailure)
             return result;

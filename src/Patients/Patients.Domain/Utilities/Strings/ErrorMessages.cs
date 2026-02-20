@@ -20,4 +20,5 @@ public static class ErrorMessages
 	public const string AllergyNotFound = "Allergy not found";
 	public const string ConditionNotFound = "Condition not found";
 	public const string AppointmentNotFound = "Appointment not found";
+	public const string NotTheDoctor = "Only the doctor that created the encounter is allowed to edit it";
 }

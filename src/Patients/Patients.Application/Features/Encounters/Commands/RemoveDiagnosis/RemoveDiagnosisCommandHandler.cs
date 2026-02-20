@@ -18,6 +18,9 @@ public sealed class RemoveDiagnosisCommandHandler(
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         
+        if(encounter.DoctorId != request.UserId)
+            return Result.Failure(ResponseList.NotTheDoctor);
+        
         var result = encounter.RemoveDiagnosis(request.DiagnosisId);
         if (result.IsFailure)
             return result;

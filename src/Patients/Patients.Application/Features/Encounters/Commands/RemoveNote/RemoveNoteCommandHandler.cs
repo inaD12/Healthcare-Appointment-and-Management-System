@@ -17,6 +17,9 @@ public sealed class RemoveNoteCommandHandler(
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         
+        if(encounter.DoctorId != request.UserId)
+            return Result.Failure(ResponseList.NotTheDoctor);
+        
         var result = encounter.RemoveNote(request.NoteId);
         if (result.IsFailure)
             return result;

@@ -17,6 +17,9 @@ public sealed class PrescribeMedicationCommandHandler(
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         
+        if(encounter.DoctorId != request.UserId)
+            return Result.Failure(ResponseList.NotTheDoctor);
+        
         var result = encounter.PrescribeMedication(request.Name, request.Dosage, request.Instructions);
         if (result.IsFailure)
             return result;

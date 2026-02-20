@@ -20,6 +20,9 @@ public sealed class AddAddendumCommandHandler(
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         
+        if(encounter.DoctorId != request.UserId)
+            return Result.Failure(ResponseList.NotTheDoctor);
+        
         var result = encounter.AddAddendum(request.Note, dateTimeProvider.UtcNow);
         if (result.IsFailure)
             return result;
