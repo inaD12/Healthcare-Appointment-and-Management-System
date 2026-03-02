@@ -38,6 +38,8 @@ app.UseExceptionHandler();
 
 EndpointMapper.MapAllEndpoints(app);
 
+app.MapGraphQL();
+
 app.Run();
 
 namespace Patients.API

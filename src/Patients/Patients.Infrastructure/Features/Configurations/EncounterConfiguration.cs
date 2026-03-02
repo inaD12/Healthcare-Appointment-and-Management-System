@@ -10,6 +10,11 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 {
     public void Configure(EntityTypeBuilder<Encounter> builder)
     {
+        builder.Ignore(e => e.Notes);
+        builder.Ignore(e => e.Diagnoses);
+        builder.Ignore(e => e.Prescriptions);
+        builder.Ignore(e => e.Addendums);
+        
         builder.HasKey(e => e.Id);
 
         builder.Property(e => e.Id)
@@ -129,16 +134,16 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
                 .IsRequired();
         });
 
-        builder.Navigation(e => e.Notes)
+        builder.Navigation("_notes")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Navigation(e => e.Diagnoses)
+        builder.Navigation("_diagnoses")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Navigation(e => e.Prescriptions)
+        builder.Navigation("_prescriptions")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Navigation(e => e.Addendums)
+        builder.Navigation("_addendums")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

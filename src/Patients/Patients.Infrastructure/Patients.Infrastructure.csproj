@@ -22,8 +22,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MassTransit" Version="9.0.1" />
-      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="9.0.1" />
+      <PackageReference Include="MassTransit" Version="8.5.4" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.4" />
     </ItemGroup>
 
 </Project>

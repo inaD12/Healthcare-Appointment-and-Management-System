@@ -70,6 +70,21 @@ services:
         condition: service_healthy
     networks:
       - my_network
+        
+  patients.api:
+    image: ${DOCKER_REGISTRY-}patientsapi
+    build:
+      context: .
+      dockerfile: src/Patients/Patients.API/Dockerfile
+    ports:
+      - "5600:5600"
+    depends_on:
+      patients.database:
+        condition: service_started
+      rabbit.mq:
+        condition: service_healthy
+    networks:
+      - my_network
 
   emails.api:
     image: ${DOCKER_REGISTRY-}emailsapi
@@ -140,6 +155,21 @@ services:
     restart: always
     networks:
       - my_network
+        
+  patients.database:
+    image: postgres:latest
+    container_name: patients.database
+    environment:
+      - POSTGRES_DB=patientsdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - patients-db:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    restart: always
+    networks:
+      - my_network
 
   rabbit.mq:
     image: rabbitmq:3.11.7-management
@@ -203,6 +233,7 @@ volumes:
   appointments-db:
   users-db:
   ratings-db:
+  patients-db:
 
 networks:
   my_network:

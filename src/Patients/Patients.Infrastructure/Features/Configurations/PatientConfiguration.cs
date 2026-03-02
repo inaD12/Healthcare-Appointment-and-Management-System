@@ -10,6 +10,9 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
 {
     public void Configure(EntityTypeBuilder<Patient> builder)
     {
+        builder.Ignore(e => e.Allergies);
+        builder.Ignore(e => e.Conditions);
+        
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
@@ -73,10 +76,10 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
                 .IsRequired();
         });
 
-        builder.Navigation(p => p.Allergies)
+        builder.Navigation("_allergies")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Navigation(p => p.Conditions)
+        builder.Navigation("_conditions")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
