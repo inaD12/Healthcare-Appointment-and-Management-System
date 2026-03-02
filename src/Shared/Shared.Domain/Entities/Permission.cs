@@ -47,6 +47,52 @@ public sealed class Permission
     public static readonly Permission GetRating = new("ratings:read");
     public static readonly Permission GetRatingStats = new("ratingStats:read");
     
+    // Patients
+    public static readonly Permission CreatePatient = new("patient:create");
+    public static readonly Permission UpdatePatient = new("patient:update");
+    public static readonly Permission ViewPatient = new("patient:view");
+    public static readonly Permission DeletePatient = new("patient:delete");
+
+    // Admin patient
+    public static readonly Permission ViewAllPatients = new("patient:admin:view-all");
+    public static readonly Permission DeletePatientByAdmin = new("patient:admin:delete");
+
+    // Allergies
+    public static readonly Permission AddAllergy = new("patient:allergy:add");
+    public static readonly Permission RemoveAllergy = new("patient:allergy:remove");
+    public static readonly Permission ViewAllergies = new("patient:allergy:view");
+
+    // Chronic conditions
+    public static readonly Permission AddChronicCondition = new("patient:condition:add");
+    public static readonly Permission RemoveChronicCondition = new("patient:condition:remove");
+    public static readonly Permission ViewChronicConditions = new("patient:condition:view");
+
+    // Encounter Permissions
+    public static readonly Permission StartEncounter = new("encounter:start");
+    public static readonly Permission ViewEncounter = new("encounter:view");
+    public static readonly Permission EditEncounter = new("encounter:edit");
+    public static readonly Permission LockEncounter = new("encounter:lock");
+    public static readonly Permission FinalizeEncounter = new("encounter:finalize");
+
+    // Notes
+    public static readonly Permission AddNote = new("encounter:note:add");
+    public static readonly Permission RemoveNote = new("encounter:note:remove");
+    public static readonly Permission ViewNotes = new("encounter:note:view");
+
+    // Diagnoses
+    public static readonly Permission AddDiagnosis = new("encounter:diagnosis:add");
+    public static readonly Permission RemoveDiagnosis = new("encounter:diagnosis:remove");
+    public static readonly Permission ViewDiagnoses = new("encounter:diagnosis:view");
+
+    // Prescriptions
+    public static readonly Permission AddPrescription = new("encounter:prescription:add");
+    public static readonly Permission RemovePrescription = new("encounter:prescription:remove");
+    public static readonly Permission ViewPrescriptions = new("encounter:prescription:view");
+
+    // Addendums
+    public static readonly Permission AddAddendum = new("encounter:addendum:add");
+    public static readonly Permission ViewAddendums = new("encounter:addendum:view");
+    
     public Permission(string code)
     {
         Code = code;

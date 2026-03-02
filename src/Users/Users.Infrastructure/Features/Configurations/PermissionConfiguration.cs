@@ -50,8 +50,39 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.RemoveRating,
             Permission.EditRating,
             Permission.GetRating,
-            Permission.GetRatingStats
+            Permission.GetRatingStats,
             
+            // Patient Permissions
+            Permission.CreatePatient,
+            Permission.UpdatePatient,
+            Permission.ViewPatient,
+            Permission.DeletePatient,
+            Permission.ViewAllPatients,
+            Permission.DeletePatientByAdmin,
+            Permission.AddAllergy,
+            Permission.RemoveAllergy,
+            Permission.ViewAllergies,
+            Permission.AddChronicCondition,
+            Permission.RemoveChronicCondition,
+            Permission.ViewChronicConditions,
+
+            // Encounter Permissions
+            Permission.StartEncounter,
+            Permission.ViewEncounter,
+            Permission.EditEncounter,
+            Permission.LockEncounter,
+            Permission.FinalizeEncounter,
+            Permission.AddNote,
+            Permission.RemoveNote,
+            Permission.ViewNotes,
+            Permission.AddDiagnosis,
+            Permission.RemoveDiagnosis,
+            Permission.ViewDiagnoses,
+            Permission.AddPrescription,
+            Permission.RemovePrescription,
+            Permission.ViewPrescriptions,
+            Permission.AddAddendum,
+            Permission.ViewAddendums
         );
 
         builder
@@ -96,6 +127,37 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.EditRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRatingStats),
+                    // Admin patient permissions
+                    CreateRolePermission(Role.Administrator, Permission.CreatePatient),
+                    CreateRolePermission(Role.Administrator, Permission.UpdatePatient),
+                    CreateRolePermission(Role.Administrator, Permission.ViewPatient),
+                    CreateRolePermission(Role.Administrator, Permission.DeletePatient),
+                    CreateRolePermission(Role.Administrator, Permission.ViewAllPatients),
+                    CreateRolePermission(Role.Administrator, Permission.DeletePatientByAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.AddAllergy),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveAllergy),
+                    CreateRolePermission(Role.Administrator, Permission.ViewAllergies),
+                    CreateRolePermission(Role.Administrator, Permission.AddChronicCondition),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveChronicCondition),
+                    CreateRolePermission(Role.Administrator, Permission.ViewChronicConditions),
+                    // Admin encounter permissions
+                    CreateRolePermission(Role.Administrator, Permission.StartEncounter),
+                    CreateRolePermission(Role.Administrator, Permission.ViewEncounter),
+                    CreateRolePermission(Role.Administrator, Permission.EditEncounter),
+                    CreateRolePermission(Role.Administrator, Permission.LockEncounter),
+                    CreateRolePermission(Role.Administrator, Permission.FinalizeEncounter),
+                    CreateRolePermission(Role.Administrator, Permission.AddNote),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveNote),
+                    CreateRolePermission(Role.Administrator, Permission.ViewNotes),
+                    CreateRolePermission(Role.Administrator, Permission.AddDiagnosis),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveDiagnosis),
+                    CreateRolePermission(Role.Administrator, Permission.ViewDiagnoses),
+                    CreateRolePermission(Role.Administrator, Permission.AddPrescription),
+                    CreateRolePermission(Role.Administrator, Permission.RemovePrescription),
+                    CreateRolePermission(Role.Administrator, Permission.ViewPrescriptions),
+                    CreateRolePermission(Role.Administrator, Permission.AddAddendum),
+                    CreateRolePermission(Role.Administrator, Permission.ViewAddendums),
+
 
                     // --- Doctor permissions ---
                     CreateRolePermission(Role.Doctor, Permission.CreateAppointment),
@@ -116,6 +178,26 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Doctor, Permission.RemoveUnavailability),
                     CreateRolePermission(Role.Doctor, Permission.GetRating),
                     CreateRolePermission(Role.Doctor, Permission.GetRatingStats),
+                    CreateRolePermission(Role.Doctor, Permission.ViewPatient),
+                    CreateRolePermission(Role.Doctor, Permission.ViewAllergies),
+                    CreateRolePermission(Role.Doctor, Permission.ViewChronicConditions),
+                    CreateRolePermission(Role.Doctor, Permission.StartEncounter),
+                    CreateRolePermission(Role.Doctor, Permission.ViewEncounter),
+                    CreateRolePermission(Role.Doctor, Permission.EditEncounter),
+                    CreateRolePermission(Role.Doctor, Permission.LockEncounter),
+                    CreateRolePermission(Role.Doctor, Permission.FinalizeEncounter),
+                    CreateRolePermission(Role.Doctor, Permission.AddNote),
+                    CreateRolePermission(Role.Doctor, Permission.RemoveNote),
+                    CreateRolePermission(Role.Doctor, Permission.ViewNotes),
+                    CreateRolePermission(Role.Doctor, Permission.AddDiagnosis),
+                    CreateRolePermission(Role.Doctor, Permission.RemoveDiagnosis),
+                    CreateRolePermission(Role.Doctor, Permission.ViewDiagnoses),
+                    CreateRolePermission(Role.Doctor, Permission.AddPrescription),
+                    CreateRolePermission(Role.Doctor, Permission.RemovePrescription),
+                    CreateRolePermission(Role.Doctor, Permission.ViewPrescriptions),
+                    CreateRolePermission(Role.Doctor, Permission.AddAddendum),
+                    CreateRolePermission(Role.Doctor, Permission.ViewAddendums),
+
 
                     // --- Patient permissions ---
                     CreateRolePermission(Role.Patient, Permission.CreateAppointment),
@@ -126,7 +208,15 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Patient, Permission.RemoveRating),
                     CreateRolePermission(Role.Patient, Permission.EditRating),
                     CreateRolePermission(Role.Patient, Permission.GetRating),
-                    CreateRolePermission(Role.Patient, Permission.GetRatingStats)
+                    CreateRolePermission(Role.Patient, Permission.GetRatingStats),
+                    CreateRolePermission(Role.Patient, Permission.ViewPatient),
+                    CreateRolePermission(Role.Patient, Permission.ViewAllergies),
+                    CreateRolePermission(Role.Patient, Permission.ViewChronicConditions),
+                    CreateRolePermission(Role.Patient, Permission.ViewEncounter),
+                    CreateRolePermission(Role.Patient, Permission.ViewNotes),
+                    CreateRolePermission(Role.Patient, Permission.ViewDiagnoses),
+                    CreateRolePermission(Role.Patient, Permission.ViewPrescriptions),
+                    CreateRolePermission(Role.Patient, Permission.ViewAddendums)
                 );
             });
     }
