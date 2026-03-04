@@ -15,6 +15,8 @@ public sealed class Appointment : BaseEntity
 		DoctorId = doctorId;
 		Status = status;
 		Duration = duration;
+		
+		RaiseDomainEvent(new AppointmentCreatedDomainEvent(Id, doctorId, patientId, duration.Start, duration.End)); 
 	}
 
 	private Appointment()
@@ -47,6 +49,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Rescheduled;
 
+		RaiseDomainEvent(new AppointmentRescheduledDomainEvent(Id)); 
 		return Result.Success();
 	}
 
@@ -60,6 +63,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Cancelled;
 
+		RaiseDomainEvent(new AppointmentCanceledDomainEvent(Id)); 
 		return Result.Success();
 	}
 
