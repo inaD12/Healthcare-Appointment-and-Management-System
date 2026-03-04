@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Users.Application.Features.Email.Commands.HandleEmail;
-using Users.Domain.Responses;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Utilities;
 using Xunit;
 
@@ -90,7 +90,7 @@ public class EmailCommandHandlerUnitTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		token.User.EmailVerified.Should().BeTrue();
+		token.User!.EmailVerified.Should().BeTrue();
 	}
 
 	[Fact]

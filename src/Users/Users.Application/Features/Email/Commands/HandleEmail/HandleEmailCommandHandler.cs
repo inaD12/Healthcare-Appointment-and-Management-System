@@ -2,41 +2,33 @@
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Responses;
+using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Email.Commands.HandleEmail;
 
-public sealed class HandleEmailCommandHandler : ICommandHandler<HandleEmailCommand>
+public sealed class HandleEmailCommandHandler(
+	IUnitOfWork unitOfWork,
+	IEmailVerificationTokenRepository emailVerificationTokenRepository,
+	IUserRepository userRepository,
+	IDateTimeProvider dateTimeProvider)
+	: ICommandHandler<HandleEmailCommand>
 {
-	private readonly IEmailVerificationTokenRepository _emailVerificationTokenRepository;
-	private readonly IUserRepository _userRepository;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IDateTimeProvider _dateTimeProvider;
-
-	public HandleEmailCommandHandler(IUnitOfWork unitOfWork, IEmailVerificationTokenRepository emailVerificationTokenRepository, IUserRepository userRepository, IDateTimeProvider dateTimeProvider)
-	{
-		_unitOfWork = unitOfWork;
-		_emailVerificationTokenRepository = emailVerificationTokenRepository;
-		_userRepository = userRepository;
-		_dateTimeProvider = dateTimeProvider;
-	}
-
 	public async Task<Result> Handle(HandleEmailCommand request, CancellationToken cancellationToken)
 	{
-		var token = await _emailVerificationTokenRepository.GetByIdAsync(request.tokenId);
+		var token = await emailVerificationTokenRepository.GetByIdAsync(request.TokenId, cancellationToken);
 
 		if (token == null)
 			return Result.Failure(ResponseList.InvalidVerificationToken);
-		if(token.ExpiresOnUtc < _dateTimeProvider.UtcNow)
+		if(token.ExpiresOnUtc < dateTimeProvider.UtcNow)
 			return Result.Failure(ResponseList.ExpiredVerificationToken);
-		if (token.User.EmailVerified)
+		if (token.User!.EmailVerified)
 			return Result.Failure(ResponseList.EmailAlreadyVerified);
 
 		token.User.VerifyEmail();
-		 _userRepository.Update(token.User);
+		 userRepository.Update(token.User);
 
-		await _unitOfWork.SaveChangesAsync();
+		await unitOfWork.SaveChangesAsync(cancellationToken);
 		return Result.Success();
 	}
 }

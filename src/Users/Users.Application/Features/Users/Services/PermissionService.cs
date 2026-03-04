@@ -7,8 +7,8 @@ namespace Users.Application.Features.Users.Services;
 
 internal sealed class PermissionService(ISender sender) : IPermissionService
 {
-    public async Task<Result<PermissionsResponse>> GetUserPermissionsAsync(string identityId)
+    public async Task<Result<PermissionsResponse>> GetUserPermissionsAsync(string identityId, CancellationToken cancellationToken = default)
     {
-        return await sender.Send(new GetUserPermissionsQuery(identityId));
+        return await sender.Send(new GetUserPermissionsQuery(identityId), cancellationToken);
     }
 }

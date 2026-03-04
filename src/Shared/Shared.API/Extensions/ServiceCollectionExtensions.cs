@@ -11,6 +11,7 @@ using Shared.API.Options;
 using Shared.API.Utilities;
 using Shared.Domain.Options;
 using System.Text;
+using Shared.API.ExceptionHandlers;
 
 namespace Shared.API.Extensions;
 
@@ -49,6 +50,16 @@ public static class ServiceCollectionExtensions
 				{securityScheme, new string[] { }}
 			});
 		});
+
+		return services;
+	}
+	
+	public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
+	{
+		services
+			.AddExceptionHandler<ValidationExceptionHandler>()
+			.AddExceptionHandler<GlobalExceptionHandler>()
+			.AddProblemDetails();
 
 		return services;
 	}

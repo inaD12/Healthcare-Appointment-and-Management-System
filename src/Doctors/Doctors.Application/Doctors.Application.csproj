@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
+      <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+      <ProjectReference Include="..\Doctors.Domain\Doctors.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="FluentValidation">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\fluentvalidation\11.11.0\lib\net8.0\FluentValidation.dll</HintPath>
+      </Reference>
+      <Reference Include="MassTransit.Abstractions">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\masstransit.abstractions\8.3.7-develop.2215\lib\net8.0\MassTransit.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="MediatR">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\mediatr\13.1.0\lib\net8.0\MediatR.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.0.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+    </ItemGroup>
+
+</Project>

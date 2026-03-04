@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using Users.Application.Features.Users.Models;
-using Users.Application.Features.Users.Queries.GetById;
-using Users.Domain.Responses;
+using Users.Application.Features.Users.Queries.GetUserById;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Utilities;
 using Xunit;
 
@@ -14,7 +14,7 @@ public class GetUserByIdQueryHandlerUnitTests : BaseUsersUnitTest
 
 	public GetUserByIdQueryHandlerUnitTests()
 	{
-		_handler = new GetUserByIdQueryHandler(UserRepository, HAMSMapper);
+		_handler = new GetUserByIdQueryHandler(UserRepository);
 	}
 
 	[Fact]

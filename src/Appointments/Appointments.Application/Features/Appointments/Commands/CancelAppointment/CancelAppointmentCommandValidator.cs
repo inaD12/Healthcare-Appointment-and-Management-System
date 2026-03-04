@@ -1,8 +1,7 @@
-﻿using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
-using Appointments.Domain.Utilities;
+﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Commands.Appointments.CancelAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 
 public class CancelAppointmentCommandValidator : AbstractValidator<CancelAppointmentCommand>
 {

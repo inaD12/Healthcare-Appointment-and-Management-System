@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hangfire.PostgreSql" Version="1.20.10" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
@@ -32,6 +33,12 @@
 	  <ProjectReference Include="..\Appointments.Application\Appointments.Application.csproj" />
 	  <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
       <ProjectReference Include="..\Appointments.Infrastructure\Appointments.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MediatR">
+      <HintPath>..\..\..\..\..\..\.nuget\packages\mediatr\13.1.0\lib\net8.0\MediatR.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

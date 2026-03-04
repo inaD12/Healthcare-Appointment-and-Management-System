@@ -4,6 +4,7 @@ using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Shared.Domain.Utilities;
 using Users.Application.Features.Users.Queries.GetAllUsers;
+using Users.Application.UnitTests.Utilities;
 using Users.Domain.Utilities;
 using Xunit;
 

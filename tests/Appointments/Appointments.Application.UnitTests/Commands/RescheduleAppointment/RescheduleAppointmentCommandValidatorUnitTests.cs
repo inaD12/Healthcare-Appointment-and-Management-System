@@ -1,5 +1,4 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Utilities;

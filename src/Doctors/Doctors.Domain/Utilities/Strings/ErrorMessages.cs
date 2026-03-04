@@ -1,0 +1,17 @@
+﻿namespace Doctors.Domain.Utilities.Strings;
+
+public static class ErrorMessages
+{
+	public const string ExceptionOverlap = "Exception overlaps with an existing exception";
+	public const string NoSpecialities = "There are no specialities in the system";
+	public const string ExceptionNotFound = "No exception that matches the given range exists";
+	public const string DuplicateWorkDay = "Duplicate weekday not allowed";
+	public const string WorkDayNotExist = "Work day does not exist";
+	public const string InvalidTimezone = "Invalid timezone";
+	public const string DoctorNotFound = "Doctor not found";
+	public const string DoctorAlreadyExists = "Doctor already exists";
+	public const string SpecialityBelongsToDoctor = "This speciality already belongs to this doctor";
+	public const string SpecialityNotBelongToDoctor = "This speciality doesn't belong to this doctor";
+	public const string NoCloseSpecialities = "Symptoms do not match any speciality closely enough";
+	public const string SpecialityNotExists = "The following specialities do not exist: {0}";
+}

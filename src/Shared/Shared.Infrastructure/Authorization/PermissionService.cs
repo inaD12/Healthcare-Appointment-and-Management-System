@@ -13,7 +13,7 @@ public sealed class PermissionService(
 {
     //private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
     
-    public async Task<Result<PermissionsResponse>> GetUserPermissionsAsync(string identityId)
+    public async Task<Result<PermissionsResponse>> GetUserPermissionsAsync(string identityId, CancellationToken cancellationToken = default)
     {
         /*var permissionsResponse = await cacheService.GetAsync<PermissionsResponse>(CreateCacheKey(identityId));
 
@@ -25,14 +25,14 @@ public sealed class PermissionService(
         var request = new GetUserPermissionsRequest(identityId);
         
         Response<PermissionsResponse, Result> response =
-            await requestClient.GetResponse<PermissionsResponse, Result>(request);
+            await requestClient.GetResponse<PermissionsResponse, Result>(request, cancellationToken);
 
-        if (response.Is(out Response<Result> errorResponse))
+        if (response.Is(out Response<Result>? errorResponse))
         {
             return Result<PermissionsResponse>.Failure(errorResponse.Message.Response);
         }
 
-        if (response.Is(out Response<PermissionsResponse> permissionResponse))
+        if (response.Is(out Response<PermissionsResponse>? permissionResponse))
         {
             /*await cacheService.SetAsync(
                 CreateCacheKey(identityId),

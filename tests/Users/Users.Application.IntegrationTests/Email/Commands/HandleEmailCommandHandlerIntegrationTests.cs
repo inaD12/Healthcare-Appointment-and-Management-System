@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.IntegrationTests.Utilities;
-using Users.Domain.Responses;
 using Users.Domain.Utilities;
 
 namespace Users.Application.IntegrationTests.Email.Commands;
@@ -65,7 +64,7 @@ public class HandleEmailCommandHandlerIntegrationTests : BaseUsersIntegrationTes
 
 		// Act
 		var result = await Sender.Send(command, CancellationToken);
-		var user = await UserRepository.GetByIdAsync(token.User.Id);
+		var user = await UserRepository.GetByIdAsync(token.User!.Id);
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();

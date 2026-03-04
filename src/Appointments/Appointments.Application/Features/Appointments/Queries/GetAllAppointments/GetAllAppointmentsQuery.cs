@@ -3,7 +3,7 @@ using Appointments.Domain.Entities.Enums;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Enums;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentsUsers;
+namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 
 public sealed record GetAllAppointmentsQuery(
 	string? PatientId,
@@ -11,7 +11,7 @@ public sealed record GetAllAppointmentsQuery(
 	AppointmentStatus? Status,
 	DateTime? FromTime,
 	DateTime? ToTime,
-	SortOrder? SortOrder,
+	SortOrder SortOrder,
 	string SortPropertyName,
 	int Page,
 	int PageSize) : IQuery<AppointmentPaginatedQueryViewModel>;

@@ -4,7 +4,7 @@ using Shared.Domain.Enums;
 
 namespace Appointments.API.Appointments.Models.Requests;
 
-public record GetAllAppointmentsRequest
+public sealed record GetAllAppointmentsRequest
 (
 	string PatientId = "",
 	string DoctorId = "",

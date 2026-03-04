@@ -242,6 +242,171 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:update",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:view",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:update",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:view",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:view-all",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:recommend",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:update",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:create",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:cancel",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:reschedule",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:create",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:update",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:view",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:remove",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:speciality:recommend",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:update",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:remove",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:remove",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:remove",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -257,18 +422,8 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "appointment:create",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "appointment:cancel",
-                            RoleName = "Doctor"
-                        },
-                        new
-                        {
-                            PermissionCode = "appointment:reschedule",
-                            RoleName = "Doctor"
+                            PermissionCode = "doctor:speciality:recommend",
+                            RoleName = "Patient"
                         });
                 });
 
@@ -326,6 +481,74 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "appointment:read"
+                        },
+                        new
+                        {
+                            Code = "doctor:create"
+                        },
+                        new
+                        {
+                            Code = "doctor:update"
+                        },
+                        new
+                        {
+                            Code = "doctor:view"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:create"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:update"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:view"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:view-all"
+                        },
+                        new
+                        {
+                            Code = "doctor:speciality:add"
+                        },
+                        new
+                        {
+                            Code = "doctor:speciality:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:speciality:recommend"
+                        },
+                        new
+                        {
+                            Code = "doctor:schedule:workday:add"
+                        },
+                        new
+                        {
+                            Code = "doctor:schedule:workday:update"
+                        },
+                        new
+                        {
+                            Code = "doctor:schedule:workday:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:availability:extra:add"
+                        },
+                        new
+                        {
+                            Code = "doctor:availability:extra:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:availability:unavailable:add"
+                        },
+                        new
+                        {
+                            Code = "doctor:availability:unavailable:remove"
                         });
                 });
 
@@ -382,6 +605,7 @@ namespace Users.Infrastructure.Features.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("DateOfBirth")
@@ -407,6 +631,7 @@ namespace Users.Infrastructure.Features.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

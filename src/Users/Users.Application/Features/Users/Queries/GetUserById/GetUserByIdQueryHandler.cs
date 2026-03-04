@@ -1,30 +1,22 @@
-﻿using Shared.Application.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Infrastructure.Abstractions.Repositories;
-using Users.Domain.Responses;
+using Users.Domain.Abstractions.Repositories;
+using Users.Domain.Utilities;
 
-namespace Users.Application.Features.Users.Queries.GetById;
+namespace Users.Application.Features.Users.Queries.GetUserById;
 
-public sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserQueryViewModel>
+public sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
+	: IQueryHandler<GetUserByIdQuery, UserQueryViewModel>
 {
-	private readonly IUserRepository _userRepository;
-	private readonly IHAMSMapper _mapper;
-
-	public GetUserByIdQueryHandler(IUserRepository userRepository, IHAMSMapper mapper)
-	{
-		_userRepository = userRepository;
-		_mapper = mapper;
-	}
-
 	public async Task<Result<UserQueryViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
 	{
-		var user = await _userRepository.GetByIdAsync(request.Id);
+		var user = await userRepository.GetByIdAsync(request.Id, cancellationToken);
 		if (user == null)
 			return Result<UserQueryViewModel>.Failure(ResponseList.UserNotFound);
 
-		var userQueryViewModel = _mapper.Map<UserQueryViewModel>(user);
+		var userQueryViewModel = user.ToQueryViewModel();
 		return Result<UserQueryViewModel>.Success(userQueryViewModel);
 	}
 }

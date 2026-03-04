@@ -4,19 +4,14 @@ using Shared.Domain.Entities.Base;
 
 namespace Shared.Infrastructure.Repositories;
 
-public abstract class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+public abstract class GenericRepository<T>(DbContext context) : IGenericRepository<T>
+	where T : BaseEntity
 {
-	private readonly DbContext _context;
-	private DbSet<T> Entities => _context.Set<T>();
+	private DbSet<T> Entities => context.Set<T>();
 
-	public GenericRepository(DbContext context)
+	public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
 	{
-		_context = context;
-	}
-
-	public virtual async Task AddAsync(T entity)
-	{
-		await Entities.AddAsync(entity);
+		await Entities.AddAsync(entity, cancellationToken);
 	}
 
 	public virtual void Delete(T entity)
@@ -24,9 +19,9 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : Bas
 		Entities.Remove(entity);
 	}
 
-	public virtual async Task<T?> GetByIdAsync(string id)
+	public virtual async Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
-		var res = await Entities.FindAsync(id);
+		var res = await Entities.FindAsync(id, cancellationToken);
 
 		return res;
 	}

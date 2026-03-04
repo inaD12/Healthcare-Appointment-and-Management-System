@@ -1,7 +1,3 @@
-﻿namespace Users.Users.Models.Requests
-{
-	public class VerifyEmailRequest
-	{
-		public string Token { get; set; }
-	}
-}
+﻿namespace Users.Users.Models.Requests;
+
+public sealed record VerifyEmailRequest(string Token);

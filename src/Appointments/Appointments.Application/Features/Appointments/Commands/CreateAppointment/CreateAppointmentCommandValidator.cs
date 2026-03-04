@@ -1,23 +1,21 @@
 ﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+namespace Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 
 public class CreateAppointmentCommandValidator : AbstractValidator<CreateAppointmentCommand>
 {
 	public CreateAppointmentCommandValidator()
 	{
-		RuleFor(x => x.PatientEmail)
-				.NotEmpty()
-				.MinimumLength(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH)
-				.MaximumLength(AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH)
-				.EmailAddress();
+		RuleFor(x => x.PatientUserId)
+			.NotEmpty()
+			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
+			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
 
-		RuleFor(x => x.DoctorEmail)
-				.NotEmpty()
-				.MinimumLength(AppointmentsBusinessConfiguration.EMAIL_MIN_LENGTH)
-				.MaximumLength(AppointmentsBusinessConfiguration.EMAIL_MAX_LENGTH)
-				.EmailAddress();
+		RuleFor(x => x.DoctorUserId)
+			.NotEmpty()
+			.MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
+			.MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
 
 		RuleFor(x => x.ScheduledStartTime)
 				.GreaterThan(DateTime.Now)

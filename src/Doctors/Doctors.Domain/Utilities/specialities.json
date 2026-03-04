@@ -1,0 +1,306 @@
+[
+  {
+    "name": "Adolescent medicine",
+    "description": "Adolescent medicine focuses on health problems in teenagers including hormones, growth, mood changes, injuries, and chronic illness."
+  },
+  {
+    "name": "Aerospace medicine",
+    "description": "Aerospace medicine deals with health issues related to flying and air pressure such as motion sickness, oxygen problems, and fatigue."
+  },
+  {
+    "name": "Allergy and immunology",
+    "description": "This field treats allergies, asthma, immune system disorders, chronic cough, rashes, and sinus problems."
+  },
+  {
+    "name": "Anesthesiology",
+    "description": "Anesthesiology involves anesthesia, pain control, and monitoring patients during surgery."
+  },
+  {
+    "name": "Bariatrics",
+    "description": "Bariatrics focuses on weight loss, obesity, metabolic problems, and nutrition guidance."
+  },
+  {
+    "name": "Cardiology",
+    "description": "Cardiology treats heart and blood vessel issues such as chest pain, palpitations, high blood pressure, and heart disease."
+  },
+  {
+    "name": "Cardiothoracic surgery",
+    "description": "Cardiothoracic surgery performs surgical treatment on the heart, lungs, and chest organs."
+  },
+  {
+    "name": "Child and adolescent psychiatry",
+    "description": "This treats emotional, behavioral, and mental health problems in children and teenagers."
+  },
+  {
+    "name": "Clinical neurophysiology",
+    "description": "Clinical neurophysiology studies nerve and brain activity, diagnosing seizures, neuropathy, and nerve pain."
+  },
+  {
+    "name": "Colorectal surgery",
+    "description": "Colorectal surgery treats diseases of the colon, rectum, hemorrhoids, bowel problems, and cancers."
+  },
+  {
+    "name": "Dermatology",
+    "description": "Dermatology treats skin, hair, and nail problems such as rashes, acne, itching, infections, and growths."
+  },
+  {
+    "name": "Developmental pediatrics",
+    "description": "This focuses on childhood development issues such as ADHD, autism, and learning delays."
+  },
+  {
+    "name": "Emergency medicine",
+    "description": "Emergency medicine handles urgent injuries, trauma, sudden illness, chest pain, fractures, and severe infections."
+  },
+  {
+    "name": "Endocrinology",
+    "description": "Endocrinology treats hormone disorders like diabetes, thyroid problems, weight changes, and fatigue."
+  },
+  {
+    "name": "Family medicine",
+    "description": "Family medicine provides general care for all ages including infections, fevers, chronic disease, and preventive health."
+  },
+  {
+    "name": "Forensic pathology",
+    "description": "Forensic pathology determines causes of death through medical examination."
+  },
+  {
+    "name": "Forensic psychiatry",
+    "description": "Forensic psychiatry evaluates mental health in legal and criminal situations."
+  },
+  {
+    "name": "Gastroenterology",
+    "description": "Gastroenterology treats digestive issues like stomach pain, nausea, diarrhea, constipation, and liver disease."
+  },
+  {
+    "name": "General surgery",
+    "description": "General surgery performs operations for abdominal, soft tissue, and emergency surgical conditions."
+  },
+  {
+    "name": "Geriatric psychiatry",
+    "description": "Geriatric psychiatry focuses on mental health in older adults, including memory problems and mood disorders."
+  },
+  {
+    "name": "Geriatrics",
+    "description": "Geriatrics cares for older adults with chronic illness, frailty, memory problems, and mobility issues."
+  },
+  {
+    "name": "Gynecologic oncology",
+    "description": "Gynecologic oncology treats cancers of the female reproductive system."
+  },
+  {
+    "name": "Hematologic pathology",
+    "description": "Hematologic pathology diagnoses blood disorders using laboratory analysis."
+  },
+  {
+    "name": "Hematology",
+    "description": "Hematology treats blood diseases including anemia, clotting issues, leukemia, and bleeding disorders."
+  },
+  {
+    "name": "Infectious disease",
+    "description": "Infectious disease treats bacterial, viral, and unusual infections, fevers, and long-lasting illness."
+  },
+  {
+    "name": "Intensive care medicine",
+    "description": "ICU medicine treats critically ill patients who need life support and close monitoring."
+  },
+  {
+    "name": "Internal medicine",
+    "description": "Internal medicine treats complex adult illnesses such as infections, lung issues, heart problems, and chronic disease."
+  },
+  {
+    "name": "Interventional radiology",
+    "description": "This specialty performs minimally invasive procedures using imaging guidance."
+  },
+  {
+    "name": "Maternal-fetal medicine",
+    "description": "Maternal-fetal medicine handles high-risk pregnancies and fetal complications."
+  },
+  {
+    "name": "Medical biochemistry",
+    "description": "Medical biochemistry studies chemical processes in the body related to disease diagnosis."
+  },
+  {
+    "name": "Medical genetics",
+    "description": "Medical genetics diagnoses inherited disorders and genetic conditions."
+  },
+  {
+    "name": "Medical oncology",
+    "description": "Medical oncology treats cancer with medications such as chemotherapy and immunotherapy."
+  },
+  {
+    "name": "Neonatology",
+    "description": "Neonatology treats newborn infants, especially premature or medically fragile babies."
+  },
+  {
+    "name": "Nephrology",
+    "description": "Nephrology treats kidney disease, electrolyte problems, swelling, and kidney failure."
+  },
+  {
+    "name": "Neurology",
+    "description": "Neurology treats brain and nerve problems such as headaches, seizures, numbness, weakness, and nerve pain."
+  },
+  {
+    "name": "Neuropathology",
+    "description": "Neuropathology studies diseases of the brain and nerves using tissue analysis."
+  },
+  {
+    "name": "Neuropsychiatry",
+    "description": "Neuropsychiatry treats mental and neurological disorders involving both brain function and behavior."
+  },
+  {
+    "name": "Neuroradiology",
+    "description": "Neuroradiology uses imaging to diagnose brain, spinal cord, and nerve problems."
+  },
+  {
+    "name": "Neurosurgery",
+    "description": "Neurosurgery performs surgery on the brain, spine, and nerves."
+  },
+  {
+    "name": "Nuclear medicine",
+    "description": "Nuclear medicine uses radioactive substances for imaging and targeted treatment."
+  },
+  {
+    "name": "Obstetrics and gynecology",
+    "description": "OB/GYN treats pregnancy, childbirth, menstrual issues, infertility, and female reproductive health."
+  },
+  {
+    "name": "Occupational medicine",
+    "description": "Occupational medicine treats work-related injuries, strain, chemical exposure, and ergonomic issues."
+  },
+  {
+    "name": "Ophthalmology",
+    "description": "Ophthalmology treats eye problems including vision loss, infections, cataracts, and injuries."
+  },
+  {
+    "name": "Oral and maxillofacial surgery",
+    "description": "This performs surgery on the mouth, jaw, face, and teeth."
+  },
+  {
+    "name": "Orthopedic surgery",
+    "description": "Orthopedics treats bones, joints, muscles, the spine, sports injuries, back pain, fractures, and arthritis."
+  },
+  {
+    "name": "Otorhinolaryngology",
+    "description": "ENT treats ear, nose, throat, sinus, voice, and hearing problems."
+  },
+  {
+    "name": "Palliative care",
+    "description": "Palliative care relieves symptoms and pain for patients with serious illness."
+  },
+  {
+    "name": "Pathology",
+    "description": "Pathology studies tissues and fluids to diagnose diseases."
+  },
+  {
+    "name": "Pediatric allergy and immunology",
+    "description": "This treats allergies, asthma, and immune problems in children."
+  },
+  {
+    "name": "Pediatric cardiology",
+    "description": "Pediatric cardiology treats heart problems in children."
+  },
+  {
+    "name": "Pediatric emergency medicine",
+    "description": "This focuses on emergency care for children."
+  },
+  {
+    "name": "Pediatric endocrinology",
+    "description": "This treats hormone disorders in children such as diabetes and growth issues."
+  },
+  {
+    "name": "Pediatric gastroenterology",
+    "description": "This treats digestive problems in children."
+  },
+  {
+    "name": "Pediatric hematology and oncology",
+    "description": "This treats blood disorders and cancer in children."
+  },
+  {
+    "name": "Pediatric infectious disease",
+    "description": "This treats complex infections in children."
+  },
+  {
+    "name": "Pediatric nephrology",
+    "description": "This treats kidney problems in children."
+  },
+  {
+    "name": "Pediatric respiratory medicine",
+    "description": "This treats lung and breathing problems in children including asthma and chronic cough."
+  },
+  {
+    "name": "Pediatric rheumatology",
+    "description": "This treats autoimmune and joint issues in children."
+  },
+  {
+    "name": "Pediatric surgery",
+    "description": "Pediatric surgery performs operations on infants and children."
+  },
+  {
+    "name": "Pediatrics",
+    "description": "General pediatrics treats common childhood illnesses like fever, cough, infections, and stomach issues."
+  },
+  {
+    "name": "Physical medicine and rehabilitation",
+    "description": "PM\u0026R treats back pain, mobility issues, injuries, nerve pain, and restores physical function."
+  },
+  {
+    "name": "Plastic, reconstructive and aesthetic surgery",
+    "description": "Plastic surgery repairs injuries and improves appearance after trauma or disease."
+  },
+  {
+    "name": "Psychiatry",
+    "description": "Psychiatry treats mental health problems like anxiety, depression, mood changes, and sleep issues."
+  },
+  {
+    "name": "Public health",
+    "description": "Public health deals with disease prevention, epidemics, and population health."
+  },
+  {
+    "name": "Pulmonology",
+    "description": "Pulmonology treats lung and breathing problems such as asthma, chronic cough, pneumonia, and chest tightness."
+  },
+  {
+    "name": "Radiation oncology",
+    "description": "Radiation oncology treats cancer using radiation therapy."
+  },
+  {
+    "name": "Radiology",
+    "description": "Radiology uses imaging such as X-ray, CT, and MRI to diagnose disease."
+  },
+  {
+    "name": "Reproductive endocrinology and infertility",
+    "description": "This treats infertility, hormone imbalance, and reproductive issues."
+  },
+  {
+    "name": "Rheumatology",
+    "description": "Rheumatology treats joint pain, autoimmune disease, inflammation, and arthritis."
+  },
+  {
+    "name": "Sports medicine",
+    "description": "Sports medicine treats injuries from exercise including sprains, strains, knee pain, and shoulder injuries."
+  },
+  {
+    "name": "Surgical oncology",
+    "description": "Surgical oncology performs operations to remove cancer."
+  },
+  {
+    "name": "Thoracic surgery",
+    "description": "Thoracic surgery treats lung, chest, and esophagus conditions."
+  },
+  {
+    "name": "Toxicology",
+    "description": "Toxicology manages poisoning, overdoses, and exposure to toxic substances."
+  },
+  {
+    "name": "Transfusion medicine",
+    "description": "Transfusion medicine manages blood transfusions and immune reactions."
+  },
+  {
+    "name": "Urology",
+    "description": "Urology treats urinary problems, kidney stones, male reproductive issues, and bladder problems."
+  },
+  {
+    "name": "Vascular surgery",
+    "description": "Vascular surgery treats blood vessel disease, poor circulation, and aneurysms."
+  }
+]

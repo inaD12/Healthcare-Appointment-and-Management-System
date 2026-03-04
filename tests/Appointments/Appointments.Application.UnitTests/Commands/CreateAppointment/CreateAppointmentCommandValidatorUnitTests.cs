@@ -1,4 +1,4 @@
-﻿using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
+﻿using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Utilities;
@@ -31,7 +31,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.PatientEmail);
+		result.ShouldHaveValidationErrorFor(m => m.PatientUserId);
 	}
 
 	[Theory]
@@ -52,7 +52,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.PatientEmail);
+		result.ShouldHaveValidationErrorFor(m => m.PatientUserId);
 	}
 
 	[Fact]
@@ -70,7 +70,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.PatientEmail);
+		result.ShouldHaveValidationErrorFor(m => m.PatientUserId);
 	}
 
 	[Fact]
@@ -88,7 +88,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.DoctorEmail);
+		result.ShouldHaveValidationErrorFor(m => m.DoctorUserId);
 	}
 
 	[Theory]
@@ -109,7 +109,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.DoctorEmail);
+		result.ShouldHaveValidationErrorFor(m => m.DoctorUserId);
 	}
 
 	[Fact]
@@ -127,7 +127,7 @@ public class CreateAppointmentCommandValidatorUnitTests : BaseAppointmentsUnitTe
 		var result = _validator.TestValidate(command);
 
 		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.DoctorEmail);
+		result.ShouldHaveValidationErrorFor(m => m.DoctorUserId);
 	}
 
 	[Fact]

@@ -1,13 +1,11 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
-using Appointments.Application.Features.Commands.Appointments.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
-using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;
+using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.UnitTests.Commands.CreateAppointment;
 
@@ -18,10 +16,10 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	public CreateAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new CreateAppointmentCommandHandler(
-			HAMSMapper,
 			UnitOfWork,
-			UserDataRepository,
-			AppointmentRepository);
+			AppointmentRepository,
+			DoctorScheduleRepository,
+			RolesService);
 	}
 
 	[Fact]
@@ -31,8 +29,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.InvalidEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.InvalidId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -52,8 +50,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.PatientEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.PatientId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -73,8 +71,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.InvalidEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.InvalidId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -94,8 +92,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -111,14 +109,14 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallGetUserDataByEmailForPatient_WhenEverythingIsCorrect()
+	public async Task Handle_ShouldCallGetUserGetUserRolesForPatient_WhenEverythingIsCorrect()
 	{
 		// Arrange
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -129,18 +127,18 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		await UserDataRepository.Received(1).GetUserDataByEmailAsync(command.PatientEmail);
+		await RolesService.Received(1).GetUserRolesAsync(command.PatientUserId);
 	}
 
 	[Fact]
-	public async Task Handle_ShouldCallGetUserDataByEmailForDoctor_WhenEverythingIsCorrect()
+	public async Task Handle_ShouldCallGetUserGetUserRolesForDoctor_WhenEverythingIsCorrect()
 	{
 		// Arrange
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -151,7 +149,7 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		// Assert
 		result.IsSuccess.Should().BeTrue();
 
-		await UserDataRepository.Received(1).GetUserDataByEmailAsync(command.DoctorEmail);
+		await RolesService.Received(1).GetUserRolesAsync(command.DoctorUserId);
 	}
 
 	[Fact]
@@ -161,8 +159,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -187,8 +185,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -214,8 +212,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);
@@ -236,8 +234,8 @@ public class CreateAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 		var appointment = GetAppointment();
 		var command = new CreateAppointmentCommand
 		(
-			AppointmentsTestUtilities.PatientEmail,
-			AppointmentsTestUtilities.DoctorEmail,
+			AppointmentsTestUtilities.PatientId,
+			AppointmentsTestUtilities.DoctorId,
 			AppointmentsTestUtilities.CurrentDate,
 			AppointmentDuration.OneHour
 		);

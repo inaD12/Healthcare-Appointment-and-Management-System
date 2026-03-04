@@ -1,10 +1,10 @@
-﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Infrastructure.Abstractions.Repository;
-using Appointments.Infrastructure.Features.Appointments.Repositories;
+﻿using Appointments.Domain.Abstractions;
+using Appointments.Domain.Entities.Enums;
 using Appointments.Infrastructure.Features.BackgroundJobs;
 using Appointments.Infrastructure.Features.DBContexts;
 using Appointments.Infrastructure.Features.Helpers;
-using Appointments.Infrastructure.Features.UsersData.Repositories;
+using Appointments.Infrastructure.Features.Repositories;
+using Appointments.Infrastructure.Features.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Domain.Abstractions;
@@ -17,14 +17,18 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
+		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
+		
 		services
-			.AddTransient<IAppointmentRepository, AppointmentRepository>()
-			.AddScoped<IUserDataRepository, UserDataRepository>()
+			.AddScoped<IAppointmentRepository, AppointmentRepository>()
+			.AddScoped<IDoctorScheduleRepository, DoctorScheduleRepository>()
+			.AddTransient<IRolesService, RolesService>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
 			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddHostedService<HangfireHostedService>()
+			.AddMessageBroker(configuration, currentAssembly)
 			.AddAuth(configuration)
 			.AddPermissionService()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>

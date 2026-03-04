@@ -1,13 +1,12 @@
 ﻿using System.Net;
-using Microsoft.Extensions.Logging;
 using Shared.Domain.Results;
-using Users.Domain.Infrastructure.Auth.Abstractions;
-using Users.Domain.Infrastructure.Auth.Models;
-using Users.Domain.Responses;
+using Users.Domain.Auth.Abstractions;
+using Users.Domain.Auth.Models;
+using Users.Domain.Utilities;
 
 namespace Users.Infrastructure.Features.Identity;
 
-internal sealed class IdentityProviderService(KeyCloakClient keyCloakClient, ILogger<IdentityProviderService> logger)
+internal sealed class IdentityProviderService(KeyCloakClient keyCloakClient)
     : IIdentityProviderService
 {
     private const string PasswordCredentialType = "password";

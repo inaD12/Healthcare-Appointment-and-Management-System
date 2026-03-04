@@ -130,15 +130,15 @@ public static class ServiceCollectionExtentions
 			.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer();
 
-		services
-			.AddAuthorization()
-			.AddHttpContextAccessor();
+		services.AddAuthorization();
 
-		services
-			.AddAuthorizationInternal();
+		services.AddHttpContextAccessor();
+
+		services.AddAuthorizationInternal();
 
 		return services;
 	}
+
 
 	public static IServiceCollection AddPermissionService(this IServiceCollection services)
 	{

@@ -1,7 +1,8 @@
 ﻿using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
-using Appointments.Domain.Responses;
+using Appointments.Domain.Events;
+using Appointments.Domain.Utilities;
 using Shared.Domain.Entities.Base;
+using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Results;
 
 namespace Appointments.Domain.Entities;
@@ -14,6 +15,8 @@ public sealed class Appointment : BaseEntity
 		DoctorId = doctorId;
 		Status = status;
 		Duration = duration;
+		
+		RaiseDomainEvent(new AppointmentCreatedDomainEvent(Id, doctorId, patientId, duration.Start, duration.End)); 
 	}
 
 	private Appointment()
@@ -28,7 +31,8 @@ public sealed class Appointment : BaseEntity
 	public static Appointment Schedule(string patientId, string doctorId, DateTimeRange duration)
 	{
 		var appointment =  new Appointment(
-			patientId, doctorId,
+			patientId,
+			doctorId,
 			AppointmentStatus.Scheduled,
 			duration);
 
@@ -45,6 +49,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Rescheduled;
 
+		RaiseDomainEvent(new AppointmentRescheduledDomainEvent(Id)); 
 		return Result.Success();
 	}
 
@@ -58,6 +63,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Cancelled;
 
+		RaiseDomainEvent(new AppointmentCanceledDomainEvent(Id)); 
 		return Result.Success();
 	}
 
@@ -68,6 +74,7 @@ public sealed class Appointment : BaseEntity
 
 		Status = AppointmentStatus.Completed;
 
+		RaiseDomainEvent(new AppointmentCompletedDomainEvent(Id, DoctorId, PatientId)); 
 		return Result.Success();
 	}
 }

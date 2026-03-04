@@ -3,4 +3,4 @@
 namespace Users.Application.Features.Email.Commands.HandleEmail;
 
 public sealed record HandleEmailCommand(
-	string tokenId) : ICommand;
+	string TokenId) : ICommand;

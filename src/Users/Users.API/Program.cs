@@ -1,7 +1,6 @@
 using Serilog;
 using Shared.API.Extensions;
 using Shared.API.Helpers;
-using Shared.API.Middlewares;
 using Shared.API.Utilities;
 using Users.Application.Extensions;
 using Users.Extensions;
@@ -35,10 +34,13 @@ app.UseCors(AppPolicies.CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseExceptionHandler();
 
 EndpointMapper.MapAllEndpoints(app);
 
 app.Run();
 
-public partial class Program { }
+namespace Users
+{
+	public partial class Program { }
+}

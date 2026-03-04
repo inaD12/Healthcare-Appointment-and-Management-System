@@ -13,7 +13,7 @@ public sealed record GetAllUsersQuery(
 	string? PhoneNumber,
 	string? Address,
 	bool? EmailVerified,
-	SortOrder? SortOrder,
+	SortOrder SortOrder,
 	int Page,
 	int PageSize,
 	string SortPropertyName) : IQuery<UserPaginatedQueryViewModel>;

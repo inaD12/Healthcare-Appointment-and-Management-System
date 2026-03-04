@@ -1,15 +1,13 @@
 ﻿using System.Security.Claims;
 using Appointments.Application.Features.Appointments.Commands.RescheduleAppointment;
-using Appointments.Application.Features.Commands.Appointments.RescheduleAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Entities.ValueObjects;
-using Appointments.Domain.Responses;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
 using NSubstitute;
+using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.UnitTests.Commands.RescheduleAppointment;
 
@@ -20,7 +18,6 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 	public RescheduleAppointmentCommandHandlerUnitTests()
 	{
 		_handler = new RescheduleAppointmentCommandHandler(
-			HAMSMapper,
 			UnitOfWork,
 			AppointmentRepository,
 			DateTimeProvider,
