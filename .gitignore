@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 # Docker
 .containers/
+
+BackEnd/ollama
+BackEnd/.idea
+ollama
