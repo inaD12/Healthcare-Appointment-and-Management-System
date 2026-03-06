@@ -1,6 +1,6 @@
 "use client"
 
-import { AuthContext } from "@/src/providers/AuthProvider"
+import { AuthContext } from "@/providers/AuthProvider"
 import { useContext } from "react"
 
 export function useAuth() {
