@@ -11,6 +11,7 @@ using Shared.API.Options;
 using Shared.API.Utilities;
 using Shared.Domain.Options;
 using System.Text;
+using System.Text.Json.Serialization;
 using Shared.API.ExceptionHandlers;
 
 namespace Shared.API.Extensions;
@@ -60,6 +61,17 @@ public static class ServiceCollectionExtensions
 			.AddExceptionHandler<ValidationExceptionHandler>()
 			.AddExceptionHandler<GlobalExceptionHandler>()
 			.AddProblemDetails();
+
+		return services;
+	}
+	
+	public static IServiceCollection AddEnumConversion(this IServiceCollection services)
+	{
+		services
+			.ConfigureHttpJsonOptions(options =>
+			{
+				options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+			});
 
 		return services;
 	}
