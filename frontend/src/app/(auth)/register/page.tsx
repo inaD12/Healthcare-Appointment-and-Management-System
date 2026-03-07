@@ -21,6 +21,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
+import keycloak from "@/config/keycloak"
 
 export default function RegisterPage() {
   const {
@@ -134,6 +135,16 @@ export default function RegisterPage() {
             >
               {isSubmitting ? "Registering..." : "Register"}
             </Button>
+            <div className="text-center text-sm">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => keycloak.login()}
+                className="text-blue-600 hover:underline"
+              >
+                Login
+              </button>
+            </div>
           </form>
         </CardContent>
       </Card>
