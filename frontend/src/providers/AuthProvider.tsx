@@ -19,21 +19,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     keycloak
       .init({
-          onLoad: "login-required",
-          pkceMethod: "S256",
-        })
+        onLoad: "check-sso",
+        pkceMethod: "S256",
+        silentCheckSsoRedirectUri: window.location.origin + "/silent-check-sso.html",
+      })
       .then((auth) => {
         setAuthenticated(auth)
         setToken(keycloak.token ?? null)
         setReady(true)
 
-        setInterval(() => {
+        const interval = setInterval(() => {
           keycloak.updateToken(60).then((refreshed) => {
             if (refreshed) {
               setToken(keycloak.token ?? null)
             }
           })
         }, 60000)
+        return () => clearInterval(interval)
       })
   }, [])
 
