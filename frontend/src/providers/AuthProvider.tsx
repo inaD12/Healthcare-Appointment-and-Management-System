@@ -19,11 +19,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     keycloak
       .init({
-        onLoad: "check-sso",
-        pkceMethod: "S256",
-        silentCheckSsoRedirectUri:
-          window.location.origin + "/silent-check-sso.html",
-      })
+          onLoad: "login-required",
+          pkceMethod: "S256",
+        })
       .then((auth) => {
         setAuthenticated(auth)
         setToken(keycloak.token ?? null)
