@@ -1,4 +1,4 @@
-import keycloak from "@/src/config/keycloak"
+import keycloak from "@/config/keycloak"
 import axios from "axios"
 
 export const api = axios.create({
