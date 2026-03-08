@@ -197,9 +197,13 @@ services:
       - KC_HEALTH_ENABLED=true
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_PROXY=edge
+      - KC_PROXY_HEADERS=forwarded
+      - KC_HOSTNAME=http://localhost:5000/auth
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./.files:/opt/keycloak/data/import
+      - ./themes:/opt/keycloak/providers/
     ports:
       - "18080:8080"
     networks:
