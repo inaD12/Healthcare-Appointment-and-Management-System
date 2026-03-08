@@ -203,6 +203,7 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./.files:/opt/keycloak/data/import
+      - ./themes:/opt/keycloak/providers/
     ports:
       - "18080:8080"
     networks:
