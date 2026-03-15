@@ -100,7 +100,7 @@ export const getAllDoctorsSchema = z.object({
 })
 
 export const recommendSpecialitySchema = z.object({
-  prompt: z
+  Symptoms: z
     .string()
     .min(C.SYMPTOMS_MIN_LENGTH, `Symptoms must be at least ${C.SYMPTOMS_MIN_LENGTH} characters`)
     .max(C.SYMPTOMS_MAX_LENGTH, `Symptoms must be at most ${C.SYMPTOMS_MAX_LENGTH} characters`),
@@ -125,6 +125,6 @@ export type GetAllDoctorsRequest = z.infer<typeof getAllDoctorsSchema>
 
 export type RecommendSpecialityRequest = z.infer<typeof recommendSpecialitySchema>
 
-export type RecommendSpecialityResponse = {
-  speciality: string
+export interface RecommendSpecialityResponse {
+    specialities: { name: string }[]
 }

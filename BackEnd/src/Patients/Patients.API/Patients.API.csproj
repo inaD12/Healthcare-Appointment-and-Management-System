@@ -10,8 +10,7 @@
     <ItemGroup>
         <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.12" />
         <PackageReference Include="HotChocolate.Data" Version="15.1.12" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.20"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
     <ItemGroup>

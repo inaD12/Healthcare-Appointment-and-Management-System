@@ -12,8 +12,8 @@ using Users.Infrastructure.Features.DBContexts;
 namespace Users.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    [Migration("20260304120439_PendingChangesAfterMove")]
-    partial class PendingChangesAfterMove
+    [Migration("20260315171747_Add_Database")]
+    partial class Add_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -275,7 +275,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "doctor:admin:view-all",
+                            PermissionCode = "doctor:view-all",
                             RoleName = "Administrator"
                         },
                         new
@@ -680,6 +680,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:view-all",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -746,6 +751,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "encounter:note:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:view-all",
                             RoleName = "Patient"
                         },
                         new
@@ -846,7 +856,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            Code = "doctor:admin:view-all"
+                            Code = "doctor:view-all"
                         },
                         new
                         {
