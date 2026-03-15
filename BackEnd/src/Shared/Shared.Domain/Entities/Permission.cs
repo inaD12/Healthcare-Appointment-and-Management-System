@@ -17,12 +17,12 @@ public sealed class Permission
     public static readonly Permission CreateDoctor = new("doctor:create");
     public static readonly Permission UpdateDoctor = new("doctor:update");
     public static readonly Permission ViewDoctor = new("doctor:view");
+    public static readonly Permission ViewAllDoctors = new("doctor:view-all");
 
     // Doctor Management (Admin)
     public static readonly Permission CreateDoctorByAdmin = new("doctor:admin:create");
     public static readonly Permission UpdateDoctorByAdmin = new("doctor:admin:update");
     public static readonly Permission ViewDoctorByAdmin = new("doctor:admin:view");
-    public static readonly Permission ViewAllDoctors = new("doctor:admin:view-all");
 
     // Specialities
     public static readonly Permission AddSpeciality = new("doctor:speciality:add");

@@ -194,12 +194,13 @@ services:
     container_name: Identity
     command: start-dev --import-realm
     environment:
+      - KC_LOG_LEVEL=DEBUG
       - KC_HEALTH_ENABLED=true
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_PROXY=edge
       - KC_PROXY_HEADERS=forwarded
-      - KC_HOSTNAME=http://localhost:5000/auth
+      - KC_HOSTNAME_STRICT=false
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./.files:/opt/keycloak/data/import
@@ -208,7 +209,7 @@ services:
       - "18080:8080"
     networks:
       - my_network
-  
+
   ollama:
     container_name: ollama
     image: docker.io/ollama/ollama:latest

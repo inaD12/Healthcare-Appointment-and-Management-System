@@ -197,6 +197,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Doctor, Permission.ViewPrescriptions),
                     CreateRolePermission(Role.Doctor, Permission.AddAddendum),
                     CreateRolePermission(Role.Doctor, Permission.ViewAddendums),
+                    CreateRolePermission(Role.Doctor, Permission.ViewAllDoctors),
 
 
                     // --- Patient permissions ---
@@ -214,6 +215,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Patient, Permission.ViewChronicConditions),
                     CreateRolePermission(Role.Patient, Permission.ViewEncounter),
                     CreateRolePermission(Role.Patient, Permission.ViewNotes),
+                    CreateRolePermission(Role.Patient, Permission.ViewAllDoctors),
                     CreateRolePermission(Role.Patient, Permission.ViewDiagnoses),
                     CreateRolePermission(Role.Patient, Permission.ViewPrescriptions),
                     CreateRolePermission(Role.Patient, Permission.ViewAddendums)

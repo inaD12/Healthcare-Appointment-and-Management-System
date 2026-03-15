@@ -272,7 +272,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "doctor:admin:view-all",
+                            PermissionCode = "doctor:view-all",
                             RoleName = "Administrator"
                         },
                         new
@@ -677,6 +677,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:view-all",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -743,6 +748,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "encounter:note:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:view-all",
                             RoleName = "Patient"
                         },
                         new
@@ -843,7 +853,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            Code = "doctor:admin:view-all"
+                            Code = "doctor:view-all"
                         },
                         new
                         {

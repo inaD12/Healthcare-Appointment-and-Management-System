@@ -25,10 +25,8 @@ internal sealed class CustomClaimsTransformation(IServiceScopeFactory serviceSco
 
         Result<PermissionsResponse> result = await permissionService.GetUserPermissionsAsync(identityId);
 
-        if (result.IsFailure)
-        {
+        if (result.IsFailure || result.Value is null)
             throw new Exception(result.Response.Message.Message);
-        }
 
         var claimsIdentity = new ClaimsIdentity();
 
