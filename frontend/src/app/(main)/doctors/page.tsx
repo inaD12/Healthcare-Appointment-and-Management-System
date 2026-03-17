@@ -21,7 +21,7 @@ export default function DoctorsPage() {
     speciality: "",
     timeZoneId: "",
     sortOrder: "ASC",
-    sortPropertyName: "firstName",
+    sortPropertyName: "FirstName",
     page: 1,
     pageSize: 10,
   })
@@ -45,8 +45,18 @@ export default function DoctorsPage() {
       }
       setFilters((prev) => ({ ...prev, page }))
     } catch (err: any) {
-      console.error(err)
+  console.error(err)
+
+    if (err.response?.status === 404) {
+      setDoctors([])
+      setError("No doctors found.")
+    } else if (err.response?.status === 403) {
+      setError("You don’t have permission to view doctors.")
+    } else if (err.response?.status === 500) {
+      setError("Server error. Please try again later.")
+    } else {
       setError("Failed to fetch doctors. Please try again.")
+    }
     } finally {
       setLoading(false)
     }
@@ -163,28 +173,45 @@ export default function DoctorsPage() {
       {loading ? (
         <p>Loading doctors...</p>
       ) : error ? (
-        <Card
-          className={`border-red-400 bg-red-50 transition-opacity duration-500 ${
-            error ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <CardContent className="flex items-center gap-2">
-            <svg
-              className="w-5 h-5 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span className="text-red-700 font-medium">{error}</span>
-          </CardContent>
-        </Card>
+        error === "No doctors found." ? (
+          <Card className="border-gray-300 bg-gray-50">
+            <CardContent className="flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 13h6m-6 4h6M9 9h6M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2z"
+                />
+              </svg>
+              <span className="text-gray-600">{error}</span>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="border-red-400 bg-red-50 transition-opacity duration-500">
+            <CardContent className="flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-red-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-red-700 font-medium">{error}</span>
+            </CardContent>
+          </Card>
+        )
       ) : (
         <div className="space-y-4">
           {doctors.map((doctor) => (

@@ -135,9 +135,9 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveUnavailability);
 
-		var adminGroup = app.MapGroup("/api/doctors");
+		var doctorsGroup = app.MapGroup("/api/doctors");
 		
-		adminGroup.MapPost("", CreateDoctorByAdminAsync)
+		doctorsGroup.MapPost("", CreateDoctorByAdminAsync)
 			.Produces<DoctorCommandResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -146,7 +146,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.CreateDoctorByAdmin);
 		
-		adminGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
+		doctorsGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -155,7 +155,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.UpdateDoctorByAdmin);
 		
-		adminGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
+		doctorsGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -164,7 +164,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
 
-		adminGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
+		doctorsGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -173,7 +173,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
 
-		adminGroup.MapGet("", GetAllDoctorsAsync)
+		doctorsGroup.MapGet("", GetAllDoctorsAsync)
 			.Produces<DoctorPaginatedQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)

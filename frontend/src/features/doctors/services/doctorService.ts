@@ -4,9 +4,11 @@ import { DoctorPaginatedQueryResponse, DoctorQueryViewModel, GetAllDoctorsReques
 import { APIResponse } from "@/types/types";
 
 export const getAllDoctors = (data: GetAllDoctorsRequest) =>
-  api.post<APIResponse<DoctorPaginatedQueryResponse>>(
+  api.get<APIResponse<DoctorPaginatedQueryResponse>>(
     ENDPOINTS.doctors.admin,
-    data
+    {
+      params: data,
+    }
   );
 
 export const recommendSpeciality = (data: RecommendSpecialityRequest) =>
