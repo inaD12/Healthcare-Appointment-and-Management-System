@@ -4,6 +4,7 @@ using Doctors.Domain.Entities;
 using Doctors.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pgvector;
@@ -13,9 +14,11 @@ using Pgvector;
 namespace Doctors.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(DoctorsDbContext))]
-    partial class DoctorsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260318120229_Add_Ratings")]
+    partial class Add_Ratings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

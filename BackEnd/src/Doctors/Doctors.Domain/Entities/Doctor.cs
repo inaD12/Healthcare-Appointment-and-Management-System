@@ -1,7 +1,9 @@
 using Doctors.Domain.Events;
 using Doctors.Domain.Utilities;
+using FluentValidation.Results;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
+using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
 
 namespace Doctors.Domain.Entities;
@@ -16,6 +18,8 @@ public sealed class Doctor : BaseEntity
     public List<Speciality> Specialities { get; private set; }
     public WeeklySchedule WeeklySchedule { get; private set; }
     public List<DoctorAvailabilityException> AvailabilityExceptions { get; private set; }
+    public double AverageRating { get; private set; }
+    public int RatingsCount { get; private set; }
 
     private Doctor(){}
     
@@ -27,7 +31,9 @@ public sealed class Doctor : BaseEntity
         List<Speciality> specialities,
         string timeZoneId,
         WeeklySchedule weeklySchedule,
-        List<DoctorAvailabilityException> availabilityExceptions)
+        List<DoctorAvailabilityException> availabilityExceptions,
+        double averageRating,
+        int ratingsCount)
     {
         UserId = userId;
         FirstName = firstName;
@@ -37,6 +43,8 @@ public sealed class Doctor : BaseEntity
         TimeZoneId = timeZoneId;
         WeeklySchedule = weeklySchedule;
         AvailabilityExceptions = availabilityExceptions;
+        AverageRating = averageRating;
+        RatingsCount = ratingsCount;
     }
 
     public static Result<Doctor> Create(
@@ -60,7 +68,9 @@ public sealed class Doctor : BaseEntity
             specialities,
             timeZoneId,
             weeklySchedule ?? WeeklySchedule.Create(null).Value!,
-            availabilityExceptions ?? new List<DoctorAvailabilityException>()));
+            availabilityExceptions ?? new List<DoctorAvailabilityException>(),
+            0,
+            0));
     }
     
     public Result AddUnavailability(DateTime start, DateTime end, string reason = "")
@@ -180,15 +190,28 @@ public sealed class Doctor : BaseEntity
         return Result.Success();
     }
     
-    public Result RemoveSpeciality(string name)
+    public void ChangeAverageRating(double newRating)
     {
-        var speciality = Specialities.Find(p => p.Name == name);
-        if (speciality == null)
-            return Result.Failure(ResponseList.SpecialityNotBelongDoctor);
+        if (newRating < 1 || newRating > 5)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Doctor", "Rating score must be between 1 and 5.")
+            });
         
-        Specialities.Remove(speciality);
-
-        return Result.Success();
+        AverageRating = newRating;
+    }
+    
+    public void ChangeRatingsCount(int ratingsCount)
+    {
+        if (ratingsCount < 0)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Doctor", "Ratings count must be greater than 0.")
+            });
+        
+        RatingsCount = ratingsCount;
     }
 
     public bool IsAvailable(DateTimeRange range)
@@ -210,6 +233,17 @@ public sealed class Doctor : BaseEntity
         }
 
         return true;
+    }
+    
+    public Result RemoveSpeciality(string name)
+    {
+        var speciality = Specialities.Find(p => p.Name == name);
+        if (speciality == null)
+            return Result.Failure(ResponseList.SpecialityNotBelongDoctor);
+        
+        Specialities.Remove(speciality);
+
+        return Result.Success();
     }
     
     private Result AddAvailabilityException(DoctorAvailabilityException exception)
