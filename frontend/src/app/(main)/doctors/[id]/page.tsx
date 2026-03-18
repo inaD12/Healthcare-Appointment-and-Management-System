@@ -67,6 +67,24 @@ export default function DoctorDetailsPage() {
         </CardContent>
       </Card>
 
+      <Card className="p-4">
+         <CardContent className="flex items-center justify-between">
+            <div>
+            <p className="text-sm text-gray-500">Average Rating</p>
+            <p className="text-2xl font-semibold text-yellow-600">
+                ⭐ {doctor.averageRating?.toFixed(1) ?? "0.0"}
+            </p>
+            </div>
+
+            <div className="text-right">
+            <p className="text-sm text-gray-500">Total Reviews</p>
+            <p className="text-lg font-medium">
+                {doctor.ratingsCount ?? 0}
+            </p>
+            </div>
+         </CardContent>
+      </Card>
+
       <Card>
         <CardContent className="flex justify-between items-center">
           <div>
