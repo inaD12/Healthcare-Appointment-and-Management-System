@@ -8,9 +8,11 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useRouter } from "next/navigation"
 
 export default function DoctorsPage() {
   const auth = useAuthGuard()
+  const router = useRouter()
 
   const [doctors, setDoctors] = useState<DoctorQueryViewModel[]>([])
   const [loading, setLoading] = useState(false)
@@ -215,7 +217,11 @@ export default function DoctorsPage() {
       ) : (
         <div className="space-y-4">
           {doctors.map((doctor) => (
-            <Card key={doctor.id}>
+            <Card
+              key={doctor.id}
+              onClick={() => router.push(`/doctors/${doctor.id}`)}
+              className="cursor-pointer hover:shadow-lg hover:scale-[1.01] transition"
+            >
               <CardContent className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <CardTitle>
