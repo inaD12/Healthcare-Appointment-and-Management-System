@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
+using Shared.Infrastructure.Authentication;
 
 namespace Appointments.API.Appointments.EndPoints;
 
@@ -61,10 +62,12 @@ internal class AppointmentsEndPoints : IEndPoints
 
 	private async Task<IResult> CreateAsync(
 		[FromBody] CreateAppointmentRequest request,
+		HttpContext httpContext, 
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var command = request.ToCommand();
+		var userId = httpContext.User.GetUserId();
+		var command = request.ToCommand(userId);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
