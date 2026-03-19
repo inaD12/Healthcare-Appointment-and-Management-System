@@ -59,7 +59,7 @@ export const doctorSchema = z.object({
   availabilityExceptions: z.array(doctorAvailabilityExceptionSchema),
 
   averageRating: z.number().optional().default(0),
-  
+
   ratingsCount: z.number().optional().default(0),
 })
 
