@@ -7,7 +7,7 @@ public class RemoveUnavailabilityCommandValidator : AbstractValidator<RemoveUnav
 {
     public RemoveUnavailabilityCommandValidator()
     {
-        RuleFor(x => x.DoctorId)
+        RuleFor(x => x.DoctorUserId)
             .NotEmpty()
             .MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
             .MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);  

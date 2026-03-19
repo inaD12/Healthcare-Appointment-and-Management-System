@@ -79,7 +79,7 @@ public sealed class Doctor : BaseEntity
         
         if (result.IsSuccess)
         {
-            RaiseDomainEvent(new DoctorAddedUnavailabilityDomainEvent(Id, start, end, reason));
+            RaiseDomainEvent(new DoctorAddedUnavailabilityDomainEvent(UserId, start, end, reason));
         }
         
         return result;
@@ -91,7 +91,7 @@ public sealed class Doctor : BaseEntity
 
         if (result.IsSuccess)
         {
-            RaiseDomainEvent(new DoctorAddedExtraAvailabilityDomainEvent(Id, start, end, reason));
+            RaiseDomainEvent(new DoctorAddedExtraAvailabilityDomainEvent(UserId, start, end, reason));
         }
         
         return result;
@@ -109,7 +109,7 @@ public sealed class Doctor : BaseEntity
         foreach (var exception in exceptions)
             AvailabilityExceptions.Remove(exception);
 
-        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(UserId, start, end));
         return Result.Success();
         
     }
@@ -126,7 +126,7 @@ public sealed class Doctor : BaseEntity
         foreach (var exception in exceptions)
             AvailabilityExceptions.Remove(exception);
 
-        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(UserId, start, end));
         return Result.Success();
         
     }
@@ -137,7 +137,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleAddedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
+        RaiseDomainEvent(new WorkDayScheduleAddedDomainEvent(UserId, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -147,7 +147,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleChangedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
+        RaiseDomainEvent(new WorkDayScheduleChangedDomainEvent(UserId, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -157,7 +157,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(Id, dayOfWeek));
+        RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(UserId, dayOfWeek));
         return Result.Success();
     }
     

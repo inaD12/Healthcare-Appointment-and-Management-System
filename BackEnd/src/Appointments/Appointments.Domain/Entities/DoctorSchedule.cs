@@ -11,7 +11,7 @@ public class DoctorSchedule : BaseEntity
     private readonly List<AvailabilityException> _availabilityExceptions = new();
     public IReadOnlyCollection<AvailabilityException> AvailabilityExceptions => _availabilityExceptions;
 
-    public DoctorSchedule(string id) { Id = id;}
+    public DoctorSchedule(string doctorUserId) { Id = doctorUserId;}
     private DoctorSchedule() { }
 
     public bool IsSlotAvailable(DateTime start, DateTime end)

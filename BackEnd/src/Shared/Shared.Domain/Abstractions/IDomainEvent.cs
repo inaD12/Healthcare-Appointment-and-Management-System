@@ -1,5 +1,4 @@
-﻿
-namespace Shared.Domain.Abstractions;
+﻿namespace Shared.Domain.Abstractions;
 
 public interface IDomainEvent
 {

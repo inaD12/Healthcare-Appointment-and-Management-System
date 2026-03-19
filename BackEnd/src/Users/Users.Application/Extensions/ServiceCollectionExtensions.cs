@@ -6,8 +6,6 @@ using Shared.Application.Authorization;
 using Shared.Application.Extensions;
 using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Extensions;
-using Users.Application.Features.Email.Helpers;
-using Users.Application.Features.Email.Helpers.Abstractions;
 using Users.Application.Features.Users.Services;
 
 namespace Users.Application.Extensions;
@@ -19,7 +17,6 @@ public static class ServiceCollectionExtensions
 		var currentAssembly = typeof(ServiceCollectionExtensions).Assembly;
 
 		services
-			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
 			.AddScoped<IPermissionService, PermissionService>()
 			.AddScoped<IRolesService, RolesService>()

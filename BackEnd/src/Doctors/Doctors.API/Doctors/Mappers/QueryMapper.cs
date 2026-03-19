@@ -26,7 +26,7 @@ public static class QueryMapper
     public static WorkDayResponse ToResponse(
         this WorkDayDto workDay)
         => new(
-            workDay.DayOfWeek,
+            (int)workDay.DayOfWeek,
             workDay.WorkTimes.Select(s => s.ToResponse()).ToList());
     
     public static WorkTimeRangeResponse ToResponse(

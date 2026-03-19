@@ -11,6 +11,7 @@ using Users.Infrastructure.Features.Consumers;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
 using Users.Infrastructure.Features.DBContexts;
+using Users.Infrastructure.Features.Helpers.Abstractions;
 using Users.Infrastructure.Features.Identity;
 
 namespace Users.Infrastructure.Extensions;
@@ -24,6 +25,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddScoped<IUserRepository, UserRepository>()
 			.AddTransient<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>()
+			.AddSingleton<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services

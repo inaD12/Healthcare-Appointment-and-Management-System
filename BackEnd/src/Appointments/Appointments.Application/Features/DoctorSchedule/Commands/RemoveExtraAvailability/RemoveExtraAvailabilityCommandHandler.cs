@@ -13,7 +13,7 @@ public sealed class RemoveExtraAvailabilityCommandHandler(
 {
     public async Task<Result> Handle(RemoveExtraAvailabilityCommand request, CancellationToken cancellationToken)
     {
-        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorId, cancellationToken);
+        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorUserId, cancellationToken);
         if (schedule == null)
             return Result.Failure(ResponseList.ScheduleNotFound);
         

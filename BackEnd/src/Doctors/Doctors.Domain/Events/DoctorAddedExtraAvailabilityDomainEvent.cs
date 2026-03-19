@@ -3,7 +3,7 @@
 namespace Doctors.Domain.Events;
 
 public sealed record DoctorAddedExtraAvailabilityDomainEvent(
-    string DoctorId,
+    string DoctorUserId,
     DateTime Start,
     DateTime End,
     string Reason

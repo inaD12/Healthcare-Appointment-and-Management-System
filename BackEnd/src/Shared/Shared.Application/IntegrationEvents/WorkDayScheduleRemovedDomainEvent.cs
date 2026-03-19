@@ -1,6 +1,6 @@
 ﻿namespace Shared.Application.IntegrationEvents;
 
 public sealed record WorkDayScheduleRemovedIntegrationEvent(
-    string DoctorId,
+    string DoctorUserId,
     DayOfWeek DayOfWeek
 );

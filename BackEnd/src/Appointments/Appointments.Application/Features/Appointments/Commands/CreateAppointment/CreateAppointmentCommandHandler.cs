@@ -41,7 +41,7 @@ public sealed class CreateAppointmentCommandHandler(
 		if (doctorSchedule == null)
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.ScheduleNotFound);
 		
-		if(doctorSchedule.IsSlotAvailable(duration.Start, duration.End))
+		if(!doctorSchedule.IsSlotAvailable(duration.Start, duration.End))
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.NotWorkHours);
 		
 		try

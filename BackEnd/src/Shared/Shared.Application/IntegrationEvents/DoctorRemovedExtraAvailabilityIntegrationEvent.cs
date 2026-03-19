@@ -1,7 +1,7 @@
 ﻿namespace Shared.Application.IntegrationEvents;
 
 public sealed record DoctorRemovedExtraAvailabilityIntegrationEvent(
-    string DoctorId,
+    string DoctorUserId,
     DateTime Start,
     DateTime End
 );
