@@ -45,6 +45,13 @@ internal class RatingEndPoints : IEndPoints
 		    .Produces(StatusCodes.Status404NotFound)
 		    .Produces(StatusCodes.Status500InternalServerError)
 		    .RequireAuthorization(Permissions.GetRating);
+	    
+	    ratingsGroup.MapGet("/by-doctor/{doctorId}", GetAllByDoctorAsync)
+		    .Produces<RatingPaginatedQueryResponse>()
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization(Permissions.GetRating);
 
 	    var ratingStatsGroup = app.MapGroup("/api/ratingsStats");
 	    
@@ -123,5 +130,20 @@ internal class RatingEndPoints : IEndPoints
 
 		var queryResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
+	}
+	
+	private async Task<IResult> GetAllByDoctorAsync(
+		[FromRoute] string doctorId,
+		[AsParameters] GetAllRatingsByDoctorRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery(doctorId);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var response = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, response);
 	}
 }

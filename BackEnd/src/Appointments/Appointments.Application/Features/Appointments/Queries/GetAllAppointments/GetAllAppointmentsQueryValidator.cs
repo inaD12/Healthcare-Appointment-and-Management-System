@@ -16,7 +16,7 @@ public class GetAllAppointmentsQueryValidator : AbstractValidator<GetAllAppointm
 		RuleFor(q => q.DoctorId)
 		   .MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
 		   .MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.PatientId));
+		   .When(q => !string.IsNullOrEmpty(q.DoctorId));
 
 		RuleFor(q => q.Status)
 			.IsInEnum()

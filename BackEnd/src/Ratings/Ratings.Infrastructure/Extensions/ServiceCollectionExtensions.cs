@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 			.AddUnitOfWork<RatingsDbContext>()
 			.AddMessageBroker(configuration, currentAssembly)
 			.AddAuth(configuration)
+			.AddDateTimeProvider()
 			.AddPermissionService()
 			.AddDatabaseContext<RatingsDbContext>(configuration);
 		
