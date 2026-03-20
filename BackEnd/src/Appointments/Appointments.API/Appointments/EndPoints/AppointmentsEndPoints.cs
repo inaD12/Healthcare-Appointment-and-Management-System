@@ -46,7 +46,7 @@ internal class AppointmentsEndPoints : IEndPoints
 		    .Produces(StatusCodes.Status401Unauthorized)
 		    .Produces(StatusCodes.Status404NotFound)
 		    .Produces(StatusCodes.Status500InternalServerError)
-		    .RequireAuthorization(Permissions.GetAppointment);
+		    .RequireAuthorization(Permissions.GetBookings);
 
 	    group.MapDelete("/{id}", CancelAsync)
 	        .Produces(StatusCodes.Status200OK)

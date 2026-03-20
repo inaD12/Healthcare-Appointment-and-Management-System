@@ -25,6 +25,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.CancelAppointment,
             Permission.RescheduleAppointment,
             Permission.GetAppointment,
+            Permission.GetBookings,
 
             // Doctor Permissions
             Permission.CreateDoctor,
@@ -103,6 +104,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.CancelAppointment),
                     CreateRolePermission(Role.Administrator, Permission.RescheduleAppointment),
                     CreateRolePermission(Role.Administrator, Permission.GetAppointment),
+                    CreateRolePermission(Role.Administrator, Permission.GetBookings),
                     // Admin doctor permissions
                     CreateRolePermission(Role.Administrator, Permission.CreateDoctor),
                     CreateRolePermission(Role.Administrator, Permission.UpdateDoctor),
@@ -160,6 +162,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
 
 
                     // --- Doctor permissions ---
+                    CreateRolePermission(Role.Doctor, Permission.GetBookings),
                     CreateRolePermission(Role.Doctor, Permission.CreateAppointment),
                     CreateRolePermission(Role.Doctor, Permission.CancelAppointment),
                     CreateRolePermission(Role.Doctor, Permission.RescheduleAppointment),
@@ -201,6 +204,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
 
 
                     // --- Patient permissions ---
+                    CreateRolePermission(Role.Patient, Permission.GetBookings),
                     CreateRolePermission(Role.Patient, Permission.CreateAppointment),
                     CreateRolePermission(Role.Patient, Permission.CancelAppointment),
                     CreateRolePermission(Role.Patient, Permission.RescheduleAppointment),

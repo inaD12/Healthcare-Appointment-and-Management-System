@@ -6,4 +6,5 @@ internal static class Permissions
     internal const string CancelAppointment = "appointment:cancel";
     internal const string RescheduleAppointment = "appointment:reschedule";
     internal const string GetAppointment = "appointment:read";
+    internal const string GetBookings = "bookings:read";
 }
