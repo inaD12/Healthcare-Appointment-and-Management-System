@@ -8,6 +8,7 @@ export const ENDPOINTS = {
   ratings: {
     root: "/ratings-api/api/ratings",
     byId: (id: string) => `/ratings-api/api/ratings/${id}`,
+    byDoctor: (doctorId: string) => `/ratings-api/api/ratings//by-doctor/${doctorId}`,
     statsById: (id: string) => `/ratings-api/api/ratingsStats/${id}`,
   },
   patients: {
@@ -37,5 +38,6 @@ export const ENDPOINTS = {
   appointments: {
     root: "/appointments-api/api/appointments",
     byId: (id: string) => `/appointments-api/api/appointments/${id}`,
+    byDoctor: (doctorUserId: string) => `/appointments-api/api/appointments/by-doctor/${doctorUserId}`,
   }
 }

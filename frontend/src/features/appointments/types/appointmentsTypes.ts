@@ -16,8 +16,27 @@ export const createAppointmentSchema = z.object({
   ]),
 })
 
+export const getBookingsByDoctorAndDateSchema = z.object({
+  startDate: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid start date",
+    }),
+  endDate: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid end date",
+    }),
+});
+
+export interface BookingQueryResponse {
+  start: string
+  end: string
+}
+
 export type CreateAppointmentRequest = z.infer<typeof createAppointmentSchema>
 
+export type GetBookingsByDoctorAndDateRequest = z.infer<typeof getBookingsByDoctorAndDateSchema>
 
 export const appointmentResponseSchema = z.object({
   id: z.string().min(AppointmentsBusinessConfiguration.ID_MIN_LENGTH),
