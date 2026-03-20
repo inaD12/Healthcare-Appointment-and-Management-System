@@ -60,19 +60,26 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 	
 	public async Task<List<Appointment>> GetByDoctorAndDateAsync(
 		string doctorUserId,
-		DateTime date,
+		DateOnly date,
 		CancellationToken cancellationToken = default)
 	{
-		var startOfDay = date.Date;
-		var endOfDay = startOfDay.AddDays(1);
+		var start = DateTime.SpecifyKind(
+			date.ToDateTime(TimeOnly.MinValue),
+			DateTimeKind.Utc
+		);
+
+		var end = DateTime.SpecifyKind(
+			date.ToDateTime(TimeOnly.MaxValue),
+			DateTimeKind.Utc
+		);
 
 		return await _context.Appointments
 			.Where(a =>
 				a.DoctorId == doctorUserId &&
 				a.Status != AppointmentStatus.Cancelled &&
 				a.Status != AppointmentStatus.Rescheduled &&
-				a.Duration.Start < endOfDay &&
-				a.Duration.End > startOfDay
+				a.Duration.Start < end &&
+				a.Duration.End > start
 			)
 			.ToListAsync(cancellationToken);
 	}

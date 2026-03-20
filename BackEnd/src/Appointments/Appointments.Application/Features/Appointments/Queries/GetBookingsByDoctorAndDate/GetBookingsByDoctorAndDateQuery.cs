@@ -3,5 +3,5 @@ using Shared.Domain.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetBookingsByDoctorAndDate;
 
-public sealed record GetBookingsByDoctorAndDateQuery(string DoctorUserId, DateTime Date) : IQuery<ICollection<BookingQueryViewModel>>;
+public sealed record GetBookingsByDoctorAndDateQuery(string DoctorUserId, DateOnly Date) : IQuery<ICollection<BookingQueryViewModel>>;
 
