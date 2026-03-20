@@ -47,6 +47,9 @@ namespace Doctors.Infrastructure.Features.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<double>("AverageRating")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("text");
@@ -58,6 +61,9 @@ namespace Doctors.Infrastructure.Features.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("RatingsCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("TimeZoneId")
                         .IsRequired()

@@ -4,7 +4,7 @@ using Shared.Domain.Abstractions;
 namespace Doctors.Domain.Events;
 
 public sealed record WorkDayScheduleChangedDomainEvent(
-    string DoctorId,
+    string DoctorUserId,
     DayOfWeek DayOfWeek,
     IReadOnlyCollection<WorkTimeRange> WorkTimes
 ) : IDomainEvent;

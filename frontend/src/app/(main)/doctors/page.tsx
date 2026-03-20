@@ -8,9 +8,11 @@ import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/c
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useRouter } from "next/navigation"
 
 export default function DoctorsPage() {
   const auth = useAuthGuard()
+  const router = useRouter()
 
   const [doctors, setDoctors] = useState<DoctorQueryViewModel[]>([])
   const [loading, setLoading] = useState(false)
@@ -215,16 +217,29 @@ export default function DoctorsPage() {
       ) : (
         <div className="space-y-4">
           {doctors.map((doctor) => (
-            <Card key={doctor.id}>
+            <Card
+              key={doctor.id}
+              onClick={() => router.push(`/doctors/${doctor.id}`)}
+              className="cursor-pointer hover:shadow-lg hover:scale-[1.01] transition"
+            >
               <CardContent className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                  <CardTitle>
+                  <CardTitle className="flex items-center gap-2">
                     {doctor.firstName} {doctor.lastName}
                   </CardTitle>
                   <CardDescription className="text-gray-600">{doctor.bio}</CardDescription>
                   <p className="mt-2">
                     <b>Specialities:</b> {doctor.specialities.join(", ")}
                   </p>
+                  <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                    <span className="text-yellow-500">★</span>
+                    <span className="font-medium">
+                      {doctor.averageRating?.toFixed(1) ?? "0.0"}
+                    </span>
+                    <span className="text-gray-400">
+                      ({doctor.ratingsCount ?? 0} reviews)
+                    </span>
+                  </div>
                   <p className="text-gray-500 text-sm mt-1">Timezone: {doctor.timeZoneId}</p>
                 </div>
               </CardContent>

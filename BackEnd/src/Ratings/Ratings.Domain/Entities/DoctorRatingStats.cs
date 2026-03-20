@@ -1,3 +1,4 @@
+using Ratings.Domain.Events;
 using Shared.Domain.Entities.Base;
 
 namespace Ratings.Domain.Entities;
@@ -26,6 +27,12 @@ public sealed class DoctorRatingStats: BaseEntity
         var total = AverageRating * RatingsCount;
         RatingsCount++;
         AverageRating = (total + score) / RatingsCount;
+        
+        RaiseDomainEvent(new DoctorAverageRatingUpdatedDomainEvent(
+            Id,
+            AverageRating,
+            RatingsCount)
+        );
     }
 
     public void RemoveRating(int score)
@@ -40,5 +47,11 @@ public sealed class DoctorRatingStats: BaseEntity
         var total = AverageRating * RatingsCount;
         RatingsCount--;
         AverageRating = (total - score) / RatingsCount;
+        
+        RaiseDomainEvent(new DoctorAverageRatingUpdatedDomainEvent(
+            Id,
+            AverageRating,
+            RatingsCount)
+        );
     }
 }

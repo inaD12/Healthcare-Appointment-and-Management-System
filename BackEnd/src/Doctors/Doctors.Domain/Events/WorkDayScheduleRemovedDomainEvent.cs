@@ -3,6 +3,6 @@
 namespace Doctors.Domain.Events;
 
 public sealed record WorkDayScheduleRemovedDomainEvent(
-    string DoctorId,
+    string DoctorUserId,
     DayOfWeek DayOfWeek
 ) : IDomainEvent;

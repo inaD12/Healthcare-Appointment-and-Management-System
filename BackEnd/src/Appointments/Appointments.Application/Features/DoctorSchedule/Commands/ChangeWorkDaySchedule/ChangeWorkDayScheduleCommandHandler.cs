@@ -12,11 +12,11 @@ public sealed class ChangeWorkDayScheduleCommandHandler(
 {
     public async Task<Result> Handle(ChangeWorkDayScheduleCommand request, CancellationToken cancellationToken)
     {
-        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorId, cancellationToken);
+        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorUserId, cancellationToken);
 
         if (schedule is null)
         {
-            schedule = new Domain.Entities.DoctorSchedule(request.DoctorId);
+            schedule = new Domain.Entities.DoctorSchedule(request.DoctorUserId);
             schedule.AddOrUpdateWorkDay(request.DayOfWeek, request.WorkTimes);
 
             await scheduleRepository.AddAsync(schedule, cancellationToken);

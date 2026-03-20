@@ -20,7 +20,9 @@ public static class QueryMapper
             doctor.TimeZoneId,
             doctor.Specialities.Select(s => s.ToString()).ToList(),
             doctor.WeeklySchedule.WorkDays.Select(s => s.ToDto()).ToList(),
-            doctor.AvailabilityExceptions.Select(s => s.ToDto()).ToList());
+            doctor.AvailabilityExceptions.Select(s => s.ToDto()).ToList(),
+            doctor.AverageRating,
+            doctor.RatingsCount);
 
     public static WorkDayDto ToDto(
         this WorkDay workDay)

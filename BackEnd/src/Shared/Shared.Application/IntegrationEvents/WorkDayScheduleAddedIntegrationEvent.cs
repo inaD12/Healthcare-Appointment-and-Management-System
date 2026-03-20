@@ -3,7 +3,7 @@
 namespace Shared.Application.IntegrationEvents;
 
 public sealed record WorkDayScheduleAddedIntegrationEvent(
-    string DoctorId,
+    string DoctorUserId,
     DayOfWeek DayOfWeek,
     IReadOnlyCollection<TimeRangeDto> WorkTimes
 );

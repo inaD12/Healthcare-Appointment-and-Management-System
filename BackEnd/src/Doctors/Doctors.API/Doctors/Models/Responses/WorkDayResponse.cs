@@ -1,5 +1,3 @@
-using Doctors.Application.Features.Doctors.Dtos;
-
 namespace Doctors.API.Doctors.Models.Responses;
 
-public sealed record WorkDayResponse(DayOfWeek DayOfWeek, List<WorkTimeRangeResponse> WorkTimes);
+public sealed record WorkDayResponse(int DayOfWeek, List<WorkTimeRangeResponse> WorkTimes);

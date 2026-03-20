@@ -13,6 +13,7 @@ using Shared.Application.IntegrationTests.Extentensions;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Users.Application.Features.Users.Consumers;
+using Users.Infrastructure.Features.Consumers;
 using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Application.IntegrationTests.Utilities;

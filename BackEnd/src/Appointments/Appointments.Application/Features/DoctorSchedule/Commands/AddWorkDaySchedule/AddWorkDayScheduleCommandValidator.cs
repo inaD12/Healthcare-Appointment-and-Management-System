@@ -7,7 +7,7 @@ public class AddWorkDayScheduleCommandValidator: AbstractValidator<AddWorkDaySch
 {
     public AddWorkDayScheduleCommandValidator()
     {
-        RuleFor(x => x.DoctorId)
+        RuleFor(x => x.DoctorUserId)
             .NotEmpty()
             .MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
             .MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);  
