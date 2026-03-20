@@ -39,6 +39,14 @@ internal class AppointmentsEndPoints : IEndPoints
 	        .Produces(StatusCodes.Status404NotFound)
 	        .Produces(StatusCodes.Status500InternalServerError)
 	        .RequireAuthorization(Permissions.GetAppointment);
+	    
+	    group.MapGet("/by-doctor/{doctorUserId}", GetBookingsByDoctorAndDateAsync)
+		    .Produces<ICollection<BookingQueryResponse>>()
+		    .Produces(StatusCodes.Status400BadRequest)
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization(Permissions.GetBookings);
 
 	    group.MapDelete("/{id}", CancelAsync)
 	        .Produces(StatusCodes.Status200OK)
@@ -125,5 +133,20 @@ internal class AppointmentsEndPoints : IEndPoints
 
 		var appointmentCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+	
+	private async Task<IResult> GetBookingsByDoctorAndDateAsync(
+		[FromRoute] string doctorUserId,
+		[AsParameters] GetBookingsByDoctorAndDateRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery(doctorUserId);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var response = res.Value!.ToCollectionResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, response);
 	}
 }
