@@ -1,4 +1,4 @@
 ﻿namespace Appointments.API.Appointments.Models.Requests;
 
-public sealed record GetBookingsByDoctorAndDateRequest(DateOnly Date);
+public sealed record GetBookingsByDoctorAndDateRequest(DateOnly StartDate, DateOnly EndDate);
 
