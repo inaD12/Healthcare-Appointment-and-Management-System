@@ -6,4 +6,5 @@ public sealed record RatingQueryResponse(
     string PatientId,
     string AppointmentId,
     int Score,
+    DateTime CreatedAt,
     string? Comment);

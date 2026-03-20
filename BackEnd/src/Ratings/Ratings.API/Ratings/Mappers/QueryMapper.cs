@@ -13,6 +13,7 @@ public static class QueryMapper
             viewModel.PatientId,
             viewModel.AppointmentId,
             viewModel.Score,
+            viewModel.CreatedAt,
             viewModel.Comment);
 
     public static DoctorRatingStatsQueryResponse ToResponse(
