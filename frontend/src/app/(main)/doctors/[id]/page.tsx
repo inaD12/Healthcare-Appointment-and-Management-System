@@ -12,6 +12,9 @@ import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalend
 import { CalendarGrid } from "@/components/calendar/CalendarGrid"
 import { TimeSlots } from "@/components/calendar/TimeSlots"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
+import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { DoctorRatings } from "@/components/ratings/DoctorRatings"
 
 export default function DoctorCalendarPage() {
   const { id } = useParams()
@@ -20,6 +23,9 @@ export default function DoctorCalendarPage() {
 
   const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
   const [appointments, setAppointments] = useState<BookingQueryResponse[]>([])
+  const [ratings, setRatings] = useState<RatingQueryViewModel[]>([])
+  const [ratingsPage, setRatingsPage] = useState(1)
+  const [ratingsTotalPages, setRatingsTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -31,6 +37,14 @@ export default function DoctorCalendarPage() {
   const [bookingLoading, setBookingLoading] = useState(false)
   const [bookingError, setBookingError] = useState("")
   const [bookingSuccess, setBookingSuccess] = useState("")
+
+  // Example ratings if API is empty
+  const exampleRatings: RatingQueryViewModel[] = [
+  { Id: "1", DoctorId: "doc1", PatientId: "p1", AppointmentId: "a1", Score: 5, CreatedAt: new Date().toISOString(), Comment: "Excellent!" },
+  { Id: "2", DoctorId: "doc1", PatientId: "p2", AppointmentId: "a2", Score: 4, CreatedAt: new Date().toISOString(), Comment: "Good." },
+  { Id: "3", DoctorId: "doc1", PatientId: "p3", AppointmentId: "a3", Score: 3, CreatedAt: new Date().toISOString(), Comment: "Okay." },
+  { Id: "4", DoctorId: "doc1", PatientId: "p4", AppointmentId: "a4", Score: 5, CreatedAt: new Date().toISOString(), Comment: "Great!" },
+]
 
   async function fetchDoctor() {
     try {
@@ -54,14 +68,44 @@ export default function DoctorCalendarPage() {
       })
       setAppointments(res.data.data)
     } catch (err: any) {
-      if (err.response?.status !== 404) {
-        console.error(err)
-      }
+      if (err.response?.status !== 404) console.error(err)
+    }
+  }
+
+  async function fetchRatings(page = 1) {
+    if (!doctor) return
+    try {
+      const res = await getRatingsByDoctor(doctor.userId, {
+        PatientId: "",
+        AppointmentId: "",
+        MinScore: null,
+        MaxScore: null,
+        SortOrder: "DESC",
+        SortPropertyName: "CreatedAt",
+        Page: page,
+        PageSize: 4,
+      })
+
+      const fetchedRatings = res?.data?.data?.Items ?? []
+
+      setRatings(fetchedRatings)
+      setRatingsPage(page)
+      setRatingsTotalPages(Math.ceil((res?.data?.data?.TotalCount ?? fetchedRatings.length) / 4))
+    } catch (err: any) {
+      if (err.response?.status !== 404) console.error(err)
+      setRatings([])
+      setRatingsPage(1)
+      setRatingsTotalPages(1)
     }
   }
 
   useEffect(() => { if (id) fetchDoctor() }, [id])
-  useEffect(() => { if (doctor) fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear()) }, [doctor, currentMonth])
+  useEffect(() => { 
+  if (doctor) {
+    fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear())
+    fetchRatings()
+  }
+}, [doctor])
 
   const { calendarDays, timeSlots } = useDoctorCalendar({
     doctor,
@@ -120,6 +164,58 @@ export default function DoctorCalendarPage() {
         </CardContent>
       </Card>
 
+      <DoctorRatings
+        ratings={ratings}
+        page={ratingsPage}
+        totalPages={ratingsTotalPages}
+        onPageChange={fetchRatings}
+      />
+
+      <Card className="p-4">
+        <CardContent>
+          <h2 className="text-xl font-semibold mb-4">Book an Appointment</h2>
+
+          <div className="flex justify-between items-center mb-2">
+            <Button
+              onClick={() =>
+                setCurrentMonth(
+                  new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
+                )
+              }
+            >
+              Previous
+            </Button>
+            <h3 className="text-lg font-medium">
+              {currentMonth.toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h3>
+            <Button
+              onClick={() =>
+                setCurrentMonth(
+                  new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
+                )
+              }
+            >
+              Next
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-7 text-center font-medium mb-2">
+            {weekdays.map((d) => (
+              <div key={d}>{d}</div>
+            ))}
+          </div>
+
+          <CalendarGrid
+            days={calendarDays}
+            selectedDate={selectedDate}
+            onSelect={setSelectedDate}
+          />
+        </CardContent>
+      </Card>
+
       <Card className="p-4">
         <CardTitle>Select Duration</CardTitle>
         <CardContent className="flex gap-2 mt-3">
@@ -133,22 +229,6 @@ export default function DoctorCalendarPage() {
               {d} min
             </Button>
           ))}
-        </CardContent>
-      </Card>
-
-      <Card className="p-4">
-        <CardContent>
-          <div className="flex justify-between items-center mb-2">
-            <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>Previous</Button>
-            <h2 className="text-lg font-medium">{currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}</h2>
-            <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>Next</Button>
-          </div>
-
-          <div className="grid grid-cols-7 text-center font-medium mb-2">
-            {weekdays.map(d => <div key={d}>{d}</div>)}
-          </div>
-
-          <CalendarGrid days={calendarDays} selectedDate={selectedDate} onSelect={setSelectedDate} />
         </CardContent>
       </Card>
 
@@ -170,7 +250,7 @@ export default function DoctorCalendarPage() {
                 {bookingLoading ? "Booking..." : "Confirm Booking"}
               </Button>
             </div>
-         </CardContent>
+          </CardContent>
         </Card>
       )}
 

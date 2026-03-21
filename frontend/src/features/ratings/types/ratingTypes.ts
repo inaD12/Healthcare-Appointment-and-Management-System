@@ -1,0 +1,79 @@
+import { z } from "zod"
+import { RatingsBusinessConfiguration } from "../config/business"
+import { PaginatedQueryResponseSchema } from "@/types/types"
+
+export const GetAllRatingsByDoctorRequestDefaults = {
+  PatientId: "",
+  AppointmentId: "",
+  MinScore: null as number | null,
+  MaxScore: null as number | null,
+  SortOrder: "ASC" as "ASC" | "DESC",
+  SortPropertyName: "CreatedAt",
+  Page: 1,
+  PageSize: 10,
+}
+
+export const GetAllRatingsByDoctorRequestSchema = z.object({
+  PatientId: z.string()
+    .min(RatingsBusinessConfiguration.ID_MIN_LENGTH)
+    .max(RatingsBusinessConfiguration.ID_MAX_LENGTH)
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.PatientId),
+
+  AppointmentId: z.string()
+    .min(RatingsBusinessConfiguration.ID_MIN_LENGTH)
+    .max(RatingsBusinessConfiguration.ID_MAX_LENGTH)
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.AppointmentId),
+
+  MinScore: z.number()
+    .min(RatingsBusinessConfiguration.MIN_RATING_SCORE)
+    .max(RatingsBusinessConfiguration.MAX_RATING_SCORE)
+    .nullable()
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.MinScore),
+
+  MaxScore: z.number()
+    .min(RatingsBusinessConfiguration.MIN_RATING_SCORE)
+    .max(RatingsBusinessConfiguration.MAX_RATING_SCORE)
+    .nullable()
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.MaxScore),
+
+  SortOrder: z.enum(["ASC", "DESC"])
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.SortOrder),
+
+  SortPropertyName: z.string()
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.SortPropertyName),
+
+  Page: z.number()
+    .int()
+    .min(1)
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.Page),
+
+  PageSize: z.number()
+    .int()
+    .min(1)
+    .optional()
+    .default(GetAllRatingsByDoctorRequestDefaults.PageSize),
+})
+
+export const RatingQueryViewModelSchema = z.object({
+  Id: z.string(),
+  DoctorId: z.string(),
+  PatientId: z.string(),
+  AppointmentId: z.string(),
+  Score: z.number().int(),
+  CreatedAt: z.string(),
+  Comment: z.string().nullable().optional(),
+})
+
+export const RatingPaginatedQueryResponseSchema =
+  PaginatedQueryResponseSchema(RatingQueryViewModelSchema)
+
+export type RatingQueryViewModel = z.infer<typeof RatingQueryViewModelSchema>
+export type RatingPaginatedQueryResponse = z.infer<typeof RatingPaginatedQueryResponseSchema>
+export type GetAllRatingsByDoctorRequest = z.infer<typeof GetAllRatingsByDoctorRequestSchema>
