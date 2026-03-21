@@ -45,7 +45,8 @@ public static class QueryMapper
         string doctorUserId)
         => new(
             doctorUserId,
-            request.Date);
+            request.StartDate,
+            request.EndDate);
     
     public static ICollection<BookingQueryResponse> ToCollectionResponse(
         this ICollection<BookingQueryViewModel> models)

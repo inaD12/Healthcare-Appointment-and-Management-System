@@ -1,7 +1,9 @@
 import { api } from "@/lib/api/axios"
 import {
   CreateAppointmentRequest,
-  AppointmentResponse
+  AppointmentResponse,
+  GetBookingsByDoctorAndDateRequest,
+  BookingQueryResponse
 } from "@/features/appointments/types/appointmentsTypes"
 import { ENDPOINTS } from "@/config/endpoints"
 import { APIResponse } from "@/types/types"
@@ -15,6 +17,15 @@ export const getMyAppointments = () =>
 
 export const getAppointmentById = (id: string) =>
   api.get<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id))
+
+export const getAppointmentsByDoctor = (
+  doctorUserId: string,
+  data: GetBookingsByDoctorAndDateRequest
+) =>
+  api.get<APIResponse<BookingQueryResponse[]>>(
+    ENDPOINTS.appointments.byDoctor(doctorUserId),
+    { params: data }
+  )
 
 export const cancelAppointment = (id: string) =>
   api.delete<APIResponse<boolean>>(ENDPOINTS.appointments.byId(id))

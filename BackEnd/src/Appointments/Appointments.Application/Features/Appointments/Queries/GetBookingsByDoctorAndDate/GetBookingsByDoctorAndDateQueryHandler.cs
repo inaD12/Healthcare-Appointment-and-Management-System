@@ -12,7 +12,7 @@ public sealed class GetBookingsByDoctorAndDateQueryHandler(IAppointmentRepositor
 {
 	public async Task<Result<ICollection<BookingQueryViewModel>>> Handle(GetBookingsByDoctorAndDateQuery request, CancellationToken cancellationToken)
 	{
-		var appointments = await appointmentRepository.GetByDoctorAndDateAsync(request.DoctorUserId, request.Date, cancellationToken);
+		var appointments = await appointmentRepository.GetByDoctorAndDateAsync(request.DoctorUserId, request.StartDate, request.EndDate, cancellationToken);
 		if (appointments.Count == 0)
 		{
 			return Result<ICollection<BookingQueryViewModel>>.Failure(ResponseList.NoAppointmentsFound);
