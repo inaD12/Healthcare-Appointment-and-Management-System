@@ -1,14 +1,18 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import { getDoctorById } from "@/features/doctors/services/doctorService"
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
+import { createAppointment, getAppointmentsByDoctor } from "@/features/appointments/services/appointmentService"
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
-import { createAppointment, getAppointmentsByDoctor } from "@/features/appointments/services/appointmentService"
+import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
+import { CalendarGrid } from "@/components/calendar/CalendarGrid"
+import { TimeSlots } from "@/components/calendar/TimeSlots"
+
 
 export default function DoctorCalendarPage() {
   const { id } = useParams()
@@ -29,7 +33,6 @@ export default function DoctorCalendarPage() {
   const [bookingError, setBookingError] = useState("")
   const [bookingSuccess, setBookingSuccess] = useState("")
 
-  // Fetch doctor info
   async function fetchDoctor() {
     try {
       const res = await getDoctorById(id as string)
@@ -42,112 +45,32 @@ export default function DoctorCalendarPage() {
   }
 
   async function fetchAppointments(month: number, year: number) {
-    if (!doctor) return
-    try {
-      const startOfMonth = new Date(year, month, 1)
-      const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
-      const res = await getAppointmentsByDoctor(doctor.userId, {
+  if (!doctor) return
+  try {
+    const startOfMonth = new Date(year, month, 1)
+    const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
+    const res = await getAppointmentsByDoctor(doctor.userId, {
       startDate: startOfMonth.toISOString().split("T")[0],
       endDate: endOfMonth.toISOString().split("T")[0],
     })
-
     setAppointments(res.data.data)
-    } catch (err) {
+  } catch (err: any) {
+    if (err.response?.status !== 404) {
       console.error(err)
     }
   }
+}
 
-  useEffect(() => {
-    if (id) fetchDoctor()
-  }, [id])
+  useEffect(() => { if (id) fetchDoctor() }, [id])
+  useEffect(() => { if (doctor) fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear()) }, [doctor, currentMonth])
 
-  useEffect(() => {
-    if (doctor) {
-      fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear())
-    }
-  }, [doctor, currentMonth])
-
-  const calendarDays = useMemo(() => {
-    if (!doctor) return []
-
-    const month = currentMonth.getMonth()
-    const year = currentMonth.getFullYear()
-    const firstDay = new Date(year, month, 1).getDay()
-    const lastDate = new Date(year, month + 1, 0).getDate()
-    const today = new Date()
-    const todayStart = new Date()
-    todayStart.setHours(0, 0, 0, 0)
-
-    const days = []
-
-    for (let i = 0; i < firstDay; i++) days.push(null)
-
-    for (let i = 1; i <= lastDate; i++) {
-      const date = new Date(year, month, i)
-      const dayAppointments = appointments.filter(a => {
-        const aDate = new Date(a.start)
-        return aDate.toDateString() === date.toDateString()
-      })
-
-      const dayOfWeek = date.getDay()
-      const workDay = doctor.workDays.find(d => d.dayOfWeek === dayOfWeek)
-
-      let status: "past" | "fullyBooked" | "partiallyBooked" | "empty" = "empty"
-
-      if (date.valueOf() < todayStart.valueOf()) status = "past"
-      else if (!workDay) status = "fullyBooked"
-      else {
-        let totalSlots = 0
-        for (const wt of workDay.workTimes) {
-          const start = new Date(`${date.toDateString()} ${wt.start}`)
-          const end = new Date(`${date.toDateString()} ${wt.end}`)
-          totalSlots += Math.floor((end.getTime() - start.getTime()) / (duration * 60000))
-        }
-
-        if (dayAppointments.length === 0) status = "empty"
-        else if (dayAppointments.length < totalSlots) status = "partiallyBooked"
-        else status = "fullyBooked"
-      }
-
-      days.push({ date, status })
-    }
-
-    return days
-}, [appointments, doctor, currentMonth, duration])
-
-  const slots = useMemo(() => {
-    if (!doctor || !selectedDate) return []
-    const dayOfWeek = selectedDate.getDay()
-    const workDay = doctor.workDays.find(d => d.dayOfWeek === dayOfWeek)
-    if (!workDay) return []
-
-    const now = new Date()
-    const result: { start: string }[] = []
-
-    for (const wt of workDay.workTimes) {
-      let start = new Date(`${selectedDate.toDateString()} ${wt.start}`)
-      const end = new Date(`${selectedDate.toDateString()} ${wt.end}`)
-
-      while (start < end) {
-        const slotEnd = new Date(start.getTime() + duration * 60000)
-        if (slotEnd > end) break
-
-        const isPast = start < now
-        const isBlocked = appointments.some(a => {
-          const aStart = new Date(a.start)
-          const aEnd = new Date(a.end)  
-          const duration = (end.getTime() - start.getTime()) / (1000 * 60)
-          aEnd.setMinutes(aEnd.getMinutes() + duration)
-          return start < aEnd && slotEnd > aStart
-        })
-
-        if (!isPast && !isBlocked) result.push({ start: start.toISOString() })
-        start = slotEnd
-      }
-    }
-
-    return result
-  }, [appointments, doctor, selectedDate, duration])
+  const { calendarDays, timeSlots } = useDoctorCalendar({
+    doctor,
+    appointments,
+    currentMonth,
+    duration,
+    selectedDate
+  })
 
   async function handleBooking() {
     if (!selectedSlot || !doctor || !patientId) {
@@ -165,7 +88,8 @@ export default function DoctorCalendarPage() {
         scheduledStartTime: selectedSlot,
         duration,
       })
-      setBookingSuccess("Appointment booked successfully 🎉")
+
+      setBookingSuccess("Appointment booked successfully")
       setSelectedSlot(null)
       if (selectedDate) fetchAppointments(selectedDate.getMonth(), selectedDate.getFullYear())
     } catch (err: any) {
@@ -178,6 +102,8 @@ export default function DoctorCalendarPage() {
   if (loading) return <p className="p-8">Loading doctor...</p>
   if (error) return <p className="p-8 text-red-600">{error}</p>
   if (!doctor) return null
+
+  const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
 
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -217,81 +143,34 @@ export default function DoctorCalendarPage() {
         <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>Next</Button>
       </div>
 
-      <Card className="p-4">
-        <CardTitle>Available Dates</CardTitle>
-        <CardContent className="grid grid-cols-7 gap-2 mt-3">
-          {calendarDays.map((day, idx) => {
-            if (!day) return <div key={idx} />
-            const isSelected = selectedDate?.toDateString() === day.date.toDateString()
+      <div className="grid grid-cols-7 text-center font-medium">
+        {weekdays.map(d => <div key={d}>{d}</div>)}
+      </div>
 
-            let className = ""
-            switch (day.status) {
-              case "past":
-                className = "bg-gray-300 text-gray-600 cursor-not-allowed"
-                break
-              case "empty":
-                className = "bg-green-500 text-white"
-                break
-              case "partiallyBooked":
-                className = "bg-yellow-400 text-white"
-                break
-              case "fullyBooked":
-                className = "bg-red-500 text-white"
-                break
-            }
+      <CalendarGrid days={calendarDays} selectedDate={selectedDate} onSelect={setSelectedDate}></CalendarGrid>
 
-            return (
-              <Button
-                key={day.date.toISOString()}
-                size="sm"
-                variant={isSelected ? "default" : "outline"}
-                className={className}
-                disabled={day.status === "past"}
-                onClick={() => setSelectedDate(day.date)}
-              >
-                {day.date.getDate()}
-              </Button>
-            )
-          })}
-        </CardContent>
-      </Card>
-
-      {slots.length > 0 && selectedDate && (
-        <Card className="p-4">
-          <CardTitle>Available Slots for {selectedDate.toDateString()}</CardTitle>
-          <CardContent className="flex flex-wrap gap-2 mt-3">
-            {slots.map(slot => {
-              const time = new Date(slot.start).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-              const isSelected = selectedSlot === slot.start
-              return (
-                <Button
-                  key={slot.start}
-                  size="sm"
-                  variant={isSelected ? "default" : "outline"}
-                  onClick={() => setSelectedSlot(slot.start)}
-                >
-                  {time}
-                </Button>
-              )
-            })}
-          </CardContent>
-
-          {selectedSlot && (
-            <div className="mt-3 flex justify-between items-center">
-              <p>Selected Time: {new Date(selectedSlot).toLocaleString()}</p>
-              <Button onClick={handleBooking} disabled={bookingLoading}>
-                {bookingLoading ? "Booking..." : "Confirm Booking"}
-              </Button>
-            </div>
-          )}
-
-          {(bookingError || bookingSuccess) && (
-            <p className={`mt-2 text-sm ${bookingError ? "text-red-600" : "text-green-600"}`}>
-              {bookingError || bookingSuccess}
-            </p>
-          )}
-        </Card>
+      {selectedDate && (
+        <div className="mt-4">
+          <h3 className="font-medium mb-2">Available Slots for {selectedDate.toDateString()}</h3>
+          <TimeSlots slots={timeSlots} selectedSlot={selectedSlot} onSelect={setSelectedSlot}></TimeSlots>
+        </div>
       )}
+
+      {selectedSlot && (
+        <div className="mt-3 flex justify-between items-center">
+          <p>Selected Time: {new Date(selectedSlot).toLocaleString()}</p>
+          <Button onClick={handleBooking} disabled={bookingLoading}>
+            {bookingLoading ? "Booking..." : "Confirm Booking"}
+          </Button>
+        </div>
+      )}
+
+      {(bookingError || bookingSuccess) && (
+        <p className={`mt-2 text-sm ${bookingError ? "text-red-600" : "text-green-600"}`}>
+          {bookingError || bookingSuccess}
+        </p>
+      )}
+
     </div>
   )
 }

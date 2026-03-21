@@ -83,3 +83,4 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 			.ToListAsync(cancellationToken);
 	}
 }
+	
