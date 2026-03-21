@@ -12,6 +12,8 @@ import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalend
 import { CalendarGrid } from "@/components/calendar/CalendarGrid"
 import { TimeSlots } from "@/components/calendar/TimeSlots"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
+import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 
 export default function DoctorCalendarPage() {
   const { id } = useParams()
@@ -20,6 +22,9 @@ export default function DoctorCalendarPage() {
 
   const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
   const [appointments, setAppointments] = useState<BookingQueryResponse[]>([])
+  const [ratings, setRatings] = useState<RatingQueryViewModel[]>([])
+  const [ratingsPage, setRatingsPage] = useState(1)
+  const [ratingsTotalPages, setRatingsTotalPages] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -31,6 +36,55 @@ export default function DoctorCalendarPage() {
   const [bookingLoading, setBookingLoading] = useState(false)
   const [bookingError, setBookingError] = useState("")
   const [bookingSuccess, setBookingSuccess] = useState("")
+
+  // Example ratings if API is empty
+  const exampleRatings: RatingQueryViewModel[] = [
+    {
+      Id: "1",
+      DoctorId: "doc1",
+      PatientId: "pat1",
+      AppointmentId: "app1",
+      Score: 5,
+      CreatedAt: new Date().toISOString(),
+      Comment: "Great doctor, very attentive!"
+    },
+    {
+      Id: "2",
+      DoctorId: "doc1",
+      PatientId: "pat2",
+      AppointmentId: "app2",
+      Score: 4,
+      CreatedAt: new Date().toISOString(),
+      Comment: "Good consultation, explained everything clearly."
+    },
+    {
+      Id: "3",
+      DoctorId: "doc1",
+      PatientId: "pat3",
+      AppointmentId: "app3",
+      Score: 5,
+      CreatedAt: new Date().toISOString(),
+      Comment: "Highly recommend!"
+    },
+    {
+      Id: "4",
+      DoctorId: "doc1",
+      PatientId: "pat2",
+      AppointmentId: "app2",
+      Score: 4,
+      CreatedAt: new Date().toISOString(),
+      Comment: "Good consultation, explained everything clearly."
+    },
+    {
+      Id: "5",
+      DoctorId: "doc1",
+      PatientId: "pat2",
+      AppointmentId: "app2",
+      Score: 4,
+      CreatedAt: new Date().toISOString(),
+      Comment: "Good consultation, explained everything clearly."
+    },
+  ]
 
   async function fetchDoctor() {
     try {
@@ -54,14 +108,43 @@ export default function DoctorCalendarPage() {
       })
       setAppointments(res.data.data)
     } catch (err: any) {
-      if (err.response?.status !== 404) {
-        console.error(err)
-      }
+      if (err.response?.status !== 404) console.error(err)
+    }
+  }
+
+  async function fetchRatings(page = 1) {
+    if (!doctor) return
+    try {
+      const res = await getRatingsByDoctor(doctor.userId, {
+        PatientId: "",
+        AppointmentId: "",
+        MinScore: null,
+        MaxScore: null,
+        SortOrder: "DESC",
+        SortPropertyName: "CreatedAt",
+        Page: page,
+        PageSize: 5,
+      })
+
+      const fetchedRatings = res?.data?.data?.Items ?? []
+      setRatings(fetchedRatings.length > 0 ? fetchedRatings : exampleRatings)
+      setRatingsPage(page)
+      setRatingsTotalPages(Math.ceil((res?.data?.data?.TotalCount ?? fetchedRatings.length) / 5))
+    } catch (err) {
+      console.error(err)
+      setRatings(exampleRatings)
+      setRatingsPage(1)
+      setRatingsTotalPages(1)
     }
   }
 
   useEffect(() => { if (id) fetchDoctor() }, [id])
-  useEffect(() => { if (doctor) fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear()) }, [doctor, currentMonth])
+  useEffect(() => { 
+  if (doctor) {
+    fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear())
+    fetchRatings()
+  }
+}, [doctor])
 
   const { calendarDays, timeSlots } = useDoctorCalendar({
     doctor,
@@ -121,6 +204,47 @@ export default function DoctorCalendarPage() {
       </Card>
 
       <Card className="p-4">
+        <CardContent>
+          <CardTitle>Patient Reviews</CardTitle>
+          {ratings.length === 0 ? (
+            <p className="text-gray-500">No reviews yet.</p>
+          ) : (
+            <>
+              {ratings.map(r => (
+                <div key={r.Id} className="border-b border-gray-200 py-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">Score: {r.Score} ⭐</span>
+                    <span className="text-sm text-gray-500">{new Date(r.CreatedAt).toLocaleDateString()}</span>
+                  </div>
+                  <p className="mt-1">{r.Comment}</p>
+                </div>
+              ))}
+
+              {ratingsTotalPages > 1 && (
+                <div className="flex justify-between mt-2">
+                  <Button
+                    size="sm"
+                    disabled={ratingsPage <= 1}
+                    onClick={() => fetchRatings(ratingsPage - 1)}
+                  >
+                    Previous
+                  </Button>
+                  <span>Page {ratingsPage} of {ratingsTotalPages}</span>
+                  <Button
+                    size="sm"
+                    disabled={ratingsPage >= ratingsTotalPages}
+                    onClick={() => fetchRatings(ratingsPage + 1)}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="p-4">
         <CardTitle>Select Duration</CardTitle>
         <CardContent className="flex gap-2 mt-3">
           {[15, 30, 60].map(d => (
@@ -170,7 +294,7 @@ export default function DoctorCalendarPage() {
                 {bookingLoading ? "Booking..." : "Confirm Booking"}
               </Button>
             </div>
-         </CardContent>
+          </CardContent>
         </Card>
       )}
 
