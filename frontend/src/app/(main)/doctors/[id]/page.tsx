@@ -8,16 +8,15 @@ import { BookingQueryResponse } from "@/features/appointments/types/appointments
 import { createAppointment, getAppointmentsByDoctor } from "@/features/appointments/services/appointmentService"
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/features/auth/hooks/useAuth"
 import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
 import { CalendarGrid } from "@/components/calendar/CalendarGrid"
 import { TimeSlots } from "@/components/calendar/TimeSlots"
-
+import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 
 export default function DoctorCalendarPage() {
   const { id } = useParams()
-  const auth = useAuth()
-  const patientId = auth.keycloak?.subject
+  const auth = useAuthGuard()
+  const patientId = auth?.keycloak?.subject
 
   const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
   const [appointments, setAppointments] = useState<BookingQueryResponse[]>([])
@@ -45,21 +44,21 @@ export default function DoctorCalendarPage() {
   }
 
   async function fetchAppointments(month: number, year: number) {
-  if (!doctor) return
-  try {
-    const startOfMonth = new Date(year, month, 1)
-    const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
-    const res = await getAppointmentsByDoctor(doctor.userId, {
-      startDate: startOfMonth.toISOString().split("T")[0],
-      endDate: endOfMonth.toISOString().split("T")[0],
-    })
-    setAppointments(res.data.data)
-  } catch (err: any) {
-    if (err.response?.status !== 404) {
-      console.error(err)
+    if (!doctor) return
+    try {
+      const startOfMonth = new Date(year, month, 1)
+      const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
+      const res = await getAppointmentsByDoctor(doctor.userId, {
+        startDate: startOfMonth.toISOString().split("T")[0],
+        endDate: endOfMonth.toISOString().split("T")[0],
+      })
+      setAppointments(res.data.data)
+    } catch (err: any) {
+      if (err.response?.status !== 404) {
+        console.error(err)
+      }
     }
   }
-}
 
   useEffect(() => { if (id) fetchDoctor() }, [id])
   useEffect(() => { if (doctor) fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear()) }, [doctor, currentMonth])
@@ -137,32 +136,42 @@ export default function DoctorCalendarPage() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-between items-center mb-2">
-        <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>Previous</Button>
-        <h2 className="text-lg font-medium">{currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}</h2>
-        <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>Next</Button>
-      </div>
+      <Card className="p-4">
+        <CardContent>
+          <div className="flex justify-between items-center mb-2">
+            <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}>Previous</Button>
+            <h2 className="text-lg font-medium">{currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}</h2>
+            <Button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}>Next</Button>
+          </div>
 
-      <div className="grid grid-cols-7 text-center font-medium">
-        {weekdays.map(d => <div key={d}>{d}</div>)}
-      </div>
+          <div className="grid grid-cols-7 text-center font-medium mb-2">
+            {weekdays.map(d => <div key={d}>{d}</div>)}
+          </div>
 
-      <CalendarGrid days={calendarDays} selectedDate={selectedDate} onSelect={setSelectedDate}></CalendarGrid>
+          <CalendarGrid days={calendarDays} selectedDate={selectedDate} onSelect={setSelectedDate} />
+        </CardContent>
+      </Card>
 
       {selectedDate && (
-        <div className="mt-4">
-          <h3 className="font-medium mb-2">Available Slots for {selectedDate.toDateString()}</h3>
-          <TimeSlots slots={timeSlots} selectedSlot={selectedSlot} onSelect={setSelectedSlot}></TimeSlots>
-        </div>
+        <Card className="p-4">
+          <CardContent>
+            <h3 className="font-medium mb-2">Available Slots for {selectedDate.toDateString()}</h3>
+            <TimeSlots slots={timeSlots} selectedSlot={selectedSlot} onSelect={setSelectedSlot} />
+          </CardContent>
+        </Card>
       )}
 
       {selectedSlot && (
-        <div className="mt-3 flex justify-between items-center">
-          <p>Selected Time: {new Date(selectedSlot).toLocaleString()}</p>
-          <Button onClick={handleBooking} disabled={bookingLoading}>
-            {bookingLoading ? "Booking..." : "Confirm Booking"}
-          </Button>
-        </div>
+        <Card className="p-3">
+          <CardContent>
+            <div className="mb-2 flex justify-between items-center">
+              <p>Selected Time: {new Date(selectedSlot).toLocaleString()}</p>
+              <Button onClick={handleBooking} disabled={bookingLoading}>
+                {bookingLoading ? "Booking..." : "Confirm Booking"}
+              </Button>
+            </div>
+         </CardContent>
+        </Card>
       )}
 
       {(bookingError || bookingSuccess) && (
