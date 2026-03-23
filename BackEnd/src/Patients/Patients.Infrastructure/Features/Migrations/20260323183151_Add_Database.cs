@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Patients.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_DataBase : Migration
+    public partial class Add_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,7 +40,7 @@ namespace Patients.Infrastructure.Features.Migrations
                     StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FinalizedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LockedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,7 +95,7 @@ namespace Patients.Infrastructure.Features.Migrations
                     FirstName = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

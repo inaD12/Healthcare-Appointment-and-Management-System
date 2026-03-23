@@ -36,7 +36,8 @@ internal sealed class PatientConfiguration : IEntityTypeConfiguration<Patient>
         
         builder.Property(p => p.RowVersion)
             .IsRowVersion()
-            .IsConcurrencyToken();
+            .HasColumnName("xmin")
+            .ValueGeneratedOnAddOrUpdate();
 
         builder.OwnsMany<Allergy>("_allergies", a =>
         {
