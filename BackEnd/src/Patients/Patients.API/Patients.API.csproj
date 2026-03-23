@@ -20,6 +20,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared.API\Shared.API.csproj" />
       <ProjectReference Include="..\Patients.Application\Patients.Application.csproj" />
+      <ProjectReference Include="..\Patients.Infrastructure\Patients.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

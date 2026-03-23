@@ -67,7 +67,13 @@ public sealed class User : BaseEntity
 
 		user._roles.Add(role);
 		
-		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
+		user.RaiseDomainEvent(new UserCreatedDomainEvent(
+			user.Id,
+			user.Email,
+			user.FirstName,
+			user.LastName,
+			DateOnly.FromDateTime(user.DateOfBirth),
+			user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
 
 		return user;
 	}

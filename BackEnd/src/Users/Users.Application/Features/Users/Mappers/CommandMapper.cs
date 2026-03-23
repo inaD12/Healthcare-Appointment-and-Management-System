@@ -12,6 +12,9 @@ public static class CommandMapper
         => new(
             user.Id,
             user.Email,
+            user.FirstName,
+            user.LastName,
+            DateOnly.FromDateTime(user.DateOfBirth),
             user.Roles.Select(r => r.MapToRoleEnum()).ToList());
     
     public static UserCommandViewModel ToCommandViewModel(

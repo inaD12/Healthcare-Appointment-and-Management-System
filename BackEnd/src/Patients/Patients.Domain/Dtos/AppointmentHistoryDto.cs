@@ -1,6 +1,6 @@
 using Patients.Infrastructure.Features.ReadModels.Enums;
 
-namespace Patients.Application.Features.AppointmentProjections.Dtos;
+namespace Patients.Domain.Dtos;
 
 public sealed record AppointmentHistoryDto(
     string Id,

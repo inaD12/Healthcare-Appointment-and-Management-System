@@ -1,6 +1,5 @@
-using System.Data.Entity;
-using Patients.Application.Features.AppointmentProjections.Dtos;
-using Patients.Infrastructure.Features.DBContexts;
+using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Dtos;
 
 namespace Patients.Application.Features.AppointmentProjections.Queries;
 
@@ -11,52 +10,19 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentHistoryDto> GetAppointmentsByPatient(
         string patientId,
-        [Service] PatientsReadDbContext db)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.PatientId == patientId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
-    }
+        [Service] IAppointmentReadRepository repo)
+        => repo.GetByPatient(patientId);
 
     [UsePaging(IncludeTotalCount = true)]
     [UseFiltering]
     [UseSorting]
     public IQueryable<AppointmentHistoryDto> GetAppointmentsByDoctor(
         string doctorId,
-        [Service] PatientsReadDbContext db)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.DoctorId == doctorId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
-    }
+        [Service] IAppointmentReadRepository repo)
+        => repo.GetByDoctor(doctorId);
 
     public IQueryable<AppointmentHistoryDto> GetAppointmentById(
         string appointmentId,
-        [Service] PatientsReadDbContext db)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.Id == appointmentId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
-    }
+        [Service] IAppointmentReadRepository repo)
+        => repo.GetById(appointmentId);
 }

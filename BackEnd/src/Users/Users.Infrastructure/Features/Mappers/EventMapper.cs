@@ -17,5 +17,8 @@ public static class EventMapper
         => new(
             domainEvent.Id,
             domainEvent.Email,
+            domainEvent.FirstName,
+            domainEvent.LastName,
+            domainEvent.BirthDay,
             domainEvent.Roles);
 }

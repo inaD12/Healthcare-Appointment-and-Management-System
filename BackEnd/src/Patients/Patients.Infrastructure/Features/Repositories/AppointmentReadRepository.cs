@@ -1,7 +1,9 @@
 using System.Data.Entity;
+using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Dtos;
+using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Patients.Infrastructure.Features.ReadModels;
-using Patients.Infrastructure.Features.ReadModels.Abstractions;
 
 namespace Patients.Infrastructure.Features.Repositories;
 
@@ -53,5 +55,64 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
 
         db.AppointmentProjections.Remove(entity);
         await db.SaveChangesAsync(ct);
+    }
+    
+    public async Task<List<AppointmentHistoryDto>> GetByPatientIdsAsync(
+        IReadOnlyList<string> patientIds,
+        CancellationToken cancellationToken)
+    {
+        return await db.AppointmentProjections
+            .AsNoTracking()
+            .Where(a => patientIds.Contains(a.PatientId))
+            .Select(a => new AppointmentHistoryDto(
+                a.Id,
+                a.Start,
+                a.End,
+                a.Status,
+                a.DoctorId,
+                a.PatientId))
+            .ToListAsync(cancellationToken);
+    }
+
+    public IQueryable<AppointmentHistoryDto> GetByPatient(string patientId)
+    {
+        return db.AppointmentProjections
+            .AsNoTracking()
+            .Where(a => a.PatientId == patientId)
+            .Select(a => new AppointmentHistoryDto(
+                a.Id,
+                a.Start,
+                a.End,
+                a.Status,
+                a.DoctorId,
+                a.PatientId));
+    }
+
+    public IQueryable<AppointmentHistoryDto> GetByDoctor(string doctorId)
+    {
+        return db.AppointmentProjections
+            .AsNoTracking()
+            .Where(a => a.DoctorId == doctorId)
+            .Select(a => new AppointmentHistoryDto(
+                a.Id,
+                a.Start,
+                a.End,
+                a.Status,
+                a.DoctorId,
+                a.PatientId));
+    }
+
+    public IQueryable<AppointmentHistoryDto> GetById(string appointmentId)
+    {
+        return db.AppointmentProjections
+            .AsNoTracking()
+            .Where(a => a.Id == appointmentId)
+            .Select(a => new AppointmentHistoryDto(
+                a.Id,
+                a.Start,
+                a.End,
+                a.Status,
+                a.DoctorId,
+                a.PatientId));
     }
 }

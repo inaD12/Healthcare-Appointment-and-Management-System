@@ -10,7 +10,6 @@
       <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
       <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
       <ProjectReference Include="..\Patients.Domain\Patients.Domain.csproj" />
-      <ProjectReference Include="..\Patients.Infrastructure\Patients.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,6 +21,10 @@
       <PackageReference Include="HotChocolate.Data" Version="15.1.12" />
       <PackageReference Include="HotChocolate.Utilities.DependencyInjection" Version="15.1.12" />
       <PackageReference Include="MediatR" Version="13.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Features\AppointmentProjections\Dtos\" />
     </ItemGroup>
 
 </Project>

@@ -1,12 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using Patients.Application.Features.Encounters.Dtos;
-using Patients.Infrastructure.Features.DBContexts;
+using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Dtos;
 
 namespace Patients.Application.Features.Encounters.Queries.DataLoaders;
 
 public sealed class DiagnosesByEncounterDataLoader(
     IBatchScheduler batchScheduler,
-    PatientsReadDbContext db,
+    IEncounterRepository encounterRepository,
     DataLoaderOptions? options = null)
     : BatchDataLoader<string, List<DiagnosisDto>>(batchScheduler, options ?? new DataLoaderOptions())
 {
@@ -14,14 +13,6 @@ public sealed class DiagnosesByEncounterDataLoader(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {
-        var diagnoses = await db.Encounters
-            .AsNoTracking()
-            .Where(e => keys.Contains(e.Id))
-            .SelectMany(e => e.Diagnoses.Select(d => new { e.Id, Diagnosis = new DiagnosisDto(d.Id, d.IcdCode, d.Description) }))
-            .ToListAsync(cancellationToken);
-
-        return diagnoses
-            .GroupBy(d => d.Id)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.Diagnosis).ToList());
+        return await encounterRepository.GetDiagnosesByEncounterIdsAsync(keys, cancellationToken);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using MassTransit;
+using Patients.Domain.Abstractions.Repositories;
 using Patients.Infrastructure.Features.ReadModels;
-using Patients.Infrastructure.Features.ReadModels.Abstractions;
 using Patients.Infrastructure.Features.ReadModels.Enums;
 using Shared.Application.IntegrationEvents;
 

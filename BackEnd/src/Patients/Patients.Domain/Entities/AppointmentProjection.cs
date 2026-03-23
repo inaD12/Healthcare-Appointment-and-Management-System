@@ -1,6 +1,6 @@
 using Patients.Infrastructure.Features.ReadModels.Enums;
 
-namespace Patients.Infrastructure.Features.ReadModels;
+namespace Patients.Domain.Entities;
 
 public sealed class AppointmentProjection
 {
