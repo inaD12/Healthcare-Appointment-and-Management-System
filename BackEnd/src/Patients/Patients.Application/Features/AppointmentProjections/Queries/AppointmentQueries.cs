@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Dtos;
+using Shared.Infrastructure.Authentication;
 
 namespace Patients.Application.Features.AppointmentProjections.Queries;
 
@@ -8,10 +10,13 @@ public sealed class AppointmentQueries
     [UsePaging(IncludeTotalCount = true)]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<AppointmentHistoryDto> GetAppointmentsByPatient(
-        string patientId,
+    public IQueryable<AppointmentHistoryDto> GetMyAppointments(
+        HttpContext httpContext,
         [Service] IAppointmentReadRepository repo)
-        => repo.GetByPatient(patientId);
+    {
+        var userId = httpContext.User.GetUserId();
+        return repo.GetByPatient(userId);
+    }
 
     [UsePaging(IncludeTotalCount = true)]
     [UseFiltering]

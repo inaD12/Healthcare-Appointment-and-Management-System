@@ -1,9 +1,8 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
-using Patients.Infrastructure.Features.ReadModels;
 
 namespace Patients.Infrastructure.Features.Repositories;
 

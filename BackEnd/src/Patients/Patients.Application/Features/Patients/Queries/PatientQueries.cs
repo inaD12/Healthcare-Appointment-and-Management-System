@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Patients.Application.Features.Patients.Dtos;
 using Patients.Domain.Abstractions.Repositories;
+using Shared.Infrastructure.Authentication;
 
 namespace Patients.Application.Features.Patients.Queries;
 
@@ -12,8 +14,14 @@ public sealed class PatientQueries
         [Service] IPatientRepository repo)
         => repo.GetAll();
 
-    public IQueryable<PatientHeaderDto> GetPatientHeader(
-        string patientId,
+    public async Task<PatientHeaderDto> GetMyPatientHeader(
+        HttpContext httpContext,
         [Service] IPatientRepository repo)
-        => repo.GetHeader(patientId);
+    {
+        string userId = httpContext.User.GetUserId();
+
+        var header = await repo.GetHeaderAsync(userId);
+
+        return header;
+    }
 }

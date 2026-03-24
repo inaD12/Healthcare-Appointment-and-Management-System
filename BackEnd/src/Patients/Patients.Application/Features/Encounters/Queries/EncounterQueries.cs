@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Http;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Dtos;
+using Shared.Infrastructure.Authentication;
 
 namespace Patients.Application.Features.Encounters.Queries;
 
@@ -8,10 +10,13 @@ public sealed class EncounterQueries
     [UsePaging(IncludeTotalCount = true)]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<EncounterListItemDto> GetEncountersByPatient(
-        string patientId,
+    public IQueryable<EncounterListItemDto> GetMyEncounters(
+        HttpContext httpContext,
         [Service] IEncounterRepository repo)
-        => repo.GetByPatient(patientId);
+    {
+        var userId = httpContext.User.GetUserId();
+        return repo.GetByPatient(userId);
+    }
 
     public IQueryable<EncounterDetailsDto> GetEncounterDetails(
         string encounterId,

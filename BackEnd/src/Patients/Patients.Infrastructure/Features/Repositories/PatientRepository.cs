@@ -9,6 +9,12 @@ namespace Patients.Infrastructure.Features.Repositories;
 
 public class PatientRepository(PatientsDbContext context) : GenericRepository<Patient>(context), IPatientRepository
 {
+    public override Task<Patient?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        return context.Patients
+            .Where(p => p.UserId == id).FirstOrDefaultAsync(cancellationToken);
+    }
+
     public IQueryable<PatientListItemDto> GetAll()
     {
         return context.Patients
@@ -20,17 +26,33 @@ public class PatientRepository(PatientsDbContext context) : GenericRepository<Pa
             ));
     }
 
-    public IQueryable<PatientHeaderDto> GetHeader(string patientId)
+    public async Task<PatientHeaderDto> GetHeaderAsync(string userId)
     {
-        return context.Patients
+        var patient = await context.Patients
             .AsNoTracking()
-            .Where(p => p.Id == patientId)
-            .Select(p => new PatientHeaderDto(
+            .Where(p => p.UserId == userId)
+            .Select(p => new
+            {
                 p.Id,
-                p.FirstName + " " + p.LastName,
+                FullName = p.FirstName + " " + p.LastName,
                 p.BirthDate,
-                p.Allergies.Select(a => a.Substance).ToList(),
-                p.Conditions.Select(c => c.Name).ToList()
-            ));
+                p.Allergies,
+                p.Conditions 
+            })
+            .FirstOrDefaultAsync();
+
+        if (patient is null)
+            return null!;
+
+        var allergies = patient.Allergies.Select(a => a.Substance).ToList();
+        var conditions = patient.Conditions.Select(c => c.Name).ToList();
+
+        return new PatientHeaderDto(
+            patient.Id,
+            patient.FullName,
+            patient.BirthDate,
+            allergies,
+            conditions
+        );
     }
 }
