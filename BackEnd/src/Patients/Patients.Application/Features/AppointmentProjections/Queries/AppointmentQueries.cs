@@ -1,6 +1,7 @@
-using System.Data.Entity;
-using Patients.Application.Features.AppointmentProjections.Dtos;
-using Patients.Infrastructure.Features.DBContexts;
+using Microsoft.AspNetCore.Http;
+using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Dtos;
+using Shared.Infrastructure.Authentication;
 
 namespace Patients.Application.Features.AppointmentProjections.Queries;
 
@@ -9,20 +10,12 @@ public sealed class AppointmentQueries
     [UsePaging(IncludeTotalCount = true)]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<AppointmentHistoryDto> GetAppointmentsByPatient(
-        string patientId,
-        [Service] PatientsReadDbContext db)
+    public IQueryable<AppointmentHistoryDto> GetMyAppointments(
+        HttpContext httpContext,
+        [Service] IAppointmentReadRepository repo)
     {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.PatientId == patientId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
+        var userId = httpContext.User.GetUserId();
+        return repo.GetByPatient(userId);
     }
 
     [UsePaging(IncludeTotalCount = true)]
@@ -30,33 +23,11 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentHistoryDto> GetAppointmentsByDoctor(
         string doctorId,
-        [Service] PatientsReadDbContext db)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.DoctorId == doctorId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
-    }
+        [Service] IAppointmentReadRepository repo)
+        => repo.GetByDoctor(doctorId);
 
     public IQueryable<AppointmentHistoryDto> GetAppointmentById(
         string appointmentId,
-        [Service] PatientsReadDbContext db)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.Id == appointmentId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId));
-    }
+        [Service] IAppointmentReadRepository repo)
+        => repo.GetById(appointmentId);
 }

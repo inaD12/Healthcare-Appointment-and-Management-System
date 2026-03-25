@@ -18,15 +18,11 @@ public static class CommandMapper
             request.ScheduledStartTime,
             request.Duration);
     
-    public static CancelAppointmentCommand ToCommand(
-        this CancelAppointmentRequest request)
-        => new(
-            request.AppointmentId);
-    
     public static RescheduleAppointmentCommand ToCommand(
-        this RescheduleAppointmentRequest request)
+        this RescheduleAppointmentRequest request,
+        string appointmentId)
         => new(
-            request.AppointmentId,
+            appointmentId,
             request.ScheduledStartTime,
             request.Duration);
     

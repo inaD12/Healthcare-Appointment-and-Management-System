@@ -692,6 +692,16 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "patient:condition:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:allergy:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "bookings:read",
                             RoleName = "Patient"
                         },
@@ -772,6 +782,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
                             PermissionCode = "encounter:diagnosis:view",
                             RoleName = "Patient"
                         },
@@ -783,6 +798,16 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "encounter:addendum:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:condition:add",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:allergy:add",
                             RoleName = "Patient"
                         });
                 });

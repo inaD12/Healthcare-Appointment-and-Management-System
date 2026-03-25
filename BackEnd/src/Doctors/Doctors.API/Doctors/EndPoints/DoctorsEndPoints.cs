@@ -162,7 +162,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
+			.RequireAuthorization(Permissions.ViewDoctor);
 
 		doctorsGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
 			.Produces<DoctorQueryResponse>()
@@ -171,7 +171,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status404NotFound)
 			.Produces(StatusCodes.Status409Conflict)
 			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.ViewDoctorByAdmin);
+			.RequireAuthorization(Permissions.ViewDoctor);
 
 		doctorsGroup.MapGet("", GetAllDoctorsAsync)
 			.Produces<DoctorPaginatedQueryResponse>()

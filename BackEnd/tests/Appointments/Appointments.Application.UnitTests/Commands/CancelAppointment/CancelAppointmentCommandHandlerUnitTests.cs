@@ -5,6 +5,7 @@ using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using NSubstitute;
 
 namespace Appointments.Application.UnitTests.Commands.CancelAppointment;
@@ -16,7 +17,7 @@ public class CancelAppointmentCommandHandlerUnitTests : BaseAppointmentsUnitTest
 
 	public CancelAppointmentCommandHandlerUnitTests()
 	{
-		_handler = new CancelAppointmentCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository, AuthService);
+		_handler = new CancelAppointmentCommandHandler(UnitOfWork, DateTimeProvider, AppointmentRepository, AuthService, new HttpContextAccessor());
 	}
 
 	[Fact]

@@ -16,6 +16,16 @@ export const createAppointmentSchema = z.object({
   ]),
 })
 
+export const rescheduleAppointmentSchema = z.object({
+  scheduledStartTime: z.string(),
+
+  duration: z.union([
+    z.literal(15),
+    z.literal(30),
+    z.literal(60),
+  ]),
+})
+
 export const getBookingsByDoctorAndDateSchema = z.object({
   startDate: z
     .string()
@@ -35,7 +45,7 @@ export interface BookingQueryResponse {
 }
 
 export type CreateAppointmentRequest = z.infer<typeof createAppointmentSchema>
-
+export type RescheduleAppointmentRequest = z.infer<typeof rescheduleAppointmentSchema>
 export type GetBookingsByDoctorAndDateRequest = z.infer<typeof getBookingsByDoctorAndDateSchema>
 
 export const appointmentResponseSchema = z.object({

@@ -6,6 +6,7 @@ using Appointments.Domain.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -17,7 +18,8 @@ public sealed class RescheduleAppointmentCommandHandler(
 	IUnitOfWork unitOfWork,
 	IAppointmentRepository appointmentRepository,
 	IDateTimeProvider dateTimeProvider,
-	IAuthorizationService authService)
+	IAuthorizationService authService,
+	IHttpContextAccessor  httpContextAccessor)
 	: ICommandHandler<RescheduleAppointmentCommand, AppointmentCommandViewModel>
 {
 	public async Task<Result<AppointmentCommandViewModel>> Handle(RescheduleAppointmentCommand request, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ public sealed class RescheduleAppointmentCommandHandler(
 
 		var requirement = new ModifyAppointmentRequirement();
 
-		var authResult = await authService.AuthorizeAsync(ClaimsPrincipal.Current!, existingAppointment, requirement );
+		var authResult = await authService.AuthorizeAsync(httpContextAccessor.HttpContext!.User, existingAppointment, requirement );
 		if (!authResult.Succeeded)
 		{
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);

@@ -42,7 +42,8 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
         builder.Property(p => p.RowVersion)
             .IsRowVersion()
-            .IsConcurrencyToken();
+            .HasColumnName("xmin")
+            .ValueGeneratedOnAddOrUpdate();
         
         builder.Property(e => e.StartedAt).IsRequired();
         builder.Property(e => e.FinalizedAt);

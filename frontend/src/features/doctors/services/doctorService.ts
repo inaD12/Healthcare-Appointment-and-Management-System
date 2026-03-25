@@ -17,7 +17,7 @@ export const recommendSpeciality = (data: RecommendSpecialityRequest) =>
     data
   );
 
-export const getDoctorById = (doctorId: string) =>
+export const getDoctorByUserId = (doctorUserId: string) =>
   api.get<APIResponse<DoctorQueryViewModel>>(
-    `${ENDPOINTS.doctors.admin}/by-id/${doctorId}`
+    `${ENDPOINTS.doctors.admin}/by-user/${doctorUserId}`
   );

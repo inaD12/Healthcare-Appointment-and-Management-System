@@ -1,6 +1,6 @@
 using Patients.Domain.Enums;
 
-namespace Patients.Application.Features.Encounters.Dtos;
+namespace Patients.Domain.Dtos;
 
 public sealed record EncounterDetailsDto(
     string Id,

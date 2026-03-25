@@ -12,6 +12,7 @@ export const ENDPOINTS = {
     statsById: (id: string) => `/ratings-api/api/ratingsStats/${id}`,
   },
   patients: {
+    graphql: "/patients-api/graphql",
     root: (patientId: string) => `/patients-api/api/patients/${patientId}`,
     allergies: (patientId: string) => `/patients-api/api/patients/${patientId}/allergies`,
     chronicConditions: (patientId: string) => `/patients-api/api/patients/${patientId}/chronic-conditions`,

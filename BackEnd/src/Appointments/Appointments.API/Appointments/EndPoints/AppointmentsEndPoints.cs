@@ -1,6 +1,7 @@
 ﻿using Appointments.API.Appointments.Mappers;
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
 using Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -85,21 +86,22 @@ internal class AppointmentsEndPoints : IEndPoints
 	}
 
 	private async Task<IResult> CancelAsync(
-		[FromBody] CancelAppointmentRequest request,
+		[FromRoute] string id,
 		[FromServices] ISender sender,
 		CancellationToken cancellationToken)
 	{
-		var command = request.ToCommand();
+		var command = new CancelAppointmentCommand(id);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 
 	private async Task<IResult> RescheduleAsync(
+		[FromRoute] string id,
 		[FromBody] RescheduleAppointmentRequest request,
 		[FromServices] ISender sender,	
 		CancellationToken cancellationToken)
 	{
-		var command = request.ToCommand();
+		var command = request.ToCommand(id);
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

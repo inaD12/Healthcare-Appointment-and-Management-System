@@ -3,7 +3,6 @@ using Patients.Application.Features.Encounters.Models;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
-using Patients.Infrastructure.Features.ReadModels.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Infrastructure.Clock;
