@@ -3,7 +3,8 @@ import {
   CreateAppointmentRequest,
   AppointmentResponse,
   GetBookingsByDoctorAndDateRequest,
-  BookingQueryResponse
+  BookingQueryResponse,
+  RescheduleAppointmentRequest
 } from "@/features/appointments/types/appointmentsTypes"
 import { ENDPOINTS } from "@/config/endpoints"
 import { APIResponse } from "@/types/types"
@@ -30,5 +31,5 @@ export const getAppointmentsByDoctor = (
 export const cancelAppointment = (id: string) =>
   api.delete<APIResponse<boolean>>(ENDPOINTS.appointments.byId(id))
 
-export const rescheduleAppointment = (id: string, data: { start: string; end: string }) =>
+export const rescheduleAppointment = (id: string, data: RescheduleAppointmentRequest) =>
   api.put<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id), data)

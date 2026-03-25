@@ -7,11 +7,13 @@ import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { getPatientDashboard } from "@/features/patients/services/patientService"
 import { Appointment, PatientProfile } from "@/features/patients/types/patientTypes"
 import { cancelAppointment } from "@/features/appointments/services/appointmentService"
+import { useRouter } from "next/navigation"
 
 const PAGE_SIZE = 5
 
 export default function PatientDashboardPage() {
   const auth = useAuthGuard()
+  const router = useRouter()
 
   const [patient, setPatient] = useState<PatientProfile | null>(null)
   const [appointments, setAppointments] = useState<Appointment[]>([])
@@ -52,8 +54,8 @@ export default function PatientDashboardPage() {
     }
 }
 
-  const handleReschedule = (id: string) => {
-    console.log("Reschedule appointment", id)
+   const handleReschedule = (appointmentId: string, doctorId: string) => {
+    router.push(`/doctors/${doctorId}?rescheduleId=${appointmentId}`)
   }
 
   if (loading) return <p className="p-8 text-center">Loading...</p>
@@ -77,41 +79,41 @@ export default function PatientDashboardPage() {
           {pagedAppointments.length === 0 ? (
             <p className="text-gray-500">No appointments found.</p>
           ) : (
-            pagedAppointments.map(a => (
-              <div
-                key={a.id}
-                className="border p-4 rounded-lg flex justify-between items-center hover:shadow"
-              >
-                <div>
-                  <p><strong>Status:</strong> {a.status}</p>
-                  <p>
-                    <strong>Time:</strong>{" "}
-                    {new Date(a.start).toLocaleString()} → {new Date(a.end).toLocaleString()}
-                  </p>
-                  <p><strong>Doctor:</strong> {a.doctorName || "Unknown"}</p>
-                </div>
-                <div className="flex gap-2">
-                  {a.status === "Scheduled" && ( 
-                    <>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleCancel(a.id)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleReschedule(a.id)}
-                      >
-                        Reschedule
-                      </Button>
-                    </>
-                  )}
-                </div>
+           pagedAppointments.map(a => (
+            <div
+              key={a.id}
+              className="border p-4 rounded-lg flex justify-between items-center hover:shadow"
+            >
+              <div>
+                <p><strong>Status:</strong> {a.status}</p>
+                <p>
+                  <strong>Time:</strong>{" "}
+                  {new Date(a.start).toLocaleString()} → {new Date(a.end).toLocaleString()}
+                </p>
+                <p><strong>Doctor:</strong> {a.doctorName || "Unknown"}</p>
               </div>
-            ))
+              <div className="flex gap-2">
+                {a.status === "Scheduled" && ( 
+                  <>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleCancel(a.id)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleReschedule(a.id, a.doctorId)}
+                    >
+                      Reschedule
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))
           )}
 
           {totalPages > 1 && (

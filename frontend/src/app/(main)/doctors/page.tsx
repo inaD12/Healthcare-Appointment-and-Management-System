@@ -219,7 +219,7 @@ export default function DoctorsPage() {
           {doctors.map((doctor) => (
             <Card
               key={doctor.id}
-              onClick={() => router.push(`/doctors/${doctor.id}`)}
+              onClick={() => router.push(`/doctors/${doctor.userId}`)}
               className="cursor-pointer hover:shadow-lg hover:scale-[1.01] transition"
             >
               <CardContent className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
