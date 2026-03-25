@@ -57,22 +57,25 @@ export interface Encounter {
   patientId: string;
 }
 
+export enum AppointmentStatus {
+  Scheduled = "Scheduled",
+  Rescheduled = "Rescheduled",
+  Cancelled = "Cancelled",
+  Completed = "Completed"
+}
+
 export interface Appointment {
   id: string;
   start: string;
   end: string;
-  status: string;
+  status: AppointmentStatus;
   doctorId: string;
   patientId: string;
-  doctorName: string
+  doctorName: string;
 }
 
 export interface PatientDashboard {
-  id: string;
-  fullName: string;
-  birthDate: string;
-  allergies: string[];
-  conditions: string[];
+  profile: PatientProfile
   encounters: Encounter[];
   appointments: Appointment[];
 }

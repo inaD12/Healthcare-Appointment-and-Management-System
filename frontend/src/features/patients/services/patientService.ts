@@ -3,6 +3,7 @@ import {
   AddAllergyRequest,
   AddChronicConditionRequest,
   AllergyCommandResponse,
+  AppointmentStatus,
   ConditionCommandResponse,
   PatientDashboard,
   PatientProfile,
@@ -75,7 +76,6 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
         allergies
         conditions
       }
-
       myEncounters(first: 20) {
         nodes {
           id
@@ -86,7 +86,6 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
         }
         totalCount
       }
-
       myAppointments(first: 20) {
         nodes {
           id
@@ -100,24 +99,36 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
         totalCount
       }
     }
-  `;
+  `
 
-  const res = await api.post(ENDPOINTS.patients.graphql, { query });
+  const res = await api.post(ENDPOINTS.patients.graphql, { query })
 
-  const header = res.data?.data?.myPatientHeader?.[0];
-  const encounters = res.data?.data?.myEncounters?.nodes ?? [];
-  const appointments = res.data?.data?.myAppointments?.nodes ?? [];
+  const header = res.data?.data?.myPatientHeader
+  const encounters = res.data?.data?.myEncounters?.nodes ?? []
+  const appointments = res.data?.data?.myAppointments?.nodes ?? []
+
+  const mapStatus = (status: string) => {
+    switch (status.toUpperCase()) {
+      case "SCHEDULED": return AppointmentStatus.Scheduled
+      case "RESCHEDULED": return AppointmentStatus.Rescheduled
+      case "CANCELLED": return AppointmentStatus.Cancelled
+      case "COMPLETED": return AppointmentStatus.Completed
+      default: return AppointmentStatus.Scheduled
+    }
+  }
 
   return {
-    id: header?.id ?? "",
-    fullName: header?.fullName ?? "",
-    birthDate: header?.birthDate ?? "",
-    allergies: header?.allergies ?? [],
-    conditions: header?.conditions ?? [],
+    profile: {
+      id: header?.id ?? "",
+      fullName: header?.fullName ?? "",
+      birthDate: header?.birthDate ?? "",
+      allergies: header?.allergies ?? [],
+      conditions: header?.conditions ?? [],
+    },
     encounters: encounters.map((e: any) => ({
       id: e.id,
       startedAt: e.startedAt,
-      status: e.status,
+      status: mapStatus(e.status),
       doctorId: e.doctorId,
       patientId: e.patientId,
     })),
@@ -125,10 +136,10 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
       id: a.id,
       start: a.start,
       end: a.end,
-      status: a.status,
+      status: mapStatus(a.status),
       doctorId: a.doctorId,
       patientId: a.patientId,
       doctorName: a.doctorName
     })),
-  };
+  }
 }

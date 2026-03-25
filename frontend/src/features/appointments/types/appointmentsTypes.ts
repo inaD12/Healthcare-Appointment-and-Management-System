@@ -35,7 +35,6 @@ export interface BookingQueryResponse {
 }
 
 export type CreateAppointmentRequest = z.infer<typeof createAppointmentSchema>
-
 export type GetBookingsByDoctorAndDateRequest = z.infer<typeof getBookingsByDoctorAndDateSchema>
 
 export const appointmentResponseSchema = z.object({
