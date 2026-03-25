@@ -46,16 +46,20 @@ export default function PatientDashboardPage() {
   )
 
   const handleCancel = async (id: string) => {
-   try {
-      const data = await cancelAppointment(id)
+    try {
+      await cancelAppointment(id)
       setAppointments(prev => prev.filter(a => a.id !== id))
     } catch (err) {
       console.error("Error canceling appointment:", err)
     }
-}
+  }
 
-   const handleReschedule = (appointmentId: string, doctorId: string) => {
+  const handleReschedule = (appointmentId: string, doctorId: string) => {
     router.push(`/doctors/${doctorId}?rescheduleId=${appointmentId}`)
+  }
+
+  const handleViewDetails = (appointmentId: string) => {
+    router.push(`/appointment/${appointmentId}`)
   }
 
   if (loading) return <p className="p-8 text-center">Loading...</p>
@@ -82,7 +86,8 @@ export default function PatientDashboardPage() {
            pagedAppointments.map(a => (
             <div
               key={a.id}
-              className="border p-4 rounded-lg flex justify-between items-center hover:shadow"
+              className="border p-4 rounded-lg flex justify-between items-center hover:shadow cursor-pointer"
+              onClick={() => handleViewDetails(a.id)}
             >
               <div>
                 <p><strong>Status:</strong> {a.status}</p>
@@ -98,14 +103,20 @@ export default function PatientDashboardPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleCancel(a.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCancel(a.id)
+                      }}
                     >
                       Cancel
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleReschedule(a.id, a.doctorId)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleReschedule(a.id, a.doctorId)
+                      }}
                     >
                       Reschedule
                     </Button>

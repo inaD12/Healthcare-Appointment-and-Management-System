@@ -3,6 +3,7 @@ import {
   AddAllergyRequest,
   AddChronicConditionRequest,
   AllergyCommandResponse,
+  AppointmentByIdResponse,
   AppointmentStatus,
   ConditionCommandResponse,
   PatientDashboard,
@@ -76,16 +77,6 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
         allergies
         conditions
       }
-      myEncounters(first: 20) {
-        nodes {
-          id
-          startedAt
-          status
-          doctorId
-          patientId
-        }
-        totalCount
-      }
       myAppointments(first: 20) {
         nodes {
           id
@@ -104,7 +95,6 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
   const res = await api.post(ENDPOINTS.patients.graphql, { query })
 
   const header = res.data?.data?.myPatientHeader
-  const encounters = res.data?.data?.myEncounters?.nodes ?? []
   const appointments = res.data?.data?.myAppointments?.nodes ?? []
 
   const mapStatus = (status: string) => {
@@ -125,13 +115,6 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
       allergies: header?.allergies ?? [],
       conditions: header?.conditions ?? [],
     },
-    encounters: encounters.map((e: any) => ({
-      id: e.id,
-      startedAt: e.startedAt,
-      status: mapStatus(e.status),
-      doctorId: e.doctorId,
-      patientId: e.patientId,
-    })),
     appointments: appointments.map((a: any) => ({
       id: a.id,
       start: a.start,
@@ -142,4 +125,56 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
       doctorName: a.doctorName
     })),
   }
+}
+
+export async function getAppointmentWithEncounters(
+  appointmentId: string
+): Promise<AppointmentByIdResponse | null> {
+  const query = `
+    query GetAppointmentWithEncounters($appointmentId: String!) {
+      appointmentById(appointmentId: $appointmentId) {
+        id
+        start
+        end
+        status
+        doctorId
+        patientId
+        doctorName
+        encounterDetails {
+          id
+          startedAt
+          finalizedAt
+          status
+          notes {
+            id
+            text
+            createdAt
+          }
+          diagnoses {
+            id
+            icdCode
+            description
+          }
+          prescriptions {
+            id
+            medicationName
+            dosage
+            instructions
+          }
+          addendums {
+            id
+            text
+            createdAt
+          }
+        }
+      }
+    }
+  `
+
+  const res = await api.post(ENDPOINTS.patients.graphql, {
+    query,
+    variables: { appointmentId }
+  })
+
+  return res.data?.data ?? null
 }

@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
 			.AddDataLoader<UserNamesDataLoader>()
 			.AddDataLoader<NotesByEncounterDataLoader>()
 			.AddDataLoader<DiagnosesByEncounterDataLoader>()
+			.AddDataLoader<EncountersByAppointmentDataLoader>()
 			.AddDataLoader<PrescriptionsByEncounterDataLoader>()
 			.AddDataLoader<EncountersByPatientDataLoader>()
 			.AddDataLoader<AddendumsByEncounterDataLoader>();

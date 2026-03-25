@@ -1,4 +1,5 @@
 using Patients.Application.Features.AppointmentProjections.Queries.DataLoaders;
+using Patients.Application.Features.Encounters.Queries.DataLoaders;
 using Patients.Domain.Dtos;
 
 namespace Patients.API.Patients.GraphQL;
@@ -19,6 +20,18 @@ public class AppointmentHistoryType : ObjectType<AppointmentHistoryDto>
                 return names is null
                     ? null
                     : $"{names.FirstName} {names.LastName}";
+            });
+        
+        descriptor
+            .Field(x => x.EncounterDetails)
+            .Resolve(async (ctx, ct) =>
+            {
+                var appointment = ctx.Parent<AppointmentHistoryDto>();
+                var loader = ctx.DataLoader<EncountersByAppointmentDataLoader>();
+
+                var encouners = await loader.LoadAsync(appointment.Id, ct);
+
+                return encouners;
             });
     }
 }
