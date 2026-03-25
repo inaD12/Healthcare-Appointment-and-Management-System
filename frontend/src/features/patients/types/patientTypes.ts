@@ -64,6 +64,7 @@ export interface Appointment {
   status: string;
   doctorId: string;
   patientId: string;
+  doctorName: string
 }
 
 export interface PatientDashboard {

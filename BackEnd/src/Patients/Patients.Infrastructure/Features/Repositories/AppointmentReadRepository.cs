@@ -69,7 +69,8 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.End,
                 a.Status,
                 a.DoctorId,
-                a.PatientId))
+                a.PatientId,
+                null))
             .ToListAsync(cancellationToken);
     }
 
@@ -84,7 +85,8 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.End,
                 a.Status,
                 a.DoctorId,
-                a.PatientId));
+                a.PatientId,
+                null));
     }
 
     public IQueryable<AppointmentHistoryDto> GetByDoctor(string doctorId)
@@ -98,7 +100,8 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.End,
                 a.Status,
                 a.DoctorId,
-                a.PatientId));
+                a.PatientId,
+                null));
     }
 
     public IQueryable<AppointmentHistoryDto> GetById(string appointmentId)
@@ -112,6 +115,7 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.End,
                 a.Status,
                 a.DoctorId,
-                a.PatientId));
+                a.PatientId,
+                null));
     }
 }

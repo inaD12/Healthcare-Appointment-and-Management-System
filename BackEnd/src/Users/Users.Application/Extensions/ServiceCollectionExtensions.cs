@@ -20,7 +20,8 @@ public static class ServiceCollectionExtensions
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
 			.AddScoped<IPermissionService, PermissionService>()
 			.AddScoped<IRolesService, RolesService>()
-			.AddTransient<INamesService, NamesService>();
+			.AddTransient<INamesService, NamesService>()
+			.AddTransient<IBatchNamesService, NamesService>();
 
 		services
 			.AddMediatR(currentAssembly)

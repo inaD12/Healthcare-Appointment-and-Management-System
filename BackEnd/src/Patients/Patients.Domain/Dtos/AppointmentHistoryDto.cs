@@ -8,4 +8,5 @@ public sealed record AppointmentHistoryDto(
     DateTime End,
     AppointmentStatus Status,
     string DoctorId,
-    string PatientId);
+    string PatientId,
+    string? DoctorName);

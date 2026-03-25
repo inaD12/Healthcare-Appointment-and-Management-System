@@ -4,6 +4,7 @@ using Patients.Domain.Abstractions.Repositories;
 using Patients.Infrastructure.Features.DBContexts;
 using Patients.Infrastructure.Features.Helpers;
 using Patients.Infrastructure.Features.Repositories;
+using Patients.Infrastructure.Features.Services;
 using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Extensions;
 
@@ -19,6 +20,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IPatientRepository, PatientRepository>()
 			.AddScoped<IEncounterRepository, EncounterRepository>()
 			.AddScoped<IAppointmentReadRepository, AppointmentReadRepository>()
+			.AddTransient<IBatchNamesService, BatchNamesService>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 		
 		services

@@ -95,6 +95,7 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
           status
           doctorId
           patientId
+          doctorName
         }
         totalCount
       }
@@ -127,6 +128,7 @@ export async function getPatientDashboard(): Promise<PatientDashboard> {
       status: a.status,
       doctorId: a.doctorId,
       patientId: a.patientId,
+      doctorName: a.doctorName
     })),
   };
 }

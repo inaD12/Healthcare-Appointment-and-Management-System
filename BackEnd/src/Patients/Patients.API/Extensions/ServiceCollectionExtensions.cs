@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
 		serviceCollection
 			.AddGraphQLServer()
 			.AddQueryType<Query>()
+			.AddType<AppointmentHistoryType>()
 			.AddFiltering()
 			.AddSorting()
 			.AddProjections();
