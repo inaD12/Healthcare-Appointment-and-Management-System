@@ -61,6 +61,19 @@ export const GetAllRatingsByDoctorRequestSchema = z.object({
     .default(GetAllRatingsByDoctorRequestDefaults.PageSize),
 })
 
+export const AddRatingRequestSchema = z.object({
+  AppointmentId: z.string()
+    .min(RatingsBusinessConfiguration.ID_MIN_LENGTH)
+    .max(RatingsBusinessConfiguration.ID_MAX_LENGTH),
+
+  Score: z.number()
+    .min(RatingsBusinessConfiguration.MIN_RATING_SCORE)
+    .max(RatingsBusinessConfiguration.MAX_RATING_SCORE),
+
+  Comment: z.string()
+    .min(RatingsBusinessConfiguration.MAX_COMMENT_LENGTH),
+})
+
 export const RatingQueryViewModelSchema = z.object({
   Id: z.string(),
   DoctorId: z.string(),
@@ -71,9 +84,13 @@ export const RatingQueryViewModelSchema = z.object({
   Comment: z.string().nullable().optional(),
 })
 
-export const RatingPaginatedQueryResponseSchema =
-  PaginatedQueryResponseSchema(RatingQueryViewModelSchema)
+export const RatingCommandResponseSchema = z.object({
+  Id: z.string(),
+})
 
+export const RatingPaginatedQueryResponseSchema = PaginatedQueryResponseSchema(RatingQueryViewModelSchema)
+export type AddRatingRequest = z.infer<typeof AddRatingRequestSchema>
+export type RatingCommandResponse = z.infer<typeof RatingCommandResponseSchema>
 export type RatingQueryViewModel = z.infer<typeof RatingQueryViewModelSchema>
 export type RatingPaginatedQueryResponse = z.infer<typeof RatingPaginatedQueryResponseSchema>
 export type GetAllRatingsByDoctorRequest = z.infer<typeof GetAllRatingsByDoctorRequestSchema>

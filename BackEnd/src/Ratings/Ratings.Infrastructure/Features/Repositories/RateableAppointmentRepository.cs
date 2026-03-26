@@ -18,12 +18,21 @@ public sealed class RateableAppointmentsRepository(RatingsDbContext context) : I
         await context.RateableAppointments.AddAsync(item, ct);
     }
 
-    public async Task ConsumeAsync(string appointmentId, CancellationToken ct)
+    public async Task MarkAsRatedAsync(string appointmentId, CancellationToken ct)
     {
         var entity = await context.RateableAppointments
             .Where(x => x.Id == appointmentId && !x.IsConsumed)
             .ExecuteUpdateAsync(
                 setters => setters.SetProperty(x => x.IsConsumed, true),
+                ct);
+    }
+    
+    public async Task MarkAsNotRatedAsync(string appointmentId, CancellationToken ct)
+    {
+        var entity = await context.RateableAppointments
+            .Where(x => x.Id == appointmentId && !x.IsConsumed)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(x => x.IsConsumed, false),
                 ct);
     }
 }
