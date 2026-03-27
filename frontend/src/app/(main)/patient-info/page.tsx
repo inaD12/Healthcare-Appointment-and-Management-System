@@ -5,14 +5,14 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { getPatientDashboard } from "@/features/patients/services/patientService"
-import { Appointment, PatientProfile } from "@/features/patients/types/patientTypes"
+import { Appointment, AppointmentStatus, PatientProfile } from "@/features/patients/types/patientTypes"
 import { cancelAppointment } from "@/features/appointments/services/appointmentService"
 import { useRouter } from "next/navigation"
 
 const PAGE_SIZE = 5
 
 export default function PatientDashboardPage() {
-  const auth = useAuthGuard()
+  useAuthGuard()
   const router = useRouter()
 
   const [patient, setPatient] = useState<PatientProfile | null>(null)
@@ -98,7 +98,7 @@ export default function PatientDashboardPage() {
                 <p><strong>Doctor:</strong> {a.doctorName || "Unknown"}</p>
               </div>
               <div className="flex gap-2">
-                {a.status === "Scheduled" && ( 
+                {a.status === AppointmentStatus.Scheduled && ( 
                   <>
                     <Button
                       variant="destructive"
