@@ -70,6 +70,7 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.Status,
                 a.DoctorId,
                 a.PatientId,
+                null,
                 null))
             .ToListAsync(cancellationToken);
     }
@@ -86,6 +87,7 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.Status,
                 a.DoctorId,
                 a.PatientId,
+                null,
                 null));
     }
 
@@ -101,6 +103,7 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.Status,
                 a.DoctorId,
                 a.PatientId,
+                null,
                 null));
     }
 
@@ -116,6 +119,7 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
                 a.Status,
                 a.DoctorId,
                 a.PatientId,
+                null,
                 null));
     }
 }

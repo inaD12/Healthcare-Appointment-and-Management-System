@@ -7,11 +7,11 @@ export interface APIResponse<T>{
 
 export function PaginatedQueryResponseSchema<T extends ZodType<any, any, any>>(itemSchema: T) {
   return z.object({
-    Items: z.array(itemSchema),
-    Page: z.number().int(),
-    PageSize: z.number().int(),
-    TotalCount: z.number().int(),
-    HasNextPage: z.boolean(),
-    HasPreviousPage: z.boolean(),
+    items: z.array(itemSchema),
+    page: z.number().int(),
+    pageSize: z.number().int(),
+    totalCount: z.number().int(),
+    hasNextPage: z.boolean(),
+    hasPreviousPage: z.boolean(),
   })
 }

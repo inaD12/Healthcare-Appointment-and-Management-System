@@ -27,8 +27,4 @@
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.5.4" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\ReadModels\Enums\" />
-    </ItemGroup>
-
 </Project>

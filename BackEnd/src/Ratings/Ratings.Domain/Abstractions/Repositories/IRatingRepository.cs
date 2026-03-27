@@ -7,6 +7,6 @@ namespace Ratings.Domain.Abstractions.Repositories;
 
 public interface IRatingRepository : IGenericRepository<Rating>
 {
-    Task<bool> ExistsForAppointmentAsync(string appointmentId, CancellationToken cancellationToken = default);
+    Task<Rating?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default);
     Task<PagedList<Rating>> GetAllAsync(RatingPagedListQuery query, CancellationToken cancellationToken = default);
 }

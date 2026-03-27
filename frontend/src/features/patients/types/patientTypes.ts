@@ -49,19 +49,75 @@ export interface PatientProfile {
   conditions: string[]
 }
 
-export interface Encounter {
-  id: string;
-  startedAt: string;
-  status: string;
-  doctorId: string;
-  patientId: string;
+export interface EncounterListItem {
+  id: string
+  startedAt: string
+  status: EncounterStatus
+  doctorId: string
+  patientId: string
+}
+
+export interface AppointmentByIdResponse {
+  appointmentById: {
+    id: string
+    start: string
+    end: string
+    status: AppointmentStatus
+    doctorId: string
+    patientId: string
+    doctorName?: string
+    encounterDetails: EncounterDetails[]
+  }[]
+}
+
+export interface EncounterDetails {
+  id: string
+  startedAt: string
+  finalizedAt?: string | null
+  status: EncounterStatus
+
+  notes: Note[]
+  diagnoses: Diagnosis[]
+  prescriptions: Prescription[]
+  addendums: Addendum[]
+}
+
+export interface Diagnosis {
+  id: string
+  icdCode: string
+  description: string
+}
+
+export interface Prescription {
+  id: string
+  medicationName: string
+  dosage: string
+  instructions: string
+}
+
+export interface Addendum {
+  id: string
+  text: string
+  createdAt: string
+}
+
+export enum EncounterStatus {
+  InProgress = "IN_PROGRESS",
+  Finalized = "FINALIZED",
+  Locked = "LOCKED"
+}
+
+export interface Note {
+  id: string
+  text: string
+  createdAt: string
 }
 
 export enum AppointmentStatus {
-  Scheduled = "Scheduled",
-  Rescheduled = "Rescheduled",
-  Cancelled = "Cancelled",
-  Completed = "Completed"
+  Scheduled = "SCHEDULED",
+  Rescheduled = "RESCHEDULED",
+  Cancelled = "CANCELLED",
+  Completed = "COMPLETED"
 }
 
 export interface Appointment {
@@ -72,11 +128,11 @@ export interface Appointment {
   doctorId: string;
   patientId: string;
   doctorName: string;
+  encounters: EncounterListItem[];
 }
 
 export interface PatientDashboard {
   profile: PatientProfile
-  encounters: Encounter[];
   appointments: Appointment[];
 }
 

@@ -81,10 +81,10 @@ export default function DoctorCalendarPage() {
         PageSize: 4,
       })
 
-      const fetchedRatings = res?.data?.data?.Items ?? []
+      const fetchedRatings = res?.data?.data?.items ?? []
       setRatings(fetchedRatings)
       setRatingsPage(page)
-      setRatingsTotalPages(Math.ceil((res?.data?.data?.TotalCount ?? fetchedRatings.length) / 4))
+      setRatingsTotalPages(Math.ceil((res?.data?.data?.totalCount ?? fetchedRatings.length) / 4))
     } catch (err: any) {
       if (err.response?.status !== 404) console.error(err)
       setRatings([])

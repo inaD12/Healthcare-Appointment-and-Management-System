@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.Configurations;
-using Patients.Infrastructure.Features.ReadModels;
 
 namespace Patients.Infrastructure.Features.DBContexts;
 

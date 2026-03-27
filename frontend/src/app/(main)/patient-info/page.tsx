@@ -5,14 +5,14 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { getPatientDashboard } from "@/features/patients/services/patientService"
-import { Appointment, PatientProfile } from "@/features/patients/types/patientTypes"
+import { Appointment, AppointmentStatus, PatientProfile } from "@/features/patients/types/patientTypes"
 import { cancelAppointment } from "@/features/appointments/services/appointmentService"
 import { useRouter } from "next/navigation"
 
 const PAGE_SIZE = 5
 
 export default function PatientDashboardPage() {
-  const auth = useAuthGuard()
+  useAuthGuard()
   const router = useRouter()
 
   const [patient, setPatient] = useState<PatientProfile | null>(null)
@@ -46,16 +46,20 @@ export default function PatientDashboardPage() {
   )
 
   const handleCancel = async (id: string) => {
-   try {
-      const data = await cancelAppointment(id)
+    try {
+      await cancelAppointment(id)
       setAppointments(prev => prev.filter(a => a.id !== id))
     } catch (err) {
       console.error("Error canceling appointment:", err)
     }
-}
+  }
 
-   const handleReschedule = (appointmentId: string, doctorId: string) => {
+  const handleReschedule = (appointmentId: string, doctorId: string) => {
     router.push(`/doctors/${doctorId}?rescheduleId=${appointmentId}`)
+  }
+
+  const handleViewDetails = (appointmentId: string) => {
+    router.push(`/appointment/${appointmentId}`)
   }
 
   if (loading) return <p className="p-8 text-center">Loading...</p>
@@ -82,7 +86,8 @@ export default function PatientDashboardPage() {
            pagedAppointments.map(a => (
             <div
               key={a.id}
-              className="border p-4 rounded-lg flex justify-between items-center hover:shadow"
+              className="border p-4 rounded-lg flex justify-between items-center hover:shadow cursor-pointer"
+              onClick={() => handleViewDetails(a.id)}
             >
               <div>
                 <p><strong>Status:</strong> {a.status}</p>
@@ -93,19 +98,25 @@ export default function PatientDashboardPage() {
                 <p><strong>Doctor:</strong> {a.doctorName || "Unknown"}</p>
               </div>
               <div className="flex gap-2">
-                {a.status === "Scheduled" && ( 
+                {a.status === AppointmentStatus.Scheduled && ( 
                   <>
                     <Button
                       variant="destructive"
                       size="sm"
-                      onClick={() => handleCancel(a.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleCancel(a.id)
+                      }}
                     >
                       Cancel
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleReschedule(a.id, a.doctorId)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleReschedule(a.id, a.doctorId)
+                      }}
                     >
                       Reschedule
                     </Button>

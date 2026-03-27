@@ -61,6 +61,30 @@ public class EncounterRepository(PatientsDbContext context) : GenericRepository<
             .ToListAsync(cancellationToken);
     }
     
+    public async Task<List<EncounterDetailsDto>> GetDetailsByAppointmentIdsAsync(
+        IReadOnlyList<string> appointmentIds,
+        CancellationToken cancellationToken)
+    {
+        var encounters = await context.Encounters
+            .Where(e => appointmentIds.Contains(e.AppointmentId))
+            .ToListAsync(cancellationToken);
+
+        var result = encounters
+            .OfType<Encounter>()
+            .Select(e => new EncounterDetailsDto(
+                e.Id,
+                e.StartedAt,
+                e.FinalizedAt,
+                e.Status,
+                e.Notes.Select(n => new NoteDto(n.Id, n.Text, n.CreatedAt)).ToList(),
+                e.Diagnoses.Select(d => new DiagnosisDto(d.Id, d.IcdCode, d.Description)).ToList(),
+                e.Prescriptions.Select(p => new PrescriptionDto(p.Id, p.MedicationName, p.Dosage, p.Instructions)).ToList(),
+                e.Addendums.Select(a => new AddendumDto(a.Id, a.Text, a.CreatedAt)).ToList()
+            ))
+            .ToList();
+
+        return result;
+    }
     public async Task<Dictionary<string, List<AddendumDto>>> GetAddendumsByEncounterIdsAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken)

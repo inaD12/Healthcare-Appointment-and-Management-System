@@ -12,7 +12,6 @@ public interface IEncounterRepository : IGenericRepository<Encounter>
     Task<List<EncounterListItemDto>> GetByPatientIdsAsync(
         IReadOnlyList<string> patientIds,
         CancellationToken cancellationToken);
-    
     Task<Dictionary<string, List<AddendumDto>>> GetAddendumsByEncounterIdsAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken);
@@ -27,5 +26,9 @@ public interface IEncounterRepository : IGenericRepository<Encounter>
 
     Task<Dictionary<string, List<PrescriptionDto>>> GetPrescriptionsByEncounterIdsAsync(
         IReadOnlyList<string> encounterIds,
+        CancellationToken cancellationToken);
+
+    Task<List<EncounterDetailsDto>> GetDetailsByAppointmentIdsAsync(
+        IReadOnlyList<string> appointmentIds,
         CancellationToken cancellationToken);
 }

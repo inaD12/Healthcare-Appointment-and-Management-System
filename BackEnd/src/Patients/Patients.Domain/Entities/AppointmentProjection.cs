@@ -1,4 +1,4 @@
-using Patients.Infrastructure.Features.ReadModels.Enums;
+using Patients.Domain.Enums;
 
 namespace Patients.Domain.Entities;
 

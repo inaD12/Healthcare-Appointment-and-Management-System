@@ -1,4 +1,4 @@
-using Patients.Infrastructure.Features.ReadModels.Enums;
+using Patients.Domain.Enums;
 
 namespace Patients.Domain.Dtos;
 
@@ -9,4 +9,5 @@ public sealed record AppointmentHistoryDto(
     AppointmentStatus Status,
     string DoctorId,
     string PatientId,
-    string? DoctorName);
+    string? DoctorName,
+    EncounterDetailsDto? EncounterDetails);

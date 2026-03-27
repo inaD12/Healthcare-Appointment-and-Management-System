@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using Patients.Domain.Abstractions.Repositories;
-using Patients.Infrastructure.Features.ReadModels;
-using Patients.Infrastructure.Features.ReadModels.Enums;
+using Patients.Domain.Enums;
 using Shared.Application.IntegrationEvents;
 
 namespace Patients.Infrastructure.Features.Consumers;

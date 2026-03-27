@@ -37,6 +37,7 @@ public sealed class AddRatingCommandHandler(
             request.Comment);
         
         await ratingRepository.AddAsync(rating, cancellationToken);
+        await rateableAppointmentRepository.MarkAsRatedAsync(request.AppointmentId, cancellationToken);
         
         var doctorRatingStats = await doctorRatingStatsRepository.GetOrCreateByIdAsync(rating.DoctorId, cancellationToken);
         doctorRatingStats.ApplyNewRating(request.Score);
