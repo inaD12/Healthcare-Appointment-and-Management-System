@@ -45,14 +45,14 @@ export function DoctorRatings({
           <>
             <div className="space-y-2">
               {displayedRatings.map(r => (
-                <div key={r.Id} className="border-b border-gray-200 py-2">
+                <div key={r.id} className="border-b border-gray-200 py-2">
                   <div className="flex justify-between">
-                    <span className="font-medium">Score: {r.Score} ⭐</span>
+                    <span className="font-medium">Score: {r.score} ⭐</span>
                     <span className="text-sm text-gray-500">
-                      {new Date(r.CreatedAt).toLocaleDateString()}
+                      {new Date(r.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="mt-1">{r.Comment}</p>
+                  <p className="mt-1">{r.comment}</p>
                 </div>
               ))}
             </div>
