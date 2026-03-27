@@ -1,4 +1,4 @@
-﻿namespace Patients.Infrastructure.Features.ReadModels.Enums;
+﻿namespace Patients.Domain.Enums;
 
 public enum AppointmentStatus
 {

@@ -4,16 +4,19 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import {
   AppointmentByIdResponse,
+  AppointmentStatus,
   EncounterDetails
 } from "@/features/patients/types/patientTypes"
 import { getAppointmentWithEncounters } from "@/features/patients/services/patientService"
-import { addRating } from "@/features/ratings/services/ratingService"
+import { addRating, getRatingByAppointment } from "@/features/ratings/services/ratingService"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 
 export default function AppointmentPage() {
   const params = useParams()
   const { id } = params as { id: string }
 
   const [appointment, setAppointment] = useState<AppointmentByIdResponse | null>(null)
+  const [rating, setRating] = useState<RatingQueryViewModel | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [score, setScore] = useState<number>(5)
@@ -24,10 +27,25 @@ export default function AppointmentPage() {
   useEffect(() => {
     if (!id) return
 
-    const fetchAppointment = async () => {
+    const fetchData = async () => {
       try {
         const data = await getAppointmentWithEncounters(id)
         setAppointment(data)
+
+        const app = data?.appointmentById?.[0]
+
+        if (app?.status === AppointmentStatus.Completed) {
+          try {
+            const ratingRes = await getRatingByAppointment(id)
+            setRating(ratingRes.data.data)
+          } catch (err: any) {
+            if (err.response?.status !== 404) {
+              console.error(err)
+              setError("Failed to fetch rating")
+            }
+          }
+        }
+
       } catch (err) {
         console.error(err)
         setError("Failed to fetch appointment")
@@ -36,7 +54,7 @@ export default function AppointmentPage() {
       }
     }
 
-    fetchAppointment()
+    fetchData()
   }, [id])
 
   const handleSubmitRating = async () => {
@@ -52,6 +70,15 @@ export default function AppointmentPage() {
       })
 
       setRatingSuccess(true)
+      setRating({
+        id: "temp",
+        doctorId: app.doctorId,
+        patientId: app.patientId,
+        appointmentId: app.id,
+        score: score,
+        createdAt: new Date().toISOString(),
+        comment: comment
+      })
     } catch (err) {
       console.error(err)
       alert("Failed to submit rating")
@@ -109,7 +136,34 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
         <p><strong>End:</strong> {new Date(app.end).toLocaleString()}</p>
       </div>
 
-      {app.status === "COMPLETED" && !ratingSuccess && (
+      {rating && (
+        <div className="mt-8 rounded-2xl border bg-gradient-to-br from-green-50 to-emerald-50 p-6 shadow-lg">
+          
+          <h2 className="text-xl font-bold text-gray-800 mb-4">
+            Your Rating
+          </h2>
+
+          <div className="flex text-3xl text-yellow-400 mb-3">
+            {[1,2,3,4,5].map((star) => (
+              <span key={star}>
+                {star <= rating.score ? "★" : "☆"}
+              </span>
+            ))}
+          </div>
+
+          {rating.comment && (
+            <p className="text-gray-700 mb-2">
+              "{rating.comment}"
+            </p>
+          )}
+
+          <p className="text-sm text-gray-500">
+            Submitted on {new Date(rating.createdAt).toLocaleString()}
+          </p>
+
+        </div>
+      )}
+      {app.status === AppointmentStatus.Completed && !rating && !ratingSuccess && (
         <div className="mt-8 rounded-2xl border bg-gradient-to-br from-blue-50 to-indigo-50 p-6 shadow-lg transition hover:shadow-xl">
           
           <h2 className="text-xl font-bold text-gray-800 mb-4">

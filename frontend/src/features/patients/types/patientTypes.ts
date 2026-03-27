@@ -62,7 +62,7 @@ export interface AppointmentByIdResponse {
     id: string
     start: string
     end: string
-    status: string
+    status: AppointmentStatus
     doctorId: string
     patientId: string
     doctorName?: string
@@ -114,10 +114,10 @@ export interface Note {
 }
 
 export enum AppointmentStatus {
-  Scheduled = "Scheduled",
-  Rescheduled = "Rescheduled",
-  Cancelled = "Cancelled",
-  Completed = "Completed"
+  Scheduled = "SCHEDULED",
+  Rescheduled = "RESCHEDULED",
+  Cancelled = "CANCELLED",
+  Completed = "COMPLETED"
 }
 
 export interface Appointment {

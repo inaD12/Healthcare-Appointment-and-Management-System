@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { AddRatingRequest, GetAllRatingsByDoctorRequest, RatingCommandResponse, RatingPaginatedQueryResponse } from "../types/ratingTypes"
+import { AddRatingRequest, GetAllRatingsByDoctorRequest, RatingCommandResponse, RatingPaginatedQueryResponse, RatingQueryViewModel } from "../types/ratingTypes"
 import { APIResponse } from "@/types/types"
 
 
@@ -19,4 +19,11 @@ export const addRating = (
   api.post<APIResponse<RatingCommandResponse>>(
     ENDPOINTS.ratings.root,
     data
+  )
+
+export const getRatingByAppointment = (
+  appointmentId: string
+) =>
+  api.get<APIResponse<RatingQueryViewModel>>(
+    ENDPOINTS.ratings.byAppointment(appointmentId)
   )

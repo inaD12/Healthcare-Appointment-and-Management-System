@@ -15,7 +15,7 @@ public class RatingsRepository(RatingsDbContext context)
     public async Task<Rating?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default)
     {
         var rating = await context.Ratings
-            .FirstOrDefaultAsync(x => x.Id == appointmentId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.AppointmentId == appointmentId, cancellationToken);
         
         return rating;
     }

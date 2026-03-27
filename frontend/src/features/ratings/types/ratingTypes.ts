@@ -75,13 +75,13 @@ export const AddRatingRequestSchema = z.object({
 })
 
 export const RatingQueryViewModelSchema = z.object({
-  Id: z.string(),
-  DoctorId: z.string(),
-  PatientId: z.string(),
-  AppointmentId: z.string(),
-  Score: z.number().int(),
-  CreatedAt: z.string(),
-  Comment: z.string().nullable().optional(),
+  id: z.string(),
+  doctorId: z.string(),
+  patientId: z.string(),
+  appointmentId: z.string(),
+  score: z.number().int(),
+  createdAt: z.string(),
+  comment: z.string().nullable().optional(),
 })
 
 export const RatingCommandResponseSchema = z.object({
