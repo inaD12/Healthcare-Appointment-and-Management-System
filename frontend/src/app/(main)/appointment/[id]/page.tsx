@@ -8,7 +8,7 @@ import {
   EncounterDetails
 } from "@/features/patients/types/patientTypes"
 import { getAppointmentWithEncounters } from "@/features/patients/services/patientService"
-import { addRating, getRatingByAppointment } from "@/features/ratings/services/ratingService"
+import { addRating, editRating, getRatingByAppointment, removeRating } from "@/features/ratings/services/ratingService"
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 
 export default function AppointmentPage() {
@@ -22,7 +22,7 @@ export default function AppointmentPage() {
   const [score, setScore] = useState<number>(5)
   const [comment, setComment] = useState<string>("")
   const [ratingLoading, setRatingLoading] = useState(false)
-  const [ratingSuccess, setRatingSuccess] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -57,21 +57,59 @@ export default function AppointmentPage() {
     fetchData()
   }, [id])
 
+
+  const handleDeleteRating = async () => {
+    if (!rating) return
+
+    try {
+      await removeRating(rating.id)
+      setRating(null)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to delete rating")
+    }
+  }
+
+  const handleEditRating = async () => {
+    if (!rating) return
+
+    try {
+      setRatingLoading(true)
+
+      await editRating(rating.id, {
+        Score: score,
+        Comment: comment
+      })
+
+      setRating({
+        ...rating,
+        score,
+        comment
+      })
+
+      setIsEditing(false)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to edit rating")
+    } finally {
+      setRatingLoading(false)
+    }
+  }
+
   const handleSubmitRating = async () => {
     if (!app) return
 
     try {
       setRatingLoading(true)
 
-      await addRating({
+      var raitingResult = await addRating({
         AppointmentId: app.id,
         Score: score,
         Comment: comment
       })
 
-      setRatingSuccess(true)
       setRating({
-        id: "temp",
+        id: raitingResult.data.data.id,
         doctorId: app.doctorId,
         patientId: app.patientId,
         appointmentId: app.id,
@@ -137,34 +175,99 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
       </div>
 
       {rating && (
-        <div className="mt-8 rounded-2xl border bg-gradient-to-br from-green-50 to-emerald-50 p-6 shadow-lg">
-          
+        <div className="mt-8 rounded-2xl border bg-linear-to-br from-green-50 to-emerald-50 p-6 shadow-lg">
+
           <h2 className="text-xl font-bold text-gray-800 mb-4">
             Your Rating
           </h2>
 
-          <div className="flex text-3xl text-yellow-400 mb-3">
-            {[1,2,3,4,5].map((star) => (
-              <span key={star}>
-                {star <= rating.score ? "★" : "☆"}
-              </span>
-            ))}
-          </div>
+          {!isEditing && (
+            <>
+              <div className="flex text-3xl text-yellow-400 mb-3">
+                {[1,2,3,4,5].map((star) => (
+                  <span key={star}>
+                    {star <= rating.score ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
 
-          {rating.comment && (
-            <p className="text-gray-700 mb-2">
-              "{rating.comment}"
-            </p>
+              {rating.comment && (
+                <p className="text-gray-700 mb-2">
+                  "{rating.comment}"
+                </p>
+              )}
+
+              <p className="text-sm text-gray-500 mb-4">
+                Submitted on {new Date(rating.createdAt).toLocaleString()}
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setIsEditing(true)
+                    setScore(rating.score)
+                    setComment(rating.comment ?? "")
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={handleDeleteRating}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </>
           )}
 
-          <p className="text-sm text-gray-500">
-            Submitted on {new Date(rating.createdAt).toLocaleString()}
-          </p>
+          {isEditing && (
+            <>
+              <div className="flex gap-2 mb-4">
+                {[1,2,3,4,5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => setScore(star)}
+                    className={`text-3xl ${
+                      star <= score ? "text-yellow-400" : "text-gray-300"
+                    }`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="w-full rounded-lg border p-3 mb-4"
+              />
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleEditRating}
+                  disabled={ratingLoading}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  Save
+                </button>
+
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
+                >
+                  Cancel
+                </button>
+              </div>
+            </>
+          )}
 
         </div>
       )}
-      {app.status === AppointmentStatus.Completed && !rating && !ratingSuccess && (
-        <div className="mt-8 rounded-2xl border bg-gradient-to-br from-blue-50 to-indigo-50 p-6 shadow-lg transition hover:shadow-xl">
+      {app.status === AppointmentStatus.Completed && !rating && (
+        <div className="mt-8 rounded-2xl border bg-linear-to-br from-blue-50 to-indigo-50 p-6 shadow-lg transition hover:shadow-xl">
           
           <h2 className="text-xl font-bold text-gray-800 mb-4">
             Rate your appointment
@@ -174,7 +277,6 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
             How was your experience with <span className="font-semibold">{app.doctorName}</span>?
           </p>
 
-          {/* Star Rating */}
           <div className="flex gap-2 mb-4">
             {[1,2,3,4,5].map((star) => (
               <button
@@ -189,7 +291,6 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
             ))}
           </div>
 
-          {/* Score text */}
           <p className="text-sm text-gray-500 mb-4">
             {score === 1 && "Very poor experience"}
             {score === 2 && "Not great"}
@@ -198,7 +299,6 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
             {score === 5 && "Excellent care"}
           </p>
 
-          {/* Comment */}
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -206,7 +306,6 @@ const encounter: EncounterDetails = app.encounterDetails && app.encounterDetails
             className="w-full rounded-lg border p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
 
-          {/* Submit */}
           <button
             onClick={handleSubmitRating}
             disabled={ratingLoading}

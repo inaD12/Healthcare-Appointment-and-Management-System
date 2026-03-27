@@ -30,7 +30,7 @@ public sealed class RateableAppointmentsRepository(RatingsDbContext context) : I
     public async Task MarkAsNotRatedAsync(string appointmentId, CancellationToken ct)
     {
         var entity = await context.RateableAppointments
-            .Where(x => x.Id == appointmentId && !x.IsConsumed)
+            .Where(x => x.Id == appointmentId && x.IsConsumed)
             .ExecuteUpdateAsync(
                 setters => setters.SetProperty(x => x.IsConsumed, false),
                 ct);

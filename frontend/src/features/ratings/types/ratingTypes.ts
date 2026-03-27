@@ -71,7 +71,19 @@ export const AddRatingRequestSchema = z.object({
     .max(RatingsBusinessConfiguration.MAX_RATING_SCORE),
 
   Comment: z.string()
-    .min(RatingsBusinessConfiguration.MAX_COMMENT_LENGTH),
+    .min(RatingsBusinessConfiguration.MAX_COMMENT_LENGTH)
+    .optional,
+})
+
+export const EditRatingRequestSchema = z.object({
+  Score: z.number()
+    .min(RatingsBusinessConfiguration.MIN_RATING_SCORE)
+    .max(RatingsBusinessConfiguration.MAX_RATING_SCORE)
+    .optional,
+
+  Comment: z.string()
+    .min(RatingsBusinessConfiguration.MAX_COMMENT_LENGTH)
+    .optional,
 })
 
 export const RatingQueryViewModelSchema = z.object({
@@ -85,11 +97,12 @@ export const RatingQueryViewModelSchema = z.object({
 })
 
 export const RatingCommandResponseSchema = z.object({
-  Id: z.string(),
+  id: z.string(),
 })
 
 export const RatingPaginatedQueryResponseSchema = PaginatedQueryResponseSchema(RatingQueryViewModelSchema)
 export type AddRatingRequest = z.infer<typeof AddRatingRequestSchema>
+export type EditRatingRequest = z.infer<typeof EditRatingRequestSchema>
 export type RatingCommandResponse = z.infer<typeof RatingCommandResponseSchema>
 export type RatingQueryViewModel = z.infer<typeof RatingQueryViewModelSchema>
 export type RatingPaginatedQueryResponse = z.infer<typeof RatingPaginatedQueryResponseSchema>
