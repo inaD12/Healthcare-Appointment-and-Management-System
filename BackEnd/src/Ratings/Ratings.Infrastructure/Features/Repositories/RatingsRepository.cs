@@ -1,4 +1,4 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Domain.Entities;
 using Ratings.Domain.Models;
@@ -12,15 +12,14 @@ namespace Ratings.Infrastructure.Features.Repositories;
 public class RatingsRepository(RatingsDbContext context)
     : GenericRepository<Rating>(context), IRatingRepository
 {
-    public async Task<bool> ExistsForAppointmentAsync(
-        string appointmentId,
-        CancellationToken cancellationToken = default)
+    public async Task<Rating?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default)
     {
-        return await context.Ratings
-            .AsNoTracking()
-            .AnyAsync(r => r.AppointmentId == appointmentId, cancellationToken);
+        var rating = await context.Ratings
+            .FirstOrDefaultAsync(x => x.Id == appointmentId, cancellationToken);
+        
+        return rating;
     }
-    
+
     public async Task<PagedList<Rating>> GetAllAsync(
         RatingPagedListQuery query,
         CancellationToken cancellationToken = default)

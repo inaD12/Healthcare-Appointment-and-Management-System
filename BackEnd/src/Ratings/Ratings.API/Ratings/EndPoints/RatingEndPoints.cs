@@ -5,6 +5,7 @@ using Ratings.API.Ratings.Models.Requests;
 using Ratings.API.Ratings.Models.Responses;
 using Ratings.Application.Features.Ratings.Commands.RemoveRating;
 using Ratings.Application.Features.Ratings.Queries.GetDoctorRatingStatsById;
+using Ratings.Application.Features.Ratings.Queries.GetRatingByAppointmentId;
 using Ratings.Application.Features.Ratings.Queries.GetRatingById;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
@@ -40,6 +41,13 @@ internal class RatingEndPoints : IEndPoints
 		    .RequireAuthorization(Permissions.RemoveRating);
 
 	    ratingsGroup.MapGet("/{id}", GetRatingByIdAsync)
+		    .Produces<RatingQueryResponse>()
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization(Permissions.GetRating);
+	    
+	    ratingsGroup.MapGet("/by-appointment/{appointmentId}", GetRatingByAppointmentIdAsync)
 		    .Produces<RatingQueryResponse>()
 		    .Produces(StatusCodes.Status401Unauthorized)
 		    .Produces(StatusCodes.Status404NotFound)
@@ -124,6 +132,20 @@ internal class RatingEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var query = new GetRatingByIdQuery(id);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var queryResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
+	}
+	
+	private async Task<IResult> GetRatingByAppointmentIdAsync(
+		[FromRoute] string appointmentId,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = new GetRatingByAppointmentIdQuery(appointmentId);
 		var res = await sender.Send(query, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
