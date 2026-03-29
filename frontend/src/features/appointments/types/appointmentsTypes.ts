@@ -52,9 +52,11 @@ export const appointmentResponseSchema = z.object({
   id: z.string().min(AppointmentsBusinessConfiguration.ID_MIN_LENGTH),
   doctorId: z.string(),
   patientId: z.string(),
-  start: z.string(),
-  end: z.string(),
-  status: z.enum(["Scheduled", "BooRescheduledked", "Cancelled", "Completed"]),
+  duration: z.object({
+    start: z.string(),
+    end: z.string(),
+  }),
+  status: z.enum(["Scheduled", "Rescheduled", "Cancelled", "Completed"]),
 })
 
 export type AppointmentResponse = z.infer<typeof appointmentResponseSchema>

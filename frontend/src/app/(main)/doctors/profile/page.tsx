@@ -28,6 +28,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { AppointmentResponse } from "@/features/appointments/types/appointmentsTypes"
+import { getMyAppointments } from "@/features/appointments/services/appointmentService"
+import DoctorSchedule from "@/components/schedule/DoctorSchedule"
 
 export default function DoctorProfilePage() {
   useAuthGuard()
@@ -40,6 +43,7 @@ export default function DoctorProfilePage() {
   const [bioInput, setBioInput] = useState("")
   const [newSpeciality, setNewSpeciality] = useState("")
   const [newWorkDay, setNewWorkDay] = useState<WorkDayDto>({ dayOfWeek: 0, workTimes: [{ start: "", end: "" }] })
+  const [appointments, setAppointments] = useState<AppointmentResponse[]>([])
   const [newAvailability, setNewAvailability] = useState<DoctorAvailabilityExceptionDto>({
     start: "",
     end: "",
@@ -61,6 +65,34 @@ export default function DoctorProfilePage() {
       }
     }
     fetchDoctor()
+    
+    const fetchAppointments = async () => {
+      const start = new Date()
+      const end = new Date()
+      end.setDate(end.getDate() + 7)
+
+      try {
+        const formatDate = (d: Date) => d.toISOString().split("T")[0]
+
+        const res = await getMyAppointments({
+          startDate: formatDate(start),
+          endDate: formatDate(end)
+        })
+
+        const sorted = res.data.data.sort(
+          (a, b) =>
+            new Date(a.duration.start).getTime() -
+            new Date(b.duration.start).getTime()
+        )
+
+        setAppointments(sorted)
+
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchAppointments()
   }, [])
 
   if (loading) return <p>Loading...</p>
@@ -140,6 +172,15 @@ export default function DoctorProfilePage() {
     }
   }
 
+  const groupedAppointments = appointments.reduce((acc, appt) => {
+    const day = new Date(appt.duration.start).toDateString()
+
+    if (!acc[day]) acc[day] = []
+    acc[day].push(appt)
+
+    return acc
+  }, {} as Record<string, AppointmentResponse[]>)
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto p-6">
 
@@ -175,6 +216,12 @@ export default function DoctorProfilePage() {
           )}
         </CardContent>
       </Card>
+
+      <DoctorSchedule
+        onAppointmentClick={(appointment) => {
+          console.log("Clicked appointment", appointment)
+        }}
+      />
 
       <Card>
         <CardHeader>
