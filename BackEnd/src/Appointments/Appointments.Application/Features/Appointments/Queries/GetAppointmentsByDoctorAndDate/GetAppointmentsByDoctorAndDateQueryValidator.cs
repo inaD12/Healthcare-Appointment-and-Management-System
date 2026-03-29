@@ -1,17 +1,17 @@
 ﻿using Appointments.Domain.Utilities;
 using FluentValidation;
 
-namespace Appointments.Application.Features.Appointments.Queries.GetBookingsByDoctorAndDate;
+namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentsByDoctorAndDate;
 
-public class GetBookingsByDoctorAndDateQueryValidator : AbstractValidator<GetBookingsByDoctorAndDateQuery>
+public class GetAppointmentsByDoctorAndDateQueryValidator : AbstractValidator<GetAppointmentsByDoctorAndDateQuery>
 {
-	public GetBookingsByDoctorAndDateQueryValidator()
+	public GetAppointmentsByDoctorAndDateQueryValidator()
 	{
 		RuleFor(q => q.DoctorUserId)
 		  .NotEmpty()
 		  .MinimumLength(AppointmentsBusinessConfiguration.ID_MIN_LENGTH)
 		  .MaximumLength(AppointmentsBusinessConfiguration.ID_MAX_LENGTH);
-		
+
 		RuleFor(q => q.StartDate)
 			.LessThanOrEqualTo(q => q.EndDate);
 

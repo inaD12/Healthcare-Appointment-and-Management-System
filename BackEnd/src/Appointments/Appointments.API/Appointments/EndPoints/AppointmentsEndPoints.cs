@@ -41,6 +41,14 @@ internal class AppointmentsEndPoints : IEndPoints
 	        .Produces(StatusCodes.Status500InternalServerError)
 	        .RequireAuthorization(Permissions.GetAppointment);
 	    
+	    group.MapGet("/mine", GetMineAsync)
+		    .Produces<ICollection<AppointmentQueryResponse>>()
+		    .Produces(StatusCodes.Status400BadRequest)
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization(Permissions.GetMyAppointment);
+	    
 	    group.MapGet("/by-doctor/{doctorUserId}", GetBookingsByDoctorAndDateAsync)
 		    .Produces<ICollection<BookingQueryResponse>>()
 		    .Produces(StatusCodes.Status400BadRequest)
@@ -110,6 +118,22 @@ internal class AppointmentsEndPoints : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
+	private async Task<IResult> GetMineAsync(
+		[AsParameters] GetAppointmentsByDoctorAndDateRequest request,
+		[FromServices] ISender sender,
+		HttpContext httpContext,
+		CancellationToken cancellationToken)
+	{
+		string userId = httpContext.User.GetUserId();
+		var query = request.ToQuery(userId);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var responses = res.Value!.ToCollectionResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, responses);
+	}
+	
 	private async Task<IResult> GetAllAsync(
 		[AsParameters] GetAllAppointmentsRequest request,
 		[FromServices] ISender sender,
