@@ -45,6 +45,10 @@ public static class QueryMapper
         this List<Appointment> appointments)
         => appointments.Select(a => a.ToBookingQueryViewModel()).ToList();
     
+    public static ICollection<AppointmentQueryViewModel> ToAppointmentsQueryViewModelCollection(
+        this List<Appointment> appointments)
+        => appointments.Select(a => a.ToQueryViewModel()).ToList();
+    
     public static BookingQueryViewModel ToBookingQueryViewModel(
         this Appointment appointment)
         => new(

@@ -110,23 +110,68 @@ export const recommendSpecialitySchema = z.object({
     .max(C.SYMPTOMS_MAX_LENGTH, `Symptoms must be at most ${C.SYMPTOMS_MAX_LENGTH} characters`),
 })
 
+export const createDoctorSchema = z.object({
+  bio: z
+    .string()
+    .min(C.BIO_MIN_LENGTH)
+    .max(C.BIO_MAX_LENGTH),
 
+  timeZoneId: z.string(),
+
+  specialities: z.array(
+    z.string()
+      .min(C.SPECIALITY_MIN_LENGTH)
+      .max(C.SPECIALITY_MAX_LENGTH)
+  ).default([]),
+})
+
+export const updateDoctorSchema = z.object({
+  newBio: z
+    .string()
+    .min(C.BIO_MIN_LENGTH)
+    .max(C.BIO_MAX_LENGTH),
+
+  newTimeZoneId: z.string(),
+})
+
+export const addSpecialitySchema = z.object({
+  speciality: z
+    .string()
+    .min(C.SPECIALITY_MIN_LENGTH)
+    .max(C.SPECIALITY_MAX_LENGTH),
+})
+
+export const removeSpecialitySchema = z.object({
+  speciality: z
+    .string()
+    .min(C.SPECIALITY_MIN_LENGTH)
+    .max(C.SPECIALITY_MAX_LENGTH),
+})
+
+export const removeWorkDaySchema = z.object({
+  dayOfWeek: z.number(),
+})
+
+export const deleteAvailabilityExceptionSchema = z.object({
+  start: z.string(),
+  end: z.string(),
+})
+
+export type DeleteAvailabilityExceptionRequest = z.infer<typeof deleteAvailabilityExceptionSchema>
+export type AddAvailabilityExceptionRequest = z.infer<typeof doctorAvailabilityExceptionSchema>
+export type RemoveWorkDayRequest = z.infer<typeof removeWorkDaySchema>
+export type UpdateWorkDayRequest = z.infer<typeof workDaySchema>
+export type AddWorkDayRequest = z.infer<typeof workDaySchema>
+export type RemoveSpecialityRequest = z.infer<typeof removeSpecialitySchema>
+export type AddSpecialityRequest = z.infer<typeof addSpecialitySchema>
+export type UpdateDoctorRequest = z.infer<typeof updateDoctorSchema>
+export type CreateDoctorRequest = z.infer<typeof createDoctorSchema>
 export type WorkTimeRangeDto = z.infer<typeof workTimeRangeSchema>
-
 export type WorkDayDto = z.infer<typeof workDaySchema>
-
-export type DoctorAvailabilityExceptionDto = z.infer<
-  typeof doctorAvailabilityExceptionSchema
->
-
+export type DoctorAvailabilityExceptionDto = z.infer<typeof doctorAvailabilityExceptionSchema>
 export type DoctorQueryViewModel = z.infer<typeof doctorSchema>
-
-export type DoctorPaginatedQueryResponse = z.infer<
-  typeof doctorPaginatedResponseSchema
->
-
+export type DoctorPaginatedQueryResponse = z.infer<typeof doctorPaginatedResponseSchema>
 export type GetAllDoctorsRequest = z.infer<typeof getAllDoctorsSchema>
-
 export type RecommendSpecialityRequest = z.infer<typeof recommendSpecialitySchema>
 
 export interface RecommendSpecialityResponse {

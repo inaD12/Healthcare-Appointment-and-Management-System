@@ -13,9 +13,6 @@ import { APIResponse } from "@/types/types"
 export const createAppointment = (data: CreateAppointmentRequest) =>
   api.post<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.root, data)
 
-export const getMyAppointments = () =>
-  api.get<APIResponse<AppointmentResponse[]>>(`${ENDPOINTS.appointments.root}/my`)
-
 export const getAppointmentById = (id: string) =>
   api.get<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id))
 
@@ -33,3 +30,12 @@ export const cancelAppointment = (id: string) =>
 
 export const rescheduleAppointment = (id: string, data: RescheduleAppointmentRequest) =>
   api.put<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id), data)
+
+export const getMyAppointments = (params: {
+  startDate?: string
+  endDate?: string
+}) =>
+  api.get<APIResponse<AppointmentResponse[]>>(
+    ENDPOINTS.appointments.mine,
+    { params }
+  )
