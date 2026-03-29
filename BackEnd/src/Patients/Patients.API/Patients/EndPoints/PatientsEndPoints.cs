@@ -60,7 +60,7 @@ internal class PatientsEndPoints : IEndPoints
         .RequireAuthorization(Permissions.DeletePatient);
 
     
-    var encountersGroup = patientsGroup.MapGroup("/encounters");
+    var encountersGroup = app.MapGroup("/api/encounters");
     
     encountersGroup.MapPost("/", StartEncounterAsync)
         .Produces<EncounterCommandResponse>()
@@ -71,7 +71,7 @@ internal class PatientsEndPoints : IEndPoints
         .RequireAuthorization(Permissions.StartEncounter);
     
     
-    var encounterActionsGroup = app.MapGroup("/api/encounters/{encounterId}")
+    var encounterActionsGroup = encountersGroup.MapGroup("/{encounterId}")
 	    .RequireAuthorization();
 
     encounterActionsGroup.MapPost("/notes", AddNoteAsync)
@@ -148,14 +148,13 @@ internal class PatientsEndPoints : IEndPoints
 }
 
 	private async Task<IResult> StartEncounterAsync(
-		[FromRoute] string patientId,
 		[FromBody] StartEncounterRequest request,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
 		CancellationToken cancellationToken)
 	{
 		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId, patientId);
+		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);

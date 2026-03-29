@@ -113,12 +113,8 @@ public static class CommandMapper
             request.PrescriptionId);
     
     public static StartEncounterCommand ToCommand(
-        this StartEncounterRequest request,
-        string doctorId,
-        string patientId)
+        this StartEncounterRequest request)
         => new(
-            patientId,
-            doctorId,
             request.AppointmentId);
 }
   

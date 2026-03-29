@@ -20,7 +20,7 @@ export const ENDPOINTS = {
     encounters: (patientId: string) => `/patients-api/api/patients/${patientId}/encounters`,
   },
   encounters: {
-    root: (encounterId: string) => `/patients-api/api/encounters/${encounterId}`,
+    root: `/patients-api/api/encounters`,
     notes: (encounterId: string) => `/patients-api/api/encounters/${encounterId}/notes`,
     diagnoses: (encounterId: string) => `/patients-api/api/encounters/${encounterId}/diagnoses`,
     prescriptions: (encounterId: string) => `/patients-api/api/encounters/${encounterId}/prescriptions`,

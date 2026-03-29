@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 
 import {
-  AppointmentByIdResponse,
+  Appointment,
   AppointmentStatus,
   EncounterDetails
 } from "@/features/patients/types/patientTypes"
@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import { mapAppointmentResponseToAppointment } from "@/features/patients/mappers/appointmentMapper"
 
 export default function AppointmentPage() {
 
@@ -42,7 +43,7 @@ export default function AppointmentPage() {
   const params = useParams()
   const { id } = params as { id: string }
 
-  const [appointment, setAppointment] = useState<AppointmentByIdResponse | null>(null)
+  const [appointment, setAppointment] = useState<Appointment | null>(null)
   const [rating, setRating] = useState<RatingQueryViewModel | null>(null)
 
   const [loading, setLoading] = useState(true)
@@ -62,12 +63,11 @@ export default function AppointmentPage() {
 
       try {
 
-        const data = await getAppointmentWithEncounters(id)
-        setAppointment(data)
+        const apiResponse = await getAppointmentWithEncounters(id)
+        const appointment: Appointment | null = mapAppointmentResponseToAppointment(apiResponse)
+        setAppointment(appointment)
 
-        const app = data?.appointmentById?.[0]
-
-        if (app?.status === AppointmentStatus.Completed) {
+        if (appointment?.status === AppointmentStatus.Completed) {
 
           try {
 
@@ -155,7 +155,7 @@ export default function AppointmentPage() {
 
     if (!appointment) return
 
-    const app = appointment.appointmentById[0]
+    const app = appointment
 
     try {
 
@@ -191,13 +191,13 @@ export default function AppointmentPage() {
 
   if (loading) return <p>Loading...</p>
   if (error) return <p className="text-red-600">{error}</p>
-  if (!appointment || appointment.appointmentById.length === 0) return <p>No appointment found</p>
+  if (!appointment) return <p>No appointment found</p>
 
-  const app = appointment.appointmentById[0]
+  const app = appointment
 
   const encounter: EncounterDetails =
-    app.encounterDetails && app.encounterDetails.length > 0
-      ? app.encounterDetails[0]
+    app.encounterDetails
+      ? app.encounterDetails
       : {
           id: "example-encounter",
           startedAt: new Date().toISOString(),
@@ -240,7 +240,7 @@ export default function AppointmentPage() {
       <Card>
 
         <CardHeader>
-          <CardTitle>{app.doctorName}</CardTitle>
+          <CardTitle>{appointment.doctorName}</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-2">

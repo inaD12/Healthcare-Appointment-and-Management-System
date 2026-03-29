@@ -1,41 +1,74 @@
 import { APIResponse } from "@/types/types"
 import {
+  AddAddendumRequest,
   AddAllergyRequest,
   AddChronicConditionRequest,
+  AddDiagnosisRequest,
+  AddendumCommandResponse,
+  AddNoteRequest,
   AllergyCommandResponse,
   AppointmentByIdResponse,
   AppointmentStatus,
   ConditionCommandResponse,
+  DiagnosisCommandResponse,
+  EncounterCommandResponse,
+  NoteCommandResponse,
   PatientDashboard,
   PatientProfile,
+  PrescribeMedicationRequest,
+  PrescriptionCommandResponse,
   RemoveAllergyRequest,
   RemoveConditionRequest,
+  RemoveDiagnosisRequest,
+  RemoveNoteRequest,
+  RemovePrescriptionRequest,
+  StartEncounterRequest,
 } from "../types/patientTypes"
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
 
 export const patientService = {
   addAllergy: (patientId: string, data: AddAllergyRequest) =>
-    api.post<APIResponse<AllergyCommandResponse>>(
-      ENDPOINTS.patients.allergies(patientId),
-      data
-    ),
+    api.post<APIResponse<AllergyCommandResponse>>(ENDPOINTS.patients.allergies(patientId), data),
 
   removeAllergy: (patientId: string, data: RemoveAllergyRequest) =>
-    api.delete(ENDPOINTS.patients.allergies(patientId), {
-      data,
-    }),
+    api.delete(ENDPOINTS.patients.allergies(patientId), { data }),
 
   addChronicCondition: (patientId: string, data: AddChronicConditionRequest) =>
-    api.post<APIResponse<ConditionCommandResponse>>(
-      ENDPOINTS.patients.chronicConditions(patientId),
-      data
-    ),
+    api.post<APIResponse<ConditionCommandResponse>>(ENDPOINTS.patients.chronicConditions(patientId), data),
 
   removeChronicCondition: (patientId: string, data: RemoveConditionRequest) =>
-    api.delete(ENDPOINTS.patients.chronicConditions(patientId), {
-      data,
-    }),
+    api.delete(ENDPOINTS.patients.chronicConditions(patientId), { data }),
+
+  startEncounter: (data: StartEncounterRequest) =>
+    api.post<APIResponse<EncounterCommandResponse>>(ENDPOINTS.encounters.root, data),
+
+  addNote: (encounterId: string, data: AddNoteRequest) =>
+    api.post<APIResponse<NoteCommandResponse>>(ENDPOINTS.encounters.notes(encounterId), data),
+
+  removeNote: (encounterId: string, data: RemoveNoteRequest) =>
+    api.delete(ENDPOINTS.encounters.notes(encounterId), { data }),
+
+  addDiagnosis: (encounterId: string, data: AddDiagnosisRequest) =>
+    api.post<APIResponse<DiagnosisCommandResponse>>(ENDPOINTS.encounters.diagnoses(encounterId), data),
+
+  removeDiagnosis: (encounterId: string, data: RemoveDiagnosisRequest) =>
+    api.delete(ENDPOINTS.encounters.diagnoses(encounterId), { data }),
+
+  prescribeMedication: (encounterId: string, data: PrescribeMedicationRequest) =>
+    api.post<APIResponse<PrescriptionCommandResponse>>(ENDPOINTS.encounters.prescriptions(encounterId), data),
+
+  removePrescription: (encounterId: string, data: RemovePrescriptionRequest) =>
+    api.delete(ENDPOINTS.encounters.prescriptions(encounterId), { data }),
+
+  addAddendum: (encounterId: string, data: AddAddendumRequest) =>
+    api.post<APIResponse<AddendumCommandResponse>>(ENDPOINTS.encounters.addendums(encounterId), data),
+
+  lockEncounter: (encounterId: string) =>
+    api.post(ENDPOINTS.encounters.lock(encounterId)),
+
+  finalizeEncounter: (encounterId: string) =>
+    api.post(ENDPOINTS.encounters.finalize(encounterId)),
 }
 
 export async function getPatientProfile(patientId: string): Promise<PatientProfile> {
@@ -178,3 +211,4 @@ export async function getAppointmentWithEncounters(
 
   return res.data?.data ?? null
 }
+

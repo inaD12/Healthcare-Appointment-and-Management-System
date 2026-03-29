@@ -26,7 +26,7 @@ public sealed class StartEncounterCommandHandler(
         if (appointment is null)
             return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
         
-        encounter = Encounter.Start(request.PatientId, request.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow);
+        encounter = Encounter.Start(appointment.PatientId, appointment.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow);
         
        await encounterRepository.AddAsync(encounter, cancellationToken);
        await unitOfWork.SaveChangesAsync(cancellationToken);
