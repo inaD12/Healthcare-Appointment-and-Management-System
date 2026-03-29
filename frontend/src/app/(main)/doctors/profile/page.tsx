@@ -21,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  CardFooter
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -70,7 +69,7 @@ export default function DoctorProfilePage() {
 
   const handleSaveBio = async () => {
     try {
-      await updateDoctorInfo({ bio: bioInput, timeZoneId: doctor.timeZoneId })
+      await updateDoctorInfo({ newBio: bioInput, newTimeZoneId: doctor.timeZoneId })
       setDoctor({ ...doctor, bio: bioInput })
       setEditingBio(false)
     } catch (err) {
@@ -130,8 +129,8 @@ export default function DoctorProfilePage() {
 
   const handleRemoveAvailability = async (availability: DoctorAvailabilityExceptionDto) => {
     try {
-      if (availability.type === 1) await deleteExtraAvailability({ start: availability.start })
-      else await deleteUnavailability({ start: availability.start })
+      if (availability.type === 1) await deleteExtraAvailability({ start: availability.start, end: availability.end })
+      else await deleteUnavailability({ start: availability.start, end: availability.end })
       setDoctor({
         ...doctor,
         availabilityExceptions: doctor.availabilityExceptions.filter(a => a.start !== availability.start)
@@ -237,67 +236,103 @@ export default function DoctorProfilePage() {
       </Card>
 
         <Card>
-        <CardHeader>
+          <CardHeader>
             <CardTitle>Availability Exceptions</CardTitle>
-        </CardHeader>
-        <CardContent>
-            <Table>
-            <TableHeader>
-                <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Start</TableHead>
-                <TableHead>End</TableHead>
-                <TableHead>Reason</TableHead>
-                <TableHead>Actions</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {doctor.availabilityExceptions.map(a => (
-                <TableRow key={a.start}>
-                    <TableCell>{a.type === 1 ? "Extra Availability" : "Unavailability"}</TableCell>
-                    <TableCell>{a.start}</TableCell>
-                    <TableCell>{a.end}</TableCell>
-                    <TableCell>{a.reason}</TableCell>
-                    <TableCell>
-                    <Button size="sm" variant="destructive" onClick={() => handleRemoveAvailability(a)}>Remove</Button>
-                    </TableCell>
-                </TableRow>
-                ))}
-            </TableBody>
-            </Table>
+          </CardHeader>
 
-            <div className="flex flex-wrap gap-2 mt-4 items-end">
-            <Select
-                value={newAvailability.type.toString()}
-                onValueChange={v => setNewAvailability({ ...newAvailability, type: Number(v) })}
-            >
-                <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                <SelectItem value="1">Extra Availability</SelectItem>
-                <SelectItem value="2">Unavailability</SelectItem>
-                </SelectContent>
-            </Select>
+          <CardContent className="space-y-6">
 
-            <Input
-                type="datetime-local"
-                value={newAvailability.start}
-                onChange={e => setNewAvailability({ ...newAvailability, start: e.target.value })}
-            />
-            <Input
-                type="datetime-local"
-                value={newAvailability.end}
-                onChange={e => setNewAvailability({ ...newAvailability, end: e.target.value })}
-            />
-            <Input
-                placeholder="Reason"
-                value={newAvailability.reason}
-                onChange={e => setNewAvailability({ ...newAvailability, reason: e.target.value })}
-            />
-            <Button onClick={handleAddAvailability}>Add Exception</Button>
+            <div className="grid gap-3">
+              {doctor.availabilityExceptions.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No availability exceptions configured.
+                </p>
+              )}
+
+              {doctor.availabilityExceptions.map(a => (
+                <div
+                  key={a.start}
+                  className="flex items-center justify-between rounded-lg border p-4 bg-muted/30"
+                >
+                  <div className="space-y-1">
+
+                    <div className="flex items-center gap-2">
+                      <Badge variant={a.type === 1 ? "default" : "destructive"}>
+                        {a.type === 1 ? "Extra Availability" : "Unavailable"}
+                      </Badge>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(a.start).toLocaleString()} → {new Date(a.end).toLocaleString()}
+                    </p>
+
+                    {a.reason && (
+                      <p className="text-sm">{a.reason}</p>
+                    )}
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleRemoveAvailability(a)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
             </div>
-        </CardContent>
+
+            <div className="border-t pt-6 space-y-3">
+
+              <h4 className="font-medium text-sm">Add Availability Exception</h4>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+
+                <Select
+                  value={newAvailability.type.toString()}
+                  onValueChange={v =>
+                    setNewAvailability({ ...newAvailability, type: Number(v) })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Extra Availability</SelectItem>
+                    <SelectItem value="2">Unavailability</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Input
+                  type="datetime-local"
+                  value={newAvailability.start}
+                  onChange={e =>
+                    setNewAvailability({ ...newAvailability, start: e.target.value })
+                  }
+                />
+
+                <Input
+                  type="datetime-local"
+                  value={newAvailability.end}
+                  onChange={e =>
+                    setNewAvailability({ ...newAvailability, end: e.target.value })
+                  }
+                />
+
+                <Input
+                  placeholder="Reason"
+                  value={newAvailability.reason}
+                  onChange={e =>
+                    setNewAvailability({ ...newAvailability, reason: e.target.value })
+                  }
+                />
+              </div>
+
+              <Button onClick={handleAddAvailability}>
+                Add Exception
+              </Button>
+            </div>
+          </CardContent>
         </Card>
 
     </div>

@@ -126,12 +126,12 @@ export const createDoctorSchema = z.object({
 })
 
 export const updateDoctorSchema = z.object({
-  bio: z
+  newBio: z
     .string()
     .min(C.BIO_MIN_LENGTH)
     .max(C.BIO_MAX_LENGTH),
 
-  timeZoneId: z.string(),
+  newTimeZoneId: z.string(),
 })
 
 export const addSpecialitySchema = z.object({
@@ -154,6 +154,7 @@ export const removeWorkDaySchema = z.object({
 
 export const deleteAvailabilityExceptionSchema = z.object({
   start: z.string(),
+  end: z.string(),
 })
 
 export type DeleteAvailabilityExceptionRequest = z.infer<typeof deleteAvailabilityExceptionSchema>
