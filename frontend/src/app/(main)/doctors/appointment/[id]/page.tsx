@@ -12,8 +12,10 @@ import { Textarea } from "@/components/ui/textarea"
 
 import { getAppointmentWithEncounters, patientService } from "@/features/patients/services/patientService"
 import { mapAppointmentResponseToAppointment } from "@/features/patients/mappers/appointmentMapper"
-import { Appointment, EncounterStatus, Note, Diagnosis, Prescription, Addendum, AddAddendumSchema, AddDiagnosisSchema, AddNoteSchema, PrescribeMedicationSchema } from "@/features/patients/types/patientTypes"
+import { Appointment, EncounterStatus, Note, Diagnosis, Prescription, Addendum, AddAddendumSchema, AddDiagnosisSchema, AddNoteSchema, PrescribeMedicationSchema, AppointmentStatus } from "@/features/patients/types/patientTypes"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { getRatingByAppointment } from "@/features/ratings/services/ratingService"
 
 export default function DoctorAppointmentPage() {
   useAuthGuard()
@@ -28,6 +30,8 @@ export default function DoctorAppointmentPage() {
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
   const [addendums, setAddendums] = useState<Addendum[]>([])
+
+  const [rating, setRating] = useState<RatingQueryViewModel | null>(null)
 
   const [newNote, setNewNote] = useState("")
   const [newDiagnosis, setNewDiagnosis] = useState({ icdCode: "", description: "" })
@@ -60,6 +64,18 @@ export default function DoctorAppointmentPage() {
         const app = mapAppointmentResponseToAppointment(res)
         if (!app) throw new Error("Appointment not found")
         setAppointment(app)
+
+        if (app.status === AppointmentStatus.Completed) {
+          try {
+            const ratingRes = await getRatingByAppointment(app.id)
+            setRating(ratingRes.data.data)
+          } catch (err: any) {
+            if (err.response?.status !== 404) {
+              console.error("Failed to fetch rating")
+            }
+          }
+        }
+
         const encounter = app.encounterDetails
         if (encounter) {
           setEncounterId(encounter.id)
@@ -69,6 +85,7 @@ export default function DoctorAppointmentPage() {
           setPrescriptions(encounter.prescriptions || [])
           setAddendums(encounter.addendums || [])
         }
+        
       } catch (err) {
         setError("Failed to load appointment")
       } finally {
@@ -185,6 +202,36 @@ export default function DoctorAppointmentPage() {
           <p><strong>End:</strong> {new Date(appointment.end).toLocaleString()}</p>
         </CardContent>
       </Card>
+
+      {rating && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Patient Rating</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+
+            <div className="flex text-3xl text-yellow-400">
+              {[1,2,3,4,5].map((star)=>(
+                <span key={star}>
+                  {star <= rating.score ? "★" : "☆"}
+                </span>
+              ))}
+            </div>
+
+            {rating.comment && (
+              <p className="italic text-muted-foreground">
+                "{rating.comment}"
+              </p>
+            )}
+
+            <p className="text-sm text-muted-foreground">
+              Submitted {new Date(rating.createdAt).toLocaleString()}
+            </p>
+
+          </CardContent>
+        </Card>
+      )}
 
       {!encounterId && (
         <Card>
