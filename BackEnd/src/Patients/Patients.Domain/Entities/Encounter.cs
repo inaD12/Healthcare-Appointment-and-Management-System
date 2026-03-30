@@ -44,13 +44,20 @@ public sealed class Encounter : BaseConcurrencyEntity
     public IReadOnlyCollection<Prescription> Prescriptions => _prescriptions;
     public IReadOnlyCollection<AddendumNote> Addendums => _addendums;
 
-    public static Encounter Start(
+    public static Result<Encounter> Start(
         string patientId,
         string doctorId,
         string appointmentId,
-        DateTime utcNow)
-        => new(patientId, doctorId, appointmentId, utcNow);
-    
+        DateTime utcNow,
+        AppointmentStatus status)
+    {
+        if (status != AppointmentStatus.Completed && status != AppointmentStatus.Scheduled)
+            return Result<Encounter>.Failure(ResponseList.AppointmentNotCompletedOrScheduled);
+        
+        var encounter = new Encounter(patientId, doctorId, appointmentId, utcNow);
+        return Result<Encounter>.Success(encounter); 
+    }
+
     public Result<string> AddNote(string text, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)

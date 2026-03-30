@@ -56,6 +56,10 @@ export default function DoctorAppointmentPage() {
   const showLock = !isLocked
   const canFinalizeOrLock = diagnoses.length > 0
 
+  const canUseEncounter =
+  appointment?.status === AppointmentStatus.Scheduled ||
+  appointment?.status === AppointmentStatus.Completed
+
   useEffect(() => {
     if (!id) return
     const fetchAppointment = async () => {
@@ -77,7 +81,7 @@ export default function DoctorAppointmentPage() {
         }
 
         const encounter = app.encounterDetails
-        if (encounter) {
+        if (encounter && (app.status === AppointmentStatus.Scheduled || app.status === AppointmentStatus.Completed)) {
           setEncounterId(encounter.id)
           setEncounterStatus(encounter.status)
           setNotes(encounter.notes || [])
@@ -110,8 +114,12 @@ export default function DoctorAppointmentPage() {
 }
 
   const handleStartEncounter = async () => {
-    if (!appointment) return
-    const res = await patientService.startEncounter({ appointmentId: appointment.id })
+    if (!appointment || !canUseEncounter) return
+
+    const res = await patientService.startEncounter({
+      appointmentId: appointment.id
+    })
+
     setEncounterId(res.data.data.id)
     setEncounterStatus(EncounterStatus.InProgress)
   }
@@ -233,7 +241,7 @@ export default function DoctorAppointmentPage() {
         </Card>
       )}
 
-      {!encounterId && (
+      {canUseEncounter && !encounterId && (
         <Card>
           <CardContent className="p-6">
             <p className="mb-4">No encounter started.</p>
@@ -242,7 +250,7 @@ export default function DoctorAppointmentPage() {
         </Card>
       )}
 
-      {encounterId && (
+      {canUseEncounter && encounterId && (
         <Card>
           <CardHeader>
             <CardTitle>Encounter</CardTitle>
