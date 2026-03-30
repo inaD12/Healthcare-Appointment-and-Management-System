@@ -36,6 +36,7 @@ public class EncounterRepository(PatientsDbContext context) : GenericRepository<
             .Where(e => e.Id == encounterId)
             .Select(e => new EncounterDetailsDto(
                 e.Id,
+                e.AppointmentId,
                 e.StartedAt,
                 e.FinalizedAt,
                 e.Status,
@@ -73,6 +74,7 @@ public class EncounterRepository(PatientsDbContext context) : GenericRepository<
             .OfType<Encounter>()
             .Select(e => new EncounterDetailsDto(
                 e.Id,
+                e.AppointmentId,
                 e.StartedAt,
                 e.FinalizedAt,
                 e.Status,
