@@ -4,10 +4,10 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
-import { getPatientDashboard } from "@/features/patients/services/patientService"
 import { Appointment, AppointmentStatus, PatientProfile } from "@/features/patients/types/patientTypes"
 import { cancelAppointment } from "@/features/appointments/services/appointmentService"
 import { useRouter } from "next/navigation"
+import { patientService } from "@/features/patients/services/patientService"
 
 const PAGE_SIZE = 5
 
@@ -22,7 +22,7 @@ export default function PatientDashboardPage() {
 
   async function fetchData() {
     try {
-      const data = await getPatientDashboard()
+      const data = await patientService.getPatientDashboard()
       setPatient(data.profile)
       const sorted = data.appointments.sort((a, b) =>
         new Date(b.start).getTime() - new Date(a.start).getTime()

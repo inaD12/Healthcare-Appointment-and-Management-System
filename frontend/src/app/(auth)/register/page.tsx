@@ -13,7 +13,6 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 
 import {
-  getAppointmentWithEncounters,
   patientService,
 } from "@/features/patients/services/patientService"
 
@@ -68,7 +67,7 @@ export default function DoctorAppointmentPage() {
 
     const fetchAppointment = async () => {
       try {
-        const res = await getAppointmentWithEncounters(id)
+        const res = await patientService.getAppointmentWithEncounters(id)
         const app = mapAppointmentResponseToAppointment(res)
 
         if (!app) throw new Error("Appointment not found")
