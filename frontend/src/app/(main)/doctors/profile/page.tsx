@@ -31,9 +31,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AppointmentResponse } from "@/features/appointments/types/appointmentsTypes"
 import { getMyAppointments } from "@/features/appointments/services/appointmentService"
 import DoctorSchedule from "@/components/schedule/DoctorSchedule"
+import { useRouter } from "next/navigation"
 
 export default function DoctorProfilePage() {
   useAuthGuard()
+
+  const router = useRouter()
 
   const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
   const [loading, setLoading] = useState(true)
@@ -219,7 +222,7 @@ export default function DoctorProfilePage() {
 
       <DoctorSchedule
         onAppointmentClick={(appointment) => {
-          console.log("Clicked appointment", appointment)
+          router.push(`/doctors/appointment/${appointment.id}`)
         }}
       />
 

@@ -10,4 +10,5 @@ public sealed record AppointmentHistoryDto(
     string DoctorId,
     string PatientId,
     string? DoctorName,
+    string? PatientName,
     EncounterDetailsDto? EncounterDetails);

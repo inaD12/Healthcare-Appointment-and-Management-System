@@ -3,6 +3,7 @@
 public static class ErrorMessages
 {
 	public const string EncounterNotEditable = "Encounter is not editable";
+	public const string AppointmentNotCompletedOrScheduled = "Appointment needs to be completed or scheduled to start an encounter";
 	public const string DiagnosisAlreadyAdded = "Diagnosis already added";
 	public const string EncounterNeedsDiagnosis = "Encounter requires at least one diagnosis";
 	public const string LockUnfinalizedEncounter = "Only finalized encounters can be locked";

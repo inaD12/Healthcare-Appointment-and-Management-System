@@ -26,12 +26,16 @@ public sealed class StartEncounterCommandHandler(
         if (appointment is null)
             return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
         
-        encounter = Encounter.Start(request.PatientId, request.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow);
+        var encounterResult = Encounter.Start(appointment.PatientId, appointment.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow, appointment.Status);
+        if (encounterResult.IsFailure)
+            return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(encounterResult.Response);
         
-       await encounterRepository.AddAsync(encounter, cancellationToken);
+        encounter = encounterResult.Value;
+        
+       await encounterRepository.AddAsync(encounter!, cancellationToken);
        await unitOfWork.SaveChangesAsync(cancellationToken);
 
-       var viewModel = encounter.ToCommandViewModel();
+       var viewModel = encounter!.ToCommandViewModel();
        return Shared.Domain.Results.Result<EncounterCommandViewModel>.Success(viewModel);
     }
 }
