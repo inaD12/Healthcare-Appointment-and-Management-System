@@ -156,6 +156,7 @@ export interface AppointmentByIdResponse {
     doctorId: string
     patientId: string
     doctorName?: string
+    patientName?: string
     encounterDetails: EncounterDetails
   }[]
 }
@@ -217,6 +218,7 @@ export interface Appointment {
   doctorId: string
   patientId: string
   doctorName: string
+  patientName: string
   encounterDetails: EncounterDetails
 }
 

@@ -15,6 +15,7 @@ export function mapAppointmentResponseToAppointment(
     doctorId: raw.doctorId,
     patientId: raw.patientId,
     doctorName: raw.doctorName || "",
+    patientName: raw.patientName || "",
     encounterDetails: raw.encounterDetails || null,
   }
 }

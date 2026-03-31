@@ -173,6 +173,7 @@ export async function getAppointmentWithEncounters(
         doctorId
         patientId
         doctorName
+        patientName
         encounterDetails {
           id
           startedAt

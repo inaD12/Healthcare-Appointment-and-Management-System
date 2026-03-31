@@ -23,6 +23,20 @@ public class AppointmentHistoryType : ObjectType<AppointmentHistoryDto>
             });
         
         descriptor
+            .Field(x => x.PatientName)
+            .Resolve(async (ctx, ct) =>
+            {
+                var appointment = ctx.Parent<AppointmentHistoryDto>();
+                var loader = ctx.DataLoader<UserNamesDataLoader>();
+
+                var names = await loader.LoadAsync(appointment.PatientId, ct);
+
+                return names is null
+                    ? null
+                    : $"{names.FirstName} {names.LastName}";
+            });
+        
+        descriptor
             .Field(x => x.EncounterDetails)
             .Resolve(async (ctx, ct) =>
             {

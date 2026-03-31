@@ -202,7 +202,7 @@ export default function DoctorAppointmentPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Patient {appointment.patientId}</CardTitle>
+          <CardTitle>Patient Name: {appointment.patientName}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <Badge>{appointment.status}</Badge>
