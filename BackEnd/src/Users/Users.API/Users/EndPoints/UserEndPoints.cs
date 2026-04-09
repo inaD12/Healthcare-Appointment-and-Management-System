@@ -64,6 +64,13 @@ internal class UserEndPoints : IEndPoints
 	    
 	    var meGroup = app.MapGroup("/api/users/me");
 	    
+	    meGroup.MapGet("/", GetCurrentAsync)
+		    .Produces<UserQueryResponse>()
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization();
+	    
 	    meGroup.MapDelete("/", DeleteCurrentAsync)
 		    .Produces(StatusCodes.Status200OK)
 		    .Produces(StatusCodes.Status401Unauthorized)
@@ -125,6 +132,21 @@ internal class UserEndPoints : IEndPoints
 
 		var userCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
+	}
+	
+	private async Task<IResult> GetCurrentAsync(
+		HttpContext httpContext,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var userId = httpContext.User.GetUserId();
+		var query = new GetUserByIdQuery(userId);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
 	}
 
 	private async Task<IResult> GetByIdAsync(
