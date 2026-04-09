@@ -1,40 +1,53 @@
 "use client"
 
-import { ReactNode, useState } from "react"
+import { ReactNode, useState, useEffect, JSX } from "react"
 import { Home, Calendar, User, Settings, LogIn, LogOut, UserPlus } from "lucide-react"
 import Link from "next/link"
 import keycloak from "@/config/keycloak"
 import { useRouter } from "next/navigation"
+import { UserQueryResponse } from "@/features/users/types/register"
+import { getCurrentUser } from "@/features/users/services/userService"
 
 interface SideBarProps {
   children: ReactNode
 }
 
-const navItems = [
-  { label: "Home", icon: <Home size={20} />, href: "/" },
-  { label: "Doctors", icon: <Calendar size={20} />, href: "/doctors" },
-  { label: "Profile", icon: <User size={20} />, href: "/patient-info" },
-]
-
 export default function SideBar({ children }: SideBarProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [user, setUser] = useState<UserQueryResponse | null>(null)
   const isAuthenticated = keycloak.authenticated
   const router = useRouter()
 
-  const handleLogin = () => {
-    keycloak.login({
-      redirectUri: window.location.href,
-    })
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      getCurrentUser()
+        .then(res => {
+          if (res.data) setUser(res.data.data)
+        })
+        .catch(err => console.error("Failed to fetch user:", err))
+    }
+  }, [isAuthenticated])
 
-  const handleRegister = () => {
-    router.push("/register")
-  }
+  const handleLogin = () => keycloak.login({ redirectUri: window.location.href })
+  const handleRegister = () => router.push("/register")
+  const handleLogout = () => keycloak.logout({ redirectUri: window.location.origin })
 
-  const handleLogout = () => {
-    keycloak.logout({
-      redirectUri: window.location.origin,
-    })
+  const isAdmin = user?.roles.includes("Admin")
+  const isDoctor = user?.roles.includes("Doctor")
+  const isPatient = user?.roles.includes("Patient")
+
+  const navItems: { label: string; icon: JSX.Element; href: string }[] = []
+  navItems.push({ label: "Home", icon: <Home size={20} />, href: "/" })
+
+  if (isDoctor) {
+    navItems.push({ label: "Doctor Profile", icon: <User size={20} />, href: "/doctors/profile" })
+  }
+  if (isPatient) {
+    navItems.push({ label: "Doctors", icon: <Calendar size={20} />, href: "/doctors" })
+    navItems.push({ label: "Profile", icon: <User size={20} />, href: "/patient-info" })
+  }
+  if (isAdmin) {
+    navItems.push({ label: "Admin", icon: <Settings size={20} />, href: "/admin" })
   }
 
   return (
@@ -45,7 +58,6 @@ export default function SideBar({ children }: SideBarProps) {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        {/* Navigation */}
         <div className="flex flex-col mt-4 space-y-2">
           {navItems.map((item) => (
             <Link
@@ -54,7 +66,6 @@ export default function SideBar({ children }: SideBarProps) {
               className="flex items-center px-4 py-3 hover:bg-gray-800 rounded-md transition-all duration-200"
             >
               <div className="flex-shrink-0">{item.icon}</div>
-
               <span
                 className={`ml-3 text-sm font-medium whitespace-nowrap transition-all duration-300
                 ${isExpanded ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"}`}
@@ -65,7 +76,6 @@ export default function SideBar({ children }: SideBarProps) {
           ))}
         </div>
 
-        {/* Auth Section */}
         <div className="mb-4 px-2">
           <div className="border-t border-gray-700 my-3"></div>
 
