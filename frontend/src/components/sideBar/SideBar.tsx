@@ -12,9 +12,8 @@ interface SideBarProps {
 
 const navItems = [
   { label: "Home", icon: <Home size={20} />, href: "/" },
-  { label: "Appointments", icon: <Calendar size={20} />, href: "/appointments" },
-  { label: "Patients", icon: <User size={20} />, href: "/patients" },
-  { label: "Settings", icon: <Settings size={20} />, href: "/settings" },
+  { label: "Doctors", icon: <Calendar size={20} />, href: "/doctors" },
+  { label: "Profile", icon: <User size={20} />, href: "/patient-info" },
 ]
 
 export default function SideBar({ children }: SideBarProps) {

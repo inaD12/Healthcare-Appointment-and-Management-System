@@ -9,9 +9,7 @@ import {
   EncounterDetails
 } from "@/features/patients/types/patientTypes"
 
-import {
-  getAppointmentWithEncounters
-} from "@/features/patients/services/patientService"
+import { patientService } from "@/features/patients/services/patientService"
 
 import {
   addRating,
@@ -63,7 +61,7 @@ export default function AppointmentPage() {
 
       try {
 
-        const apiResponse = await getAppointmentWithEncounters(id)
+        const apiResponse = await patientService.getAppointmentWithEncounters(id)
         const appointment: Appointment | null = mapAppointmentResponseToAppointment(apiResponse)
         setAppointment(appointment)
 
