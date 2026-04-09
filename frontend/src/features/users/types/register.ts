@@ -9,8 +9,21 @@ export type RegisterUserRequest = {
   dateOfBirth: Date
   phoneNumber: string
   address: string
-  role: "Patient" | "Doctor" | "Admin"
+  role: Roles
 }
+
+export type Roles = "Patient" | "Doctor" | "Admin";
+
+export type UserQueryResponse = {
+  id: string;
+  email: string;
+  roles: Roles[];
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  address: string;
+  emailVerified: boolean;
+};
 
 export type UserCommandResponse = {
   id: string
