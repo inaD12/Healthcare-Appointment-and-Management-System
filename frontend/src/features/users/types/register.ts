@@ -14,6 +14,12 @@ export type RegisterUserRequest = {
 
 export type Roles = "Patient" | "Doctor" | "Admin";
 
+export const ROLES = {
+  ADMIN: "Admin",
+  DOCTOR: "Doctor",
+  PATIENT: "Patient",
+} as const
+
 export type UserQueryResponse = {
   id: string;
   email: string;
