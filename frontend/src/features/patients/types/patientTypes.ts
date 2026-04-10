@@ -222,10 +222,54 @@ export interface Appointment {
   encounterDetails: EncounterDetails
 }
 
-export interface PatientDashboard {
+export interface PatientInfo {
   profile: PatientProfile
   appointments: Appointment[]
 }
+
+export interface DashboardAppointment {
+  id: string
+  start: string
+  end: string
+  status: AppointmentStatus
+  doctorId: string
+  doctorName: string
+}
+
+export interface DashboardEncounter {
+  id: string
+  startedAt: string
+  status: string
+  doctorId: string
+
+  prescriptions: DashboardPrescription[]
+  notes: DashboardMedicalNote[]
+}
+
+export interface DashboardPrescription {
+  medicationName: string
+  dosage: string
+  instructions: string
+}
+
+export interface DashboardMedicalNote {
+  noteText: string
+  author: string
+  createdDate: string
+}
+
+export interface PatientDashboard {
+  myPatientProfile: PatientProfile
+
+  myAppointments: {
+    nodes: DashboardAppointment[]
+  }
+
+  myEncounters: {
+    nodes: DashboardEncounter[]
+  }
+}
+
 
 export type StartEncounterRequest = z.infer<typeof StartEncounterSchema>
 export type EncounterCommandResponse = z.infer<typeof EncounterCommandResponseSchema>

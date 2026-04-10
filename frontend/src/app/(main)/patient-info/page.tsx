@@ -22,7 +22,7 @@ export default function PatientDashboardPage() {
 
   async function fetchData() {
     try {
-      const data = await patientService.getPatientDashboard()
+      const data = await patientService.getPatientInfo()
       setPatient(data.profile)
       const sorted = data.appointments.sort((a, b) =>
         new Date(b.start).getTime() - new Date(a.start).getTime()

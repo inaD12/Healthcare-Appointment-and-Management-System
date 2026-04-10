@@ -21,10 +21,11 @@ import {
   EncounterCommandResponse,
   NoteCommandResponse,
   PrescriptionCommandResponse,
-  PatientDashboard,
   PatientProfile,
   AppointmentStatus,
   AppointmentByIdResponse,
+  PatientInfo,
+  PatientDashboard,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -93,9 +94,9 @@ export const patientService = {
     }
   },
 
-  getPatientDashboard: async (): Promise<PatientDashboard> => {
+  getPatientInfo: async (): Promise<PatientInfo> => {
     const query = `
-      query GetMyPatientDashboard {
+      query GetMyPatientInfo {
         myPatientHeader {
           id
           fullName
@@ -192,5 +193,61 @@ export const patientService = {
     `
     const res = await api.post(ENDPOINTS.patients.graphql, { query, variables: { appointmentId } })
     return res.data?.data ?? null
+  },
+  getPatientDashboard: async (): Promise<PatientDashboard> => {
+    const query = `
+      query GetPatientDashboard {
+        myPatientHeader {
+          id
+          fullName
+          birthDate
+          allergiesList
+          conditionsList
+        }
+
+        myAppointments(
+          first: 3
+          where: { status: { eq: SCHEDULED } }
+          order: { start: ASC }
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            doctorName
+          }
+        }
+
+        myEncounters(
+          first: 3
+          order: { startedAt: DESC }
+        ) {
+          nodes {
+            id
+            startedAt
+            status
+            doctorId
+
+            prescriptions {
+              medicationName
+              dosage
+              instructions
+            }
+
+            notes {
+              noteText
+              author
+              createdDate
+            }
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, { query })
+
+    return res.data?.data
   }
 }
