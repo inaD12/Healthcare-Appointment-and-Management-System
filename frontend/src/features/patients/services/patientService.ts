@@ -27,6 +27,9 @@ import {
   PatientInfo,
   PatientDashboard,
   DoctorDashboard,
+  DoctorAppointment,
+  DoctorDashboardView,
+  DoctorEncounter,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -288,12 +291,23 @@ export const patientService = {
     return res.data?.data
   },
   
-  getDoctorDashboard: async (doctorId: string): Promise<DoctorDashboard> => {
+getDoctorDashboard: async (
+    doctorId: string
+  ): Promise<DoctorDashboardView> => {
+    const today = new Date().toISOString().split("T")[0]
+
     const query = `
-      query DoctorDashboard($doctorId: String!) {
-        appointmentsByDoctor(
+      query DoctorDashboard($doctorId: String!, $todayStart: DateTime!, $todayEnd: DateTime!) {
+
+        todayAppointments: appointmentsByDoctor(
           doctorId: $doctorId
           first: 20
+          where: {
+            start: {
+              gte: $todayStart
+              lt: $todayEnd
+            }
+          }
           order: [{ start: ASC }]
         ) {
           nodes {
@@ -309,10 +323,12 @@ export const patientService = {
         encountersByDoctor(
           doctorId: $doctorId
           first: 20
-          order: [{ updatedAt: DESC }]
           where: {
-            status: { in: [IN_PROGRESS, FINALIZED] }
+            status: {
+              in: [IN_PROGRESS, FINALIZED]
+            }
           }
+          order: [{ updatedAt: DESC }]
         ) {
           nodes {
             id
@@ -323,47 +339,58 @@ export const patientService = {
             startedAt
             finalizedAt
             updatedAt
-
-            notes {
-              id
-              text
-              createdAt
-              deletedAt
-            }
-
-            diagnoses {
-              id
-              icdCode
-              description
-              createdAt
-              deletedAt
-            }
-
-            prescriptions {
-              id
-              medicationName
-              dosage
-              instructions
-              createdAt
-              deletedAt
-            }
-
-            addendums {
-              id
-              text
-              createdAt
-              deletedAt
-            }
           }
         }
+
       }
     `
 
+    const todayStart = new Date(`${today}T00:00:00.000Z`).toISOString()
+    const todayEnd = new Date(`${today}T23:59:59.999Z`).toISOString()
+
     const res = await api.post(ENDPOINTS.patients.graphql, {
       query,
-      variables: { doctorId },
+      variables: {
+        doctorId,
+        todayStart,
+        todayEnd,
+      },
     })
 
-    return res.data?.data
-  },
+    const data = res.data?.data
+
+    const todayAppointments: DoctorAppointment[] =
+      data?.todayAppointments?.nodes ?? []
+
+    const encounters: DoctorEncounter[] =
+      data?.encountersByDoctor?.nodes ?? []
+
+    const nextAppointment = todayAppointments
+      .filter((a) => new Date(a.start) > new Date())
+      .sort(
+        (a, b) =>
+          new Date(a.start).getTime() - new Date(b.start).getTime()
+      )[0]
+
+    const minutesUntilNext = nextAppointment
+      ? Math.max(
+          0,
+          Math.floor(
+            (new Date(nextAppointment.start).getTime() -
+              new Date().getTime()) /
+              60000
+          )
+        )
+      : undefined
+
+    const unfinishedEncounters = encounters
+
+    return {
+      todayAppointments,
+      nextAppointment,
+      totalToday: todayAppointments.length,
+      minutesUntilNext,
+      unfinishedEncounters,
+    }
+  }
 }

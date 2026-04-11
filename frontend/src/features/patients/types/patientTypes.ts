@@ -365,6 +365,14 @@ export interface DoctorDashboard {
   }
 }
 
+export interface DoctorDashboardView {
+  todayAppointments: DoctorAppointment[]
+  nextAppointment?: DoctorAppointment
+  totalToday: number
+  minutesUntilNext?: number
+  unfinishedEncounters: DoctorEncounter[]
+}
+
 export interface TodaySummary {
   nextAppointment?: DoctorAppointment
   todayAppointments: DoctorAppointment[]

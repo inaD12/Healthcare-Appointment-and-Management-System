@@ -12,7 +12,7 @@ export function DashboardCard({
 }: {
   icon: React.ReactNode
   title: string
-  value: string
+  value: string | number
   description: string
   href?: string
 }) {
