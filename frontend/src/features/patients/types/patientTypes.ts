@@ -298,6 +298,83 @@ export interface PatientDashboard {
   }
 }
 
+export interface DoctorAppointment {
+  id: string
+  start: string
+  end: string
+  status: AppointmentStatus
+  patientName: string
+  patientId: string
+}
+
+export interface DoctorEncounterNote {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterDiagnosis {
+  id: string
+  icdCode: string
+  description: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterPrescription {
+  id: string
+  medicationName: string
+  dosage: string
+  instructions: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterAddendum {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounter {
+  id: string
+  appointmentId: string
+  patientId: string
+  doctorId: string
+  status: "IN_PROGRESS" | "FINALIZED" | "LOCKED"
+
+  startedAt: string
+  finalizedAt?: string | null
+  updatedAt?: string | null
+
+  notes: DoctorEncounterNote[]
+  diagnoses: DoctorEncounterDiagnosis[]
+  prescriptions: DoctorEncounterPrescription[]
+  addendums: DoctorEncounterAddendum[]
+}
+
+export interface DoctorDashboard {
+  appointmentsByDoctor: {
+    nodes: DoctorAppointment[]
+  }
+
+  encountersByDoctor: {
+    nodes: DoctorEncounter[]
+  }
+}
+
+export interface TodaySummary {
+  nextAppointment?: DoctorAppointment
+  todayAppointments: DoctorAppointment[]
+  minutesUntilNext?: number
+  totalToday: number
+}
+
+export interface DoctorWorkQueue {
+  unfinishedEncounters: DoctorEncounter[]
+}
 
 export type StartEncounterRequest = z.infer<typeof StartEncounterSchema>
 export type EncounterCommandResponse = z.infer<typeof EncounterCommandResponseSchema>

@@ -26,6 +26,7 @@ import {
   AppointmentByIdResponse,
   PatientInfo,
   PatientDashboard,
+  DoctorDashboard,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -285,5 +286,84 @@ export const patientService = {
     const res = await api.post(ENDPOINTS.patients.graphql, { query })
 
     return res.data?.data
-  }
+  },
+  
+  getDoctorDashboard: async (doctorId: string): Promise<DoctorDashboard> => {
+    const query = `
+      query DoctorDashboard($doctorId: String!) {
+        appointmentsByDoctor(
+          doctorId: $doctorId
+          first: 20
+          order: [{ start: ASC }]
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            patientName
+            patientId
+          }
+        }
+
+        encountersByDoctor(
+          doctorId: $doctorId
+          first: 20
+          order: [{ updatedAt: DESC }]
+          where: {
+            status: { in: [IN_PROGRESS, FINALIZED] }
+          }
+        ) {
+          nodes {
+            id
+            appointmentId
+            patientId
+            doctorId
+            status
+            startedAt
+            finalizedAt
+            updatedAt
+
+            notes {
+              id
+              text
+              createdAt
+              deletedAt
+            }
+
+            diagnoses {
+              id
+              icdCode
+              description
+              createdAt
+              deletedAt
+            }
+
+            prescriptions {
+              id
+              medicationName
+              dosage
+              instructions
+              createdAt
+              deletedAt
+            }
+
+            addendums {
+              id
+              text
+              createdAt
+              deletedAt
+            }
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: { doctorId },
+    })
+
+    return res.data?.data
+  },
 }

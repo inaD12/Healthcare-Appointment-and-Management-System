@@ -22,4 +22,19 @@ public sealed class EncounterQueries
 
         return res;
     }
+    
+    [UsePaging(IncludeTotalCount = true)]
+    [UseProjection]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<Encounter> GetEncountersByDoctor(
+        string doctorId,
+        PatientsDbContext dbContext)
+    {
+        var res = dbContext.Encounters
+            .AsNoTracking()
+            .Where(e => e.DoctorId == doctorId);
+
+        return res;
+    }
 };
