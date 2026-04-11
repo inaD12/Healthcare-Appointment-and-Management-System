@@ -131,13 +131,6 @@ export const AddendumCommandResponseSchema = z.object({
     .max(cfg.ID_MAX_LENGTH),
 })
 
-export interface PatientProfile {
-  id: string
-  fullName: string
-  birthDate: string
-  allergies: string[]
-  conditions: string[]
-}
 
 export interface EncounterListItem {
   id: string
@@ -227,6 +220,14 @@ export interface PatientInfo {
   appointments: Appointment[]
 }
 
+export interface PatientProfile {
+  id: string
+  fullName: string
+  birthDate: string
+  allergiesList: string[]
+  conditionsList: string[]
+}
+
 export interface DashboardAppointment {
   id: string
   start: string
@@ -236,32 +237,59 @@ export interface DashboardAppointment {
   doctorName: string
 }
 
-export interface DashboardEncounter {
-  id: string
-  startedAt: string
-  status: string
-  doctorId: string
-
-  prescriptions: DashboardPrescription[]
-  notes: DashboardMedicalNote[]
-}
-
 export interface DashboardPrescription {
+  id: string
   medicationName: string
   dosage: string
   instructions: string
+  createdAt: string
+  deletedAt?: string | null
 }
 
 export interface DashboardMedicalNote {
-  noteText: string
-  author: string
-  createdDate: string
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardAddendum {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardDiagnosis {
+  id: string
+  icdCode: string
+  description: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardEncounter {
+  id: string
+  startedAt: string
+  updatedAt: string
+  status: string
+  doctorId: string
+  appointmentId: string
+
+  prescriptions: DashboardPrescription[]
+  notes: DashboardMedicalNote[]
+  addendums: DashboardAddendum[]
+  diagnoses: DashboardDiagnosis[]
 }
 
 export interface PatientDashboard {
-  myPatientProfile: PatientProfile
+  myPatientHeader: PatientProfile
 
-  myAppointments: {
+  upcomingAppointment: {
+    nodes: DashboardAppointment[]
+  }
+
+  lastAppointment: {
     nodes: DashboardAppointment[]
   }
 

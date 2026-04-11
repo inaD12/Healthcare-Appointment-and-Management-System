@@ -1,9 +1,15 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, Users, FileText, Stethoscope } from "lucide-react"
 import { useAuth } from "@/features/auth/hooks/useAuth"
+import { PatientDashboard } from "@/features/patients/types/patientTypes"
+import { patientService } from "@/features/patients/services/patientService"
+import Link from "next/link"
+import { DashboardCard } from "@/components/home/DashboardCard"
+import { EncounterUpdateCard } from "@/components/home/EncounterUpdateCard"
 
 export default function HomePage() {
   const { user, roles } = useAuth()
@@ -12,8 +18,26 @@ export default function HomePage() {
   const isDoctor = roles.includes("Doctor")
   const isPatient = roles.includes("Patient")
 
+  const [dashboard, setDashboard] = useState<PatientDashboard | null>(null)
+
+  useEffect(() => {
+    if (!isPatient) return
+
+    const loadDashboard = async () => {
+      const data = await patientService.getPatientDashboard()
+      setDashboard(data)
+    }
+
+    loadDashboard()
+  }, [isPatient])
+
+  const nextAppointment = dashboard?.upcomingAppointment?.nodes?.[0]
+  const lastAppointment = dashboard?.lastAppointment?.nodes?.[0]
+  const recentEncounters = dashboard?.myEncounters?.nodes ?? [] 
+
   return (
     <div className="space-y-6">
+
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
@@ -25,31 +49,68 @@ export default function HomePage() {
         </CardHeader>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {isPatient && (
-          <>
-            <DashboardCard
-              icon={<Calendar className="h-5 w-5" />}
-              title="Upcoming Appointment"
-              value="Tomorrow 10:00"
-              description="Dr. Smith"
-            />
+      <div className="space-y-8">
 
-            <DashboardCard
-              icon={<FileText className="h-5 w-5" />}
-              title="Prescriptions"
-              value="2 Active"
-              description="Last updated yesterday"
-            />
+      {isPatient && dashboard && (
+        <>
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold">Appointments</h2>
 
-            <DashboardCard
-              icon={<Stethoscope className="h-5 w-5" />}
-              title="Last Checkup"
-              value="12 March 2026"
-              description="General consultation"
-            />
-          </>
-        )}
+            <div className="grid gap-6 md:grid-cols-2">
+              <DashboardCard
+                icon={<Calendar className="h-5 w-5" />}
+                title="Next Appointment"
+                value={
+                  nextAppointment
+                    ? new Date(nextAppointment.start).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
+                    : "None scheduled"
+                }
+                description={nextAppointment?.doctorName ?? ""}
+                href={
+                  nextAppointment
+                    ? `/appointment/${nextAppointment.id}`
+                    : undefined
+                }
+              />
+
+              <DashboardCard
+                icon={<Calendar className="h-5 w-5" />}
+                title="Last Appointment"
+                value={
+                  lastAppointment
+                    ? new Date(lastAppointment.start).toLocaleString(undefined, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
+                    : "No previous visits"
+                }
+                description={lastAppointment?.doctorName ?? ""}
+                href={
+                  lastAppointment
+                    ? `/appointment/${lastAppointment.id}`
+                    : undefined
+                }
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold">Recent Medical Updates</h2>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {recentEncounters.slice(0, 3).map((encounter) => (
+                <EncounterUpdateCard
+                  key={encounter.id}
+                  encounter={encounter}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
         {isDoctor && (
           <>
@@ -102,65 +163,52 @@ export default function HomePage() {
         )}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks you can perform.</CardDescription>
-        </CardHeader>
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>
+              Common tasks you can perform.
+            </CardDescription>
+          </CardHeader>
 
-        <CardContent className="flex flex-wrap gap-3">
-          {isPatient && (
-            <Button>
-              <Calendar className="mr-2 h-4 w-4" />
-              Book Appointment
-            </Button>
-          )}
+          <CardContent className="flex flex-wrap gap-3">
+            {isPatient && (
+              <>
+                <Button asChild>
+                  <Link href="/patient-info">
+                    <Users className="mr-2 h-4 w-4" />
+                    View Profile
+                  </Link>
+                </Button>
 
-          {isDoctor && (
-            <Button>
-              <Calendar className="mr-2 h-4 w-4" />
-              View Schedule
-            </Button>
-          )}
+                <Button asChild>
+                  <Link href="/doctors">
+                    <Stethoscope className="mr-2 h-4 w-4" />
+                    Browse Doctors
+                  </Link>
+                </Button>
+              </>
+            )}
 
-          {isAdmin && (
-            <Button>
-              <Users className="mr-2 h-4 w-4" />
-              Manage Users
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
+            {isDoctor && (
+              <Button asChild>
+                <Link href="/doctor/schedule">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  View Schedule
+                </Link>
+              </Button>
+            )}
 
-function DashboardCard({
-  icon,
-  title,
-  value,
-  description,
-}: {
-  icon: React.ReactNode
-  title: string
-  value: string
-  description: string
-}) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">
-          {title}
-        </CardTitle>
-        {icon}
-      </CardHeader>
-
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        <p className="text-xs text-muted-foreground mt-1">
-          {description}
-        </p>
-      </CardContent>
-    </Card>
-  )
-}
+            {isAdmin && (
+              <Button asChild>
+                <Link href="/admin/users">
+                  <Users className="mr-2 h-4 w-4" />
+                  Manage Users
+                </Link>
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }

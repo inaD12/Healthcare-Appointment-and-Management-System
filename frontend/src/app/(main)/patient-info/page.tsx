@@ -72,8 +72,8 @@ export default function PatientDashboardPage() {
         <CardContent className="mt-2 space-y-1">
           <p><strong>Name:</strong> {patient?.fullName}</p>
           <p><strong>Birth Date:</strong> {patient?.birthDate}</p>
-          <p><strong>Allergies:</strong> {patient?.allergies.join(", ") || "None"}</p>
-          <p><strong>Conditions:</strong> {patient?.conditions.join(", ") || "None"}</p>
+          <p><strong>Allergies:</strong> {patient?.allergiesList.join(", ") || "None"}</p>
+          <p><strong>Conditions:</strong> {patient?.conditionsList.join(", ") || "None"}</p>
         </CardContent>
       </Card>
 

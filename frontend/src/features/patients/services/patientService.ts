@@ -89,8 +89,8 @@ export const patientService = {
       id: patient?.id ?? "",
       fullName: patient?.fullName ?? "",
       birthDate: patient?.birthDate ?? "",
-      allergies: patient?.allergies ?? [],
-      conditions: patient?.conditions ?? [],
+      allergiesList: patient?.allergies ?? [],
+      conditionsList: patient?.conditions ?? [],
     }
   },
 
@@ -134,8 +134,8 @@ export const patientService = {
         id: header?.id ?? "",
         fullName: header?.fullName ?? "",
         birthDate: header?.birthDate ?? "",
-        allergies: header?.allergies ?? [],
-        conditions: header?.conditions ?? [],
+        allergiesList: header?.allergies ?? [],
+        conditionsList: header?.conditions ?? [],
       },
       appointments: appointments.map((a: any) => ({
         id: a.id,
@@ -205,8 +205,8 @@ export const patientService = {
           conditionsList
         }
 
-        myAppointments(
-          first: 3
+        upcomingAppointment: myAppointments(
+          first: 1
           where: { status: { eq: SCHEDULED } }
           order: [{ start: ASC }]
         ) {
@@ -220,39 +220,62 @@ export const patientService = {
           }
         }
 
+        lastAppointment: myAppointments(
+          first: 1
+          where: { status: { eq: COMPLETED } }
+          order: [{ start: DESC }]
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            doctorName
+          }
+        }
+
         myEncounters(
           first: 3
-          order: [{ startedAt: DESC }]
+          order: [{ updatedAt: DESC }]
         ) {
           nodes {
             id
             startedAt
+            updatedAt
             status
             doctorId
+            appointmentId
 
             prescriptions {
               id
               medicationName
               dosage
               instructions
+              createdAt
+              deletedAt
             }
 
             notes {
               id
               text
               createdAt
+              deletedAt
             }
 
             addendums {
               id
               text
               createdAt
+              deletedAt
             }
 
             diagnoses {
               id
               icdCode
               description
+              createdAt
+              deletedAt
             }
           }
         }

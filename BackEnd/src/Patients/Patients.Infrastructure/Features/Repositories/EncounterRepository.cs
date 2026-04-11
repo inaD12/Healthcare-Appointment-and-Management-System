@@ -54,10 +54,10 @@ public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
             e.StartedAt,
             e.FinalizedAt,
             e.Status,
-            e.Notes.Select(n => new NoteDto(n.Id, e.Id, n.Text, n.CreatedAt)).ToList(),
-            e.Diagnoses.Select(d => new DiagnosisDto(d.Id, e.Id, d.IcdCode, d.Description)).ToList(),
-            e.Prescriptions.Select(p => new PrescriptionDto(p.Id, e.Id, p.MedicationName, p.Dosage, p.Instructions)).ToList(),
-            e.Addendums.Select(a => new AddendumDto(a.Id, e.Id, a.Text, a.CreatedAt)).ToList()
+            e.Notes.Select(n => new NoteDto(n.Id, e.Id, n.Text, n.CreatedAt, n.DeletedAt)).ToList(),
+            e.Diagnoses.Select(d => new DiagnosisDto(d.Id, e.Id, d.IcdCode, d.Description, d.CreatedAt, d.DeletedAt)).ToList(),
+            e.Prescriptions.Select(p => new PrescriptionDto(p.Id, e.Id, p.MedicationName, p.Dosage, p.Instructions, p.CreatedAt, p.DeletedAt)).ToList(),
+            e.Addendums.Select(a => new AddendumDto(a.Id, e.Id, a.Text, a.CreatedAt, a.DeletedAt)).ToList()
         )).ToList();
     }
 
@@ -74,7 +74,8 @@ public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
                 a.Id,
                 e.Id,
                 a.Text,
-                a.CreatedAt)))
+                a.CreatedAt,
+                a.DeletedAt)))
             .ToListAsync(cancellationToken);
     }
 
@@ -91,7 +92,9 @@ public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
                 d.Id,
                 e.Id,
                 d.IcdCode,
-                d.Description)))
+                d.Description,
+                d.CreatedAt,
+                d.DeletedAt)))
             .ToListAsync(cancellationToken);
     }
 
@@ -108,7 +111,8 @@ public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
                 n.Id,
                 e.Id,
                 n.Text,
-                n.CreatedAt)))
+                n.CreatedAt,
+                n.DeletedAt)))
             .ToListAsync(cancellationToken);
     }
 
@@ -126,7 +130,9 @@ public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
                 e.Id,
                 p.MedicationName,
                 p.Dosage,
-                p.Instructions)))
+                p.Instructions,
+                p.CreatedAt,
+                p.DeletedAt)))
             .ToListAsync(cancellationToken);
     }
 }

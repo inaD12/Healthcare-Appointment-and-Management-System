@@ -17,6 +17,7 @@ public sealed class EncounterType : ObjectType<Encounter>
         descriptor.Field(x => x.StartedAt);
         descriptor.Field(x => x.FinalizedAt);
         descriptor.Field(x => x.LockedAt);
+        descriptor.Field(x => x.UpdatedAt);
 
         descriptor
             .Field("notes")
