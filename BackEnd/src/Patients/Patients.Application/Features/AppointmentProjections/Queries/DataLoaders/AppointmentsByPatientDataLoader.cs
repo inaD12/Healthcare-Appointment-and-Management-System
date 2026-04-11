@@ -1,5 +1,5 @@
 using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Dtos;
+using Patients.Domain.Entities;
 
 namespace Patients.Application.Features.AppointmentProjections.Queries.DataLoaders;
 
@@ -7,9 +7,9 @@ public sealed class AppointmentsByPatientDataLoader(
     IBatchScheduler batchScheduler,
     IAppointmentReadRepository repo,
     DataLoaderOptions? options = null)
-    : BatchDataLoader<string, List<AppointmentHistoryDto>>(batchScheduler, options ?? new DataLoaderOptions())
+    : BatchDataLoader<string, List<AppointmentProjection>>(batchScheduler, options ?? new DataLoaderOptions())
 {
-    protected override async Task<IReadOnlyDictionary<string, List<AppointmentHistoryDto>>> LoadBatchAsync(
+    protected override async Task<IReadOnlyDictionary<string, List<AppointmentProjection>>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {

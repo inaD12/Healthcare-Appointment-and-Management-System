@@ -16,11 +16,12 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddExceptionHandling()
 			.AddEndpointsApiExplorer();
-		
+
 		serviceCollection
 			.AddGraphQLServer()
+			.AddType<AppointmentType>()
+			.AddType<EncounterType>()
 			.AddQueryType<Query>()
-			.AddType<AppointmentHistoryType>()
 			.AddFiltering()
 			.AddSorting()
 			.AddProjections();

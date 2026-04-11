@@ -208,7 +208,7 @@ export const patientService = {
         myAppointments(
           first: 3
           where: { status: { eq: SCHEDULED } }
-          order: { start: ASC }
+          order: [{ start: ASC }]
         ) {
           nodes {
             id
@@ -222,7 +222,7 @@ export const patientService = {
 
         myEncounters(
           first: 3
-          order: { startedAt: DESC }
+          order: [{ startedAt: DESC }]
         ) {
           nodes {
             id
@@ -231,15 +231,28 @@ export const patientService = {
             doctorId
 
             prescriptions {
+              id
               medicationName
               dosage
               instructions
             }
 
             notes {
-              noteText
-              author
-              createdDate
+              id
+              text
+              createdAt
+            }
+
+            addendums {
+              id
+              text
+              createdAt
+            }
+
+            diagnoses {
+              id
+              icdCode
+              description
             }
           }
         }

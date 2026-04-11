@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Infrastructure.Features.DBContexts;
@@ -22,14 +23,16 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IAppointmentReadRepository, AppointmentReadRepository>()
 			.AddTransient<IBatchNamesService, BatchNamesService>()
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
-		
+
 		services
 			.AddUnitOfWork<PatientsDbContext>()
 			.AddMessageBroker(configuration, currentAssembly)
 			.AddAuth(configuration)
 			.AddPermissionService()
-			.AddDatabaseContext<PatientsDbContext>(configuration)
-			.AddDatabaseContext<PatientsReadDbContext>(configuration);
+			.AddDatabaseContext<PatientsDbContext>(configuration, optionsAction =>
+			{
+				optionsAction.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+			});
 
 		return services;
 	}

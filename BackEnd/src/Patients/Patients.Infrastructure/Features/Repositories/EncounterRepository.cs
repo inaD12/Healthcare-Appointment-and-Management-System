@@ -16,34 +16,13 @@ public class EncounterRepository(PatientsDbContext context) : GenericRepository<
         return res;
     }
     
-    public IQueryable<EncounterListItemDto> GetByPatient(string patientId)
+    public IQueryable<Encounter> GetByPatient(string patientId)
     {
-        return context.Encounters
+        var res = context.Encounters
             .AsNoTracking()
-            .Where(e => e.PatientId == patientId)
-            .Select(e => new EncounterListItemDto(
-                e.Id,
-                e.StartedAt,
-                e.Status,
-                e.DoctorId,
-                e.PatientId));
-    }
+            .Where(e => e.PatientId == patientId);
 
-    public IQueryable<EncounterDetailsDto> GetDetails(string encounterId)
-    {
-        return context.Encounters
-            .AsNoTracking()
-            .Where(e => e.Id == encounterId)
-            .Select(e => new EncounterDetailsDto(
-                e.Id,
-                e.AppointmentId,
-                e.StartedAt,
-                e.FinalizedAt,
-                e.Status,
-                e.Notes.Select(n => new NoteDto(n.Id, n.Text, n.CreatedAt)).ToList(),
-                e.Diagnoses.Select(d => new DiagnosisDto(d.Id, d.IcdCode, d.Description)).ToList(),
-                e.Prescriptions.Select(p => new PrescriptionDto(p.Id, p.MedicationName, p.Dosage, p.Instructions)).ToList(),
-                e.Addendums.Select(a => new AddendumDto(a.Id, a.Text, a.CreatedAt)).ToList()));
+        return res;
     }
 
     public async Task<List<EncounterListItemDto>> GetByPatientIdsAsync(
@@ -75,91 +54,78 @@ public class EncounterRepository(PatientsDbContext context) : GenericRepository<
             .Select(e => new EncounterDetailsDto(
                 e.Id,
                 e.AppointmentId,
+                e.DoctorId,
+                e.PatientId,
                 e.StartedAt,
                 e.FinalizedAt,
                 e.Status,
-                e.Notes.Select(n => new NoteDto(n.Id, n.Text, n.CreatedAt)).ToList(),
-                e.Diagnoses.Select(d => new DiagnosisDto(d.Id, d.IcdCode, d.Description)).ToList(),
-                e.Prescriptions.Select(p => new PrescriptionDto(p.Id, p.MedicationName, p.Dosage, p.Instructions)).ToList(),
-                e.Addendums.Select(a => new AddendumDto(a.Id, a.Text, a.CreatedAt)).ToList()
+                e.Notes.Select(n => new NoteDto(n.Id, e.Id, n.Text, n.CreatedAt)).ToList(),
+                e.Diagnoses.Select(d => new DiagnosisDto(d.Id, e.Id, d.IcdCode, d.Description)).ToList(),
+                e.Prescriptions.Select(p => new PrescriptionDto(p.Id, e.Id, p.MedicationName, p.Dosage, p.Instructions)).ToList(),
+                e.Addendums.Select(a => new AddendumDto(a.Id, e.Id, a.Text, a.CreatedAt)).ToList()
             ))
             .ToList();
 
         return result;
     }
-    public async Task<Dictionary<string, List<AddendumDto>>> GetAddendumsByEncounterIdsAsync(
+    public async Task<List<AddendumDto>> GetAddendumsByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken)
     {
-        var data = await context.Encounters
+        return await context.Encounters
             .AsNoTracking()
             .Where(e => encounterIds.Contains(e.Id))
-            .SelectMany(e => e.Addendums.Select(a => new
-            {
-                EncounterId = e.Id,
-                Addendum = new AddendumDto(a.Id, a.Text, a.CreatedAt)
-            }))
+            .SelectMany(e => e.Addendums.Select(a => new AddendumDto(
+                a.Id,
+                e.Id,
+                a.Text,
+                a.CreatedAt)))
             .ToListAsync(cancellationToken);
-
-        return data
-            .GroupBy(x => x.EncounterId)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.Addendum).ToList());
     }
 
-    public async Task<Dictionary<string, List<DiagnosisDto>>> GetDiagnosesByEncounterIdsAsync(
+    public async Task<List<DiagnosisDto>> GetDiagnosesByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken)
     {
-        var data = await context.Encounters
+        return await context.Encounters
             .AsNoTracking()
             .Where(e => encounterIds.Contains(e.Id))
-            .SelectMany(e => e.Diagnoses.Select(d => new
-            {
-                EncounterId = e.Id,
-                Diagnosis = new DiagnosisDto(d.Id, d.IcdCode, d.Description)
-            }))
+            .SelectMany(e => e.Diagnoses.Select(d => new DiagnosisDto(
+                d.Id,
+                e.Id,
+                d.IcdCode,
+                d.Description)))
             .ToListAsync(cancellationToken);
-
-        return data
-            .GroupBy(x => x.EncounterId)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.Diagnosis).ToList());
     }
 
-    public async Task<Dictionary<string, List<NoteDto>>> GetNotesByEncounterIdsAsync(
+    public async Task<List<NoteDto>> GetNotesByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken)
     {
-        var data = await context.Encounters
+        return await context.Encounters
             .AsNoTracking()
             .Where(e => encounterIds.Contains(e.Id))
-            .SelectMany(e => e.Notes.Select(n => new
-            {
-                EncounterId = e.Id,
-                Note = new NoteDto(n.Id, n.Text, n.CreatedAt)
-            }))
+            .SelectMany(e => e.Notes.Select(n => new NoteDto(
+                n.Id,
+                e.Id,
+                n.Text,
+                n.CreatedAt)))
             .ToListAsync(cancellationToken);
-
-        return data
-            .GroupBy(x => x.EncounterId)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.Note).ToList());
     }
 
-    public async Task<Dictionary<string, List<PrescriptionDto>>> GetPrescriptionsByEncounterIdsAsync(
+    public async Task<List<PrescriptionDto>> GetPrescriptionsByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken)
     {
-        var data = await context.Encounters
+        return await context.Encounters
             .AsNoTracking()
             .Where(e => encounterIds.Contains(e.Id))
-            .SelectMany(e => e.Prescriptions.Select(p => new
-            {
-                EncounterId = e.Id,
-                Prescription = new PrescriptionDto(p.Id, p.MedicationName, p.Dosage, p.Instructions)
-            }))
+            .SelectMany(e => e.Prescriptions.Select(p => new PrescriptionDto(
+                p.Id,
+                e.Id,
+                p.MedicationName,
+                p.Dosage,
+                p.Instructions)))
             .ToListAsync(cancellationToken);
-
-        return data
-            .GroupBy(x => x.EncounterId)
-            .ToDictionary(g => g.Key, g => g.Select(x => x.Prescription).ToList());
     }
 }

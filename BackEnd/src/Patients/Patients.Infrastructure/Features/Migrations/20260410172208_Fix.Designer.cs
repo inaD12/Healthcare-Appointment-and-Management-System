@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Patients.Infrastructure.Features.DBContexts;
@@ -11,9 +12,11 @@ using Patients.Infrastructure.Features.DBContexts;
 namespace Patients.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(PatientsDbContext))]
-    partial class PatientsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260410172208_Fix")]
+    partial class Fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,11 +235,13 @@ namespace Patients.Infrastructure.Features.Migrations
 
                     b.Property<string>("AppointmentId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("DoctorId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("FinalizedAt")
                         .HasColumnType("timestamp with time zone");
@@ -246,7 +251,8 @@ namespace Patients.Infrastructure.Features.Migrations
 
                     b.Property<string>("PatientId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<uint>("RowVersion")
                         .IsConcurrencyToken()
@@ -317,10 +323,11 @@ namespace Patients.Infrastructure.Features.Migrations
 
             modelBuilder.Entity("Patients.Domain.Entities.Encounter", b =>
                 {
-                    b.OwnsMany("Patients.Domain.ValueObjects.AddendumNote", "Addendums", b1 =>
+                    b.OwnsMany("Patients.Domain.ValueObjects.AddendumNote", "_addendums", b1 =>
                         {
                             b1.Property<string>("Id")
-                                .HasColumnType("text");
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
 
                             b1.Property<DateTime>("CreatedAt")
                                 .HasColumnType("timestamp with time zone");
@@ -343,10 +350,11 @@ namespace Patients.Infrastructure.Features.Migrations
                                 .HasForeignKey("EncounterId");
                         });
 
-                    b.OwnsMany("Patients.Domain.ValueObjects.ClinicalNote", "Notes", b1 =>
+                    b.OwnsMany("Patients.Domain.ValueObjects.ClinicalNote", "_notes", b1 =>
                         {
                             b1.Property<string>("Id")
-                                .HasColumnType("text");
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
 
                             b1.Property<DateTime>("CreatedAt")
                                 .HasColumnType("timestamp with time zone");
@@ -357,7 +365,8 @@ namespace Patients.Infrastructure.Features.Migrations
 
                             b1.Property<string>("Text")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasMaxLength(400)
+                                .HasColumnType("character varying(400)");
 
                             b1.HasKey("Id");
 
@@ -369,10 +378,11 @@ namespace Patients.Infrastructure.Features.Migrations
                                 .HasForeignKey("EncounterId");
                         });
 
-                    b.OwnsMany("Patients.Domain.ValueObjects.Diagnosis", "Diagnoses", b1 =>
+                    b.OwnsMany("Patients.Domain.ValueObjects.Diagnosis", "_diagnoses", b1 =>
                         {
                             b1.Property<string>("Id")
-                                .HasColumnType("text");
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
 
                             b1.Property<string>("Description")
                                 .IsRequired()
@@ -396,10 +406,11 @@ namespace Patients.Infrastructure.Features.Migrations
                                 .HasForeignKey("EncounterId");
                         });
 
-                    b.OwnsMany("Patients.Domain.ValueObjects.Prescription", "Prescriptions", b1 =>
+                    b.OwnsMany("Patients.Domain.ValueObjects.Prescription", "_prescriptions", b1 =>
                         {
                             b1.Property<string>("Id")
-                                .HasColumnType("text");
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
 
                             b1.Property<string>("Dosage")
                                 .IsRequired()
@@ -427,13 +438,13 @@ namespace Patients.Infrastructure.Features.Migrations
                                 .HasForeignKey("EncounterId");
                         });
 
-                    b.Navigation("Addendums");
+                    b.Navigation("_addendums");
 
-                    b.Navigation("Diagnoses");
+                    b.Navigation("_diagnoses");
 
-                    b.Navigation("Notes");
+                    b.Navigation("_notes");
 
-                    b.Navigation("Prescriptions");
+                    b.Navigation("_prescriptions");
                 });
 
             modelBuilder.Entity("Patients.Domain.Entities.Patient", b =>

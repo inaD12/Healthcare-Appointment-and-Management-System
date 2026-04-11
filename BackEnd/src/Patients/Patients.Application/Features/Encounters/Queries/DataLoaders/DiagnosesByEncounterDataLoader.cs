@@ -5,14 +5,16 @@ namespace Patients.Application.Features.Encounters.Queries.DataLoaders;
 
 public sealed class DiagnosesByEncounterDataLoader(
     IBatchScheduler batchScheduler,
-    IEncounterRepository encounterRepository,
+    IEncounterRepository repo,
     DataLoaderOptions? options = null)
-    : BatchDataLoader<string, List<DiagnosisDto>>(batchScheduler, options ?? new DataLoaderOptions())
+    : GroupedDataLoader<string, DiagnosisDto>(batchScheduler, options ?? new DataLoaderOptions())
 {
-    protected override async Task<IReadOnlyDictionary<string, List<DiagnosisDto>>> LoadBatchAsync(
+    protected override async Task<ILookup<string, DiagnosisDto>> LoadGroupedBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {
-        return await encounterRepository.GetDiagnosesByEncounterIdsAsync(keys, cancellationToken);
+        var rows = await repo.GetDiagnosesByEncounterIdsFlatAsync(keys, cancellationToken);
+
+        return rows.ToLookup(x => x.EncounterId);
     }
 }

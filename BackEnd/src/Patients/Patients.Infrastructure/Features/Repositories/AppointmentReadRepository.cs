@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 
@@ -56,74 +55,42 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
         await db.SaveChangesAsync(ct);
     }
     
-    public async Task<List<AppointmentHistoryDto>> GetByPatientIdsAsync(
+    public async Task<List<AppointmentProjection>> GetByPatientIdsAsync(
         IReadOnlyList<string> patientIds,
         CancellationToken cancellationToken)
     {
-        return await db.AppointmentProjections
+        var res = await db.AppointmentProjections
             .AsNoTracking()
             .Where(a => patientIds.Contains(a.PatientId))
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null))
             .ToListAsync(cancellationToken);
+        
+        return res;
     }
 
-    public IQueryable<AppointmentHistoryDto> GetByPatient(string patientId)
+    public IQueryable<AppointmentProjection> GetByPatient(string patientId)
     {
-        return db.AppointmentProjections
+        var res = db.AppointmentProjections
             .AsNoTracking()
-            .Where(a => a.PatientId == patientId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
+            .Where(e => e.PatientId == patientId);
+
+        return res;
     }
 
-    public IQueryable<AppointmentHistoryDto> GetByDoctor(string doctorId)
+    public IQueryable<AppointmentProjection> GetByDoctor(string doctorId)
     {
-        return db.AppointmentProjections
+        var res = db.AppointmentProjections
             .AsNoTracking()
-            .Where(a => a.DoctorId == doctorId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
+            .Where(e => e.DoctorId == doctorId);
+
+        return res;
     }
 
-    public IQueryable<AppointmentHistoryDto> GetById(string appointmentId)
+    public IQueryable<AppointmentProjection> GetById(string appointmentId)
     {
-        return db.AppointmentProjections
+        var res = db.AppointmentProjections
             .AsNoTracking()
-            .Where(a => a.Id == appointmentId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
+            .Where(e => e.Id == appointmentId);
+
+        return res;
     }
 }
