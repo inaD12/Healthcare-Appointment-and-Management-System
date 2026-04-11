@@ -29,6 +29,7 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
         builder.Property(e => e.StartedAt).IsRequired();
         builder.Property(e => e.FinalizedAt);
         builder.Property(e => e.LockedAt);
+        builder.Property(e => e.UpdatedAt);
 
         builder.Property(e => e.RowVersion)
             .IsRowVersion()
@@ -46,7 +47,10 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
             n.Property(x => x.Id).IsRequired();
             n.Property(x => x.Text).IsRequired();
+
             n.Property(x => x.CreatedAt).IsRequired();
+            n.Property(x => x.DeletedAt);
+            n.Property(x => x.IsDeleted).IsRequired();
         });
 
         builder.OwnsMany(e => e.Diagnoses, d =>
@@ -59,6 +63,10 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
             d.Property(x => x.IcdCode).IsRequired();
             d.Property(x => x.Description).IsRequired();
+
+            d.Property(x => x.CreatedAt).IsRequired();
+            d.Property(x => x.DeletedAt);
+            d.Property(x => x.IsDeleted).IsRequired();
         });
 
         builder.OwnsMany(e => e.Prescriptions, p =>
@@ -72,6 +80,10 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
             p.Property(x => x.MedicationName).IsRequired();
             p.Property(x => x.Dosage).IsRequired();
             p.Property(x => x.Instructions).IsRequired();
+            
+            p.Property(x => x.CreatedAt).IsRequired();
+            p.Property(x => x.DeletedAt);
+            p.Property(x => x.IsDeleted).IsRequired();
         });
 
         builder.OwnsMany(e => e.Addendums, a =>
@@ -84,6 +96,8 @@ internal sealed class EncounterConfiguration : IEntityTypeConfiguration<Encounte
 
             a.Property(x => x.Text).IsRequired();
             a.Property(x => x.CreatedAt).IsRequired();
+            a.Property(x => x.DeletedAt);
+            a.Property(x => x.IsDeleted).IsRequired();
         });
     }
 }

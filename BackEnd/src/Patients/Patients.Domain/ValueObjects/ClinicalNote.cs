@@ -1,6 +1,8 @@
+    using Shared.Domain.Entities;
+
     namespace Patients.Domain.ValueObjects;
 
-    public sealed class ClinicalNote
+    public sealed class ClinicalNote: SoftDeletableEntity
     {
         public string Id { get; }
         public string Text { get; }
