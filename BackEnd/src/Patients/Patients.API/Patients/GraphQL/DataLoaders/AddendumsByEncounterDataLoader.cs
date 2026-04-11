@@ -1,7 +1,7 @@
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Dtos;
 
-namespace Patients.Application.Features.Encounters.Queries.DataLoaders;
+namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
 
 public sealed class AddendumsByEncounterDataLoader(
     IBatchScheduler batchScheduler,

@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Patients.Application.Features.AppointmentProjections.Queries.DataLoaders;
-using Patients.Application.Features.Encounters.Queries.DataLoaders;
 using Shared.Application.Extensions;
 using Shared.Infrastructure.Extensions;
 
@@ -18,16 +16,6 @@ public static class ServiceCollectionExtensions
 			.AddMediatR(currentAssembly)
 			.AddDateTimeProvider()
 			.AddValidatorsFromAssembly(currentAssembly);
-		
-		services
-			.AddDataLoader<AppointmentsByPatientDataLoader>()
-			.AddDataLoader<UserNamesDataLoader>()
-			.AddDataLoader<NotesByEncounterDataLoader>()
-			.AddDataLoader<DiagnosesByEncounterDataLoader>()
-			.AddDataLoader<EncountersByAppointmentDataLoader>()
-			.AddDataLoader<PrescriptionsByEncounterDataLoader>()
-			.AddDataLoader<EncountersByPatientDataLoader>()
-			.AddDataLoader<AddendumsByEncounterDataLoader>();
 
 		return services;
 	}

@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Patients.Domain.Abstractions.Repositories;
+using System.Data.Entity;
 using Patients.Domain.Entities;
+using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;
 
-namespace Patients.Application.Features.Encounters.Queries;
+namespace Patients.API.Patients.GraphQL.Queries;
 
 public sealed class EncounterQueries
 {
@@ -13,10 +13,13 @@ public sealed class EncounterQueries
     [UseSorting]
     public IQueryable<Encounter> GetMyEncounters(
         HttpContext httpContext,
-        [Service] IEncounterRepository repo)
+        PatientsDbContext dbContext)
     {
         var userId = httpContext.User.GetUserId();
-        var res = repo.GetByPatient(userId);
+        var res = dbContext.Encounters
+            .AsNoTracking()
+            .Where(e => e.PatientId == userId);
+
         return res;
     }
 };

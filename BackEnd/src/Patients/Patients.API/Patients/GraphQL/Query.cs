@@ -1,6 +1,4 @@
-using Patients.Application.Features.AppointmentProjections.Queries;
-using Patients.Application.Features.Encounters.Queries;
-using Patients.Application.Features.Patients.Queries;
+using Patients.API.Patients.GraphQL.Queries;
 
 namespace Patients.API.Patients.GraphQL;
 

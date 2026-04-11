@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
 			.AddMessageBroker(configuration, currentAssembly)
 			.AddAuth(configuration)
 			.AddPermissionService()
-			.AddDatabaseContext<PatientsDbContext>(configuration, optionsAction =>
+			.AddDatabaseContextFactory<PatientsDbContext>(configuration, optionsAction =>
 			{
 				optionsAction.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
 			});

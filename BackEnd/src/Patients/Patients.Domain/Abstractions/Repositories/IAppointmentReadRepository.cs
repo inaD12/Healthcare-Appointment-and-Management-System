@@ -15,8 +15,4 @@ public interface IAppointmentReadRepository
     Task<List<AppointmentProjection>> GetByPatientIdsAsync(
         IReadOnlyList<string> patientIds,
         CancellationToken cancellationToken);
-
-    IQueryable<AppointmentProjection> GetByPatient(string patientId);
-    IQueryable<AppointmentProjection> GetByDoctor(string doctorId);
-    IQueryable<AppointmentProjection> GetById(string appointmentId);
 }

@@ -1,7 +1,7 @@
 using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Entities;
 
-namespace Patients.Application.Features.AppointmentProjections.Queries.DataLoaders;
+namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
 
 public sealed class AppointmentsByPatientDataLoader(
     IBatchScheduler batchScheduler,

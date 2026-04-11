@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Http;
+using System.Data.Entity;
 using Patients.Application.Features.Patients.Dtos;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;
 
-namespace Patients.Application.Features.Patients.Queries;
+namespace Patients.API.Patients.GraphQL.Queries;
 
 public sealed class PatientQueries
 {
@@ -11,8 +12,16 @@ public sealed class PatientQueries
     [UseFiltering]
     [UseSorting]
     public IQueryable<PatientListItemDto> GetPatients(
-        [Service] IPatientRepository repo)
-        => repo.GetAll();
+        PatientsDbContext dbContext)
+    {
+        return dbContext.Patients
+            .AsNoTracking()
+            .Select(p => new PatientListItemDto(
+                p.Id,
+                p.FirstName + " " + p.LastName,
+                p.BirthDate
+            ));
+    }
 
     public async Task<PatientHeaderDto> GetMyPatientHeader(
         HttpContext httpContext,

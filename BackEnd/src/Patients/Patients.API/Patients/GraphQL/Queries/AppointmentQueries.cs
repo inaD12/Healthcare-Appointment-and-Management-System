@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Http;
+using System.Data.Entity;
 using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
+using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;
 
-namespace Patients.Application.Features.AppointmentProjections.Queries;
+namespace Patients.API.Patients.GraphQL.Queries;
 
 public sealed class AppointmentQueries
 {
@@ -14,10 +14,14 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentProjection> GetMyAppointments(
         HttpContext httpContext,
-        [Service] IAppointmentReadRepository repo)
+        PatientsDbContext dbContext)
     {
         var userId = httpContext.User.GetUserId();
-        return repo.GetByPatient(userId);
+        var res = dbContext.AppointmentProjections
+            .AsNoTracking()
+            .Where(e => e.PatientId == userId);
+
+        return res;
     }
 
     [UsePaging(IncludeTotalCount = true)]
@@ -26,12 +30,24 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentProjection> GetAppointmentsByDoctor(
         string doctorId,
-        [Service] IAppointmentReadRepository repo)
-        => repo.GetByDoctor(doctorId);
+        PatientsDbContext dbContext)
+    {
+        var res = dbContext.AppointmentProjections
+            .AsNoTracking()
+            .Where(e => e.DoctorId == doctorId);
+        
+        return res;
+    }
 
     [UseProjection]
     public IQueryable<AppointmentProjection> GetAppointmentById(
         string appointmentId,
-        [Service] IAppointmentReadRepository repo)
-        => repo.GetById(appointmentId);
+        PatientsDbContext dbContext)
+    {
+        var res = dbContext.AppointmentProjections
+            .AsNoTracking()
+            .Where(e => e.Id == appointmentId);
+
+        return res;
+    }
 }
