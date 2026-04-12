@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
-
 import {
   Card,
   CardHeader,
@@ -10,7 +9,6 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card"
-
 import { Button } from "@/components/ui/button"
 import { Calendar, Users, FileText, Stethoscope } from "lucide-react"
 import Link from "next/link"
@@ -26,7 +24,6 @@ import {
 
 import { DashboardCard } from "@/components/home/DashboardCard"
 import { EncounterUpdateCard } from "@/components/home/EncounterUpdateCard"
-
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -38,19 +35,16 @@ export default function HomePage() {
   const isPatient = roles.includes("Patient")
 
   const [dashboard, setDashboard] = useState<PatientDashboard | null>(null)
-
   const [doctorDashboard, setDoctorDashboard] =
     useState<DoctorDashboardView | null>(null)
 
   const [loading, setLoading] = useState(false)
-
 
   useEffect(() => {
     if (!isPatient) return
 
     const load = async () => {
       setLoading(true)
-
       try {
         const data = await patientService.getPatientDashboard()
         setDashboard(data)
@@ -61,7 +55,6 @@ export default function HomePage() {
 
     load()
   }, [isPatient])
-
 
   useEffect(() => {
     if (!isDoctor || !user?.id) return
@@ -74,50 +67,45 @@ export default function HomePage() {
     load()
   }, [isDoctor, user?.id])
 
+  const {
+    data: encounterPages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery<
+    DoctorEncounterConnection,
+    Error,
+    InfiniteData<DoctorEncounterConnection>,
+    (string | undefined)[],
+    string | null
+  >({
+    queryKey: ["doctor-encounters", user?.id],
+    initialPageParam: null,
+    enabled: isDoctor && !!user?.id,
+    queryFn: ({ pageParam }) =>
+      patientService.getDoctorEncounters(user!.id, pageParam ?? undefined),
+    getNextPageParam: (lastPage) =>
+      lastPage.pageInfo.hasNextPage
+        ? lastPage.pageInfo.endCursor
+        : undefined,
+  })
 
-const {
-  data: encounterPages,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-} = useInfiniteQuery<
-  DoctorEncounterConnection,
-  Error,
-  InfiniteData<DoctorEncounterConnection>,
-  (string | undefined)[],
-  string | null
->({
-  queryKey: ["doctor-encounters", user?.id],
-  initialPageParam: null,
-  enabled: isDoctor && !!user?.id,
+  const unfinishedEncounters =
+    encounterPages?.pages.flatMap((p) => p.nodes) ?? []
 
-  queryFn: ({ pageParam }) =>
-    patientService.getDoctorEncounters(user!.id, pageParam ?? undefined),
+  const totalEncountersCount =
+    encounterPages?.pages?.[0]?.totalCount ?? 0
 
-  getNextPageParam: (lastPage) =>
-    lastPage.pageInfo.hasNextPage
-      ? lastPage.pageInfo.endCursor
-      : undefined,
-})
-
-const totalEncountersCount =
-  encounterPages?.pages?.[0]?.totalCount ?? 0
-
-const unfinishedEncounters =
-  encounterPages?.pages.flatMap((p) => p.nodes) ?? []
-
-const isScrollable = unfinishedEncounters.length > 4
+  const isScrollable = unfinishedEncounters.length > 4
 
   const nextAppointment = dashboard?.upcomingAppointment?.nodes?.[0]
   const lastAppointment = dashboard?.lastAppointment?.nodes?.[0]
   const recentEncounters = dashboard?.myEncounters?.nodes ?? []
 
-
   const nextDoctorAppointment = doctorDashboard?.nextAppointment
 
   return (
     <div className="space-y-6">
-
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
@@ -130,14 +118,12 @@ const isScrollable = unfinishedEncounters.length > 4
       </Card>
 
       <div className="space-y-8">
-
         {isPatient && dashboard && (
           <>
             <div className="space-y-3">
               <h2 className="text-lg font-semibold">Appointments</h2>
 
               <div className="grid gap-6 md:grid-cols-2">
-
                 <DashboardCard
                   icon={<Calendar className="h-5 w-5" />}
                   title="Next Appointment"
@@ -145,10 +131,7 @@ const isScrollable = unfinishedEncounters.length > 4
                     nextAppointment
                       ? new Date(nextAppointment.start).toLocaleString(
                           undefined,
-                          {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          }
+                          { dateStyle: "medium", timeStyle: "short" }
                         )
                       : "None scheduled"
                   }
@@ -167,10 +150,7 @@ const isScrollable = unfinishedEncounters.length > 4
                     lastAppointment
                       ? new Date(lastAppointment.start).toLocaleString(
                           undefined,
-                          {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          }
+                          { dateStyle: "medium", timeStyle: "short" }
                         )
                       : "No previous visits"
                   }
@@ -181,7 +161,6 @@ const isScrollable = unfinishedEncounters.length > 4
                       : undefined
                   }
                 />
-
               </div>
             </div>
 
@@ -205,7 +184,6 @@ const isScrollable = unfinishedEncounters.length > 4
         {isDoctor && doctorDashboard && (
           <>
             <div className="grid gap-6 md:grid-cols-2">
-
               <DashboardCard
                 icon={<Calendar className="h-5 w-5" />}
                 title="Today's Appointments"
@@ -218,9 +196,7 @@ const isScrollable = unfinishedEncounters.length > 4
                 title="Next Appointment"
                 value={
                   nextDoctorAppointment
-                    ? new Date(
-                        nextDoctorAppointment.start
-                      ).toLocaleString()
+                    ? new Date(nextDoctorAppointment.start).toLocaleString()
                     : "No upcoming appointment"
                 }
                 description={nextDoctorAppointment?.patientName ?? ""}
@@ -247,7 +223,6 @@ const isScrollable = unfinishedEncounters.length > 4
 
               {unfinishedEncounters.length > 0 && (
                 <div className="col-span-full space-y-4">
-
                   <div className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold">
                       Encounter Queue
@@ -256,26 +231,20 @@ const isScrollable = unfinishedEncounters.length > 4
 
                   <Card className="w-full">
                     <CardContent className="p-0">
-
                       <ScrollArea
                         className={`w-full ${
                           isScrollable ? "h-[520px]" : "max-h-fit"
                         }`}
                       >
-
                         <div className="divide-y">
-
                           {unfinishedEncounters.map((encounter) => (
                             <div
                               key={encounter.id}
                               className="flex items-center justify-between px-5 py-4 hover:bg-muted/50 transition"
                             >
-
                               <div className="space-y-1">
-
                                 <div className="font-medium">
-                                  Encounter #
-                                  {encounter.id.slice(0, 6)}
+                                  Encounter #{encounter.id.slice(0, 6)}
                                 </div>
 
                                 <div className="text-sm text-muted-foreground">
@@ -285,18 +254,18 @@ const isScrollable = unfinishedEncounters.length > 4
                                 <div className="text-xs text-muted-foreground">
                                   Started:{" "}
                                   {encounter.startedAt
-                                    ? new Date(encounter.startedAt).toLocaleString(undefined, {
-                                        dateStyle: "medium",
-                                        timeStyle: "short",
-                                      })
+                                    ? new Date(encounter.startedAt).toLocaleString(
+                                        undefined,
+                                        {
+                                          dateStyle: "medium",
+                                          timeStyle: "short",
+                                        }
+                                      )
                                     : "—"}
                                 </div>
-
-
                               </div>
 
                               <div className="flex items-center gap-3">
-
                                 <Badge variant="secondary">
                                   {encounter.status.replace("_", " ")}
                                 </Badge>
@@ -308,12 +277,9 @@ const isScrollable = unfinishedEncounters.length > 4
                                     Open
                                   </Link>
                                 </Button>
-
                               </div>
-
                             </div>
                           ))}
-
                         </div>
 
                         {hasNextPage && (
@@ -330,21 +296,17 @@ const isScrollable = unfinishedEncounters.length > 4
                             </Button>
                           </div>
                         )}
-
                       </ScrollArea>
-
                     </CardContent>
                   </Card>
                 </div>
               )}
-
             </div>
           </>
         )}
 
         {isAdmin && (
           <div className="grid gap-6 md:grid-cols-3">
-
             <DashboardCard
               icon={<Users className="h-5 w-5" />}
               title="Total Users"
@@ -365,10 +327,8 @@ const isScrollable = unfinishedEncounters.length > 4
               value="—"
               description="All clinics"
             />
-
           </div>
         )}
-
       </div>
 
       <Card>
@@ -380,7 +340,6 @@ const isScrollable = unfinishedEncounters.length > 4
         </CardHeader>
 
         <div className="p-6 flex flex-wrap gap-3">
-
           {isPatient && (
             <>
               <Button asChild>
@@ -400,16 +359,13 @@ const isScrollable = unfinishedEncounters.length > 4
           )}
 
           {isDoctor && (
-            <>
-              <Button asChild>
-                <Link href="/doctors/profile">
-                  <Users className="mr-2 h-4 w-4" />
-                  View Profile
-                </Link>
-              </Button>
-              </>
-            )}
-
+            <Button asChild>
+              <Link href="/doctors/profile">
+                <Users className="mr-2 h-4 w-4" />
+                View Profile
+              </Link>
+            </Button>
+          )}
 
           {isAdmin && (
             <Button asChild>
@@ -418,10 +374,8 @@ const isScrollable = unfinishedEncounters.length > 4
               </Link>
             </Button>
           )}
-
         </div>
       </Card>
-
     </div>
   )
 }
