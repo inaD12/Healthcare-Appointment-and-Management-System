@@ -19,3 +19,8 @@ export const updateCurrentUser = (request: UpdateCurrentUserRequest) =>
     ENDPOINTS.users.me,
     request
   );
+
+export const deleteCurrentUser = () =>
+  api.delete<APIResponse<boolean>>(
+    ENDPOINTS.users.me
+  );
