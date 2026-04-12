@@ -88,14 +88,9 @@ public sealed class User : BaseEntity
 		return Result.Success();
 	}
 
-	public void UpdateProfile(string? newEmail, string? firstName, string? lastName)
+	public void UpdateProfile(string? firstName, string? lastName)
 	{
 		bool namesChanged = false;
-		
-		if (!string.IsNullOrWhiteSpace(newEmail))
-		{
-			Email = newEmail;
-		}
 		
 		if (!string.IsNullOrWhiteSpace(firstName))
 		{
