@@ -21,10 +21,16 @@ import {
   EncounterCommandResponse,
   NoteCommandResponse,
   PrescriptionCommandResponse,
-  PatientDashboard,
   PatientProfile,
   AppointmentStatus,
   AppointmentByIdResponse,
+  PatientInfo,
+  PatientDashboard,
+  DoctorDashboard,
+  DoctorAppointment,
+  DoctorDashboardView,
+  DoctorEncounter,
+  DoctorEncounterConnection,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -88,14 +94,14 @@ export const patientService = {
       id: patient?.id ?? "",
       fullName: patient?.fullName ?? "",
       birthDate: patient?.birthDate ?? "",
-      allergies: patient?.allergies ?? [],
-      conditions: patient?.conditions ?? [],
+      allergiesList: patient?.allergies ?? [],
+      conditionsList: patient?.conditions ?? [],
     }
   },
 
-  getPatientDashboard: async (): Promise<PatientDashboard> => {
+  getPatientInfo: async (): Promise<PatientInfo> => {
     const query = `
-      query GetMyPatientDashboard {
+      query GetMyPatientInfo {
         myPatientHeader {
           id
           fullName
@@ -133,8 +139,8 @@ export const patientService = {
         id: header?.id ?? "",
         fullName: header?.fullName ?? "",
         birthDate: header?.birthDate ?? "",
-        allergies: header?.allergies ?? [],
-        conditions: header?.conditions ?? [],
+        allergiesList: header?.allergies ?? [],
+        conditionsList: header?.conditions ?? [],
       },
       appointments: appointments.map((a: any) => ({
         id: a.id,
@@ -192,5 +198,223 @@ export const patientService = {
     `
     const res = await api.post(ENDPOINTS.patients.graphql, { query, variables: { appointmentId } })
     return res.data?.data ?? null
+  },
+  getPatientDashboard: async (): Promise<PatientDashboard> => {
+    const query = `
+      query GetPatientDashboard {
+        myPatientHeader {
+          id
+          fullName
+          birthDate
+          allergiesList
+          conditionsList
+        }
+
+        upcomingAppointment: myAppointments(
+          first: 1
+          where: { status: { eq: SCHEDULED } }
+          order: [{ start: ASC }]
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            doctorName
+          }
+        }
+
+        lastAppointment: myAppointments(
+          first: 1
+          where: { status: { eq: COMPLETED } }
+          order: [{ start: DESC }]
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            doctorName
+          }
+        }
+
+        myEncounters(
+          first: 3
+          order: [{ updatedAt: DESC }]
+        ) {
+          nodes {
+            id
+            startedAt
+            updatedAt
+            status
+            doctorId
+            appointmentId
+
+            prescriptions {
+              id
+              medicationName
+              dosage
+              instructions
+              createdAt
+              deletedAt
+            }
+
+            notes {
+              id
+              text
+              createdAt
+              deletedAt
+            }
+
+            addendums {
+              id
+              text
+              createdAt
+              deletedAt
+            }
+
+            diagnoses {
+              id
+              icdCode
+              description
+              createdAt
+              deletedAt
+            }
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, { query })
+
+    return res.data?.data
+  },
+  
+getDoctorDashboard: async (
+    doctorId: string
+  ): Promise<DoctorDashboardView> => {
+    const today = new Date().toISOString().split("T")[0]
+
+    const query = `
+      query DoctorDashboard($doctorId: String!, $todayStart: DateTime!, $todayEnd: DateTime!) {
+
+        todayAppointments: appointmentsByDoctor(
+          doctorId: $doctorId
+          first: 20
+          where: {
+            start: {
+              gte: $todayStart
+              lt: $todayEnd
+            }
+          }
+          order: [{ start: ASC }]
+        ) {
+          nodes {
+            id
+            start
+            end
+            status
+            patientName
+            patientId
+          }
+          totalCount
+        }
+      }
+    `
+
+    const todayStart = new Date(`${today}T00:00:00.000Z`).toISOString()
+    const todayEnd = new Date(`${today}T23:59:59.999Z`).toISOString()
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: {
+        doctorId,
+        todayStart,
+        todayEnd,
+      },
+    })
+
+    const data = res.data?.data
+
+    const todayAppointmentsNodes: DoctorAppointment[] =
+      (data?.todayAppointments?.nodes as DoctorAppointment[]) ?? []
+
+    const totalToday =
+      data?.todayAppointments?.totalCount ?? todayAppointmentsNodes.length
+
+    const now = new Date().getTime()
+
+      const nextAppointment = todayAppointmentsNodes
+        .filter(a => new Date(a.start).getTime() > now)
+        .sort(
+          (a, b) =>
+            new Date(a.start).getTime() - new Date(b.start).getTime()
+        )[0]
+
+    const minutesUntilNext = nextAppointment
+      ? Math.max(
+          0,
+          Math.floor(
+            (new Date(nextAppointment.start).getTime() -
+              new Date().getTime()) /
+              60000
+          )
+        )
+      : undefined
+
+
+    return {
+      todayAppointments: todayAppointmentsNodes,
+      nextAppointment,
+      totalToday,
+      minutesUntilNext,
+    }
+  },
+
+  getDoctorEncounters: async (
+    doctorId: string,
+    cursor?: string
+  ): Promise<DoctorEncounterConnection> => {
+    const query = `
+      query GetDoctorEncounters($doctorId: String!, $after: String) {
+        encountersByDoctor(
+          doctorId: $doctorId
+          first: 20
+          after: $after
+          where: {
+            status: { in: [IN_PROGRESS, FINALIZED] }
+          }
+          order: [{ updatedAt: DESC }]
+        ) {
+          nodes {
+            id
+            patientId
+            patientName
+            appointmentId
+            status
+            startedAt
+            finalizedAt
+            updatedAt
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          totalCount
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: {
+        doctorId,
+        after: cursor,
+      },
+    })
+
+    return res.data?.data?.encountersByDoctor
   }
 }

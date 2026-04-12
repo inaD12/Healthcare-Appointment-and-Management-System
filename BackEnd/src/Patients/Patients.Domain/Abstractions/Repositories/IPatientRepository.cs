@@ -6,6 +6,5 @@ namespace Patients.Domain.Abstractions.Repositories;
 
 public interface IPatientRepository : IGenericRepository<Patient>
 {
-    IQueryable<PatientListItemDto> GetAll();
     Task<PatientHeaderDto> GetHeaderAsync(string patientId);
 }

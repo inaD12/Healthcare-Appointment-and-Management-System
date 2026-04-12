@@ -131,13 +131,6 @@ export const AddendumCommandResponseSchema = z.object({
     .max(cfg.ID_MAX_LENGTH),
 })
 
-export interface PatientProfile {
-  id: string
-  fullName: string
-  birthDate: string
-  allergies: string[]
-  conditions: string[]
-}
 
 export interface EncounterListItem {
   id: string
@@ -222,9 +215,194 @@ export interface Appointment {
   encounterDetails: EncounterDetails
 }
 
-export interface PatientDashboard {
+export interface PatientInfo {
   profile: PatientProfile
   appointments: Appointment[]
+}
+
+export interface PatientProfile {
+  id: string
+  fullName: string
+  birthDate: string
+  allergiesList: string[]
+  conditionsList: string[]
+}
+
+export interface DashboardAppointment {
+  id: string
+  start: string
+  end: string
+  status: AppointmentStatus
+  doctorId: string
+  doctorName: string
+}
+
+export interface DashboardPrescription {
+  id: string
+  medicationName: string
+  dosage: string
+  instructions: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardMedicalNote {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardAddendum {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardDiagnosis {
+  id: string
+  icdCode: string
+  description: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DashboardEncounter {
+  id: string
+  startedAt: string
+  updatedAt: string
+  status: string
+  doctorId: string
+  appointmentId: string
+
+  prescriptions: DashboardPrescription[]
+  notes: DashboardMedicalNote[]
+  addendums: DashboardAddendum[]
+  diagnoses: DashboardDiagnosis[]
+}
+
+export interface PatientDashboard {
+  myPatientHeader: PatientProfile
+
+  upcomingAppointment: {
+    nodes: DashboardAppointment[]
+  }
+
+  lastAppointment: {
+    nodes: DashboardAppointment[]
+  }
+
+  myEncounters: {
+    nodes: DashboardEncounter[]
+  }
+}
+
+export interface DoctorAppointment {
+  id: string
+  start: string
+  end: string
+  status: AppointmentStatus
+  patientName: string
+  patientId: string
+}
+
+export interface DoctorEncounterNote {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterDiagnosis {
+  id: string
+  icdCode: string
+  description: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterPrescription {
+  id: string
+  medicationName: string
+  dosage: string
+  instructions: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounterAddendum {
+  id: string
+  text: string
+  createdAt: string
+  deletedAt?: string | null
+}
+
+export interface DoctorEncounter {
+  id: string
+  appointmentId: string
+  patientId: string
+  doctorId: string
+  patientName: string
+  status: "IN_PROGRESS" | "FINALIZED" | "LOCKED"
+
+  startedAt: string
+  finalizedAt?: string | null
+  updatedAt?: string | null
+
+  notes: DoctorEncounterNote[]
+  diagnoses: DoctorEncounterDiagnosis[]
+  prescriptions: DoctorEncounterPrescription[]
+  addendums: DoctorEncounterAddendum[]
+}
+
+export interface DoctorDashboard {
+  appointmentsByDoctor: {
+    nodes: DoctorAppointment[]
+  }
+
+  encountersByDoctor: {
+    nodes: DoctorEncounter[]
+  }
+}
+
+export interface DoctorDashboardView {
+  todayAppointments: DoctorAppointment[]
+  nextAppointment?: DoctorAppointment
+  totalToday: number
+  minutesUntilNext?: number
+}
+
+export interface TodaySummary {
+  nextAppointment?: DoctorAppointment
+  todayAppointments: DoctorAppointment[]
+  minutesUntilNext?: number
+  totalToday: number
+}
+
+export interface DoctorWorkQueue {
+  unfinishedEncounters: DoctorEncounter[]
+}
+
+export interface DoctorEncounterConnectionNode {
+  id: string
+  appointmentId: string
+  patientId: string
+  patientName: string
+  status: "IN_PROGRESS" | "FINALIZED" | "LOCKED"
+
+  startedAt: string
+  finalizedAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface DoctorEncounterConnection {
+  nodes: DoctorEncounterConnectionNode[]
+  totalCount: number
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: string | null
+  }
 }
 
 export type StartEncounterRequest = z.infer<typeof StartEncounterSchema>

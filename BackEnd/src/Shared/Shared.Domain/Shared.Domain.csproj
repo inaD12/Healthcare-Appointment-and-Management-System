@@ -20,6 +20,9 @@
     <Reference Include="FluentValidation">
       <HintPath>..\..\..\..\..\..\.nuget\packages\fluentvalidation\11.11.0\lib\net8.0\FluentValidation.dll</HintPath>
     </Reference>
+    <Reference Include="HotChocolate.Abstractions">
+      <HintPath>..\..\..\..\..\..\..\.nuget\packages\hotchocolate.abstractions\15.1.12\lib\net8.0\HotChocolate.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR">
       <HintPath>..\..\..\..\..\..\.nuget\packages\mediatr\13.1.0\lib\net8.0\MediatR.dll</HintPath>
     </Reference>

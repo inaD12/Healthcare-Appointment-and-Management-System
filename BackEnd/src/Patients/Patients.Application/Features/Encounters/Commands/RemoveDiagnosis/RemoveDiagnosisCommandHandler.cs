@@ -4,12 +4,14 @@ using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.RemoveDiagnosis;
 
 public sealed class RemoveDiagnosisCommandHandler(
     IEncounterRepository encounterRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<RemoveDiagnosisCommand>
 {
     public async Task<Result> Handle(RemoveDiagnosisCommand request, CancellationToken cancellationToken)
@@ -21,7 +23,7 @@ public sealed class RemoveDiagnosisCommandHandler(
         if(encounter.DoctorId != request.UserId)
             return Result.Failure(ResponseList.NotTheDoctor);
         
-        var result = encounter.RemoveDiagnosis(request.DiagnosisId);
+        var result = encounter.RemoveDiagnosis(request.DiagnosisId,  dateTimeProvider.UtcNow);
         if (result.IsFailure)
             return result;
         

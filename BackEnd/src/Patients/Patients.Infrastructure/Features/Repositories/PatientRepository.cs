@@ -7,28 +7,23 @@ using Shared.Infrastructure.Repositories;
 
 namespace Patients.Infrastructure.Features.Repositories;
 
-public class PatientRepository(PatientsDbContext context) : GenericRepository<Patient>(context), IPatientRepository
+public class PatientRepository(IDbContextFactory<PatientsDbContext> factory)
+    : GenericFactoryRepository<PatientsDbContext, Patient>(factory),
+        IPatientRepository
 {
-    public override Task<Patient?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public override async Task<Patient?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        return context.Patients
-            .Where(p => p.UserId == id).FirstOrDefaultAsync(cancellationToken);
-    }
+        await using var db = CreateDbContext();
 
-    public IQueryable<PatientListItemDto> GetAll()
-    {
-        return context.Patients
+        return await db.Patients
             .AsNoTracking()
-            .Select(p => new PatientListItemDto(
-                p.Id,
-                p.FirstName + " " + p.LastName,
-                p.BirthDate
-            ));
+            .FirstOrDefaultAsync(p => p.UserId == id, cancellationToken);
     }
-
     public async Task<PatientHeaderDto> GetHeaderAsync(string userId)
     {
-        var patient = await context.Patients
+        await using var db = CreateDbContext();
+
+        var patient = await db.Patients
             .AsNoTracking()
             .Where(p => p.UserId == userId)
             .Select(p => new
@@ -37,22 +32,19 @@ public class PatientRepository(PatientsDbContext context) : GenericRepository<Pa
                 FullName = p.FirstName + " " + p.LastName,
                 p.BirthDate,
                 p.Allergies,
-                p.Conditions 
+                p.Conditions
             })
             .FirstOrDefaultAsync();
 
         if (patient is null)
             return null!;
 
-        var allergies = patient.Allergies.Select(a => a.Substance).ToList();
-        var conditions = patient.Conditions.Select(c => c.Name).ToList();
-
         return new PatientHeaderDto(
             patient.Id,
             patient.FullName,
             patient.BirthDate,
-            allergies,
-            conditions
+            patient.Allergies.Select(a => a.Substance).ToList(),
+            patient.Conditions.Select(c => c.Name).ToList()
         );
     }
 }

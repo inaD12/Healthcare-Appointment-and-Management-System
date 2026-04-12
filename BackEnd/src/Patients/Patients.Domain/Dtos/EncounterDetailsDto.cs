@@ -5,6 +5,8 @@ namespace Patients.Domain.Dtos;
 public sealed record EncounterDetailsDto(
     string Id,
     string AppointmentId,
+    string DoctorId,
+    string PatientId,
     DateTime StartedAt,
     DateTime? FinalizedAt,
     EncounterStatus Status,

@@ -38,12 +38,22 @@ public sealed class Encounter : BaseConcurrencyEntity
     public DateTime StartedAt { get; private set; }
     public DateTime? FinalizedAt { get; private set; }
     public DateTime? LockedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
 
     public IReadOnlyCollection<ClinicalNote> Notes => _notes;
     public IReadOnlyCollection<Diagnosis> Diagnoses => _diagnoses;
     public IReadOnlyCollection<Prescription> Prescriptions => _prescriptions;
     public IReadOnlyCollection<AddendumNote> Addendums => _addendums;
+    
+    private IEnumerable<ClinicalNote> ActiveNotes =>
+        _notes.Where(n => !n.IsDeleted);
 
+    private IEnumerable<Diagnosis> ActiveDiagnoses =>
+        _diagnoses.Where(d => !d.IsDeleted);
+
+    private IEnumerable<Prescription> ActivePrescriptions =>
+        _prescriptions.Where(p => !p.IsDeleted);
+    
     public static Result<Encounter> Start(
         string patientId,
         string doctorId,
@@ -66,70 +76,76 @@ public sealed class Encounter : BaseConcurrencyEntity
         var note = new ClinicalNote(text, utcNow);
         
         _notes.Add(note);
+        UpdatedAt = utcNow;
         return Result<string>.Success(note.Id);
     }
 
-    public Result<string> AddDiagnosis(string icdCode, string description)
+    public Result<string> AddDiagnosis(string icdCode, string description, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
             return Result<string>.Failure(ResponseList.EncounterNotEditable);
 
-        if (_diagnoses.Any(d => d.IcdCode == icdCode))
+        if (ActiveDiagnoses.Any(d => d.IcdCode == icdCode))
             return Result<string>.Failure(ResponseList.DiagnosisAlreadyAdded);
 
-        var diagnosis = new Diagnosis(icdCode, description);
+        var diagnosis = new Diagnosis(icdCode, description, utcNow);
         
         _diagnoses.Add(diagnosis);
+        UpdatedAt = utcNow;
         return Result<string>.Success(diagnosis.Id);
     }
 
-    public Result<string> PrescribeMedication(string name, string dosage, string instructions)
+    public Result<string> PrescribeMedication(string name, string dosage, string instructions, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
             return Result<string>.Failure(ResponseList.EncounterNotEditable);
 
-        var presctiption = new Prescription(name, dosage, instructions);
+        var presctiption = new Prescription(name, dosage, instructions, utcNow);
         
         _prescriptions.Add(presctiption);
+        UpdatedAt = utcNow;
         return Result<string>.Success(presctiption.Id);
     }
 
-    public Result RemoveNote(string noteId)
+    public Result RemoveNote(string noteId, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
             return Result.Failure(ResponseList.EncounterNotEditable);
 
-        var note = _notes.FirstOrDefault(n => n.Id == noteId);
+        var note = ActiveNotes.FirstOrDefault(n => n.Id == noteId);
         if (note is null)
             return Result.Failure(ResponseList.NoteNotFound);
         
-        _notes.Remove(note);
+        note.Delete(utcNow);
+        UpdatedAt = utcNow;
         return Result.Success();
     }
     
-    public Result RemoveDiagnosis(string diagnosisId)
+    public Result RemoveDiagnosis(string diagnosisId, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
             return Result.Failure(ResponseList.EncounterNotEditable);
 
-        var diagnoses = _diagnoses.FirstOrDefault(n => n.Id == diagnosisId);
+        var diagnoses = ActiveDiagnoses.FirstOrDefault(n => n.Id == diagnosisId);
         if (diagnoses is null)
             return Result.Failure(ResponseList.DiagnosisNotFound);
 
-        _diagnoses.Remove(diagnoses);
+        diagnoses.Delete(utcNow);
+        UpdatedAt = utcNow;
         return Result.Success();
     }
     
-    public Result RemovePrescription(string prescriptionId)
+    public Result RemovePrescription(string prescriptionId, DateTime utcNow)
     {
         if (Status != EncounterStatus.InProgress)
             return Result.Failure(ResponseList.EncounterNotEditable);
 
-        var prescription = _prescriptions.FirstOrDefault(n => n.Id == prescriptionId);
+        var prescription = ActivePrescriptions.FirstOrDefault(n => n.Id == prescriptionId);
         if (prescription is null)
             return Result.Failure(ResponseList.PrescriptionNotFound);
 
-        _prescriptions.Remove(prescription);
+        prescription.Delete(utcNow);
+        UpdatedAt = utcNow;
         return Result.Success();
     }
 
@@ -140,6 +156,7 @@ public sealed class Encounter : BaseConcurrencyEntity
 
         Status = EncounterStatus.Finalized;
         FinalizedAt = utcNow;
+        UpdatedAt = utcNow;
         return Result.Success();
     }
 
@@ -150,6 +167,7 @@ public sealed class Encounter : BaseConcurrencyEntity
 
         Status = EncounterStatus.Locked;
         LockedAt = utcNow;
+        UpdatedAt = utcNow;
         return Result.Success();
     }
 
@@ -164,6 +182,7 @@ public sealed class Encounter : BaseConcurrencyEntity
         var addendum = new AddendumNote(text, utcNow);
         
         _addendums.Add(addendum);
+        UpdatedAt = utcNow;
         return Result<string>.Success(addendum.Id);
     }
 }

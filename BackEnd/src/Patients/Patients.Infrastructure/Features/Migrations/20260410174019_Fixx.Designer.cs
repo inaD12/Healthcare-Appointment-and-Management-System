@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Patients.Infrastructure.Features.DBContexts;
@@ -11,9 +12,11 @@ using Patients.Infrastructure.Features.DBContexts;
 namespace Patients.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(PatientsDbContext))]
-    partial class PatientsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260410174019_Fixx")]
+    partial class Fixx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,9 +263,6 @@ namespace Patients.Infrastructure.Features.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppointmentId")
@@ -328,15 +328,9 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<DateTime>("CreatedAt")
                                 .HasColumnType("timestamp with time zone");
 
-                            b1.Property<DateTime?>("DeletedAt")
-                                .HasColumnType("timestamp with time zone");
-
                             b1.Property<string>("EncounterId")
                                 .IsRequired()
                                 .HasColumnType("character varying(100)");
-
-                            b1.Property<bool>("IsDeleted")
-                                .HasColumnType("boolean");
 
                             b1.Property<string>("Text")
                                 .IsRequired()
@@ -360,15 +354,9 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<DateTime>("CreatedAt")
                                 .HasColumnType("timestamp with time zone");
 
-                            b1.Property<DateTime?>("DeletedAt")
-                                .HasColumnType("timestamp with time zone");
-
                             b1.Property<string>("EncounterId")
                                 .IsRequired()
                                 .HasColumnType("character varying(100)");
-
-                            b1.Property<bool>("IsDeleted")
-                                .HasColumnType("boolean");
 
                             b1.Property<string>("Text")
                                 .IsRequired()
@@ -389,12 +377,6 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<string>("Id")
                                 .HasColumnType("text");
 
-                            b1.Property<DateTime>("CreatedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<DateTime?>("DeletedAt")
-                                .HasColumnType("timestamp with time zone");
-
                             b1.Property<string>("Description")
                                 .IsRequired()
                                 .HasColumnType("text");
@@ -406,9 +388,6 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<string>("IcdCode")
                                 .IsRequired()
                                 .HasColumnType("text");
-
-                            b1.Property<bool>("IsDeleted")
-                                .HasColumnType("boolean");
 
                             b1.HasKey("Id");
 
@@ -425,12 +404,6 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<string>("Id")
                                 .HasColumnType("text");
 
-                            b1.Property<DateTime>("CreatedAt")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<DateTime?>("DeletedAt")
-                                .HasColumnType("timestamp with time zone");
-
                             b1.Property<string>("Dosage")
                                 .IsRequired()
                                 .HasColumnType("text");
@@ -442,9 +415,6 @@ namespace Patients.Infrastructure.Features.Migrations
                             b1.Property<string>("Instructions")
                                 .IsRequired()
                                 .HasColumnType("text");
-
-                            b1.Property<bool>("IsDeleted")
-                                .HasColumnType("boolean");
 
                             b1.Property<string>("MedicationName")
                                 .IsRequired()

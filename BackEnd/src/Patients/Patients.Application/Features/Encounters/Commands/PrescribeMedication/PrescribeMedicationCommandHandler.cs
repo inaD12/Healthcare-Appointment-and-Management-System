@@ -3,12 +3,14 @@ using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
+using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.PrescribeMedication;
 
 public sealed class PrescribeMedicationCommandHandler(
     IEncounterRepository encounterRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<PrescribeMedicationCommand, PrescriptionCommandViewModel>
 {
     public async Task<Shared.Domain.Results.Result<PrescriptionCommandViewModel>> Handle(PrescribeMedicationCommand request, CancellationToken cancellationToken)
@@ -20,7 +22,7 @@ public sealed class PrescribeMedicationCommandHandler(
         if(encounter.DoctorId != request.UserId)
             return Shared.Domain.Results.Result<PrescriptionCommandViewModel>.Failure(ResponseList.NotTheDoctor);
         
-        var result = encounter.PrescribeMedication(request.Name, request.Dosage, request.Instructions);
+        var result = encounter.PrescribeMedication(request.Name, request.Dosage, request.Instructions,  dateTimeProvider.UtcNow);
         if (result.IsFailure)
             return Shared.Domain.Results.Result<PrescriptionCommandViewModel>.Failure(result.Response);
         

@@ -1,21 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 
 namespace Patients.Infrastructure.Features.Repositories;
 
-internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppointmentReadRepository
+internal sealed class AppointmentReadRepository(IDbContextFactory<PatientsDbContext> factory)
+    : IAppointmentReadRepository
 {
+    private PatientsDbContext CreateDb()
+        => factory.CreateDbContext();
+
     public async Task<AppointmentProjection?> GetAsync(string id, CancellationToken ct)
     {
+        await using var db = CreateDb();
+
         return await db.AppointmentProjections
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
 
     public async Task UpsertAsync(AppointmentProjection projection, CancellationToken ct)
     {
+        await using var db = CreateDb();
+
         var existing = await db.AppointmentProjections
             .FirstOrDefaultAsync(x => x.Id == projection.Id, ct);
 
@@ -33,6 +40,8 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
 
     public async Task UpdateAsync(string id, Action<AppointmentProjection> update, CancellationToken ct)
     {
+        await using var db = CreateDb();
+
         var entity = await db.AppointmentProjections
             .FirstOrDefaultAsync(x => x.Id == id, ct);
 
@@ -46,6 +55,8 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
 
     public async Task RemoveAsync(string id, CancellationToken ct)
     {
+        await using var db = CreateDb();
+
         var entity = await db.AppointmentProjections
             .FirstOrDefaultAsync(x => x.Id == id, ct);
 
@@ -55,75 +66,16 @@ internal sealed class AppointmentReadRepository(PatientsDbContext db) : IAppoint
         db.AppointmentProjections.Remove(entity);
         await db.SaveChangesAsync(ct);
     }
-    
-    public async Task<List<AppointmentHistoryDto>> GetByPatientIdsAsync(
+
+    public async Task<List<AppointmentProjection>> GetByPatientIdsAsync(
         IReadOnlyList<string> patientIds,
         CancellationToken cancellationToken)
     {
+        await using var db = CreateDb();
+
         return await db.AppointmentProjections
             .AsNoTracking()
             .Where(a => patientIds.Contains(a.PatientId))
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null))
             .ToListAsync(cancellationToken);
-    }
-
-    public IQueryable<AppointmentHistoryDto> GetByPatient(string patientId)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.PatientId == patientId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
-    }
-
-    public IQueryable<AppointmentHistoryDto> GetByDoctor(string doctorId)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.DoctorId == doctorId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
-    }
-
-    public IQueryable<AppointmentHistoryDto> GetById(string appointmentId)
-    {
-        return db.AppointmentProjections
-            .AsNoTracking()
-            .Where(a => a.Id == appointmentId)
-            .Select(a => new AppointmentHistoryDto(
-                a.Id,
-                a.Start,
-                a.End,
-                a.Status,
-                a.DoctorId,
-                a.PatientId,
-                null,
-                null,
-                null));
     }
 }

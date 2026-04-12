@@ -1,51 +1,52 @@
-using Patients.Application.Features.AppointmentProjections.Queries.DataLoaders;
-using Patients.Application.Features.Encounters.Queries.DataLoaders;
-using Patients.Domain.Dtos;
+using Patients.API.Patients.GraphQL.Queries.DataLoaders;
+using Patients.Domain.Entities;
 
 namespace Patients.API.Patients.GraphQL;
 
-public class AppointmentHistoryType : ObjectType<AppointmentHistoryDto>
+public class AppointmentType : ObjectType<AppointmentProjection>
 {
-    protected override void Configure(IObjectTypeDescriptor<AppointmentHistoryDto> descriptor)
+    protected override void Configure(IObjectTypeDescriptor<AppointmentProjection> descriptor)
     {
+        descriptor.Field(x => x.Id);
+
         descriptor
-            .Field(x => x.DoctorName)
+            .Field("doctorName")
+            .Type<StringType>()
             .Resolve(async (ctx, ct) =>
             {
-                var appointment = ctx.Parent<AppointmentHistoryDto>();
+                var appointment = ctx.Parent<AppointmentProjection>();
                 var loader = ctx.DataLoader<UserNamesDataLoader>();
 
                 var names = await loader.LoadAsync(appointment.DoctorId, ct);
 
-                return names is null
+                return names == null
                     ? null
                     : $"{names.FirstName} {names.LastName}";
             });
-        
+
         descriptor
-            .Field(x => x.PatientName)
+            .Field("patientName")
+            .Type<StringType>()
             .Resolve(async (ctx, ct) =>
             {
-                var appointment = ctx.Parent<AppointmentHistoryDto>();
+                var appointment = ctx.Parent<AppointmentProjection>();
                 var loader = ctx.DataLoader<UserNamesDataLoader>();
 
                 var names = await loader.LoadAsync(appointment.PatientId, ct);
 
-                return names is null
+                return names == null
                     ? null
                     : $"{names.FirstName} {names.LastName}";
             });
-        
+
         descriptor
-            .Field(x => x.EncounterDetails)
+            .Field("encounterDetails")
             .Resolve(async (ctx, ct) =>
             {
-                var appointment = ctx.Parent<AppointmentHistoryDto>();
+                var appointment = ctx.Parent<AppointmentProjection>();
                 var loader = ctx.DataLoader<EncountersByAppointmentDataLoader>();
 
-                var encouners = await loader.LoadAsync(appointment.Id, ct);
-
-                return encouners;
+                return await loader.LoadAsync(appointment.Id, ct);
             });
     }
 }

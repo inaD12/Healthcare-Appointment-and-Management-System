@@ -3,12 +3,14 @@ using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.RemoveNote;
 
 public sealed class RemoveNoteCommandHandler(
     IEncounterRepository encounterRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<RemoveNoteCommand>
 {
     public async Task<Result> Handle(RemoveNoteCommand request, CancellationToken cancellationToken)
@@ -20,7 +22,7 @@ public sealed class RemoveNoteCommandHandler(
         if(encounter.DoctorId != request.UserId)
             return Result.Failure(ResponseList.NotTheDoctor);
         
-        var result = encounter.RemoveNote(request.NoteId);
+        var result = encounter.RemoveNote(request.NoteId, dateTimeProvider.UtcNow);
         if (result.IsFailure)
             return result;
         

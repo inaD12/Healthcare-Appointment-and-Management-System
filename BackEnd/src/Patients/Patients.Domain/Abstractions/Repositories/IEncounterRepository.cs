@@ -7,24 +7,23 @@ namespace Patients.Domain.Abstractions.Repositories;
 public interface IEncounterRepository : IGenericRepository<Encounter>
 {
     Task<Encounter?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default);
-    IQueryable<EncounterListItemDto> GetByPatient(string patientId);
-    IQueryable<EncounterDetailsDto> GetDetails(string encounterId);
     Task<List<EncounterListItemDto>> GetByPatientIdsAsync(
         IReadOnlyList<string> patientIds,
         CancellationToken cancellationToken);
-    Task<Dictionary<string, List<AddendumDto>>> GetAddendumsByEncounterIdsAsync(
+
+    Task<List<AddendumDto>> GetAddendumsByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken);
 
-    Task<Dictionary<string, List<DiagnosisDto>>> GetDiagnosesByEncounterIdsAsync(
+    Task<List<DiagnosisDto>> GetDiagnosesByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken);
 
-    Task<Dictionary<string, List<NoteDto>>> GetNotesByEncounterIdsAsync(
+    Task<List<NoteDto>> GetNotesByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken);
 
-    Task<Dictionary<string, List<PrescriptionDto>>> GetPrescriptionsByEncounterIdsAsync(
+    Task<List<PrescriptionDto>> GetPrescriptionsByEncounterIdsFlatAsync(
         IReadOnlyList<string> encounterIds,
         CancellationToken cancellationToken);
 

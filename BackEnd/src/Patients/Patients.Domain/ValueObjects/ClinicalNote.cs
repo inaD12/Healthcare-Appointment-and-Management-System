@@ -1,15 +1,17 @@
-namespace Patients.Domain.ValueObjects;
+    using Shared.Domain.Entities;
 
-public sealed class ClinicalNote
-{
-    public string Id { get; }
-    public string Text { get; }
-    public DateTime CreatedAt { get; }
+    namespace Patients.Domain.ValueObjects;
 
-    public ClinicalNote(string text, DateTime createdAt)
+    public sealed class ClinicalNote: SoftDeletableEntity
     {
-        Id = Guid.NewGuid().ToString();
-        Text = text;
-        CreatedAt = createdAt;
+        public string Id { get; }
+        public string Text { get; }
+        public DateTime CreatedAt { get; }
+
+        public ClinicalNote(string text, DateTime createdAt)
+        {
+            Id = Guid.NewGuid().ToString();
+            Text = text;
+            CreatedAt = createdAt;
+        }
     }
-}
