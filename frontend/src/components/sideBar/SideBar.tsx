@@ -63,6 +63,8 @@ export default function SideBar({ children }: SideBarProps) {
     })
   }
 
+  navItems.push({label: "Settings",icon: <Settings size={20} />,href: "/settings",})
+
   return (
     <div className="flex min-h-screen">
       <aside
