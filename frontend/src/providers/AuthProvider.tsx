@@ -3,7 +3,7 @@
 import { createContext, useEffect, useState } from "react"
 import keycloak from "../config/keycloak"
 import { getCurrentUser } from "@/features/users/services/userService"
-import { UserQueryResponse } from "@/features/users/types/register"
+import { UserQueryResponse } from "@/features/users/types/userTypes"
 
 type AuthContextType = {
   keycloak: typeof keycloak

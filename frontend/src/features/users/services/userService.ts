@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { RegisterUserRequest, UserCommandResponse, UserQueryResponse } from "../types/register";
+import { RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserQueryResponse } from "../types/userTypes";
 import { APIResponse } from "@/types/types";
 
 export const registerUser = (data: RegisterUserRequest) =>
@@ -12,4 +12,10 @@ export const registerUser = (data: RegisterUserRequest) =>
 export const getCurrentUser = () =>
   api.get<APIResponse<UserQueryResponse>>(
     ENDPOINTS.users.me
+  );
+
+export const updateCurrentUser = (request: UpdateCurrentUserRequest) =>
+  api.put<APIResponse<UserCommandResponse>>(
+    ENDPOINTS.users.me,
+    request
   );
