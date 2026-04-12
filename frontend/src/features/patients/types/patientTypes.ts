@@ -343,6 +343,7 @@ export interface DoctorEncounter {
   appointmentId: string
   patientId: string
   doctorId: string
+  patientName: string
   status: "IN_PROGRESS" | "FINALIZED" | "LOCKED"
 
   startedAt: string
@@ -370,7 +371,6 @@ export interface DoctorDashboardView {
   nextAppointment?: DoctorAppointment
   totalToday: number
   minutesUntilNext?: number
-  unfinishedEncounters: DoctorEncounter[]
 }
 
 export interface TodaySummary {
@@ -382,6 +382,27 @@ export interface TodaySummary {
 
 export interface DoctorWorkQueue {
   unfinishedEncounters: DoctorEncounter[]
+}
+
+export interface DoctorEncounterConnectionNode {
+  id: string
+  appointmentId: string
+  patientId: string
+  patientName: string
+  status: "IN_PROGRESS" | "FINALIZED" | "LOCKED"
+
+  startedAt: string
+  finalizedAt?: string | null
+  updatedAt?: string | null
+}
+
+export interface DoctorEncounterConnection {
+  nodes: DoctorEncounterConnectionNode[]
+  totalCount: number
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: string | null
+  }
 }
 
 export type StartEncounterRequest = z.infer<typeof StartEncounterSchema>

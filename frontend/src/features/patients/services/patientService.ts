@@ -30,6 +30,7 @@ import {
   DoctorAppointment,
   DoctorDashboardView,
   DoctorEncounter,
+  DoctorEncounterConnection,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -318,30 +319,8 @@ getDoctorDashboard: async (
             patientName
             patientId
           }
+          totalCount
         }
-
-        encountersByDoctor(
-          doctorId: $doctorId
-          first: 20
-          where: {
-            status: {
-              in: [IN_PROGRESS, FINALIZED]
-            }
-          }
-          order: [{ updatedAt: DESC }]
-        ) {
-          nodes {
-            id
-            appointmentId
-            patientId
-            doctorId
-            status
-            startedAt
-            finalizedAt
-            updatedAt
-          }
-        }
-
       }
     `
 
@@ -359,18 +338,20 @@ getDoctorDashboard: async (
 
     const data = res.data?.data
 
-    const todayAppointments: DoctorAppointment[] =
-      data?.todayAppointments?.nodes ?? []
+    const todayAppointmentsNodes: DoctorAppointment[] =
+      (data?.todayAppointments?.nodes as DoctorAppointment[]) ?? []
 
-    const encounters: DoctorEncounter[] =
-      data?.encountersByDoctor?.nodes ?? []
+    const totalToday =
+      data?.todayAppointments?.totalCount ?? todayAppointmentsNodes.length
 
-    const nextAppointment = todayAppointments
-      .filter((a) => new Date(a.start) > new Date())
-      .sort(
-        (a, b) =>
-          new Date(a.start).getTime() - new Date(b.start).getTime()
-      )[0]
+    const now = new Date().getTime()
+
+      const nextAppointment = todayAppointmentsNodes
+        .filter(a => new Date(a.start).getTime() > now)
+        .sort(
+          (a, b) =>
+            new Date(a.start).getTime() - new Date(b.start).getTime()
+        )[0]
 
     const minutesUntilNext = nextAppointment
       ? Math.max(
@@ -383,14 +364,57 @@ getDoctorDashboard: async (
         )
       : undefined
 
-    const unfinishedEncounters = encounters
 
     return {
-      todayAppointments,
+      todayAppointments: todayAppointmentsNodes,
       nextAppointment,
-      totalToday: todayAppointments.length,
+      totalToday,
       minutesUntilNext,
-      unfinishedEncounters,
     }
+  },
+
+  getDoctorEncounters: async (
+    doctorId: string,
+    cursor?: string
+  ): Promise<DoctorEncounterConnection> => {
+    const query = `
+      query GetDoctorEncounters($doctorId: String!, $after: String) {
+        encountersByDoctor(
+          doctorId: $doctorId
+          first: 20
+          after: $after
+          where: {
+            status: { in: [IN_PROGRESS, FINALIZED] }
+          }
+          order: [{ updatedAt: DESC }]
+        ) {
+          nodes {
+            id
+            patientId
+            patientName
+            appointmentId
+            status
+            startedAt
+            finalizedAt
+            updatedAt
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          totalCount
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: {
+        doctorId,
+        after: cursor,
+      },
+    })
+
+    return res.data?.data?.encountersByDoctor
   }
 }

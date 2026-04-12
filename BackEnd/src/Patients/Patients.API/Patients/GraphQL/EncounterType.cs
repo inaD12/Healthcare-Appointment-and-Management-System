@@ -58,5 +58,35 @@ public sealed class EncounterType : ObjectType<Encounter>
 
                 return await loader.LoadAsync(encounter.Id, ct);
             });
+        
+        descriptor
+            .Field("doctorName")
+            .Type<StringType>()
+            .Resolve(async (ctx, ct) =>
+            {
+                var encounter = ctx.Parent<Encounter>();
+                var loader = ctx.DataLoader<UserNamesDataLoader>();
+
+                var names = await loader.LoadAsync(encounter.DoctorId, ct);
+
+                return names == null
+                    ? null
+                    : $"{names.FirstName} {names.LastName}";
+            });
+
+        descriptor
+            .Field("patientName")
+            .Type<StringType>()
+            .Resolve(async (ctx, ct) =>
+            {
+                var encounter = ctx.Parent<Encounter>();
+                var loader = ctx.DataLoader<UserNamesDataLoader>();
+
+                var names = await loader.LoadAsync(encounter.PatientId, ct);
+
+                return names == null
+                    ? null
+                    : $"{names.FirstName} {names.LastName}";
+            });
     }
 }

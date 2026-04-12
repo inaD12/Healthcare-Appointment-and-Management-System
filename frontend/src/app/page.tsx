@@ -1,20 +1,32 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
+
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card"
+
 import { Button } from "@/components/ui/button"
 import { Calendar, Users, FileText, Stethoscope } from "lucide-react"
 import Link from "next/link"
 
 import { useAuth } from "@/features/auth/hooks/useAuth"
 import { patientService } from "@/features/patients/services/patientService"
+
 import {
   PatientDashboard,
   DoctorDashboardView,
+  DoctorEncounterConnection,
 } from "@/features/patients/types/patientTypes"
 
 import { DashboardCard } from "@/components/home/DashboardCard"
 import { EncounterUpdateCard } from "@/components/home/EncounterUpdateCard"
+
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -26,16 +38,19 @@ export default function HomePage() {
   const isPatient = roles.includes("Patient")
 
   const [dashboard, setDashboard] = useState<PatientDashboard | null>(null)
+
   const [doctorDashboard, setDoctorDashboard] =
     useState<DoctorDashboardView | null>(null)
 
   const [loading, setLoading] = useState(false)
+
 
   useEffect(() => {
     if (!isPatient) return
 
     const load = async () => {
       setLoading(true)
+
       try {
         const data = await patientService.getPatientDashboard()
         setDashboard(data)
@@ -46,6 +61,7 @@ export default function HomePage() {
 
     load()
   }, [isPatient])
+
 
   useEffect(() => {
     if (!isDoctor || !user?.id) return
@@ -58,82 +74,46 @@ export default function HomePage() {
     load()
   }, [isDoctor, user?.id])
 
+
+const {
+  data: encounterPages,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+} = useInfiniteQuery<
+  DoctorEncounterConnection,
+  Error,
+  InfiniteData<DoctorEncounterConnection>,
+  (string | undefined)[],
+  string | null
+>({
+  queryKey: ["doctor-encounters", user?.id],
+  initialPageParam: null,
+  enabled: isDoctor && !!user?.id,
+
+  queryFn: ({ pageParam }) =>
+    patientService.getDoctorEncounters(user!.id, pageParam ?? undefined),
+
+  getNextPageParam: (lastPage) =>
+    lastPage.pageInfo.hasNextPage
+      ? lastPage.pageInfo.endCursor
+      : undefined,
+})
+
+const totalEncountersCount =
+  encounterPages?.pages?.[0]?.totalCount ?? 0
+
+const unfinishedEncounters =
+  encounterPages?.pages.flatMap((p) => p.nodes) ?? []
+
+const isScrollable = unfinishedEncounters.length > 4
+
   const nextAppointment = dashboard?.upcomingAppointment?.nodes?.[0]
   const lastAppointment = dashboard?.lastAppointment?.nodes?.[0]
   const recentEncounters = dashboard?.myEncounters?.nodes ?? []
 
-  const todayAppointments = doctorDashboard?.todayAppointments ?? []
-  const nextDoctorAppointment = doctorDashboard?.nextAppointment
-  // const unfinishedEncounters =
-  //   doctorDashboard?.unfinishedEncounters ?? []
-  const unfinishedEncounters = [
-  {
-    id: "enc_1",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_2",
-    patientId: "Jane Smith",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_13",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_14",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_15",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_16",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_17",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_18",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_19",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_111",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_122",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_133",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "enc_144",
-    patientId: "John Doe",
-    status: "IN_PROGRESS",
-  },
 
-]
+  const nextDoctorAppointment = doctorDashboard?.nextAppointment
 
   return (
     <div className="space-y-6">
@@ -152,66 +132,75 @@ export default function HomePage() {
       <div className="space-y-8">
 
         {isPatient && dashboard && (
+          <>
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold">Appointments</h2>
 
-        <>
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold">Appointments</h2>
+              <div className="grid gap-6 md:grid-cols-2">
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <DashboardCard
-                icon={<Calendar className="h-5 w-5" />}
-                title="Next Appointment"
-                value={
-                  nextAppointment
-                    ? new Date(nextAppointment.start).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })
-                    : "None scheduled"
-                }
-                description={nextAppointment?.doctorName ?? ""}
-                href={
-                  nextAppointment
-                    ? `/appointment/${nextAppointment.id}`
-                    : undefined
-                }
-              />
-
-              <DashboardCard
-                icon={<Calendar className="h-5 w-5" />}
-                title="Last Appointment"
-                value={
-                  lastAppointment
-                    ? new Date(lastAppointment.start).toLocaleString(undefined, {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })
-                    : "No previous visits"
-                }
-                description={lastAppointment?.doctorName ?? ""}
-                href={
-                  lastAppointment
-                    ? `/appointment/${lastAppointment.id}`
-                    : undefined
-                }
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold">Recent Medical Updates</h2>
-
-            <div className="grid gap-6 md:grid-cols-3">
-              {recentEncounters.slice(0, 3).map((encounter) => (
-                <EncounterUpdateCard
-                  key={encounter.id}
-                  encounter={encounter}
+                <DashboardCard
+                  icon={<Calendar className="h-5 w-5" />}
+                  title="Next Appointment"
+                  value={
+                    nextAppointment
+                      ? new Date(nextAppointment.start).toLocaleString(
+                          undefined,
+                          {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }
+                        )
+                      : "None scheduled"
+                  }
+                  description={nextAppointment?.doctorName ?? ""}
+                  href={
+                    nextAppointment
+                      ? `/appointment/${nextAppointment.id}`
+                      : undefined
+                  }
                 />
-              ))}
+
+                <DashboardCard
+                  icon={<Calendar className="h-5 w-5" />}
+                  title="Last Appointment"
+                  value={
+                    lastAppointment
+                      ? new Date(lastAppointment.start).toLocaleString(
+                          undefined,
+                          {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }
+                        )
+                      : "No previous visits"
+                  }
+                  description={lastAppointment?.doctorName ?? ""}
+                  href={
+                    lastAppointment
+                      ? `/appointment/${lastAppointment.id}`
+                      : undefined
+                  }
+                />
+
+              </div>
             </div>
-          </div>
-        </>
-      )}
+
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold">
+                Recent Medical Updates
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                {recentEncounters.slice(0, 3).map((encounter) => (
+                  <EncounterUpdateCard
+                    key={encounter.id}
+                    encounter={encounter}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {isDoctor && doctorDashboard && (
           <>
@@ -229,7 +218,9 @@ export default function HomePage() {
                 title="Next Appointment"
                 value={
                   nextDoctorAppointment
-                    ? new Date(nextDoctorAppointment.start).toLocaleString()
+                    ? new Date(
+                        nextDoctorAppointment.start
+                      ).toLocaleString()
                     : "No upcoming appointment"
                 }
                 description={nextDoctorAppointment?.patientName ?? ""}
@@ -243,16 +234,14 @@ export default function HomePage() {
               <DashboardCard
                 icon={<Users className="h-5 w-5" />}
                 title="Minutes Until Next"
-                value={
-                  doctorDashboard.minutesUntilNext ?? "—"
-                }
+                value={doctorDashboard.minutesUntilNext ?? "—"}
                 description="Time remaining"
               />
 
               <DashboardCard
                 icon={<FileText className="h-5 w-5" />}
                 title="Active Encounters"
-                value={unfinishedEncounters.length}
+                value={totalEncountersCount}
                 description="In progress or finalized"
               />
 
@@ -260,13 +249,19 @@ export default function HomePage() {
                 <div className="col-span-full space-y-4">
 
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold">Encounter Queue</h2>
+                    <h2 className="text-xl font-semibold">
+                      Encounter Queue
+                    </h2>
                   </div>
 
                   <Card className="w-full">
                     <CardContent className="p-0">
 
-                      <ScrollArea className="h-[520px] w-full">
+                      <ScrollArea
+                        className={`w-full ${
+                          isScrollable ? "h-[520px]" : "max-h-fit"
+                        }`}
+                      >
 
                         <div className="divide-y">
 
@@ -277,13 +272,27 @@ export default function HomePage() {
                             >
 
                               <div className="space-y-1">
+
                                 <div className="font-medium">
-                                  Encounter #{encounter.id.slice(0, 6)}
+                                  Encounter #
+                                  {encounter.id.slice(0, 6)}
                                 </div>
 
                                 <div className="text-sm text-muted-foreground">
-                                  Patient ID: {encounter.patientId}
+                                  Patient: {encounter.patientName}
                                 </div>
+
+                                <div className="text-xs text-muted-foreground">
+                                  Started:{" "}
+                                  {encounter.startedAt
+                                    ? new Date(encounter.startedAt).toLocaleString(undefined, {
+                                        dateStyle: "medium",
+                                        timeStyle: "short",
+                                      })
+                                    : "—"}
+                                </div>
+
+
                               </div>
 
                               <div className="flex items-center gap-3">
@@ -293,7 +302,9 @@ export default function HomePage() {
                                 </Badge>
 
                                 <Button asChild size="sm">
-                                  <Link href={`/encounter/${encounter.id}`}>
+                                  <Link
+                                    href={`/appointment/${encounter.appointmentId}`}
+                                  >
                                     Open
                                   </Link>
                                 </Button>
@@ -305,18 +316,35 @@ export default function HomePage() {
 
                         </div>
 
+                        {hasNextPage && (
+                          <div className="flex justify-center py-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => fetchNextPage()}
+                              disabled={isFetchingNextPage}
+                            >
+                              {isFetchingNextPage
+                                ? "Loading..."
+                                : "Load more"}
+                            </Button>
+                          </div>
+                        )}
+
                       </ScrollArea>
 
                     </CardContent>
                   </Card>
                 </div>
               )}
+
             </div>
           </>
         )}
 
         {isAdmin && (
           <div className="grid gap-6 md:grid-cols-3">
+
             <DashboardCard
               icon={<Users className="h-5 w-5" />}
               title="Total Users"
@@ -337,6 +365,7 @@ export default function HomePage() {
               value="—"
               description="All clinics"
             />
+
           </div>
         )}
 
@@ -353,23 +382,34 @@ export default function HomePage() {
         <div className="p-6 flex flex-wrap gap-3">
 
           {isPatient && (
+            <>
+              <Button asChild>
+                <Link href="/patient-info">
+                  <Users className="mr-2 h-4 w-4" />
+                  View Profile
+                </Link>
+              </Button>
 
-              <>
-                <Button asChild>
-                  <Link href="/patient-info">
-                    <Users className="mr-2 h-4 w-4" />
-                    View Profile
-                  </Link>
-                </Button>
+              <Button asChild>
+                <Link href="/doctors">
+                  <Stethoscope className="mr-2 h-4 w-4" />
+                  Browse Doctors
+                </Link>
+              </Button>
+            </>
+          )}
 
-                <Button asChild>
-                  <Link href="/doctors">
-                    <Stethoscope className="mr-2 h-4 w-4" />
-                    Browse Doctors
-                  </Link>
-                </Button>
+          {isDoctor && (
+            <>
+              <Button asChild>
+                <Link href="/doctors/profile">
+                  <Users className="mr-2 h-4 w-4" />
+                  View Profile
+                </Link>
+              </Button>
               </>
             )}
+
 
           {isAdmin && (
             <Button asChild>
@@ -378,6 +418,7 @@ export default function HomePage() {
               </Link>
             </Button>
           )}
+
         </div>
       </Card>
 
