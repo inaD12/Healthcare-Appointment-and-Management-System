@@ -48,6 +48,7 @@ public sealed class Permission
     public static readonly Permission RemoveRating = new("ratings:delete");
     public static readonly Permission GetRating = new("ratings:read");
     public static readonly Permission GetRatingStats = new("ratingStats:read");
+    public static readonly Permission RemoveRatingAdmin = new("ratings:admin:delete");
     
     // Patients
     public static readonly Permission CreatePatient = new("patient:create");

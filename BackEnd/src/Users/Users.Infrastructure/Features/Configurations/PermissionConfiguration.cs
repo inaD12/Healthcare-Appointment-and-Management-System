@@ -53,6 +53,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.EditRating,
             Permission.GetRating,
             Permission.GetRatingStats,
+            Permission.RemoveRatingAdmin,
             
             // Patient Permissions
             Permission.CreatePatient,
@@ -130,6 +131,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.EditRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRatingStats),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveRatingAdmin),
                     // Admin patient permissions
                     CreateRolePermission(Role.Administrator, Permission.CreatePatient),
                     CreateRolePermission(Role.Administrator, Permission.UpdatePatient),
