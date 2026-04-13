@@ -17,13 +17,7 @@ public sealed class UpdateUserCommandHandler(IUnitOfWork unitOfWork, IUserReposi
 		if (user == null)
 			return Result<UserCommandViewModel>.Failure(ResponseList.UserNotFound);
 
-		if (!string.IsNullOrEmpty(request.NewEmail) && request.NewEmail != user.Email)
-		{
-			var emailCheck = await userRepository.GetByEmailAsync(request.NewEmail, cancellationToken);
-			if (emailCheck != null)
-				return Result<UserCommandViewModel>.Failure(ResponseList.EmailTaken);
-		}
-		user.UpdateProfile(request.NewEmail, request.FirstName, request.LastName);
+		user.UpdateProfile(request.FirstName, request.LastName);
 
 		userRepository.Update(user);
 

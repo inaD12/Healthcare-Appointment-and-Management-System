@@ -39,6 +39,12 @@ export default function SideBar({ children }: SideBarProps) {
       icon: <User size={20} />,
       href: "/doctors/profile",
     })
+
+    navItems.push({
+      label: "Settings",
+      icon: <Settings size={20} />,
+      href: "/settings",
+    })
   }
 
   if (isPatient) {
@@ -53,6 +59,12 @@ export default function SideBar({ children }: SideBarProps) {
       icon: <User size={20} />,
       href: "/patient-info",
     })
+
+    navItems.push({
+      label: "Settings",
+      icon: <Settings size={20} />,
+      href: "/settings",
+    })
   }
 
   if (isAdmin) {
@@ -60,6 +72,12 @@ export default function SideBar({ children }: SideBarProps) {
       label: "Admin",
       icon: <Settings size={20} />,
       href: "/admin",
+    })
+
+    navItems.push({
+      label: "Settings",
+      icon: <Settings size={20} />,
+      href: "/settings",
     })
   }
 

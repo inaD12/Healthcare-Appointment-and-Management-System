@@ -72,4 +72,26 @@ export const registerUserSchema = z.object({
   role: z.enum(["Patient", "Doctor", "Admin"], "Select a role"),
 })
 
+export const updateCurrentUserSchema = z
+  .object({
+    firstName: z
+      .string()
+      .min(C.FIRSTNAME_MIN_LENGTH, `First name must be at least ${C.FIRSTNAME_MIN_LENGTH} characters`)
+      .max(C.FIRSTNAME_MAX_LENGTH, `First name must be at most ${C.FIRSTNAME_MAX_LENGTH} characters`)
+      .optional(),
+
+    lastName: z
+      .string()
+      .min(C.LASTNAME_MIN_LENGTH, `Last name must be at least ${C.LASTNAME_MIN_LENGTH} characters`)
+      .max(C.LASTNAME_MAX_LENGTH, `Last name must be at most ${C.LASTNAME_MAX_LENGTH} characters`)
+      .optional(),
+  })
+  .refine(
+    (data) => !!data.firstName || !!data.lastName,
+    {
+      message: "At least one field must be provided",
+    }
+  );
+
 export type RegisterFormValues = z.infer<typeof registerUserSchema>
+export type UpdateCurrentUserRequest = z.infer<typeof updateCurrentUserSchema>

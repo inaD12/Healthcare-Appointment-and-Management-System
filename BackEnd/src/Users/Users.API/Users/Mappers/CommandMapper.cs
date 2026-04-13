@@ -27,7 +27,6 @@ public static class CommandMapper
         string userId)
         => new(
             userId,
-            request.NewEmail,
             request.FirstName,
             request.LastName);
     
@@ -36,7 +35,6 @@ public static class CommandMapper
         string userId)
         => new(
             userId,
-            request.NewEmail,
             request.FirstName,
             request.LastName);
     

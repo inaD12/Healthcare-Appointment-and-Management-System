@@ -24,7 +24,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.InvalidId,
-			user.Email,
 			user.FirstName,
 			user.LastName
 			);
@@ -38,34 +37,12 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 	}
 
 	[Fact]
-	public async Task Handle_ShouldReturnFailure_WhenNewEmailIsTaken()
-	{
-		// Arrange
-		var user = GetUser();
-		var existingUser = GetUser();
-		var command = new UpdateUserCommand(
-			user.Id,
-			existingUser.Email,
-			null,
-			null
-			);
-
-		// Act
-		var result = await _commandHandler.Handle(command, CancellationToken);
-
-		// Assert
-		result.IsSuccess.Should().BeFalse();
-		result.Response.Should().BeEquivalentTo(ResponseList.EmailTaken);
-	}
-
-	[Fact]
 	public async Task Handle_ShouldCallGetByIdAsync_WhenCommandIsValid()
 	{
 		// Arrange
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			user.Id,
-			user.Email,
 			null,
 			null
 			);
@@ -85,7 +62,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			user.Id,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 			);
@@ -95,7 +71,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 
 		// Assert
 		result.IsSuccess.Should().BeTrue();
-		user.Email.Should().Be(command.NewEmail);
 		user.FirstName.Should().Be(command.FirstName);
 		user.LastName.Should().Be(command.LastName);
 	}
@@ -107,7 +82,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			user.Id,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 			);
@@ -119,7 +93,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		result.IsSuccess.Should().BeTrue();
 		UserRepository.Received(1).Update(Arg.Is<User>(u =>
 		u.Id == user.Id &&
-		u.Email == command.NewEmail &&
 		u.FirstName == command.FirstName &&
 		u.LastName == command.LastName
 		));
@@ -132,7 +105,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			user.Id,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 			);
@@ -152,7 +124,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var user = GetUser();
 		var command = new UpdateUserCommand(
 			user.Id,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 			);
@@ -174,7 +145,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		var command = new UpdateUserCommand(
 			user.Id,
 			null,
-			null,
 			UsersTestUtilities.ValidLastName
 			);
 
@@ -186,7 +156,6 @@ public class UpdateUserCommandHandlerUnitTests : BaseUsersUnitTest
 		UserRepository.Received(1).Update(
 		Arg.Is<User>(user =>
 			user.Id == command.Id &&
-			user.Email != command.NewEmail &&
 			user.FirstName != command.FirstName &&
 			user.LastName == command.LastName
 			)
