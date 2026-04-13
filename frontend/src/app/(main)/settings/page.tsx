@@ -26,12 +26,12 @@ import {
   updateCurrentUserSchema,
 } from "@/features/users/types/userTypes"
 
-import { useAuth } from "@/features/auth/hooks/useAuth"
-
 import { Loader2, Trash2, User } from "lucide-react"
+import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
+import keycloak from "@/config/keycloak"
 
 export default function AccountPage() {
-  const auth = useAuth()
+  const auth = useAuthGuard()
   const user = auth?.user
 
   const [loading, setLoading] = useState(false)
@@ -147,6 +147,28 @@ export default function AccountPage() {
                 )}
                 {loading ? "Updating..." : "Update Profile"}
               </Button>
+              <div className="border-t pt-2 flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">Password</p>
+                  <p className="text-xs text-muted-foreground">
+                    Change your account password
+                  </p>
+                </div>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    keycloak.login({
+                      action: "UPDATE_PASSWORD",
+                      redirectUri: window.location.href,
+                    })
+                  }
+                >
+                  Change
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
