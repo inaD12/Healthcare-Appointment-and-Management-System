@@ -146,6 +146,10 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.AddChronicCondition),
                     CreateRolePermission(Role.Administrator, Permission.RemoveChronicCondition),
                     CreateRolePermission(Role.Administrator, Permission.ViewChronicConditions),
+                    CreateRolePermission(Role.Administrator, Permission.AddAllergyAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveAllergyAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.AddChronicConditionAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveChronicConditionAdmin),
                     // Admin encounter permissions
                     CreateRolePermission(Role.Administrator, Permission.StartEncounter),
                     CreateRolePermission(Role.Administrator, Permission.ViewEncounter),

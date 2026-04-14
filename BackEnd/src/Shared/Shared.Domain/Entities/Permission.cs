@@ -60,6 +60,10 @@ public sealed class Permission
     // Admin patient
     public static readonly Permission ViewAllPatients = new("patient:admin:view-all");
     public static readonly Permission DeletePatientByAdmin = new("patient:admin:delete");
+    public static readonly Permission AddAllergyAdmin = new("patient:admin:allergy:add");
+    public static readonly Permission RemoveAllergyAdmin = new("patient:admin:allergy:remove");
+    public static readonly Permission AddChronicConditionAdmin = new("patient:admin:condition:add");
+    public static readonly Permission RemoveChronicConditionAdmin = new("patient:admin:condition:remove");
 
     // Allergies
     public static readonly Permission AddAllergy = new("patient:allergy:add");

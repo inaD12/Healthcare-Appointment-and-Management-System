@@ -50,15 +50,6 @@ internal class PatientsEndPoints : IEndPoints
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status500InternalServerError)
         .RequireAuthorization(Permissions.RemoveChronicCondition);
-
-    patientsGroup.MapDelete("/", DeletePatientAsync)
-        .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status409Conflict)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .RequireAuthorization(Permissions.DeletePatient);
-
     
     var encountersGroup = app.MapGroup("/api/encounters");
     
@@ -307,7 +298,7 @@ internal class PatientsEndPoints : IEndPoints
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
-		return ControllerResponse.ParseAndReturnMessage(res, new AllergyCommandResponse(res.Value!.Id));
+		return ControllerResponse.ParseAndReturnMessage(res, new ConditionCommandResponse(res.Value!.Id));
 	}
 	
 	private async Task<IResult> RemoveAllergyAsync(
@@ -328,16 +319,6 @@ internal class PatientsEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = request.ToCommand(patientId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
-	}
-	
-	private async Task<IResult> DeletePatientAsync(
-		[FromRoute] string patientId,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = new DeletePatientCommand(patientId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}
