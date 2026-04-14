@@ -51,6 +51,7 @@ public sealed class User : BaseEntity
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
+		bool emailVerified,
 		string identityId,
 		string phoneNumber,
 		string address)
@@ -60,7 +61,7 @@ public sealed class User : BaseEntity
 			firstName,
 			lastName,
 			dateOfBirth,
-			false,
+			emailVerified,
 			identityId,
 			phoneNumber,
 			address);

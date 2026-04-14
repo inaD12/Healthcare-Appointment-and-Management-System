@@ -6,6 +6,7 @@ public sealed class Permission
     public static readonly Permission GetUser = new("users:read");
     public static readonly Permission ModifyUser = new("users:update");
     public static readonly Permission DeleteUser = new("users:delete");
+    public static readonly Permission CreateUser = new("users:create");
 
     // Appointments
     public static readonly Permission CreateAppointment = new("appointment:create");

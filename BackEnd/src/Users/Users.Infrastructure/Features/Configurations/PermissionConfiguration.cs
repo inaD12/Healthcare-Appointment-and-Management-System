@@ -101,6 +101,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.GetUser),
                     CreateRolePermission(Role.Administrator, Permission.ModifyUser),
                     CreateRolePermission(Role.Administrator, Permission.DeleteUser),
+                    CreateRolePermission(Role.Administrator, Permission.CreateUser),
                     // Admin appointment permissions
                     CreateRolePermission(Role.Administrator, Permission.CreateAppointment),
                     CreateRolePermission(Role.Administrator, Permission.CancelAppointment),
