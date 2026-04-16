@@ -12,7 +12,7 @@ public class AdminDoctorsEndPoints  : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var adminGroup = app.MapGroup("/api/admin/doctors");
+		var adminGroup = app.MapGroup("/admin/doctors");
 		
 		adminGroup.MapPut("/user/{userId}", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)

@@ -15,7 +15,7 @@ internal class AdminUserEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var adminGroup = app.MapGroup("api/admin/users");
+	    var adminGroup = app.MapGroup("/admin/users");
 
 	    adminGroup.MapPost("/", CreateAsync)
 	        .Produces<UserCommandResponse>(StatusCodes.Status201Created)

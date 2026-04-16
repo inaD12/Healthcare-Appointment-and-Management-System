@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
-using Shared.Infrastructure.Authentication;
 
 namespace Appointments.API.Appointments.EndPoints;
 
@@ -15,7 +14,7 @@ internal class AdminAppointmentsEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var group = app.MapGroup("api/admin/appointments");
+	    var group = app.MapGroup("/admin/appointments");
 
 	    group.MapPost("/", CreateAsync)
 	        .Produces<AppointmentCommandResponse>(StatusCodes.Status201Created)

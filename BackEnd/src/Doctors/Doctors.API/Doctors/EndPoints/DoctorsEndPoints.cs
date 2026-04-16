@@ -15,7 +15,7 @@ public class DoctorsEndPoints  : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var specialitiesGroup = app.MapGroup("/api/specialities");
+		var specialitiesGroup = app.MapGroup("/specialities");
 		
 		specialitiesGroup.MapPost("/recommend", RecommendSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -126,7 +126,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveUnavailability);
 
-		var doctorsGroup = app.MapGroup("/api/doctors");
+		var doctorsGroup = app.MapGroup("/doctors");
 		
 		doctorsGroup.MapGet("/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()

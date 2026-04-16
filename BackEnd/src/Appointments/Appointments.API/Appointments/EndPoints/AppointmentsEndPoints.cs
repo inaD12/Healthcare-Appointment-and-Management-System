@@ -2,7 +2,6 @@
 using Appointments.API.Appointments.Models.Requests;
 using Appointments.API.Appointments.Models.Responses;
 using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
-using Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
@@ -15,7 +14,7 @@ internal class AppointmentsEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var group = app.MapGroup("api/appointments");
+	    var group = app.MapGroup("/appointments");
 
 	    group.MapPost("/", CreateAsync)
 	        .Produces<AppointmentCommandResponse>(StatusCodes.Status201Created)

@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Patients.API.Patients.Mappers;
 using Patients.API.Patients.Models.Requests;
 using Patients.API.Patients.Models.Responses;
-using Patients.Application.Features.Encounters.Commands.LockEncounter;
 using Patients.Application.Features.Patients.Commands.DeletePatient;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
-using Shared.Infrastructure.Authentication;
-using FinalizeEncounterCommand = Patients.Application.Features.Encounters.Commands.FinalizeEncounter.FinalizeEncounterCommand;
 
 namespace Patients.API.Patients.EndPoints;
 
@@ -16,7 +13,7 @@ internal class AdminPatientsEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 {
-    var patientsGroup = app.MapGroup("/api/admin/patients/{patientId}")
+    var patientsGroup = app.MapGroup("/admin/patients/{patientId}")
         .RequireAuthorization();
     
     patientsGroup.MapPost("/allergies", AddAllergyAsync)

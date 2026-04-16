@@ -4,7 +4,6 @@ using Patients.API.Patients.Mappers;
 using Patients.API.Patients.Models.Requests;
 using Patients.API.Patients.Models.Responses;
 using Patients.Application.Features.Encounters.Commands.LockEncounter;
-using Patients.Application.Features.Patients.Commands.DeletePatient;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Infrastructure.Authentication;
@@ -16,7 +15,7 @@ internal class PatientsEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 {
-    var patientsGroup = app.MapGroup("/api/patients/{patientId}")
+    var patientsGroup = app.MapGroup("/patients/{patientId}")
         .RequireAuthorization();
     
     patientsGroup.MapPost("/allergies", AddAllergyAsync)
@@ -51,7 +50,7 @@ internal class PatientsEndPoints : IEndPoints
         .Produces(StatusCodes.Status500InternalServerError)
         .RequireAuthorization(Permissions.RemoveChronicCondition);
     
-    var encountersGroup = app.MapGroup("/api/encounters");
+    var encountersGroup = app.MapGroup("	/encounters");
     
     encountersGroup.MapPost("/", StartEncounterAsync)
         .Produces<EncounterCommandResponse>()

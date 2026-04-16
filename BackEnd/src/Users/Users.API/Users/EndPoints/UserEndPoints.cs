@@ -15,7 +15,7 @@ internal class UserEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var group = app.MapGroup("api/users");
+	    var group = app.MapGroup("/users");
 
 	    group.MapPost("/", RegisterAsync)
 	        .Produces<UserCommandResponse>(StatusCodes.Status201Created)
@@ -31,7 +31,7 @@ internal class UserEndPoints : IEndPoints
 	        .WithName("VerifyEmail")
 	        .AllowAnonymous();
 	    
-	    var meGroup = app.MapGroup("/api/users/me");
+	    var meGroup = app.MapGroup("/users/me");
 	    
 	    meGroup.MapGet("/", GetCurrentAsync)
 		    .Produces<UserQueryResponse>()

@@ -17,7 +17,7 @@ internal class AdminRatingEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var adminGroup = app.MapGroup("api/admin/ratings");
+	    var adminGroup = app.MapGroup("/admin/ratings");
 
 	    adminGroup.MapDelete("/{id}", RemoveRatingByAdminAsync)
 		    .Produces(StatusCodes.Status200OK)
