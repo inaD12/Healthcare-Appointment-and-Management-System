@@ -2,7 +2,7 @@ namespace Doctors.API.Doctors;
 
 internal static class Permissions
 {
-    // Doctor Management (Self)
+    // Doctor Management
     internal const string UpdateDoctor = "doctor:update";
     internal const string ViewDoctor = "doctor:view";
     internal const string ViewAllDoctors = "doctor:view-all";
@@ -13,6 +13,10 @@ internal static class Permissions
     // Specialities
     internal const string AddSpeciality = "doctor:speciality:add";
     internal const string RemoveSpeciality = "doctor:speciality:remove";
+    internal const string AddSpecialityByAdmin = "doctor:admin:speciality:add";
+    internal const string RemoveSpecialityByAdmin = "doctor:admin:speciality:remove";
+    
+    
     internal const string RequestRecommendations = "doctor:speciality:recommend";
 
     // Schedule (Workdays)

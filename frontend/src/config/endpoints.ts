@@ -30,7 +30,7 @@ export const ENDPOINTS = {
   },
   doctors: {
     me: "/doctors-api/api/doctors/me",
-    admin: "/doctors-api/api/doctors",
+    admin: "/doctors-api/admin/api/doctors",
     specialities: "/doctors-api/api/specialities",
     meSpecialities: `/doctors-api/api/doctors/me/specialities`,
     scheduleWorkdays: `/doctors-api/api/doctors/me/schedule/workdays`,

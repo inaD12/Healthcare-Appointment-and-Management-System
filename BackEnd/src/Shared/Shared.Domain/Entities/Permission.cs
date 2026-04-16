@@ -23,9 +23,9 @@ public sealed class Permission
     public static readonly Permission ViewAllDoctors = new("doctor:view-all");
 
     // Doctor Management (Admin)
-    public static readonly Permission CreateDoctorByAdmin = new("doctor:admin:create");
     public static readonly Permission UpdateDoctorByAdmin = new("doctor:admin:update");
-    public static readonly Permission ViewDoctorByAdmin = new("doctor:admin:view");
+    public static readonly Permission AddSpecialityByAdmin = new("doctor:admin:speciality:add");
+    public static readonly Permission RemoveSpecialityByAdmin = new("doctor:admin:speciality:remove");
 
     // Specialities
     public static readonly Permission AddSpeciality = new("doctor:speciality:add");

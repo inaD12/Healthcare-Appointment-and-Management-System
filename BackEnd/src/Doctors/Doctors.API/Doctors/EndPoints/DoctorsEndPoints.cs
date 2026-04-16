@@ -128,16 +128,7 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var doctorsGroup = app.MapGroup("/api/doctors");
 		
-		doctorsGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.UpdateDoctorByAdmin);
-		
-		doctorsGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
+		doctorsGroup.MapGet("/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -146,7 +137,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctor);
 
-		doctorsGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
+		doctorsGroup.MapGet("/user/{userId}", GetDoctorByUserIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -187,16 +178,6 @@ public class DoctorsEndPoints  : IEndPoints
 	{
 		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
-	}
-	
-	private async Task<IResult> UpdateDoctorInfoByAdminAsync(
-		[FromBody] UpdateDoctorInfoByAdminRequest request,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

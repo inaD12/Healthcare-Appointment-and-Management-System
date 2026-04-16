@@ -30,12 +30,6 @@ public static class CommandMapper
             userId,
             request.NewBio);
     
-    public static UpdateDoctorInfoCommand ToCommand(
-        this UpdateDoctorInfoByAdminRequest request)
-        => new(
-            request.UserId,
-            request.NewBio);
-    
     public static AddWorkDayScheduleCommand ToCommand(
         this AddWorkDayScheduleRequest request,
         string userId)
