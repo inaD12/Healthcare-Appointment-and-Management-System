@@ -15,7 +15,7 @@ export default function CreateDoctorPage() {
     useRequireRole(ROLES.ADMIN)
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-200 p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-xl rounded-xl bg-white p-6">
           <CardHeader className="text-center mb-4">
             <CardTitle className="text-3xl font-bold">
