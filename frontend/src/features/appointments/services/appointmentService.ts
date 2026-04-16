@@ -13,9 +13,6 @@ import { APIResponse } from "@/types/types"
 export const createAppointment = (data: CreateAppointmentRequest) =>
   api.post<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.root, data)
 
-export const getAppointmentById = (id: string) =>
-  api.get<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id))
-
 export const getAppointmentsByDoctor = (
   doctorUserId: string,
   data: GetBookingsByDoctorAndDateRequest

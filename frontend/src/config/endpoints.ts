@@ -41,6 +41,6 @@ export const ENDPOINTS = {
     root: "/appointments-api/api/appointments",
     mine: "/appointments-api/api/appointments/mine",
     byId: (id: string) => `/appointments-api/api/appointments/${id}`,
-    byDoctor: (doctorUserId: string) => `/appointments-api/api/appointments/by-doctor/${doctorUserId}`,
+    byDoctor: (doctorUserId: string) => `/appointments-api/api/appointments/doctor/${doctorUserId}`,
   }
 }

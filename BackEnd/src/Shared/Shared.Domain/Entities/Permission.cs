@@ -12,9 +12,14 @@ public sealed class Permission
     public static readonly Permission CreateAppointment = new("appointment:create");
     public static readonly Permission CancelAppointment = new("appointment:cancel");
     public static readonly Permission RescheduleAppointment = new("appointment:reschedule");
-    public static readonly Permission GetAppointment = new("appointment:read");
     public static readonly Permission GetBookings = new("bookings:read");
     public static readonly Permission GetMyAppointment = new("appointment:mine:read");
+    
+    // Admin Appointments
+    public static readonly Permission GetAppointment = new("appointment:read");
+    public static readonly Permission CreateAppointmentByAdmin = new("appointment:admin:create");
+    public static readonly Permission CancelAppointmentByAdmin = new("appointment:admin:cancel");
+    public static readonly Permission RescheduleAppointmentByAdmin = new("appointment:admin:reschedule");
     
     // Doctor Management (Self)
     public static readonly Permission CreateDoctor = new("doctor:create");

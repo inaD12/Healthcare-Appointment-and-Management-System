@@ -18,13 +18,23 @@ public static class CommandMapper
             request.ScheduledStartTime,
             request.Duration);
     
+    public static CreateAppointmentCommand ToCommand(
+        this CreateAppointmentByAdminRequest request)
+        => new(
+            request.PatientUserId,
+            request.DoctorUserId,
+            request.ScheduledStartTime,
+            request.Duration);
+    
     public static RescheduleAppointmentCommand ToCommand(
         this RescheduleAppointmentRequest request,
-        string appointmentId)
+        string appointmentId,
+        bool isAdmin = false)
         => new(
             appointmentId,
             request.ScheduledStartTime,
-            request.Duration);
+            request.Duration,
+            isAdmin);
     
     public static AppointmentCommandResponse ToResponse(
         this AppointmentCommandViewModel request)
