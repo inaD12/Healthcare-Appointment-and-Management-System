@@ -20,7 +20,7 @@ export default function RegisterPage() {
         </CardHeader>
 
         <CardContent>
-          <RegisterForm />
+          <RegisterForm/>
         </CardContent>
       </Card>
     </div>
