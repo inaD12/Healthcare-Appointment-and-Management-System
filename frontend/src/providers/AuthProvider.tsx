@@ -11,6 +11,7 @@ type AuthContextType = {
   token: string | null
   user: UserQueryResponse | null
   roles: string[]
+  ready: boolean
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
@@ -62,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (!ready) return <div>Loading...</div>
 
   return (
-    <AuthContext.Provider value={{ keycloak, authenticated, token, user, roles }}>
+    <AuthContext.Provider value={{ keycloak, authenticated, token, user, roles, ready }}>
       {children}
     </AuthContext.Provider>
   )

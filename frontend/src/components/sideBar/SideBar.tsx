@@ -69,10 +69,10 @@ export default function SideBar({ children }: SideBarProps) {
 
   if (isAdmin) {
     navItems.push({
-      label: "Admin",
-      icon: <Settings size={20} />,
-      href: "/admin",
-    })
+    label: "Create User",
+    icon: <UserPlus size={20} />,
+    href: "/admin/users/create",
+  })
 
     navItems.push({
       label: "Settings",

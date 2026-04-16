@@ -1,3 +1,4 @@
+using Shared.Domain.Entities;
 using Shared.Domain.Extensions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
@@ -21,7 +22,7 @@ public static class CommandMapper
             request.DateOfBirth,
             request.PhoneNumber,
             request.Address,
-            request.Role.MapToRole());
+            Role.Patient);
     
     public static RegisterUserByAdminCommand ToCommand(
         this RegisterUserByAdminRequest request)

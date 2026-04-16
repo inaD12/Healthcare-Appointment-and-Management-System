@@ -1,11 +1,17 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserQueryResponse } from "../types/userTypes";
+import { RegisterUserByAdminRequest, RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserQueryResponse } from "../types/userTypes";
 import { APIResponse } from "@/types/types";
 
 export const registerUser = (data: RegisterUserRequest) =>
   api.post<APIResponse<UserCommandResponse>>(
     ENDPOINTS.users.root,
+     data
+  );
+
+export const registerUserByAdmin = (data: RegisterUserByAdminRequest) =>
+  api.post<APIResponse<UserCommandResponse>>(
+    ENDPOINTS.users.admin,
      data
   );
 

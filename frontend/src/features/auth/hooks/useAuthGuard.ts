@@ -12,5 +12,9 @@ export function useAuthGuard() {
     }
   }, [auth])
 
+  if (!auth) {
+    throw new Error("useAuthGuard must be used within AuthProvider")
+  }
+
   return auth
 }
