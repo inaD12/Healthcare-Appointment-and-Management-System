@@ -17,7 +17,7 @@ public sealed class UpdateDoctorInfoCommandHandler(
         if (doctor == null)
             return Result.Failure(ResponseList.DoctorNotFound);
         
-        doctor.UpdateProfile(request.NewTimeZoneId, request.NewBio);
+        doctor.UpdateProfile(request.NewBio);
         
         doctorRepository.Update(doctor);
         await unitOfWork.SaveChangesAsync(cancellationToken);

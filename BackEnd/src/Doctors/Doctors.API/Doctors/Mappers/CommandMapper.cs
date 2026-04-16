@@ -23,37 +23,18 @@ public static class CommandMapper
         => new(
             request.Symptoms);
     
-    public static CreateDoctorCommand ToCommand(
-        this CreateDoctorRequest request,
-        string userId)
-        => new(
-            userId,
-            request.Bio,
-            request.Specialities,
-            request.TimeZoneId);
-    
-    public static CreateDoctorCommand ToCommand(
-        this CreateDoctorByAdminRequest request)
-        => new(
-            request.UserId,
-            request.Bio,
-            request.Specialities,
-            request.TimeZoneId);
-    
     public static UpdateDoctorInfoCommand ToCommand(
         this UpdateDoctorInfoRequest request,
         string userId)
         => new(
             userId,
-            request.NewBio,
-            request.NewTimeZoneId);
+            request.NewBio);
     
     public static UpdateDoctorInfoCommand ToCommand(
         this UpdateDoctorInfoByAdminRequest request)
         => new(
             request.UserId,
-            request.NewBio,
-            request.NewTimeZoneId);
+            request.NewBio);
     
     public static AddWorkDayScheduleCommand ToCommand(
         this AddWorkDayScheduleRequest request,

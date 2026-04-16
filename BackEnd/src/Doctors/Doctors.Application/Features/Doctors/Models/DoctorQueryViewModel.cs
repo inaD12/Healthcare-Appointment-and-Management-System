@@ -8,7 +8,6 @@ public sealed record DoctorQueryViewModel(
 	string LastName,
 	string UserId,
 	string Bio,
-	string TimeZoneId,
 	List<string> Specialities,
 	List<WorkDayDto> WorkDays,
 	List<DoctorAvailabilityExceptionDto> AvailabilityExceptions,

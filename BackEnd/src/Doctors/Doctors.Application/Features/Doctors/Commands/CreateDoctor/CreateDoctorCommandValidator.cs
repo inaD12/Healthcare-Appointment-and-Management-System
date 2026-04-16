@@ -12,11 +12,6 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 			.MinimumLength(DoctorsBusinessConfiguration.ID_MIN_LENGTH)
 			.MaximumLength(DoctorsBusinessConfiguration.ID_MAX_LENGTH);
 
-		RuleFor(x => x.TimeZoneId)
-			.NotEmpty()
-			.Must(IsValidTimeZone)
-			.WithMessage("Invalid timezone ID.");
-
 		RuleFor(x => x.Bio)
 			.NotEmpty()
 			.MinimumLength(DoctorsBusinessConfiguration.BIO_MIN_LENGTH)
@@ -32,18 +27,5 @@ public class CreateDoctorCommandValidator : AbstractValidator<CreateDoctorComman
 			.MaximumLength(DoctorsBusinessConfiguration.SPECIALITY_MAX_LENGTH);
 
 
-	}
-	
-	private static bool IsValidTimeZone(string timeZoneId)
-	{
-		try
-		{
-			TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-			return true;
-		}
-		catch
-		{
-			return false;
-		}
 	}
 }

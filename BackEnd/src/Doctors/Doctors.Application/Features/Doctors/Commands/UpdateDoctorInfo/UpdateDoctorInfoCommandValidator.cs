@@ -17,26 +17,9 @@ public class UpdateDoctorInfoCommandValidator : AbstractValidator<UpdateDoctorIn
             .MaximumLength(DoctorsBusinessConfiguration.BIO_MAX_LENGTH)
             .When(x => !string.IsNullOrWhiteSpace(x.NewBio));
 
-        RuleFor(x => x.NewTimeZoneId)
-            .Must(IsValidTimeZone!)
-            .When(x => !string.IsNullOrWhiteSpace(x.NewTimeZoneId))
-            .WithMessage("Invalid timezone ID.");
 
         RuleFor(x => x)
-            .Must(x => !string.IsNullOrWhiteSpace(x.NewBio) || !string.IsNullOrWhiteSpace(x.NewTimeZoneId))
+            .Must(x => !string.IsNullOrWhiteSpace(x.NewBio))
             .WithMessage("At least one field must be changed.");
-    }
-	
-    private static bool IsValidTimeZone(string timeZoneId)
-    {
-        try
-        {
-            TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
     }
 }

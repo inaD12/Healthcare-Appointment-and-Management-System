@@ -27,15 +27,6 @@ public class DoctorsEndPoints  : IEndPoints
 		
 		var meGroup = app.MapGroup("/api/doctors/me");
 
-		meGroup.MapPost("", CreateDoctorAsync)
-			.Produces<DoctorCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.CreateDoctor);
-		
 		meGroup.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -137,15 +128,6 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var doctorsGroup = app.MapGroup("/api/doctors");
 		
-		doctorsGroup.MapPost("", CreateDoctorByAdminAsync)
-			.Produces<DoctorCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.CreateDoctorByAdmin);
-		
 		doctorsGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -195,35 +177,6 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var recommendSpecialityResponse = new RecommendSpecialityResponse(res.Value!);
 		return ControllerResponse.ParseAndReturnMessage(res, recommendSpecialityResponse);
-	}
-	
-	private async Task<IResult> CreateDoctorAsync(
-		[FromBody] CreateDoctorRequest request,
-		HttpContext httpContext,   
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		if (res.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(res);
-
-		var doctorCommandResponse = new DoctorCommandResponse(res.Value!.Id);
-		return ControllerResponse.ParseAndReturnMessage(res, doctorCommandResponse);
-	}
-	
-	private async Task<IResult> CreateDoctorByAdminAsync(
-		[FromBody] CreateDoctorByAdminRequest request,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = request.ToCommand();
-		var res = await sender.Send(command, cancellationToken);
-		if (res.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(res);
-
-		return ControllerResponse.ParseAndReturnMessage(res, new DoctorCommandResponse(res.Value!.Id));
 	}
 	
 	private async Task<IResult> UpdateDoctorInfoAsync(

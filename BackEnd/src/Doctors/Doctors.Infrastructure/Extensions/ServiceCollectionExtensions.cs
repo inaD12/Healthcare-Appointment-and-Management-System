@@ -7,7 +7,6 @@ using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Helpers;
 using Doctors.Infrastructure.Features.Repositories;
 using Doctors.Infrastructure.Features.Seed;
-using Doctors.Infrastructure.Features.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +24,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddScoped<IDoctorRepository, DoctorRepository>()
 			.AddScoped<ISpecialityRepository, SpecialityRepository>()
-			.AddScoped<IDatabaseInitializer, DatabaseInitializer>()
-			.AddTransient<INamesService, NamesService>();
+			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
 			.AddUnitOfWork<DoctorsDbContext>()

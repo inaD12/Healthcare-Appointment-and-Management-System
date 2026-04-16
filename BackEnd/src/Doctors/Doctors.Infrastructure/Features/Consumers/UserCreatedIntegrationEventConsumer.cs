@@ -1,10 +1,10 @@
-﻿using MassTransit;
+﻿using Doctors.Application.Features.Doctors.Commands.CreateDoctor;
+using MassTransit;
 using MediatR;
-using Patients.Application.Features.Patients.Commands.RegisterPatient;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Enums;
 
-namespace Patients.Infrastructure.Features.Consumers;
+namespace Doctors.Infrastructure.Features.Consumers;
 
 public sealed class UserCreatedIntegrationEventConsumer(
     ISender sender) 
@@ -13,10 +13,10 @@ public sealed class UserCreatedIntegrationEventConsumer(
     public async Task Consume(ConsumeContext<UserCreatedIntegrationEvent> context)
     {
         var msg = context.Message;
-        if(!msg.Roles.Contains(Roles.Patient))
+        if(!msg.Roles.Contains(Roles.Doctor))
             return;
         
-        var command = new RegisterPatientCommand(msg.Id, msg.FirstName, msg.LastName, msg.BirthDay);
+        var command = new CreateDoctorCommand(msg.Id, msg.FirstName, msg.LastName, null, null);
         await sender.Send(command);
     }
 }

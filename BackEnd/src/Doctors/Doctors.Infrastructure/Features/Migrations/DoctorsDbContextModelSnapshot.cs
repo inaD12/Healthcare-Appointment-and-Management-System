@@ -19,7 +19,7 @@ namespace Doctors.Infrastructure.Features.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "availabilityexceptiontype", new[] { "extra_availability", "unavailable" });
@@ -51,7 +51,6 @@ namespace Doctors.Infrastructure.Features.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -64,10 +63,6 @@ namespace Doctors.Infrastructure.Features.Migrations
 
                     b.Property<int>("RatingsCount")
                         .HasColumnType("integer");
-
-                    b.Property<string>("TimeZoneId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .IsRequired()

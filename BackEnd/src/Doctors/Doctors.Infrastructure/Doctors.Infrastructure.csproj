@@ -25,4 +25,9 @@
       <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Features\Migrations\20260414164215_Remove_TimeZoneId.cs" />
+      <Compile Remove="Features\Migrations\20260414164215_Remove_TimeZoneId.Designer.cs" />
+    </ItemGroup>
+
 </Project>

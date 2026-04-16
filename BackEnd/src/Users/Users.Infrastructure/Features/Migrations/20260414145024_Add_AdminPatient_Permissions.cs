@@ -13,6 +13,17 @@ namespace Users.Infrastructure.Features.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
+                table: "permissions",
+                column: "Code",
+                values: new object[]
+                {
+                    "patient:admin:allergy:add",
+                    "patient:admin:allergy:remove",
+                    "patient:admin:condition:add",
+                    "patient:admin:condition:remove"
+                });
+
+            migrationBuilder.InsertData(
                 table: "role_permissions",
                 columns: new[] { "PermissionCode", "RoleName" },
                 values: new object[,]
@@ -33,19 +44,9 @@ namespace Users.Infrastructure.Features.Migrations
                 keyValues: new object[] { "patient:admin:allergy:add", "Administrator" });
 
             migrationBuilder.DeleteData(
-                table: "role_permissions",
-                keyColumns: new[] { "PermissionCode", "RoleName" },
-                keyValues: new object[] { "patient:admin:allergy:remove", "Administrator" });
-
-            migrationBuilder.DeleteData(
-                table: "role_permissions",
-                keyColumns: new[] { "PermissionCode", "RoleName" },
-                keyValues: new object[] { "patient:admin:condition:add", "Administrator" });
-
-            migrationBuilder.DeleteData(
-                table: "role_permissions",
-                keyColumns: new[] { "PermissionCode", "RoleName" },
-                keyValues: new object[] { "patient:admin:condition:remove", "Administrator" });
+                table: "permissions",
+                keyColumn: "Code",
+                keyValue: "patient:admin:allergy:add");
         }
     }
 }

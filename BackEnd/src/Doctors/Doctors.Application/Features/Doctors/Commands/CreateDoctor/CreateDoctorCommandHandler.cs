@@ -2,10 +2,8 @@ using Doctors.Application.Features.Doctors.Models;
 using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Utilities;
-using Serilog;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Responses;
 using Shared.Domain.Results;
 
 namespace Doctors.Application.Features.Doctors.Commands.CreateDoctor;
@@ -13,7 +11,6 @@ namespace Doctors.Application.Features.Doctors.Commands.CreateDoctor;
 public sealed class CreateDoctorCommandHandler(
     IDoctorRepository doctorRepository,
     ISpecialityRepository specialityRepository,
-    INamesService namesService,
     IUnitOfWork unitOfWork)
     : ICommandHandler<CreateDoctorCommand, DoctorCommandViewModel>
 {
@@ -22,25 +19,31 @@ public sealed class CreateDoctorCommandHandler(
         var existingDoctor = await doctorRepository.GetByUserIdAsync(request.UserId, cancellationToken);
         if (existingDoctor != null)
             return Result<DoctorCommandViewModel>.Failure(ResponseList.DoctorAlreadyExists);
-        
-        var namesResult = await namesService.GetUserNamesAsync(request.UserId, cancellationToken);
-        if (namesResult.IsFailure)
-        {
-            Log.Error($"User id {request.UserId} from JWT does not return names");
-            return Result<DoctorCommandViewModel>.Failure(SharedResponses.InternalError);
-        }
-        
-        var (found, missing) = await specialityRepository
-            .GetByNamesAsync(request.Specialities, cancellationToken);
 
-        if (missing.Any())
+        var found = new List<Speciality>();
+
+        if (request.Specialities != null && request.Specialities.Any())
         {
-            return Result<DoctorCommandViewModel>.Failure(ResponseList.SpecialityNotFound(missing));
+            var result = await specialityRepository
+                .GetByNamesAsync(request.Specialities, cancellationToken);
+
+            found = result.Found;
+            var missing = result.Missing;
+
+            if (missing.Any())
+            {
+                return Result<DoctorCommandViewModel>.Failure(
+                    ResponseList.SpecialityNotFound(missing));
+            }
         }
-        
-        var names = namesResult.Value!;
-        
-        var doctorResult = Doctor.Create(request.UserId, names.FirstName,names.LastName, request.Bio, found, request.TimeZoneId);
+
+        var doctorResult = Doctor.Create(
+            request.UserId,
+            request.FirstName,
+            request.LastName,
+            request.Bio,
+            found
+        );
         if (doctorResult.IsFailure)
             return Result<DoctorCommandViewModel>.Failure(doctorResult.Response);
         
