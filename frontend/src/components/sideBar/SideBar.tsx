@@ -89,7 +89,6 @@ export default function SideBar({ children }: SideBarProps) {
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        {/* Navigation */}
         <div className="flex flex-col mt-4 space-y-2">
           {navItems.map((item) => (
             <Link
@@ -109,7 +108,6 @@ export default function SideBar({ children }: SideBarProps) {
           ))}
         </div>
 
-        {/* Auth Section */}
         <div className="mb-4 px-2">
           <div className="border-t border-gray-700 my-3"></div>
 

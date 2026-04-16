@@ -1,0 +1,128 @@
+﻿using Appointments.API.Appointments.Mappers;
+using Appointments.API.Appointments.Models.Requests;
+using Appointments.API.Appointments.Models.Responses;
+using Appointments.Application.Features.Appointments.Commands.CancelAppointment;
+using Appointments.Application.Features.Appointments.Queries.GetAppointmentById;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Shared.API.Abstractions;
+using Shared.API.Helpers;
+
+namespace Appointments.API.Appointments.EndPoints;
+
+internal class AdminAppointmentsEndPoints : IEndPoints
+{
+	public void RegisterEndpoints(IEndpointRouteBuilder app)
+	{
+	    var group = app.MapGroup("/admin/appointments");
+
+	    group.MapPost("/", CreateAsync)
+	        .Produces<AppointmentCommandResponse>(StatusCodes.Status201Created)
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status409Conflict)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.CreateAppointmentByAdmin);
+
+	    group.MapGet("/", GetAllAsync)
+	        .Produces<AppointmentPaginatedQueryResponse>()
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.GetAppointment);
+
+	    group.MapGet("/{id}", GetByIdAsync)
+	        .Produces<AppointmentQueryResponse>()
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.GetAppointment);
+	    
+	    group.MapDelete("/{id}", CancelAsync)
+	        .Produces(StatusCodes.Status200OK)
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status409Conflict)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.CancelAppointmentByAdmin);
+
+	    group.MapPut("/{id}", RescheduleAsync)
+	        .Produces<AppointmentCommandResponse>()
+	        .Produces(StatusCodes.Status400BadRequest)
+	        .Produces(StatusCodes.Status401Unauthorized)
+	        .Produces(StatusCodes.Status404NotFound)
+	        .Produces(StatusCodes.Status409Conflict)
+	        .Produces(StatusCodes.Status500InternalServerError)
+	        .RequireAuthorization(Permissions.RescheduleAppointmentByAdmin);
+	}
+
+
+	private async Task<IResult> CreateAsync(
+		[FromBody] CreateAppointmentByAdminRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = request.ToCommand();
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+
+	private async Task<IResult> CancelAsync(
+		[FromRoute] string id,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = new CancelAppointmentCommand(id, true);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+
+	private async Task<IResult> RescheduleAsync(
+		[FromRoute] string id,
+		[FromBody] RescheduleAppointmentRequest request,
+		[FromServices] ISender sender,	
+		CancellationToken cancellationToken)
+	{
+		var command = request.ToCommand(id, true);
+		var res = await sender.Send(command, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+
+	private async Task<IResult> GetAllAsync(
+		[AsParameters] GetAllAppointmentsRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery();
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+	private async Task<IResult> GetByIdAsync(
+		[FromRoute] string id,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = new GetAppointmentByIdQuery(id);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var appointmentCommandResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+}

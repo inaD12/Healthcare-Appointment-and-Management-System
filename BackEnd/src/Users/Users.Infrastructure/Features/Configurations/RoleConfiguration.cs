@@ -25,6 +25,7 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
                 joinBuilder.Property("RolesName").HasColumnName("role_name");
             });
 
+        
         builder.HasData(
             Role.Patient,
             Role.Doctor,

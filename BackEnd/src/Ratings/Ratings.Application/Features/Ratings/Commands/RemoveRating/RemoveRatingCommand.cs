@@ -4,4 +4,5 @@ namespace Ratings.Application.Features.Ratings.Commands.RemoveRating;
 
 public sealed record RemoveRatingCommand(
     string UserId,
-    string RatingId) : ICommand;
+    string RatingId,
+    bool IsAdmin = false) : ICommand;

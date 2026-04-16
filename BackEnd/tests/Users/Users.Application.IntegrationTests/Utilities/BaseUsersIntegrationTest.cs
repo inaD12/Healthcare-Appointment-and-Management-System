@@ -40,6 +40,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
+				false,
 				SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.ID_MAX_LENGTH, UsersBusinessConfiguration.ID_MIN_LENGTH),
 				UsersTestUtilities.ValidPhoneNumber,
 				UsersTestUtilities.ValidAdress
@@ -65,6 +66,7 @@ public abstract class BaseUsersIntegrationTest : BaseSharedIntegrationTest, ICla
 				UsersTestUtilities.ValidFirstName,
 				UsersTestUtilities.ValidLastName,
 				UsersTestUtilities.PastDate.ToUniversalTime(),
+				false,
 				SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.ID_MAX_LENGTH, UsersBusinessConfiguration.ID_MIN_LENGTH),
 				UsersTestUtilities.ValidPhoneNumber,
 				UsersTestUtilities.ValidAdress

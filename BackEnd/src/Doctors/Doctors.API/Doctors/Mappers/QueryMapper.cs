@@ -16,7 +16,6 @@ public static class QueryMapper
             doctor.LastName,
             doctor.UserId,
             doctor.Bio,
-            doctor.TimeZoneId,
             doctor.Specialities.Select(s => s.ToString()).ToList(),
             doctor.WorkDays.Select(s => s.ToResponse()).ToList(),
             doctor.AvailabilityExceptions.Select(s => s.ToResponse()).ToList(),

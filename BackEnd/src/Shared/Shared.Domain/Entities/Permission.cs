@@ -6,14 +6,20 @@ public sealed class Permission
     public static readonly Permission GetUser = new("users:read");
     public static readonly Permission ModifyUser = new("users:update");
     public static readonly Permission DeleteUser = new("users:delete");
+    public static readonly Permission CreateUser = new("users:create");
 
     // Appointments
     public static readonly Permission CreateAppointment = new("appointment:create");
     public static readonly Permission CancelAppointment = new("appointment:cancel");
     public static readonly Permission RescheduleAppointment = new("appointment:reschedule");
-    public static readonly Permission GetAppointment = new("appointment:read");
     public static readonly Permission GetBookings = new("bookings:read");
     public static readonly Permission GetMyAppointment = new("appointment:mine:read");
+    
+    // Admin Appointments
+    public static readonly Permission GetAppointment = new("appointment:read");
+    public static readonly Permission CreateAppointmentByAdmin = new("appointment:admin:create");
+    public static readonly Permission CancelAppointmentByAdmin = new("appointment:admin:cancel");
+    public static readonly Permission RescheduleAppointmentByAdmin = new("appointment:admin:reschedule");
     
     // Doctor Management (Self)
     public static readonly Permission CreateDoctor = new("doctor:create");
@@ -22,9 +28,9 @@ public sealed class Permission
     public static readonly Permission ViewAllDoctors = new("doctor:view-all");
 
     // Doctor Management (Admin)
-    public static readonly Permission CreateDoctorByAdmin = new("doctor:admin:create");
     public static readonly Permission UpdateDoctorByAdmin = new("doctor:admin:update");
-    public static readonly Permission ViewDoctorByAdmin = new("doctor:admin:view");
+    public static readonly Permission AddSpecialityByAdmin = new("doctor:admin:speciality:add");
+    public static readonly Permission RemoveSpecialityByAdmin = new("doctor:admin:speciality:remove");
 
     // Specialities
     public static readonly Permission AddSpeciality = new("doctor:speciality:add");
@@ -48,6 +54,7 @@ public sealed class Permission
     public static readonly Permission RemoveRating = new("ratings:delete");
     public static readonly Permission GetRating = new("ratings:read");
     public static readonly Permission GetRatingStats = new("ratingStats:read");
+    public static readonly Permission RemoveRatingAdmin = new("ratings:admin:delete");
     
     // Patients
     public static readonly Permission CreatePatient = new("patient:create");
@@ -58,6 +65,10 @@ public sealed class Permission
     // Admin patient
     public static readonly Permission ViewAllPatients = new("patient:admin:view-all");
     public static readonly Permission DeletePatientByAdmin = new("patient:admin:delete");
+    public static readonly Permission AddAllergyAdmin = new("patient:admin:allergy:add");
+    public static readonly Permission RemoveAllergyAdmin = new("patient:admin:allergy:remove");
+    public static readonly Permission AddChronicConditionAdmin = new("patient:admin:condition:add");
+    public static readonly Permission RemoveChronicConditionAdmin = new("patient:admin:condition:remove");
 
     // Allergies
     public static readonly Permission AddAllergy = new("patient:allergy:add");

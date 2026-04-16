@@ -55,8 +55,6 @@ public class DoctorRepository: GenericRepository<Doctor>, IDoctorRepository
         if (!string.IsNullOrWhiteSpace(query.Speciality))
             entitiesQuery = entitiesQuery.Where(d =>
                 d.Specialities.Any(s => EF.Functions.ILike(s.Name, $"{query.Speciality}%")));
-        if (!string.IsNullOrWhiteSpace(query.TimeZoneId))
-            entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.TimeZoneId, $"{query.TimeZoneId}%"));
 
         entitiesQuery = entitiesQuery.ApplySorting(query.SortPropertyName, query.SortOrder);
 

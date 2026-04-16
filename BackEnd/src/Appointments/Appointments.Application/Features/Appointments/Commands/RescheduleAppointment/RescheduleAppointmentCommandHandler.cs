@@ -30,12 +30,16 @@ public sealed class RescheduleAppointmentCommandHandler(
 			return Result<AppointmentCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
 		}
 
-		var requirement = new ModifyAppointmentRequirement();
-
-		var authResult = await authService.AuthorizeAsync(httpContextAccessor.HttpContext!.User, existingAppointment, requirement );
-		if (!authResult.Succeeded)
+		if (!request.IsAdmin)
 		{
-			return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
+			var requirement = new ModifyAppointmentRequirement();
+
+			var authResult = await authService.AuthorizeAsync(httpContextAccessor.HttpContext!.User,
+				existingAppointment, requirement);
+			if (!authResult.Succeeded)
+			{
+				return Result<AppointmentCommandViewModel>.Failure(ResponseList.CannotRescheduleOthersAppointment);
+			}
 		}
 
 		var duration = DateTimeRangeFactory.FromDuration(request.ScheduledStartTime, request.Duration);

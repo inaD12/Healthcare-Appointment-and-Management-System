@@ -7,4 +7,6 @@ internal static class Permissions
     internal const string RemoveRating = "ratings:delete";
     internal const string GetRating = "ratings:read";
     internal const string GetRatingStats = "ratingStats:read";
+    
+    internal const string RemoveRatingAdmin = "ratings:admin:delete";
 }

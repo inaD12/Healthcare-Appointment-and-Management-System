@@ -45,6 +45,7 @@ public abstract class BaseUsersUnitTest : BaseSharedUnitTest
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH, UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH),
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH, UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH),
 			UsersTestUtilities.PastDate,
+			false,
 			SharedTestUtilities.GetAverageString(UsersBusinessConfiguration.ID_MAX_LENGTH, UsersBusinessConfiguration.ID_MIN_LENGTH),
 			UsersTestUtilities.ValidPhoneNumber,
 			UsersTestUtilities.ValidAdress

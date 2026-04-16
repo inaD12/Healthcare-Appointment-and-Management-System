@@ -13,8 +13,7 @@ public sealed class Doctor : BaseEntity
     public string UserId { get; init; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
-    public string Bio { get; private set; }
-    public string TimeZoneId { get; private set; }
+    public string? Bio { get; private set; }
     public List<Speciality> Specialities { get; private set; }
     public WeeklySchedule WeeklySchedule { get; private set; }
     public List<DoctorAvailabilityException> AvailabilityExceptions { get; private set; }
@@ -27,9 +26,8 @@ public sealed class Doctor : BaseEntity
         string userId,
         string firstName,
         string lastName,
-        string bio,
+        string? bio,
         List<Speciality> specialities,
-        string timeZoneId,
         WeeklySchedule weeklySchedule,
         List<DoctorAvailabilityException> availabilityExceptions,
         double averageRating,
@@ -40,7 +38,6 @@ public sealed class Doctor : BaseEntity
         LastName = lastName;
         Bio = bio;
         Specialities = specialities;
-        TimeZoneId = timeZoneId;
         WeeklySchedule = weeklySchedule;
         AvailabilityExceptions = availabilityExceptions;
         AverageRating = averageRating;
@@ -51,22 +48,17 @@ public sealed class Doctor : BaseEntity
         string userId,
         string firstName,
         string lastName,
-        string bio,
+        string? bio,
         List<Speciality> specialities,
-        string timeZoneId,
         WeeklySchedule? weeklySchedule = null,
         List<DoctorAvailabilityException>? availabilityExceptions = null)
     {
-        if (!IsValidTimeZone(timeZoneId))
-            return Result<Doctor>.Failure(ResponseList.InvalidTimezone);
-        
         return  Result<Doctor>.Success(new Doctor(
             userId,
-            bio,
             firstName,
             lastName,
+            bio,
             specialities,
-            timeZoneId,
             weeklySchedule ?? WeeklySchedule.Create(null).Value!,
             availabilityExceptions ?? new List<DoctorAvailabilityException>(),
             0,
@@ -161,11 +153,8 @@ public sealed class Doctor : BaseEntity
         return Result.Success();
     }
     
-    public void UpdateProfile(string? timeZoneId, string? bio)
+    public void UpdateProfile(string? bio)
     {
-        if (!string.IsNullOrWhiteSpace(timeZoneId))
-            TimeZoneId = timeZoneId;
-
         if (!string.IsNullOrWhiteSpace(bio))
             Bio = bio;
     }
@@ -263,18 +252,6 @@ public sealed class Doctor : BaseEntity
 
         return overlapping;
     }
-    
-    private static bool IsValidTimeZone(string timeZoneId)
-    {
-        try
-        {
-            TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+
 }
 

@@ -1,6 +1,7 @@
 using Shared.Domain.Extensions;
 using Users.Application.Features.Email.Commands.HandleEmail;
 using Users.Application.Features.Users.Commands.RegisterUser;
+using Users.Application.Features.Users.Commands.RegisterUserByAdmin;
 using Users.Application.Features.Users.Commands.UpdateUser;
 using Users.Application.Features.Users.Models;
 using Users.Users.Models.Requests;
@@ -21,6 +22,19 @@ public static class CommandMapper
             request.PhoneNumber,
             request.Address,
             request.Role.MapToRole());
+    
+    public static RegisterUserByAdminCommand ToCommand(
+        this RegisterUserByAdminRequest request)
+        => new(
+            request.Email,
+            request.Password,
+            request.FirstName,
+            request.LastName,
+            request.DateOfBirth,
+            request.PhoneNumber,
+            request.Address,
+            request.Role.MapToRole(),
+            request.EmailVerified);
     
     public static UpdateUserCommand ToCommand(
         this UpdateCurrentUserRequest request,

@@ -15,7 +15,7 @@ public class DoctorsEndPoints  : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-		var specialitiesGroup = app.MapGroup("/api/specialities");
+		var specialitiesGroup = app.MapGroup("/specialities");
 		
 		specialitiesGroup.MapPost("/recommend", RecommendSpecialityAsync)
 			.Produces(StatusCodes.Status200OK)
@@ -27,15 +27,6 @@ public class DoctorsEndPoints  : IEndPoints
 		
 		var meGroup = app.MapGroup("/api/doctors/me");
 
-		meGroup.MapPost("", CreateDoctorAsync)
-			.Produces<DoctorCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.CreateDoctor);
-		
 		meGroup.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -135,27 +126,9 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RemoveUnavailability);
 
-		var doctorsGroup = app.MapGroup("/api/doctors");
+		var doctorsGroup = app.MapGroup("/doctors");
 		
-		doctorsGroup.MapPost("", CreateDoctorByAdminAsync)
-			.Produces<DoctorCommandResponse>()
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.CreateDoctorByAdmin);
-		
-		doctorsGroup.MapPut("", UpdateDoctorInfoByAdminAsync)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.UpdateDoctorByAdmin);
-		
-		doctorsGroup.MapGet("/by-id/{doctorId}", GetDoctorByIdAsync)
+		doctorsGroup.MapGet("/{doctorId}", GetDoctorByIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -164,7 +137,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctor);
 
-		doctorsGroup.MapGet("/by-user/{userId}", GetDoctorByUserIdAsync)
+		doctorsGroup.MapGet("/user/{userId}", GetDoctorByUserIdAsync)
 			.Produces<DoctorQueryResponse>()
 			.Produces(StatusCodes.Status400BadRequest)
 			.Produces(StatusCodes.Status401Unauthorized)
@@ -197,35 +170,6 @@ public class DoctorsEndPoints  : IEndPoints
 		return ControllerResponse.ParseAndReturnMessage(res, recommendSpecialityResponse);
 	}
 	
-	private async Task<IResult> CreateDoctorAsync(
-		[FromBody] CreateDoctorRequest request,
-		HttpContext httpContext,   
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		if (res.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(res);
-
-		var doctorCommandResponse = new DoctorCommandResponse(res.Value!.Id);
-		return ControllerResponse.ParseAndReturnMessage(res, doctorCommandResponse);
-	}
-	
-	private async Task<IResult> CreateDoctorByAdminAsync(
-		[FromBody] CreateDoctorByAdminRequest request,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = request.ToCommand();
-		var res = await sender.Send(command, cancellationToken);
-		if (res.IsFailure)
-			return ControllerResponse.ParseAndReturnMessage(res);
-
-		return ControllerResponse.ParseAndReturnMessage(res, new DoctorCommandResponse(res.Value!.Id));
-	}
-	
 	private async Task<IResult> UpdateDoctorInfoAsync(
 		[FromBody] UpdateDoctorInfoRequest request,
 		HttpContext httpContext,   
@@ -234,16 +178,6 @@ public class DoctorsEndPoints  : IEndPoints
 	{
 		var userId = httpContext.User.GetUserId();
 		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
-	}
-	
-	private async Task<IResult> UpdateDoctorInfoByAdminAsync(
-		[FromBody] UpdateDoctorInfoByAdminRequest request,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

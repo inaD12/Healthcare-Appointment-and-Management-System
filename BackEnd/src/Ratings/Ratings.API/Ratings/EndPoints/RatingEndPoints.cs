@@ -17,7 +17,7 @@ internal class RatingEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 	{
-	    var ratingsGroup = app.MapGroup("api/ratings");
+	    var ratingsGroup = app.MapGroup("/ratings");
 
 	    ratingsGroup.MapPost("/", AddRatingAsync)
 	        .Produces<RatingCommandResponse>()
@@ -47,14 +47,14 @@ internal class RatingEndPoints : IEndPoints
 		    .Produces(StatusCodes.Status500InternalServerError)
 		    .RequireAuthorization(Permissions.GetRating);
 	    
-	    ratingsGroup.MapGet("/by-appointment/{appointmentId}", GetRatingByAppointmentIdAsync)
+	    ratingsGroup.MapGet("/appointment/{appointmentId}", GetRatingByAppointmentIdAsync)
 		    .Produces<RatingQueryResponse>()
 		    .Produces(StatusCodes.Status401Unauthorized)
 		    .Produces(StatusCodes.Status404NotFound)
 		    .Produces(StatusCodes.Status500InternalServerError)
 		    .RequireAuthorization(Permissions.GetRating);
 	    
-	    ratingsGroup.MapGet("/by-doctor/{doctorId}", GetAllByDoctorAsync)
+	    ratingsGroup.MapGet("/doctor/{doctorId}", GetAllByDoctorAsync)
 		    .Produces<RatingPaginatedQueryResponse>()
 		    .Produces(StatusCodes.Status401Unauthorized)
 		    .Produces(StatusCodes.Status404NotFound)

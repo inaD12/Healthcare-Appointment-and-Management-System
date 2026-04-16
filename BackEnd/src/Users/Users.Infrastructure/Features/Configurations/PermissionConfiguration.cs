@@ -32,9 +32,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.CreateDoctor,
             Permission.UpdateDoctor,
             Permission.ViewDoctor,
-            Permission.CreateDoctorByAdmin,
             Permission.UpdateDoctorByAdmin,
-            Permission.ViewDoctorByAdmin,
             Permission.ViewAllDoctors,
             Permission.AddSpeciality,
             Permission.RemoveSpeciality,
@@ -53,6 +51,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.EditRating,
             Permission.GetRating,
             Permission.GetRatingStats,
+            Permission.RemoveRatingAdmin,
             
             // Patient Permissions
             Permission.CreatePatient,
@@ -100,6 +99,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.GetUser),
                     CreateRolePermission(Role.Administrator, Permission.ModifyUser),
                     CreateRolePermission(Role.Administrator, Permission.DeleteUser),
+                    CreateRolePermission(Role.Administrator, Permission.CreateUser),
                     // Admin appointment permissions
                     CreateRolePermission(Role.Administrator, Permission.CreateAppointment),
                     CreateRolePermission(Role.Administrator, Permission.CancelAppointment),
@@ -110,9 +110,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.CreateDoctor),
                     CreateRolePermission(Role.Administrator, Permission.UpdateDoctor),
                     CreateRolePermission(Role.Administrator, Permission.ViewDoctor),
-                    CreateRolePermission(Role.Administrator, Permission.CreateDoctorByAdmin),
                     CreateRolePermission(Role.Administrator, Permission.UpdateDoctorByAdmin),
-                    CreateRolePermission(Role.Administrator, Permission.ViewDoctorByAdmin),
                     CreateRolePermission(Role.Administrator, Permission.ViewAllDoctors),
                     CreateRolePermission(Role.Administrator, Permission.AddSpeciality),
                     CreateRolePermission(Role.Administrator, Permission.RemoveSpeciality),
@@ -130,6 +128,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.EditRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRating),
                     CreateRolePermission(Role.Administrator, Permission.GetRatingStats),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveRatingAdmin),
                     // Admin patient permissions
                     CreateRolePermission(Role.Administrator, Permission.CreatePatient),
                     CreateRolePermission(Role.Administrator, Permission.UpdatePatient),
@@ -143,6 +142,10 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.AddChronicCondition),
                     CreateRolePermission(Role.Administrator, Permission.RemoveChronicCondition),
                     CreateRolePermission(Role.Administrator, Permission.ViewChronicConditions),
+                    CreateRolePermission(Role.Administrator, Permission.AddAllergyAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveAllergyAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.AddChronicConditionAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveChronicConditionAdmin),
                     // Admin encounter permissions
                     CreateRolePermission(Role.Administrator, Permission.StartEncounter),
                     CreateRolePermission(Role.Administrator, Permission.ViewEncounter),

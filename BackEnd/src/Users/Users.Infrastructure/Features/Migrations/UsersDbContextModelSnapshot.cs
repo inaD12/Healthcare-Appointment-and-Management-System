@@ -222,6 +222,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "users:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Administrator"
                         },
@@ -262,17 +267,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "doctor:admin:create",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
                             PermissionCode = "doctor:admin:update",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:admin:view",
                             RoleName = "Administrator"
                         },
                         new
@@ -357,6 +352,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "ratings:admin:delete",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "patient:create",
                             RoleName = "Administrator"
                         },
@@ -413,6 +413,26 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "patient:condition:view",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:allergy:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:allergy:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:condition:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:condition:remove",
                             RoleName = "Administrator"
                         },
                         new
@@ -894,15 +914,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            Code = "doctor:admin:create"
-                        },
-                        new
-                        {
                             Code = "doctor:admin:update"
-                        },
-                        new
-                        {
-                            Code = "doctor:admin:view"
                         },
                         new
                         {
@@ -967,6 +979,10 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "ratingStats:read"
+                        },
+                        new
+                        {
+                            Code = "ratings:admin:delete"
                         },
                         new
                         {
