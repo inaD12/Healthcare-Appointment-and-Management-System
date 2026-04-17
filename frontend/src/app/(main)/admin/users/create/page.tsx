@@ -12,7 +12,7 @@ import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 import { ROLES } from "@/features/users/types/userTypes"
 
 export default function CreateDoctorPage() {
-    useRequireRole(ROLES.ADMIN)
+  useRequireRole(ROLES.ADMIN)
 
   return (
       <div className="min-h-screen flex items-center justify-center p-4">

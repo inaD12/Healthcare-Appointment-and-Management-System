@@ -21,7 +21,6 @@ export default function DoctorsPage() {
     firstName: "",
     lastName: "",
     speciality: "",
-    timeZoneId: "",
     sortOrder: "ASC",
     sortPropertyName: "FirstName",
     page: 1,
@@ -240,7 +239,6 @@ export default function DoctorsPage() {
                       ({doctor.ratingsCount ?? 0} reviews)
                     </span>
                   </div>
-                  <p className="text-gray-500 text-sm mt-1">Timezone: {doctor.timeZoneId}</p>
                 </div>
               </CardContent>
             </Card>

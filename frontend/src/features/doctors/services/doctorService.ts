@@ -13,10 +13,10 @@ export const getMyDoctorInfo = () =>
   api.get<APIResponse<DoctorQueryViewModel>>(ENDPOINTS.doctors.me)
 
 export const getDoctorByUserId = (userId: string) =>
-  api.get<APIResponse<DoctorQueryViewModel>>(`${ENDPOINTS.doctors.admin}/by-user/${userId}`)
+  api.get<APIResponse<DoctorQueryViewModel>>(`${ENDPOINTS.doctors.root}/user/${userId}`)
 
 export const getAllDoctors = (query: GetAllDoctorsRequest) =>
-  api.get<APIResponse<DoctorPaginatedQueryResponse>>(ENDPOINTS.doctors.admin, { params: query })
+  api.get<APIResponse<DoctorPaginatedQueryResponse>>(ENDPOINTS.doctors.root, { params: query })
 
 export const addSpeciality = (data: AddSpecialityRequest) =>
   api.post<APIResponse<null>>(ENDPOINTS.doctors.meSpecialities, data)

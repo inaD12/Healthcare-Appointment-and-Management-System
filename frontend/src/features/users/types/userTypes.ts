@@ -24,6 +24,16 @@ export type UserCommandResponse = {
   id: string
 }
 
+export type UserPaginatedResponse = {
+  items: UserQueryResponse[]
+  page: number
+  pageSize: number
+  totalCount: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
+};
+
+
 export const registerUserByAdminSchema = z.object({
   email: z
     .string()
@@ -96,6 +106,52 @@ export const registerUserSchema = z.object({
     .max(C.ADDRESS_MAX_LENGTH, `Address must be at most ${C.ADDRESS_MAX_LENGTH} characters`),
 })
 
+export const getAllUsersSchema = z.object({
+  email: z
+    .string()
+    .optional()
+    .default(""),
+
+  role: z.enum(["Patient", "Doctor", "Admin"])
+    .optional(),
+
+  firstName: z
+    .string()
+    .max(C.FIRSTNAME_MAX_LENGTH, `First name must be at most ${C.FIRSTNAME_MAX_LENGTH} characters`)
+    .optional()
+    .default(""),
+
+  lastName: z
+    .string()
+    .max(C.LASTNAME_MAX_LENGTH, `Last name must be at most ${C.LASTNAME_MAX_LENGTH} characters`)
+    .optional()
+    .default(""),
+
+  phoneNumber: z
+    .string()
+    .max(C.PHONENUMBER_MAX_LENGTH, `Phone number must be at most ${C.PHONENUMBER_MAX_LENGTH} characters`)
+    .optional()
+    .default(""),
+
+  address: z
+    .string()
+    .max(C.ADDRESS_MAX_LENGTH, `Address must be at most ${C.ADDRESS_MAX_LENGTH} characters`)
+    .optional()
+    .default(""),
+  
+  emailVerified:z
+    .boolean()
+    .optional(),
+
+  sortOrder: z.enum(["ASC", "DESC"]).default("ASC"),
+  
+  sortPropertyName: z.string().default("Id"),
+  
+  page: z.number().default(1),
+  
+  pageSize: z.number().default(10),
+})
+
 export const updateCurrentUserSchema = z
   .object({
     firstName: z
@@ -122,3 +178,4 @@ export type RegisterByAdminFormValues = z.infer<typeof registerUserByAdminSchema
 export type RegisterUserRequest = z.infer<typeof registerUserSchema>
 export type RegisterUserByAdminRequest = z.infer<typeof registerUserByAdminSchema>
 export type UpdateCurrentUserRequest = z.infer<typeof updateCurrentUserSchema>
+export type GetAllUsersRequest = z.infer<typeof getAllUsersSchema>

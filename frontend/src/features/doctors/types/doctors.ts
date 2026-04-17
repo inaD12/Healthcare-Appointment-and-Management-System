@@ -45,8 +45,6 @@ export const doctorSchema = z.object({
     .min(C.BIO_MIN_LENGTH, `Bio must be at least ${C.BIO_MIN_LENGTH} characters`)
     .max(C.BIO_MAX_LENGTH, `Bio must be at most ${C.BIO_MAX_LENGTH} characters`),
 
-  timeZoneId: z.string(),
-
   specialities: z.array(
     z
       .string()
@@ -91,8 +89,6 @@ export const getAllDoctorsSchema = z.object({
     .max(C.SPECIALITY_MAX_LENGTH)
     .optional()
     .default(""),
-
-  timeZoneId: z.string().optional().default(""),
 
   sortOrder: z.enum(["ASC", "DESC"]).default("ASC"),
 

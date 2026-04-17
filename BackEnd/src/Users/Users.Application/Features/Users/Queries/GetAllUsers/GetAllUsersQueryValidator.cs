@@ -16,34 +16,9 @@ public class GetAllUsersQueryValidator : AbstractValidator<GetAllUsersQuery>
 			.Select(f => ((Role)f.GetValue(null)!).Name)
 			.ToHashSet();
 		
-		RuleFor(q => q.Email)
-		   .MinimumLength(UsersBusinessConfiguration.EMAIL_MIN_LENGTH)
-		   .MaximumLength(UsersBusinessConfiguration.EMAIL_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.Email));
-
 		RuleFor(q => q.Role)
 			.Must(role => roles.Contains(role!.Name))
 			.When(q => q.Role != null);
-
-		RuleFor(q => q.FirstName)
-		   .MinimumLength(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH)
-		   .MaximumLength(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.FirstName));
-
-		RuleFor(q => q.LastName)
-		   .MinimumLength(UsersBusinessConfiguration.LASTTNAME_MIN_LENGTH)
-		   .MaximumLength(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.LastName));
-
-		RuleFor(q => q.PhoneNumber)
-		   .MinimumLength(UsersBusinessConfiguration.PHONENUMBER_MIN_LENGTH)
-		   .MaximumLength(UsersBusinessConfiguration.PHONENUMBER_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.PhoneNumber));
-
-		RuleFor(q => q.Address)
-		   .MinimumLength(UsersBusinessConfiguration.ADRESS_MIN_LENGTH)
-		   .MaximumLength(UsersBusinessConfiguration.ADRESS_MAX_LENGTH)
-		   .When(q => !string.IsNullOrEmpty(q.Address));
 
 		RuleFor(q => q.SortPropertyName)
 			.Must(BeAValidSortProperty).WithMessage("SortPropertyName must be a valid property");

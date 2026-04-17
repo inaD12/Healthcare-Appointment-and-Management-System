@@ -1,7 +1,7 @@
 "use client"
 
 import { ReactNode, useState, JSX } from "react"
-import { Home, Calendar, User, Settings, LogIn, LogOut, UserPlus } from "lucide-react"
+import { Home, Calendar, User, Settings, LogIn, LogOut, UserPlus, Users } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/features/auth/hooks/useAuth"
@@ -69,10 +69,16 @@ export default function SideBar({ children }: SideBarProps) {
 
   if (isAdmin) {
     navItems.push({
-    label: "Create User",
-    icon: <UserPlus size={20} />,
-    href: "/admin/users/create",
-  })
+      label: "Users",
+      icon: <Users size={20} />,
+      href: "/admin/users",
+    })
+
+    navItems.push({
+      label: "Create User",
+      icon: <UserPlus size={20} />,
+      href: "/admin/users/create",
+    })
 
     navItems.push({
       label: "Settings",

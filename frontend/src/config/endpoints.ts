@@ -38,6 +38,7 @@ export const ENDPOINTS = {
     finalize: (encounterId: string) => `/patients-api/encounters/${encounterId}/finalize`,
   },
   doctors: {
+    root: "/doctors-api/doctors",
     me: "/doctors-api/doctors/me",
     specialities: "/doctors-api/specialities",
     meSpecialities: `/doctors-api/doctors/me/specialities`,
