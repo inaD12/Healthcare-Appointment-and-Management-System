@@ -12,8 +12,10 @@ import {
 } from "@/features/users/types/userTypes"
 
 import { Badge } from "@/components/ui/badge"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 
 export default function AdminUsersPage() {
+  useRequireRole(ROLES.ADMIN)
   const router = useRouter()
 
   const filters: FilterField[] = [
