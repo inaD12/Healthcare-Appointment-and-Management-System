@@ -28,13 +28,26 @@ export function SearchPage<T, Q extends PaginatedQuery>({
   const [query, setQuery] = useState<Q>(defaultQuery)
   const [data, setData] = useState<any>()
 
+  const [error, setError] = useState<string | null>(null)
+
   const handleSearch = async (values: Partial<Q>) => {
     const request = { ...query, ...values }
     setQuery(request)
 
-    const res = await queryFn(request)
-    setData(res.data.data)
-  }
+    try {
+        setError(null)
+
+        const res = await queryFn(request)
+        setData(res.data.data)
+    } catch (err: any) {
+        if (err.response?.status === 404) {
+        setData({ items: [], page: 1, totalCount: 0, pageSize: 10 })
+        setError("No results found.")
+        } else {
+        setError("Something went wrong. Please try again.")
+        }
+    }
+    }
 
   useEffect(() => {
     handleSearch({})
@@ -50,11 +63,21 @@ export function SearchPage<T, Q extends PaginatedQuery>({
 
         <SearchFilters filters={filters} onSearch={handleSearch} />
 
-        <SearchTable<T>
-          columns={columns}
-          data={data?.items || []}
-          onRowClick={onRowClick}
-        />
+        {error ? (
+            <div className="text-center text-gray-500 py-8">
+                {error}
+            </div>
+            ) : data?.items?.length ? (
+            <SearchTable<T>
+                columns={columns}
+                data={data.items}
+                onRowClick={onRowClick}
+            />
+            ) : (
+            <div className="text-center text-gray-500 py-8">
+                No results found.
+            </div>
+        )}
 
         <SearchPagination
           page={data?.page}
