@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { RegisterUserByAdminRequest, RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserQueryResponse } from "../types/userTypes";
+import { GetAllUsersRequest, RegisterUserByAdminRequest, RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserPaginatedResponse, UserQueryResponse } from "../types/userTypes";
 import { APIResponse } from "@/types/types";
 
 export const registerUser = (data: RegisterUserRequest) =>
@@ -29,4 +29,12 @@ export const updateCurrentUser = (request: UpdateCurrentUserRequest) =>
 export const deleteCurrentUser = () =>
   api.delete<APIResponse<boolean>>(
     ENDPOINTS.users.me
+  );
+
+export const getAllUsers = (request: GetAllUsersRequest) =>
+  api.get<APIResponse<UserPaginatedResponse>>(
+    ENDPOINTS.users.admin,
+    {
+      params: request
+    }
   );
