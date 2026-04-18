@@ -11,6 +11,7 @@ import { AdminUserEditForm } from "@/components/admin/AdminUserEditForm"
 import { AppointmentList } from "@/components/appointments/AppointmentsList"
 import { useAppointmentsPagination } from "@/components/appointments/useAppointmentsPagination"
 import { useState, useEffect, useCallback } from "react"
+import { PatientInfoCard } from "@/components/patients/PatientInfoCard"
 
 export default function AdminUserPage() {
   const { id } = useParams<{ id: string }>()
@@ -69,15 +70,7 @@ export default function AdminUserPage() {
       </Card>
 
       {patient && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Patient Profile</CardTitle>
-          </CardHeader>
-
-          <CardContent>
-            <p>{patient.fullName}</p>
-          </CardContent>
-        </Card>
+        <PatientInfoCard patient={patient} />
       )}
 
       <Card>
