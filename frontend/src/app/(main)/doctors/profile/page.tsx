@@ -104,7 +104,7 @@ export default function DoctorProfilePage() {
 
   const handleSaveBio = async () => {
     try {
-      await updateDoctorInfo({ newBio: bioInput, newTimeZoneId: doctor.timeZoneId })
+      await updateDoctorInfo({ newBio: bioInput })
       setDoctor({ ...doctor, bio: bioInput })
       setEditingBio(false)
     } catch (err) {
@@ -193,7 +193,6 @@ export default function DoctorProfilePage() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p><strong>Name:</strong> {doctor.firstName} {doctor.lastName}</p>
-          <p><strong>Time Zone:</strong> {doctor.timeZoneId}</p>
           <p><strong>Rating:</strong> {doctor.averageRating?.toFixed(1)} ({doctor.ratingsCount} ratings)</p>
         </CardContent>
       </Card>

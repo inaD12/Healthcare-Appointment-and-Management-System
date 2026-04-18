@@ -25,7 +25,7 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RequestRecommendations);
 		
-		var meGroup = app.MapGroup("/api/doctors/me");
+		var meGroup = app.MapGroup("/doctors/me");
 
 		meGroup.MapPut("", UpdateDoctorInfoAsync)
 			.Produces(StatusCodes.Status200OK)

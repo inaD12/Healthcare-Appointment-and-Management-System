@@ -215,9 +215,18 @@ export interface Appointment {
   encounterDetails: EncounterDetails
 }
 
+export interface MyPatientInfo {
+  profile: PatientProfile
+  appointments: Appointment[]
+}
+
 export interface PatientInfo {
   profile: PatientProfile
   appointments: Appointment[]
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: string | null
+  }
 }
 
 export interface PatientProfile {

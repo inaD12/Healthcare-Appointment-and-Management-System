@@ -26,11 +26,11 @@ import {
   AppointmentByIdResponse,
   PatientInfo,
   PatientDashboard,
-  DoctorDashboard,
   DoctorAppointment,
   DoctorDashboardView,
-  DoctorEncounter,
   DoctorEncounterConnection,
+  MyPatientInfo,
+  Appointment,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -45,6 +45,18 @@ export const patientService = {
 
   removeChronicCondition: (patientId: string, data: RemoveConditionRequest) =>
     api.delete(ENDPOINTS.patients.chronicConditions(patientId), { data }),
+
+  addAllergyByAdmin: (patientId: string, data: AddAllergyRequest) =>
+    api.post<APIResponse<AllergyCommandResponse>>(ENDPOINTS.patients.adminAllergies(patientId), data),
+
+  removeAllergyByAdmin: (patientId: string, data: RemoveAllergyRequest) =>
+    api.delete(ENDPOINTS.patients.adminAllergies(patientId), { data }),
+
+  addChronicConditionByAdmin: (patientId: string, data: AddChronicConditionRequest) =>
+    api.post<APIResponse<ConditionCommandResponse>>(ENDPOINTS.patients.adminChronicConditions(patientId), data),
+
+  removeChronicConditionByAdmin: (patientId: string, data: RemoveConditionRequest) =>
+    api.delete(ENDPOINTS.patients.adminChronicConditions(patientId), { data }),
 
   startEncounter: (data: StartEncounterRequest) =>
     api.post<APIResponse<EncounterCommandResponse>>(ENDPOINTS.encounters.root, data),
@@ -76,32 +88,9 @@ export const patientService = {
   addAddendum: (encounterId: string, data: AddAddendumRequest) =>
     api.post<APIResponse<AddendumCommandResponse>>(ENDPOINTS.encounters.addendums(encounterId), data),
 
-  getPatientProfile: async (patientId: string): Promise<PatientProfile> => {
+  getMyPatientInfoInitial: async (first = 10): Promise<PatientInfo> => {
     const query = `
-      query GetPatientProfile($patientId: String!) {
-        patientHeader(patientId: $patientId) {
-          id
-          fullName
-          birthDate
-          allergies
-          conditions
-        }
-      }
-    `
-    const res = await api.post(ENDPOINTS.patients.graphql, { query, variables: { patientId } })
-    const patient = res.data?.data?.patientHeader?.[0]
-    return {
-      id: patient?.id ?? "",
-      fullName: patient?.fullName ?? "",
-      birthDate: patient?.birthDate ?? "",
-      allergiesList: patient?.allergies ?? [],
-      conditionsList: patient?.conditions ?? [],
-    }
-  },
-
-  getPatientInfo: async (): Promise<PatientInfo> => {
-    const query = `
-      query GetMyPatientInfo {
+      query GetMyPatientInfoInitial($first: Int!) {
         myPatientHeader {
           id
           fullName
@@ -109,7 +98,8 @@ export const patientService = {
           allergies
           conditions
         }
-        myAppointments(first: 20) {
+
+        myAppointments(first: $first) {
           nodes {
             id
             start
@@ -119,21 +109,24 @@ export const patientService = {
             patientId
             doctorName
           }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }
     `
-    const res = await api.post(ENDPOINTS.patients.graphql, { query })
-    const header = res.data?.data?.myPatientHeader
-    const appointments = res.data?.data?.myAppointments?.nodes ?? []
-    const mapStatus = (status: string) => {
-      switch (status.toUpperCase()) {
-        case "SCHEDULED": return AppointmentStatus.Scheduled
-        case "RESCHEDULED": return AppointmentStatus.Rescheduled
-        case "CANCELLED": return AppointmentStatus.Cancelled
-        case "COMPLETED": return AppointmentStatus.Completed
-        default: return AppointmentStatus.Scheduled
-      }
-    }
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: { first },
+    })
+
+    const data = res.data?.data
+
+    const header = data?.myPatientHeader
+    const conn = data?.myAppointments
+
     return {
       profile: {
         id: header?.id ?? "",
@@ -142,15 +135,162 @@ export const patientService = {
         allergiesList: header?.allergies ?? [],
         conditionsList: header?.conditions ?? [],
       },
-      appointments: appointments.map((a: any) => ({
-        id: a.id,
-        start: a.start,
-        end: a.end,
-        status: mapStatus(a.status),
-        doctorId: a.doctorId,
-        patientId: a.patientId,
-        doctorName: a.doctorName,
-      })),
+
+      appointments: (conn?.nodes ?? []).map(mapAppointment),
+
+      pageInfo: {
+        hasNextPage: conn?.pageInfo?.hasNextPage ?? false,
+        endCursor: conn?.pageInfo?.endCursor ?? null,
+      },
+    }
+  },
+
+  getPatientInfoInitial: async (
+    userId: string,
+    first = 10
+  ): Promise<PatientInfo> => {
+    const query = `
+      query GetPatientInfoInitial($userId: String!, $first: Int!) {
+        patientHeaderByUserId(userId: $userId) {
+          id
+          fullName
+          birthDate
+          allergies
+          conditions
+        }
+
+        appointmentsByUserId(userId: $userId, first: $first) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            patientId
+            doctorName
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: { userId, first },
+    })
+
+    const data = res.data?.data
+
+    const header = data?.patientHeaderByUserId
+    const conn = data?.appointmentsByUserId
+
+    return {
+      profile: {
+        id: header?.id ?? "",
+        fullName: header?.fullName ?? "",
+        birthDate: header?.birthDate ?? "",
+        allergiesList: header?.allergies ?? [],
+        conditionsList: header?.conditions ?? [],
+      },
+
+      appointments: (conn?.nodes ?? []).map(mapAppointment),
+
+      pageInfo: {
+        hasNextPage: conn?.pageInfo?.hasNextPage ?? false,
+        endCursor: conn?.pageInfo?.endCursor ?? null,
+      },
+    }
+  },
+
+  getPatientAppointmentsPage: async (
+    userId: string,
+    first = 10,
+    after?: string
+  ): Promise<{
+    appointments: Appointment[]
+    pageInfo: { hasNextPage: boolean; endCursor: string | null }
+  }> => {
+    const query = `
+      query GetPatientAppointments($userId: String!, $first: Int!, $after: String) {
+        appointmentsByUserId(userId: $userId, first: $first, after: $after) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            patientId
+            doctorName
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: { userId, first, after },
+    })
+
+    const conn = res.data?.data?.appointmentsByUserId
+
+    return {
+      appointments: (conn?.nodes ?? []).map(mapAppointment),
+
+      pageInfo: {
+        hasNextPage: conn?.pageInfo?.hasNextPage ?? false,
+        endCursor: conn?.pageInfo?.endCursor ?? null,
+      },
+    }
+  },
+
+  getMyPatientAppointmentsPage: async (
+    first = 10,
+    after?: string
+  ): Promise<{
+    appointments: Appointment[]
+    pageInfo: { hasNextPage: boolean; endCursor: string | null }
+  }> => {
+    const query = `
+      query GetMyAppointments($first: Int!, $after: String) {
+        myAppointments(first: $first, after: $after) {
+          nodes {
+            id
+            start
+            end
+            status
+            doctorId
+            patientId
+            doctorName
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, {
+      query,
+      variables: { first, after },
+    })
+
+    const conn = res.data?.data?.myAppointments
+
+    return {
+      appointments: (conn?.nodes ?? []).map(mapAppointment),
+
+      pageInfo: {
+        hasNextPage: conn?.pageInfo?.hasNextPage ?? false,
+        endCursor: conn?.pageInfo?.endCursor ?? null,
+      },
     }
   },
   
@@ -418,3 +558,28 @@ getDoctorDashboard: async (
     return res.data?.data?.encountersByDoctor
   }
 }
+
+const mapAppointmentStatus = (status: string): AppointmentStatus => {
+  switch (status?.toUpperCase()) {
+    case "SCHEDULED":
+      return AppointmentStatus.Scheduled
+    case "RESCHEDULED":
+      return AppointmentStatus.Rescheduled
+    case "CANCELLED":
+      return AppointmentStatus.Cancelled
+    case "COMPLETED":
+      return AppointmentStatus.Completed
+    default:
+      return AppointmentStatus.Scheduled
+  }
+}
+
+const mapAppointment = (a: any) => ({
+  id: a.id,
+  start: a.start,
+  end: a.end,
+  status: mapAppointmentStatus(a.status),
+  doctorId: a.doctorId,
+  patientId: a.patientId,
+  doctorName: a.doctorName,
+})

@@ -23,6 +23,21 @@ public sealed class AppointmentQueries
 
         return res;
     }
+    
+    [UsePaging(IncludeTotalCount = true)]
+    [UseProjection]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<AppointmentProjection> GetAppointmentsByUserId(
+        string userId,
+        PatientsDbContext dbContext)
+    {
+        var res = dbContext.AppointmentProjections
+            .AsNoTracking()
+            .Where(e => e.PatientId == userId);
+
+        return res;
+    }
 
     [UsePaging(IncludeTotalCount = true)]
     [UseProjection]

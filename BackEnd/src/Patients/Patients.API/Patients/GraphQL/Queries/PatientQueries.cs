@@ -33,4 +33,13 @@ public sealed class PatientQueries
 
         return header;
     }
+    
+    public async Task<PatientHeaderDto> GetPatientHeaderByUserId(
+        string userId,
+        [Service] IPatientRepository repo)
+    {
+        var header = await repo.GetHeaderAsync(userId);
+
+        return header;
+    }
 }

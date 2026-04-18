@@ -24,9 +24,9 @@ export const ENDPOINTS = {
     chronicConditions: (patientId: string) => `/patients-api/patients/${patientId}/chronic-conditions`,
     encounters: (patientId: string) => `/patients-api/patients/${patientId}/encounters`,
 
-     admin: (patientId: string) => `/patients-api/admin/patients/${patientId}`,
-     adminAllergies: (patientId: string) => `/patients-api/admin/patients/${patientId}/allergies`,
-     adminChronicConditions: (patientId: string) => `/patients-api/admin/patients/${patientId}/chronic-conditions`,
+    admin: (patientId: string) => `/patients-api/admin/patients/${patientId}`,
+    adminAllergies: (patientId: string) => `/patients-api/admin/patients/${patientId}/allergies`,
+    adminChronicConditions: (patientId: string) => `/patients-api/admin/patients/${patientId}/chronic-conditions`,
   },
   encounters: {
     root: `/patients-api/api/encounters`,

@@ -126,8 +126,6 @@ export const updateDoctorSchema = z.object({
     .string()
     .min(C.BIO_MIN_LENGTH)
     .max(C.BIO_MAX_LENGTH),
-
-  newTimeZoneId: z.string(),
 })
 
 export const addSpecialitySchema = z.object({
