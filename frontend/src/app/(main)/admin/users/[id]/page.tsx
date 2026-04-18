@@ -14,7 +14,6 @@ import {
 
 import {
   getUserByAdmin,
-  updateUserByAdmin,
 } from "@/features/users/services/userService"
 import { AdminUserEditForm } from "@/components/admin/AdminUserEditForm"
 
@@ -97,10 +96,6 @@ export default function AdminUserPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Edit User</CardTitle>
-        </CardHeader>
-
         <CardContent>
           <AdminUserEditForm
             userId={user.id}

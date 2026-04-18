@@ -1,15 +1,33 @@
 "use client"
 
+import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Form } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
 
-import { updateUserByAdmin } from "@/features/users/services/userService"
+import {
+  updateUserByAdmin,
+  deleteUserByAdmin,
+} from "@/features/users/services/userService"
+
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card"
 
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { UpdateUserRequest, updateUserSchema } from "@/features/users/types/userTypes"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "../ui/form"
+
+import { Loader2, Trash2, User } from "lucide-react"
+
+import {
+  UpdateUserRequest,
+  updateUserSchema,
+} from "@/features/users/types/userTypes"
 
 interface Props {
   userId: string
@@ -17,60 +35,144 @@ interface Props {
 }
 
 export function AdminUserEditForm({ userId, defaultValues }: Props) {
-  const form = useForm<UpdateUserRequest>({
+  const router = useRouter()
+
+  const [loading, setLoading] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [success, setSuccess] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateUserRequest>({
     resolver: zodResolver(updateUserSchema),
     defaultValues,
   })
 
-  const onSubmit = async (values: UpdateUserRequest) => {
-    await updateUserByAdmin(values, userId)
+  const onSubmit = async (data: UpdateUserRequest) => {
+    setLoading(true)
+    setSuccess(false)
+
+    try {
+      await updateUserByAdmin(data, userId)
+      setSuccess(true)
+
+      setTimeout(() => setSuccess(false), 3000)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!confirm("Delete this user permanently?")) return
+
+    setDeleting(true)
+
+    try {
+      await deleteUserByAdmin(userId)
+      router.push("/admin/users")
+    } finally {
+      setDeleting(false)
+    }
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First Name</FormLabel>
+    <div className="flex min-h-[70vh] items-center justify-center px-6 py-10">
+      <div className="w-full max-w-lg space-y-8">
 
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+        <Card className="shadow-sm">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center gap-2">
+              <User className="h-5 w-5 text-muted-foreground" />
+              <CardTitle>Edit User</CardTitle>
+            </div>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <CardDescription>
+              Update the user's information
+            </CardDescription>
+          </CardHeader>
 
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
+              <div className="space-y-2">
+                <Label>First Name</Label>
+                <Input {...register("firstName")} />
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                {errors.firstName && (
+                  <p className="text-sm text-red-500">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
 
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting}
-        >
-          Update User
-        </Button>
-      </form>
-    </Form>
+              <div className="space-y-2">
+                <Label>Last Name</Label>
+                <Input {...register("lastName")} />
+
+                {errors.lastName && (
+                  <p className="text-sm text-red-500">
+                    {errors.lastName.message}
+                  </p>
+                )}
+              </div>
+
+              {success && (
+                <div className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                  User updated successfully.
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+              >
+                {loading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {loading ? "Updating..." : "Update User"}
+              </Button>
+
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card className="border-destructive/30 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-destructive">
+              Danger Zone
+            </CardTitle>
+
+            <CardDescription>
+              Permanently delete this user. This action cannot be undone.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent>
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete User
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
+      </div>
+    </div>
   )
 }
