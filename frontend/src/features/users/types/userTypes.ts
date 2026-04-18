@@ -17,6 +17,7 @@ export type UserQueryResponse = {
   lastName: string;
   phoneNumber: string;
   address: string;
+  birthDate: string
   emailVerified: boolean;
 };
 

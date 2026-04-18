@@ -32,6 +32,7 @@ import { AppointmentResponse } from "@/features/appointments/types/appointmentsT
 import { getMyAppointments } from "@/features/appointments/services/appointmentService"
 import DoctorSchedule from "@/components/schedule/DoctorSchedule"
 import { useRouter } from "next/navigation"
+import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 
 export default function DoctorProfilePage() {
   useAuthGuard()
@@ -187,15 +188,7 @@ export default function DoctorProfilePage() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto p-6">
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Doctor Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p><strong>Name:</strong> {doctor.firstName} {doctor.lastName}</p>
-          <p><strong>Rating:</strong> {doctor.averageRating?.toFixed(1)} ({doctor.ratingsCount} ratings)</p>
-        </CardContent>
-      </Card>
+      <PersonProfileCard doctor={doctor} />
 
       <Card>
         <CardHeader>

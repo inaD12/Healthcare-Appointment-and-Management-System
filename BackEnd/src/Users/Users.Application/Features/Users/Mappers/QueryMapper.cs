@@ -19,6 +19,7 @@ public static class QueryMapper
             user.LastName,
             user.PhoneNumber,
             user.Address,
+            user.DateOfBirth,
             user.EmailVerified);
     
     public static UserPaginatedQueryViewModel ToQueryViewModel(

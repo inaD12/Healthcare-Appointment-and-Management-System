@@ -8,7 +8,7 @@ import { patientService } from "@/features/patients/services/patientService"
 import { AppointmentList } from "@/components/appointments/AppointmentsList"
 import { useCallback, useEffect, useState } from "react"
 import { useAppointmentsPagination } from "@/components/appointments/useAppointmentsPagination"
-import { PatientInfoCard } from "@/components/patients/PatientInfoCard"
+import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 
 const PAGE_SIZE = 5
 
@@ -46,7 +46,7 @@ export default function PatientDashboardPage() {
   return (
     <div className="max-w-5xl mx-auto p-8 space-y-8">
 
-      <PatientInfoCard patient={patient} />
+      <PersonProfileCard patient={patient} />
 
       <Card className="p-6 shadow-lg">
         <CardTitle className="text-xl font-semibold">
