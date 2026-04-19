@@ -13,6 +13,8 @@
   import { useState, useEffect, useCallback } from "react"
   import { UserQueryResponse } from "@/features/users/types/userTypes"
 import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
+import { PatientProfile } from "@/features/patients/types/patientTypes"
+import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
 
   export default function AdminUserPage() {
     const { id } = useParams<{ id: string }>()
@@ -34,7 +36,7 @@ import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
     } = useAppointmentsPagination(fetchAppointments, 5)
 
     const [user, setUser] = useState<UserQueryResponse | null>(null)
-    const [patient, setPatient] = useState<any>(null)
+    const [patient, setPatient] = useState<PatientProfile | null>(null)
 
     useEffect(() => {
       const load = async () => {
@@ -50,6 +52,7 @@ import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 
     if (loading) return <div className="p-8">Loading...</div>
     if (!user) return <div className="p-8">User not found</div>
+    if (!patient) return <div className="p-8">Patient not found</div>
 
     return (
       <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -73,6 +76,17 @@ import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
           />
           </CardContent>
         </Card>
+
+        <PatientMedicalCard
+          patientId={id}
+          allergies={patient.allergies}
+          conditions={patient.conditions}
+
+          onAddAllergy={patientService.addAllergyByAdmin}
+          onRemoveAllergy={patientService.removeAllergyByAdmin}
+          onAddCondition={patientService.addChronicConditionByAdmin}
+          onRemoveCondition={patientService.removeChronicConditionByAdmin}
+        />
 
         <Card>
           <CardContent>

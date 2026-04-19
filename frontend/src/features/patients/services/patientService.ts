@@ -46,17 +46,49 @@ export const patientService = {
   removeChronicCondition: (patientId: string, data: RemoveConditionRequest) =>
     api.delete(ENDPOINTS.patients.chronicConditions(patientId), { data }),
 
-  addAllergyByAdmin: (patientId: string, data: AddAllergyRequest) =>
-    api.post<APIResponse<AllergyCommandResponse>>(ENDPOINTS.patients.adminAllergies(patientId), data),
+  addAllergyByAdmin: async (
+    patientId: string,
+    data: AddAllergyRequest
+  ): Promise<AllergyCommandResponse> => {
+    const res = await api.post<APIResponse<AllergyCommandResponse>>(
+      ENDPOINTS.patients.adminAllergies(patientId),
+      data
+    )
 
-  removeAllergyByAdmin: (patientId: string, data: RemoveAllergyRequest) =>
-    api.delete(ENDPOINTS.patients.adminAllergies(patientId), { data }),
+    return res.data.data
+  },
 
-  addChronicConditionByAdmin: (patientId: string, data: AddChronicConditionRequest) =>
-    api.post<APIResponse<ConditionCommandResponse>>(ENDPOINTS.patients.adminChronicConditions(patientId), data),
+ removeAllergyByAdmin: async (
+    patientId: string,
+    data: RemoveAllergyRequest
+  ): Promise<void> => {
+    await api.delete(
+      ENDPOINTS.patients.adminAllergies(patientId),
+      { data }
+    )
+  },
 
-  removeChronicConditionByAdmin: (patientId: string, data: RemoveConditionRequest) =>
-    api.delete(ENDPOINTS.patients.adminChronicConditions(patientId), { data }),
+  addChronicConditionByAdmin: async (
+    patientId: string,
+    data: AddChronicConditionRequest
+  ): Promise<ConditionCommandResponse> => {
+    const res = await api.post<APIResponse<ConditionCommandResponse>>(
+      ENDPOINTS.patients.adminChronicConditions(patientId),
+      data
+    )
+
+    return res.data.data
+  },
+
+  removeChronicConditionByAdmin: async (
+    patientId: string,
+    data: RemoveConditionRequest
+  ): Promise<void> => {
+    await api.delete(
+      ENDPOINTS.patients.adminChronicConditions(patientId),
+      { data }
+    )
+  },
 
   startEncounter: (data: StartEncounterRequest) =>
     api.post<APIResponse<EncounterCommandResponse>>(ENDPOINTS.encounters.root, data),
@@ -95,8 +127,16 @@ export const patientService = {
           id
           fullName
           birthDate
-          allergies
-          conditions
+          allergies {
+            id
+            substance
+            reaction
+          }
+
+          conditions {
+            id
+            name
+          }
         }
 
         myAppointments(first: $first) {
@@ -132,8 +172,17 @@ export const patientService = {
         id: header?.id ?? "",
         fullName: header?.fullName ?? "",
         birthDate: header?.birthDate ?? "",
-        allergiesList: header?.allergies ?? [],
-        conditionsList: header?.conditions ?? [],
+
+        allergies: (header?.allergies ?? []).map((a: any) => ({
+          id: a.id,
+          substance: a.substance,
+          reaction: a.reaction,
+        })),
+
+        conditions: (header?.conditions ?? []).map((c: any) => ({
+          id: c.id,
+          name: c.name,
+        })),
       },
 
       appointments: (conn?.nodes ?? []).map(mapAppointment),
@@ -155,8 +204,16 @@ export const patientService = {
           id
           fullName
           birthDate
-          allergies
-          conditions
+          allergies {
+            id
+            substance
+            reaction
+          }
+
+          conditions {
+            id
+            name
+          }
         }
 
         appointmentsByUserId(userId: $userId, first: $first) {
@@ -192,8 +249,17 @@ export const patientService = {
         id: header?.id ?? "",
         fullName: header?.fullName ?? "",
         birthDate: header?.birthDate ?? "",
-        allergiesList: header?.allergies ?? [],
-        conditionsList: header?.conditions ?? [],
+
+        allergies: (header?.allergies ?? []).map((a: any) => ({
+          id: a.id,
+          substance: a.substance,
+          reaction: a.reaction,
+        })),
+
+        conditions: (header?.conditions ?? []).map((c: any) => ({
+          id: c.id,
+          name: c.name,
+        })),
       },
 
       appointments: (conn?.nodes ?? []).map(mapAppointment),

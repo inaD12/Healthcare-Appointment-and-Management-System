@@ -139,16 +139,47 @@ export function PersonProfileCard({
           <div className="space-y-4 pt-2 border-t">
             <SectionTitle>Patient Information</SectionTitle>
 
-            <div className="grid md:grid-cols-2 gap-4 text-sm">
-              <div>
+            <div className="grid md:grid-cols-2 gap-6 text-sm">
+
+              <div className="space-y-1">
                 <p className="text-muted-foreground text-xs">Allergies</p>
-                <p>{patient.allergiesList?.join(", ") || "None"}</p>
+
+                {patient.allergies?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {patient.allergies.map((a) => (
+                      <span
+                        key={a.id}
+                        className="rounded-full border px-2 py-0.5 text-xs"
+                        title={a.reaction}
+                      >
+                        {a.substance}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">None</p>
+                )}
               </div>
 
-              <div>
+              <div className="space-y-1">
                 <p className="text-muted-foreground text-xs">Conditions</p>
-                <p>{patient.conditionsList?.join(", ") || "None"}</p>
+
+                {patient.conditions?.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {patient.conditions.map((c) => (
+                      <span
+                        key={c.id}
+                        className="rounded-full border px-2 py-0.5 text-xs"
+                      >
+                        {c.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">None</p>
+                )}
               </div>
+
             </div>
           </div>
         )}
