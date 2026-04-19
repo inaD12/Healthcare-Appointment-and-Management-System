@@ -3,6 +3,8 @@ using Doctors.API.Doctors.Models.Responses;
 using Doctors.Application.Features.Doctors.Dtos;
 using Doctors.Application.Features.Doctors.Models;
 using Doctors.Application.Features.Doctors.Queries.GetAllDoctors;
+using Doctors.Application.Features.Specialities.Models;
+using Doctors.Application.Features.Specialities.Queries.GetAllDoctors;
 
 namespace Doctors.API.Doctors.Mappers;
 
@@ -54,8 +56,28 @@ public static class QueryMapper
             request.PageSize,
             request.SortPropertyName);
     
+    public static GetAllSpecialitiesQuery ToQuery(
+        this GetAllSpecialitiesRequest request)
+        => new(
+            request.Name,
+            request.Description,
+            request.SortOrder,
+            request.Page,
+            request.PageSize,
+            request.SortPropertyName);
+    
     public static DoctorPaginatedQueryResponse ToResponse(
         this DoctorPaginatedQueryViewModel viewModel)
+        => new(
+            viewModel.Items,
+            viewModel.Page,
+            viewModel.PageSize,
+            viewModel.TotalCount,
+            viewModel.HasNextPage,
+            viewModel.HasPreviousPage);
+    
+    public static SpecialityPaginatedQueryResponse ToResponse(
+        this SpecialityPaginatedQueryViewModel viewModel)
         => new(
             viewModel.Items,
             viewModel.Page,

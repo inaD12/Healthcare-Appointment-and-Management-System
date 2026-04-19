@@ -1,10 +1,13 @@
 using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Dtos;
 using Doctors.Domain.Entities;
+using Doctors.Domain.Models;
 using Doctors.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Pgvector;
 using Pgvector.EntityFrameworkCore;
+using Shared.Domain.Models;
+using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 
 namespace Doctors.Infrastructure.Features.Repositories;
@@ -67,4 +70,29 @@ public class SpecialityRepository: GenericRepository<Speciality>, ISpecialityRep
             .ToList();
     }
 
+    public async Task<PagedList<Speciality>?> GetAllAsync(SpecialityPagedListQuery query, CancellationToken cancellationToken = default)
+    {
+        var entitiesQuery = _context.Specialities
+            .AsNoTracking()
+            .AsQueryable();
+        
+        if (!string.IsNullOrWhiteSpace(query.Name))
+            entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.Name, $"{query.Name}%"));
+        if (!string.IsNullOrWhiteSpace(query.Description))
+            entitiesQuery = entitiesQuery.Where(d => EF.Functions.ILike(d.Description, $"{query.Description}%")); ;
+
+        entitiesQuery = entitiesQuery.ApplySorting(query.SortPropertyName, query.SortOrder);
+
+        if (!await entitiesQuery.AnyAsync(cancellationToken))
+            return null;
+
+        var specialities = await PagedList<Speciality>.CreateAsync(
+            entitiesQuery,
+            query.Page,
+            query.PageSize,
+            cancellationToken
+        );
+
+        return specialities;
+    }
 }

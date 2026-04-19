@@ -15,7 +15,7 @@ internal static class Permissions
     internal const string RemoveSpeciality = "doctor:speciality:remove";
     internal const string AddSpecialityByAdmin = "doctor:admin:speciality:add";
     internal const string RemoveSpecialityByAdmin = "doctor:admin:speciality:remove";
-    
+    internal const string ViewAllSpecialities = "specialities:view-all";
     
     internal const string RequestRecommendations = "doctor:speciality:recommend";
 

@@ -25,6 +25,15 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.RequestRecommendations);
 		
+		specialitiesGroup.MapGet("", GetAllSpecialitiesAsync)
+			.Produces<SpecialityPaginatedQueryResponse>()
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status401Unauthorized)
+			.Produces(StatusCodes.Status404NotFound)
+			.Produces(StatusCodes.Status409Conflict)
+			.Produces(StatusCodes.Status500InternalServerError)
+			.RequireAuthorization(Permissions.ViewAllSpecialities);
+		
 		var meGroup = app.MapGroup("/doctors/me");
 
 		meGroup.MapPut("", UpdateDoctorInfoAsync)
@@ -345,5 +354,19 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var userCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, userCommandResponse);
+	}
+	
+	private async Task<IResult> GetAllSpecialitiesAsync(
+		[AsParameters] GetAllSpecialitiesRequest request,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery();
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var specialitiesResponse = res.Value!.ToResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, specialitiesResponse);
 	}
 }

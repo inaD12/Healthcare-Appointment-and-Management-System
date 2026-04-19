@@ -44,6 +44,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.RemoveExtraAvailability,
             Permission.AddUnavailability,
             Permission.RemoveUnavailability,
+            Permission.ViewAllSpecialities,
             
             // Rating Permissions
             Permission.AddRating,
@@ -122,6 +123,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.RemoveExtraAvailability),
                     CreateRolePermission(Role.Administrator, Permission.AddUnavailability),
                     CreateRolePermission(Role.Administrator, Permission.RemoveUnavailability),
+                    CreateRolePermission(Role.Administrator, Permission.ViewAllSpecialities),
                     // Admin rating permissions
                     CreateRolePermission(Role.Administrator, Permission.AddRating),
                     CreateRolePermission(Role.Administrator, Permission.RemoveRating),
@@ -208,6 +210,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Doctor, Permission.ViewAllDoctors),
                     CreateRolePermission(Role.Doctor, Permission.AddChronicCondition),
                     CreateRolePermission(Role.Doctor, Permission.AddAllergy),
+                    CreateRolePermission(Role.Doctor, Permission.ViewAllSpecialities),
 
 
                     // --- Patient permissions ---
@@ -232,7 +235,8 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Patient, Permission.ViewPrescriptions),
                     CreateRolePermission(Role.Patient, Permission.ViewAddendums),
                     CreateRolePermission(Role.Patient, Permission.AddChronicCondition),
-                    CreateRolePermission(Role.Patient, Permission.AddAllergy)
+                    CreateRolePermission(Role.Patient, Permission.AddAllergy),
+                    CreateRolePermission(Role.Patient, Permission.ViewAllSpecialities)
                 );
             });
     }
