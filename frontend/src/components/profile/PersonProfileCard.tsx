@@ -49,6 +49,8 @@ export function PersonProfileCard({
   doctor,
 }: PersonProfile) {
   const hasUser = !!user
+  const hasPatient = !!patient?.id
+  const hasDoctor = !!doctor?.id
 
 
   const fullName =
@@ -135,7 +137,7 @@ export function PersonProfileCard({
           </div>
         )}
 
-        {patient && (
+        {hasPatient && (
           <div className="space-y-4 pt-2 border-t">
             <SectionTitle>Patient Information</SectionTitle>
 
@@ -184,7 +186,7 @@ export function PersonProfileCard({
           </div>
         )}
 
-        {doctor && (
+        {hasDoctor && (
             <div className="space-y-5 pt-2 border-t">
 
                 <div className="flex flex-wrap gap-2">

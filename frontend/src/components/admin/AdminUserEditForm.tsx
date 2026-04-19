@@ -57,7 +57,6 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
     try {
       await updateUserByAdmin(data, userId)
       setSuccess(true)
-
       setTimeout(() => setSuccess(false), 3000)
     } finally {
       setLoading(false)
@@ -78,55 +77,53 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
   }
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-6 py-10">
-      <div className="w-full max-w-lg space-y-8">
+    <div className="w-full space-y-8">
 
-        <Card className="shadow-sm">
-          <CardHeader className="space-y-1">
-            <div className="flex items-center gap-2">
-              <User className="h-5 w-5 text-muted-foreground" />
-              <CardTitle>Edit User</CardTitle>
+      <Card className="shadow-sm w-full">
+        <CardHeader className="space-y-1">
+          <div className="flex items-center gap-2">
+            <User className="h-5 w-5 text-muted-foreground" />
+            <CardTitle>Edit User</CardTitle>
+          </div>
+
+          <CardDescription>
+            Update the user's information
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+            <div className="space-y-2">
+              <Label>First Name</Label>
+              <Input {...register("firstName")} />
+              {errors.firstName && (
+                <p className="text-sm text-red-500">
+                  {errors.firstName.message}
+                </p>
+              )}
             </div>
 
-            <CardDescription>
-              Update the user's information
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
-              <div className="space-y-2">
-                <Label>First Name</Label>
-                <Input {...register("firstName")} />
-
-                {errors.firstName && (
-                  <p className="text-sm text-red-500">
-                    {errors.firstName.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label>Last Name</Label>
-                <Input {...register("lastName")} />
-
-                {errors.lastName && (
-                  <p className="text-sm text-red-500">
-                    {errors.lastName.message}
-                  </p>
-                )}
-              </div>
-
-              {success && (
-                <div className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
-                  User updated successfully.
-                </div>
+            <div className="space-y-2">
+              <Label>Last Name</Label>
+              <Input {...register("lastName")} />
+              {errors.lastName && (
+                <p className="text-sm text-red-500">
+                  {errors.lastName.message}
+                </p>
               )}
+            </div>
 
+            {success && (
+              <div className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+                User updated successfully.
+              </div>
+            )}
+
+            <div className="flex justify-end">
               <Button
                 type="submit"
-                className="w-full"
+                className="w-auto px-6"
                 disabled={loading}
               >
                 {loading && (
@@ -134,26 +131,28 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
                 )}
                 {loading ? "Updating..." : "Update User"}
               </Button>
+            </div>
 
-            </form>
-          </CardContent>
-        </Card>
+          </form>
+        </CardContent>
+      </Card>
 
-        <Card className="border-destructive/30 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-destructive">
-              Danger Zone
-            </CardTitle>
+      <Card className="border-destructive/30 shadow-sm w-full">
+        <CardHeader>
+          <CardTitle className="text-destructive">
+            Danger Zone
+          </CardTitle>
 
-            <CardDescription>
-              Permanently delete this user. This action cannot be undone.
-            </CardDescription>
-          </CardHeader>
+          <CardDescription>
+            Permanently delete this user. This action cannot be undone.
+          </CardDescription>
+        </CardHeader>
 
-          <CardContent>
+        <CardContent>
+          <div className="flex justify-end">
             <Button
               variant="destructive"
-              className="w-full"
+              className="w-auto px-6"
               onClick={handleDelete}
               disabled={deleting}
             >
@@ -169,10 +168,10 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
                 </>
               )}
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-      </div>
     </div>
   )
 }

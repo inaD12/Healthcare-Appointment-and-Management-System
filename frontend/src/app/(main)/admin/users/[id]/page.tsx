@@ -88,15 +88,13 @@ import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
           onRemoveCondition={patientService.removeChronicConditionByAdmin}
         />
 
-        <Card>
-          <CardContent>
-            <AdminUserEditForm
-              userId={user.id}
-              defaultValues={{ firstName: user.firstName, lastName: user.lastName, }}
-              /> 
-            </CardContent>
-        </Card>
-
+        <AdminUserEditForm
+          userId={user.id}
+          defaultValues={{
+            firstName: user.firstName,
+            lastName: user.lastName,
+          }}
+        />
       </div>
     )
   }
