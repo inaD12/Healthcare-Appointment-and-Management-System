@@ -1,22 +1,21 @@
 using Patients.Application.Features.Encounters.Models;
-using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.AddDiagnosis;
 
 public sealed class AddDiagnosisCommandHandler(
-    IEncounterRepository encounterRepository,
+    IEncounterCommandRepository encounterCommandRepository,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<AddDiagnosisCommand, DiagnosisCommandViewModel>
 {
     public async Task<Shared.Domain.Results.Result<DiagnosisCommandViewModel>> Handle(AddDiagnosisCommand request, CancellationToken cancellationToken)
     {
-        var encounter = await encounterRepository.GetByIdAsync(request.EncounterId, cancellationToken);
+        var encounter = await encounterCommandRepository.GetByIdAsync(request.EncounterId, cancellationToken);
         if (encounter is  null)
             return Shared.Domain.Results.Result<DiagnosisCommandViewModel>.Failure(ResponseList.EncounterNotFound);
         

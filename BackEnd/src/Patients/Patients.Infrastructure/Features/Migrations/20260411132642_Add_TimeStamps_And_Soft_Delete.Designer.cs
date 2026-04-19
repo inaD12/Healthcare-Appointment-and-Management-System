@@ -11,7 +11,7 @@ using Patients.Infrastructure.Features.DBContexts;
 
 namespace Patients.Infrastructure.Features.Migrations
 {
-    [DbContext(typeof(PatientsDbContext))]
+    [DbContext(typeof(PatientsQueryDbContext))]
     [Migration("20260411132642_Add_TimeStamps_And_Soft_Delete")]
     partial class Add_TimeStamps_And_Soft_Delete
     {

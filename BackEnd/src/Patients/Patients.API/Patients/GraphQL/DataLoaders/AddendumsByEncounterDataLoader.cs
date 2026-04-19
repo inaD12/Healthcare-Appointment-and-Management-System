@@ -1,11 +1,12 @@
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Dtos;
 
 namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
 
 public sealed class AddendumsByEncounterDataLoader(
     IBatchScheduler batchScheduler,
-    IEncounterRepository repo,
+    IEncounterQueryRepository repo,
     DataLoaderOptions? options = null)
     : GroupedDataLoader<string, AddendumDto>(batchScheduler, options ?? new DataLoaderOptions())
 {

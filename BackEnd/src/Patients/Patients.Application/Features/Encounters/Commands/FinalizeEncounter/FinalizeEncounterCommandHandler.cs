@@ -1,4 +1,6 @@
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
@@ -8,14 +10,14 @@ using Shared.Infrastructure.Clock;
 namespace Patients.Application.Features.Encounters.Commands.FinalizeEncounter;
 
 public sealed class FinalizeEncounterCommandHandler(
-    IEncounterRepository encounterRepository,
+    IEncounterCommandRepository encounterCommandRepository,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<FinalizeEncounterCommand>
 {
     public async Task<Result> Handle(FinalizeEncounterCommand request, CancellationToken cancellationToken)
     {
-        var encounter = await encounterRepository.GetByIdAsync(request.EncounterId, cancellationToken);
+        var encounter = await encounterCommandRepository.GetByIdAsync(request.EncounterId, cancellationToken);
         if (encounter is  null)
             return Result.Failure(ResponseList.EncounterNotFound);
         

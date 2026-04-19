@@ -10,7 +10,7 @@ using Patients.Infrastructure.Features.DBContexts;
 
 namespace Patients.Infrastructure.Features.Migrations
 {
-    [DbContext(typeof(PatientsDbContext))]
+    [DbContext(typeof(PatientsQueryDbContext))]
     partial class PatientsDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

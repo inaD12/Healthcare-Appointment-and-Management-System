@@ -1,20 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Repositories;
 
-namespace Patients.Infrastructure.Features.Repositories;
+namespace Patients.Infrastructure.Features.Repositories.Query;
 
-public class EncounterRepository(IDbContextFactory<PatientsDbContext> factory)
-    : GenericFactoryRepository<PatientsDbContext, Encounter>(factory), IEncounterRepository
+public class EncounterQueryQueryRepository(IDbContextFactory<PatientsQueryDbContext> factory)
+    : GenericFactoryRepository<PatientsQueryDbContext, Encounter>(factory), IEncounterQueryRepository
 {
     public async Task<Encounter?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default)
     {
         await using var db = CreateDbContext();
 
         return await db.Encounters
+            .AsNoTracking()
             .SingleOrDefaultAsync(e => e.AppointmentId == appointmentId, cancellationToken);
     }
 

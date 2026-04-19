@@ -1,15 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Patients.Application.Features.Patients.Dtos;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Repositories;
 
-namespace Patients.Infrastructure.Features.Repositories;
+namespace Patients.Infrastructure.Features.Repositories.Query;
 
-public class PatientRepository(IDbContextFactory<PatientsDbContext> factory)
-    : GenericFactoryRepository<PatientsDbContext, Patient>(factory),
-        IPatientRepository
+public class PatientQueryRepository(IDbContextFactory<PatientsQueryDbContext> factory)
+    : GenericFactoryRepository<PatientsQueryDbContext, Patient>(factory),
+        IPatientQueryRepository
 {
     public override async Task<Patient?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
@@ -17,6 +18,8 @@ public class PatientRepository(IDbContextFactory<PatientsDbContext> factory)
 
         return await db.Patients
             .AsNoTracking()
+            .Include("_conditions")
+            .Include("_allergies")
             .FirstOrDefaultAsync(p => p.UserId == id, cancellationToken);
     }
     public async Task<PatientHeaderDto> GetHeaderAsync(string userId)

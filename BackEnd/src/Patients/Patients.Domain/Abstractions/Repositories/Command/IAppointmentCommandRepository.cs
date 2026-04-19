@@ -1,8 +1,8 @@
 using Patients.Domain.Entities;
 
-namespace Patients.Domain.Abstractions.Repositories;
+namespace Patients.Domain.Abstractions.Repositories.Command;
 
-public interface IAppointmentReadRepository
+public interface IAppointmentCommandRepository
 {
     Task<AppointmentProjection?> GetAsync(string id, CancellationToken ct);
 

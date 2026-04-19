@@ -2,9 +2,9 @@
 using Patients.Domain.Entities;
 using Shared.Domain.Abstractions;
 
-namespace Patients.Domain.Abstractions.Repositories;
+namespace Patients.Domain.Abstractions.Repositories.Query;
 
-public interface IEncounterRepository : IGenericRepository<Encounter>
+public interface IEncounterQueryRepository : IGenericReadRepository<Encounter>
 {
     Task<Encounter?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default);
     Task<List<EncounterListItemDto>> GetByPatientIdsAsync(

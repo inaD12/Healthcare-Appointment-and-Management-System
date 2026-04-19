@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
 
 		serviceCollection
 			.AddGraphQLServer()
-			.RegisterDbContextFactory<PatientsDbContext>()
+			.RegisterDbContextFactory<PatientsQueryDbContext>()
 			.AddType<AppointmentType>()
 			.AddType<EncounterType>()
 			.AddQueryType<Query>()

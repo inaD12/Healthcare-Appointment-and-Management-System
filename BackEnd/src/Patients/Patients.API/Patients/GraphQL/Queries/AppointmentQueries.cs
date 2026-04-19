@@ -14,10 +14,10 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentProjection> GetMyAppointments(
         HttpContext httpContext,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
         var userId = httpContext.User.GetUserId();
-        var res = dbContext.AppointmentProjections
+        var res = queryDbContext.AppointmentProjections
             .AsNoTracking()
             .Where(e => e.PatientId == userId);
 
@@ -30,9 +30,9 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentProjection> GetAppointmentsByUserId(
         string userId,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
-        var res = dbContext.AppointmentProjections
+        var res = queryDbContext.AppointmentProjections
             .AsNoTracking()
             .Where(e => e.PatientId == userId);
 
@@ -45,9 +45,9 @@ public sealed class AppointmentQueries
     [UseSorting]
     public IQueryable<AppointmentProjection> GetAppointmentsByDoctor(
         string doctorId,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
-        var res = dbContext.AppointmentProjections
+        var res = queryDbContext.AppointmentProjections
             .AsNoTracking()
             .Where(e => e.DoctorId == doctorId);
         
@@ -57,9 +57,9 @@ public sealed class AppointmentQueries
     [UseProjection]
     public IQueryable<AppointmentProjection> GetAppointmentById(
         string appointmentId,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
-        var res = dbContext.AppointmentProjections
+        var res = queryDbContext.AppointmentProjections
             .AsNoTracking()
             .Where(e => e.Id == appointmentId);
 
