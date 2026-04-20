@@ -1,11 +1,12 @@
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Entities;
 
 namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
 
 public sealed class AppointmentsByPatientDataLoader(
     IBatchScheduler batchScheduler,
-    IAppointmentReadRepository repo,
+    IAppointmentQueryRepository repo,
     DataLoaderOptions? options = null)
     : BatchDataLoader<string, List<AppointmentProjection>>(batchScheduler, options ?? new DataLoaderOptions())
 {

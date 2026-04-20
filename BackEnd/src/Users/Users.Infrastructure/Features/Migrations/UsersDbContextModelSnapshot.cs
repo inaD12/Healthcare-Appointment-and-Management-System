@@ -327,6 +327,21 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "specialities:view-all",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:speciality:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:admin:speciality:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "ratings:create",
                             RoleName = "Administrator"
                         },
@@ -727,6 +742,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "specialities:view-all",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
                             PermissionCode = "bookings:read",
                             RoleName = "Patient"
                         },
@@ -833,6 +853,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "patient:allergy:add",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "specialities:view-all",
                             RoleName = "Patient"
                         });
                 });
@@ -959,6 +984,18 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "doctor:availability:unavailable:remove"
+                        },
+                        new
+                        {
+                            Code = "specialities:view-all"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:speciality:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:speciality:add"
                         },
                         new
                         {

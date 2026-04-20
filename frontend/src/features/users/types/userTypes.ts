@@ -17,6 +17,7 @@ export type UserQueryResponse = {
   lastName: string;
   phoneNumber: string;
   address: string;
+  birthDate: string
   emailVerified: boolean;
 };
 
@@ -152,7 +153,7 @@ export const getAllUsersSchema = z.object({
   pageSize: z.number().default(10),
 })
 
-export const updateCurrentUserSchema = z
+export const updateUserSchema = z
   .object({
     firstName: z
       .string()
@@ -177,5 +178,5 @@ export type RegisterFormValues = z.infer<typeof registerUserSchema>
 export type RegisterByAdminFormValues = z.infer<typeof registerUserByAdminSchema>
 export type RegisterUserRequest = z.infer<typeof registerUserSchema>
 export type RegisterUserByAdminRequest = z.infer<typeof registerUserByAdminSchema>
-export type UpdateCurrentUserRequest = z.infer<typeof updateCurrentUserSchema>
+export type UpdateUserRequest = z.infer<typeof updateUserSchema>
 export type GetAllUsersRequest = z.infer<typeof getAllUsersSchema>

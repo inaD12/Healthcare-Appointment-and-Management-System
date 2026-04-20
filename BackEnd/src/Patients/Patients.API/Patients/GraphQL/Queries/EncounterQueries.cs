@@ -13,10 +13,10 @@ public sealed class EncounterQueries
     [UseSorting]
     public IQueryable<Encounter> GetMyEncounters(
         HttpContext httpContext,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
         var userId = httpContext.User.GetUserId();
-        var res = dbContext.Encounters
+        var res = queryDbContext.Encounters
             .AsNoTracking()
             .Where(e => e.PatientId == userId);
 
@@ -29,9 +29,9 @@ public sealed class EncounterQueries
     [UseSorting]
     public IQueryable<Encounter> GetEncountersByDoctor(
         string doctorId,
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
-        var res = dbContext.Encounters
+        var res = queryDbContext.Encounters
             .AsNoTracking()
             .Where(e => e.DoctorId == doctorId);
 

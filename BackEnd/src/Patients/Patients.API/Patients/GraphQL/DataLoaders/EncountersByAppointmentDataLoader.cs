@@ -1,11 +1,12 @@
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Dtos;
 
 namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
 
 public sealed class EncountersByAppointmentDataLoader(
     IBatchScheduler batchScheduler,
-    IEncounterRepository encounterRepository,
+    IEncounterQueryRepository encounterQueryRepository,
     DataLoaderOptions? options = null)
     : BatchDataLoader<string, EncounterDetailsDto?>(
         batchScheduler,
@@ -15,7 +16,7 @@ public sealed class EncountersByAppointmentDataLoader(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {
-        var encounters = await encounterRepository
+        var encounters = await encounterQueryRepository
             .GetDetailsByAppointmentIdsAsync(keys, cancellationToken);
 
         return encounters.ToDictionary(

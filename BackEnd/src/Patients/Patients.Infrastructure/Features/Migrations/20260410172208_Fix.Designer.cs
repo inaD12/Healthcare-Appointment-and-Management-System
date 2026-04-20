@@ -11,7 +11,7 @@ using Patients.Infrastructure.Features.DBContexts;
 
 namespace Patients.Infrastructure.Features.Migrations
 {
-    [DbContext(typeof(PatientsDbContext))]
+    [DbContext(typeof(PatientsQueryDbContext))]
     [Migration("20260410172208_Fix")]
     partial class Fix
     {

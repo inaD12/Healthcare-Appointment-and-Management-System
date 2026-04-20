@@ -30,13 +30,13 @@ export const RemoveConditionSchema = z.object({
 })
 
 export const AllergyCommandResponseSchema = z.object({
-  Id: z.string()
+  id: z.string()
     .min(cfg.ID_MIN_LENGTH)
     .max(cfg.ID_MAX_LENGTH),
 })
 
 export const ConditionCommandResponseSchema = z.object({
-  Id: z.string()
+  id: z.string()
     .min(cfg.ID_MIN_LENGTH)
     .max(cfg.ID_MAX_LENGTH),
 })
@@ -215,17 +215,37 @@ export interface Appointment {
   encounterDetails: EncounterDetails
 }
 
+export interface MyPatientInfo {
+  profile: PatientProfile
+  appointments: Appointment[]
+}
+
 export interface PatientInfo {
   profile: PatientProfile
   appointments: Appointment[]
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: string | null
+  }
+}
+
+export interface Allergy {
+  id: string
+  substance: string
+  reaction: string
+}
+
+export interface Condition {
+  id: string
+  name: string
 }
 
 export interface PatientProfile {
   id: string
   fullName: string
   birthDate: string
-  allergiesList: string[]
-  conditionsList: string[]
+  allergies: Allergy[]
+  conditions: Condition[]
 }
 
 export interface DashboardAppointment {

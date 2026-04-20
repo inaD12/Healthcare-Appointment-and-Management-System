@@ -24,9 +24,9 @@ export const ENDPOINTS = {
     chronicConditions: (patientId: string) => `/patients-api/patients/${patientId}/chronic-conditions`,
     encounters: (patientId: string) => `/patients-api/patients/${patientId}/encounters`,
 
-     admin: (patientId: string) => `/patients-api/admin/patients/${patientId}`,
-     adminAllergies: (patientId: string) => `/patients-api/admin/patients/${patientId}/allergies`,
-     adminChronicConditions: (patientId: string) => `/patients-api/admin/patients/${patientId}/chronic-conditions`,
+    admin: (patientId: string) => `/patients-api/admin/patients/${patientId}`,
+    adminAllergies: (patientId: string) => `/patients-api/admin/patients/${patientId}/allergies`,
+    adminChronicConditions: (patientId: string) => `/patients-api/admin/patients/${patientId}/chronic-conditions`,
   },
   encounters: {
     root: `/patients-api/api/encounters`,
@@ -47,8 +47,8 @@ export const ENDPOINTS = {
     availabilityUnavailable: `/doctors-api/doctors/me/availability/unavailable`,
 
     admin: "/doctors-api/admin/doctors",
-    adminByUser: (userId: string) => `/doctors-api/admin/user/${userId}`,
-    adminSpecialities: (userId: string) => `/doctors-api/admin/user/${userId}/specialities`,
+    adminByUser: (userId: string) => `/doctors-api/admin/doctors/user/${userId}`,
+    adminSpecialities: (userId: string) => `/doctors-api/admin/doctors/user/${userId}/specialities`,
   },
   appointments: {
     root: "/appointments-api/appointments",
@@ -58,5 +58,6 @@ export const ENDPOINTS = {
 
     admin: "/appointments-api/admin/appointments",
     byIdAdmin: (id: string) => `/appointments-api/admin/appointments/${id}`,
+    byUserIdAdmin: (userId: string) => `/appointments-api/admin/appointments/user/${userId}`,
   }
 }

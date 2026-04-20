@@ -1,13 +1,13 @@
-namespace Patients.Application.Features.Patients.Dtos;
+namespace Patients.Domain.Dtos;
 
 public sealed record PatientHeaderDto(
     string Id,
     string FullName,
     DateOnly BirthDate,
-    IEnumerable<string> Allergies,
-    IEnumerable<string> Conditions
+    IEnumerable<AllergyDto> Allergies,
+    IEnumerable<ConditionDto> Conditions
 )
 {
-    public List<string> AllergiesList => Allergies.ToList();
-    public List<string> ConditionsList => Conditions.ToList();
+    public List<AllergyDto> AllergiesList => Allergies.ToList();
+    public List<ConditionDto> ConditionsList => Conditions.ToList();
 }

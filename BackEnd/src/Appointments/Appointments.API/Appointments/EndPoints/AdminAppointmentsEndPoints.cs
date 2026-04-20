@@ -57,8 +57,16 @@ internal class AdminAppointmentsEndPoints : IEndPoints
 	        .Produces(StatusCodes.Status409Conflict)
 	        .Produces(StatusCodes.Status500InternalServerError)
 	        .RequireAuthorization(Permissions.RescheduleAppointmentByAdmin);
+	    
+	    group.MapGet("/user/{userId}", GetByDate)
+		    .Produces<ICollection<AppointmentQueryResponse>>()
+		    .Produces(StatusCodes.Status400BadRequest)
+		    .Produces(StatusCodes.Status401Unauthorized)
+		    .Produces(StatusCodes.Status404NotFound)
+		    .Produces(StatusCodes.Status500InternalServerError)
+		    .RequireAuthorization(Permissions.GetAppointment);
 	}
-
+	
 
 	private async Task<IResult> CreateAsync(
 		[FromBody] CreateAppointmentByAdminRequest request,
@@ -124,5 +132,21 @@ internal class AdminAppointmentsEndPoints : IEndPoints
 
 		var appointmentCommandResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, appointmentCommandResponse);
+	}
+	
+	private async Task<IResult> GetByDate(
+		[FromRoute] string userId,
+		[AsParameters] GetAppointmentsByDateRequest request,
+		[FromServices] ISender sender,
+		HttpContext httpContext,
+		CancellationToken cancellationToken)
+	{
+		var query = request.ToQuery(userId);
+		var res = await sender.Send(query, cancellationToken);
+		if (res.IsFailure)
+			return ControllerResponse.ParseAndReturnMessage(res);
+
+		var responses = res.Value!.ToCollectionResponse();
+		return ControllerResponse.ParseAndReturnMessage(res, responses);
 	}
 }

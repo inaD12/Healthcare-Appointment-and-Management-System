@@ -1,12 +1,14 @@
 ﻿using MassTransit;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Entities;
 using Shared.Application.IntegrationEvents;
 
 namespace Patients.Infrastructure.Features.Consumers;
 
 public sealed class AppointmentCreatedIntegrationEventConsumer(
-    IAppointmentReadRepository appointmentReadRepository) 
+    IAppointmentCommandRepository appointmentQueryRepository) 
     : IConsumer<AppointmentCreatedIntegrationEvent>
 {
     
@@ -21,6 +23,6 @@ public sealed class AppointmentCreatedIntegrationEventConsumer(
             End = context.Message.End
         };
 
-        await appointmentReadRepository.UpsertAsync(projection, context.CancellationToken);
+        await appointmentQueryRepository.UpsertAsync(projection, context.CancellationToken);
     }
 }

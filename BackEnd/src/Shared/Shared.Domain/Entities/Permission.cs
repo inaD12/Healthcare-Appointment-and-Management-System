@@ -36,6 +36,7 @@ public sealed class Permission
     public static readonly Permission AddSpeciality = new("doctor:speciality:add");
     public static readonly Permission RemoveSpeciality = new("doctor:speciality:remove");
     public static readonly Permission RequestRecommendations = new("doctor:speciality:recommend");
+    public static readonly Permission ViewAllSpecialities = new("specialities:view-all");
 
     // Schedule (Workdays)
     public static readonly Permission AddWorkDaySchedule = new("doctor:schedule:workday:add");

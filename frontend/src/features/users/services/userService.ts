@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { GetAllUsersRequest, RegisterUserByAdminRequest, RegisterUserRequest,UpdateCurrentUserRequest,UserCommandResponse, UserPaginatedResponse, UserQueryResponse } from "../types/userTypes";
+import { GetAllUsersRequest, RegisterUserByAdminRequest, RegisterUserRequest,UpdateUserRequest,UserCommandResponse, UserPaginatedResponse, UserQueryResponse } from "../types/userTypes";
 import { APIResponse } from "@/types/types";
 
 export const registerUser = (data: RegisterUserRequest) =>
@@ -20,7 +20,7 @@ export const getCurrentUser = () =>
     ENDPOINTS.users.me
   );
 
-export const updateCurrentUser = (request: UpdateCurrentUserRequest) =>
+export const updateCurrentUser = (request: UpdateUserRequest) =>
   api.put<APIResponse<UserCommandResponse>>(
     ENDPOINTS.users.me,
     request
@@ -29,6 +29,22 @@ export const updateCurrentUser = (request: UpdateCurrentUserRequest) =>
 export const deleteCurrentUser = () =>
   api.delete<APIResponse<boolean>>(
     ENDPOINTS.users.me
+  );
+
+export const deleteUserByAdmin = (id: string) =>
+  api.delete<APIResponse<boolean>>(
+    ENDPOINTS.users.adminById(id)
+  );
+
+export const updateUserByAdmin = (request: UpdateUserRequest, id: string) =>
+  api.put<APIResponse<UserCommandResponse>>(
+    ENDPOINTS.users.adminById(id),
+    request
+  );
+
+export const getUserByAdmin = (id: string) =>
+  api.get<APIResponse<UserQueryResponse>>(
+    ENDPOINTS.users.adminById(id)
   );
 
 export const getAllUsers = (request: GetAllUsersRequest) =>

@@ -11,7 +11,7 @@ using Patients.Infrastructure.Features.DBContexts;
 
 namespace Patients.Infrastructure.Features.Migrations
 {
-    [DbContext(typeof(PatientsDbContext))]
+    [DbContext(typeof(PatientsQueryDbContext))]
     [Migration("20260323183151_Add_Database")]
     partial class Add_Database
     {

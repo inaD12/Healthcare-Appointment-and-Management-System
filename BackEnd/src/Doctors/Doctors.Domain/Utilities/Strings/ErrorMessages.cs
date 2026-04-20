@@ -14,4 +14,5 @@ public static class ErrorMessages
 	public const string SpecialityNotBelongToDoctor = "This speciality doesn't belong to this doctor";
 	public const string NoCloseSpecialities = "Symptoms do not match any speciality closely enough";
 	public const string SpecialityNotExists = "The following specialities do not exist: {0}";
+	public const string NoSpecialitiesFound = "No specialities found";
 }

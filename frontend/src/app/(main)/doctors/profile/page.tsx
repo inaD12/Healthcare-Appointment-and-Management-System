@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import {
   getMyDoctorInfo,
   updateDoctorInfo,
-  addSpeciality,
-  removeSpeciality,
   addWorkDaySchedule,
   removeWorkDaySchedule,
   addExtraAvailability,
@@ -32,6 +30,7 @@ import { AppointmentResponse } from "@/features/appointments/types/appointmentsT
 import { getMyAppointments } from "@/features/appointments/services/appointmentService"
 import DoctorSchedule from "@/components/schedule/DoctorSchedule"
 import { useRouter } from "next/navigation"
+import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 
 export default function DoctorProfilePage() {
   useAuthGuard()
@@ -104,7 +103,7 @@ export default function DoctorProfilePage() {
 
   const handleSaveBio = async () => {
     try {
-      await updateDoctorInfo({ newBio: bioInput, newTimeZoneId: doctor.timeZoneId })
+      await updateDoctorInfo({ newBio: bioInput })
       setDoctor({ ...doctor, bio: bioInput })
       setEditingBio(false)
     } catch (err) {
@@ -112,25 +111,6 @@ export default function DoctorProfilePage() {
     }
   }
 
-  const handleAddSpeciality = async () => {
-    if (!newSpeciality) return
-    try {
-      await addSpeciality({ speciality: newSpeciality })
-      setDoctor({ ...doctor, specialities: [...doctor.specialities, newSpeciality] })
-      setNewSpeciality("")
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const handleRemoveSpeciality = async (speciality: string) => {
-    try {
-      await removeSpeciality({ speciality })
-      setDoctor({ ...doctor, specialities: doctor.specialities.filter(s => s !== speciality) })
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
   const handleAddWorkDay = async () => {
     try {
@@ -187,16 +167,7 @@ export default function DoctorProfilePage() {
   return (
     <div className="space-y-8 max-w-6xl mx-auto p-6">
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Doctor Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p><strong>Name:</strong> {doctor.firstName} {doctor.lastName}</p>
-          <p><strong>Time Zone:</strong> {doctor.timeZoneId}</p>
-          <p><strong>Rating:</strong> {doctor.averageRating?.toFixed(1)} ({doctor.ratingsCount} ratings)</p>
-        </CardContent>
-      </Card>
+      <PersonProfileCard doctor={doctor} />
 
       <Card>
         <CardHeader>
@@ -221,29 +192,11 @@ export default function DoctorProfilePage() {
       </Card>
 
       <DoctorSchedule
+        fetchAppointments={getMyAppointments}
         onAppointmentClick={(appointment) => {
           router.push(`/doctors/appointment/${appointment.id}`)
         }}
       />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Specialities</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex flex-wrap gap-2">
-            {doctor.specialities.map(s => (
-              <Badge key={s} variant="outline" className="flex items-center gap-1">
-                {s} <Button size="icon" variant="ghost" onClick={() => handleRemoveSpeciality(s)}>×</Button>
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2 mt-2">
-            <Input placeholder="New speciality" value={newSpeciality} onChange={e => setNewSpeciality(e.target.value)} />
-            <Button onClick={handleAddSpeciality}>Add</Button>
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>

@@ -21,14 +21,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
-import {
-  UpdateCurrentUserRequest,
-  updateCurrentUserSchema,
-} from "@/features/users/types/userTypes"
 
 import { Loader2, Trash2, User } from "lucide-react"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import keycloak from "@/config/keycloak"
+import { UpdateUserRequest, updateUserSchema } from "@/features/users/types/userTypes"
 
 export default function AccountPage() {
   const auth = useAuthGuard()
@@ -43,8 +40,8 @@ export default function AccountPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<UpdateCurrentUserRequest>({
-    resolver: zodResolver(updateCurrentUserSchema),
+  } = useForm<UpdateUserRequest>({
+    resolver: zodResolver(updateUserSchema),
   })
 
   useEffect(() => {
@@ -56,7 +53,7 @@ export default function AccountPage() {
     }
   }, [user, reset])
 
-  const onSubmit = async (data: UpdateCurrentUserRequest) => {
+  const onSubmit = async (data: UpdateUserRequest) => {
     setLoading(true)
     setSuccess(false)
 

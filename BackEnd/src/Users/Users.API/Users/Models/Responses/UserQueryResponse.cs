@@ -10,4 +10,5 @@ public sealed record UserQueryResponse(
 	string LastName,
 	string PhoneNumber,
 	string Address,
+	DateTime BirthDate,
 	bool EmailVerified);

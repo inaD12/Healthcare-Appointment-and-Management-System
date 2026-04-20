@@ -1,6 +1,9 @@
 using System.Data.Entity;
 using Patients.Application.Features.Patients.Dtos;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Domain.Dtos;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;
 
@@ -12,9 +15,9 @@ public sealed class PatientQueries
     [UseFiltering]
     [UseSorting]
     public IQueryable<PatientListItemDto> GetPatients(
-        PatientsDbContext dbContext)
+        PatientsQueryDbContext queryDbContext)
     {
-        return dbContext.Patients
+        return queryDbContext.Patients
             .AsNoTracking()
             .Select(p => new PatientListItemDto(
                 p.Id,
@@ -25,10 +28,19 @@ public sealed class PatientQueries
 
     public async Task<PatientHeaderDto> GetMyPatientHeader(
         HttpContext httpContext,
-        [Service] IPatientRepository repo)
+        [Service] IPatientQueryRepository repo)
     {
         string userId = httpContext.User.GetUserId();
 
+        var header = await repo.GetHeaderAsync(userId);
+
+        return header;
+    }
+    
+    public async Task<PatientHeaderDto> GetPatientHeaderByUserId(
+        string userId,
+        [Service] IPatientQueryRepository repo)
+    {
         var header = await repo.GetHeaderAsync(userId);
 
         return header;

@@ -50,7 +50,7 @@ public static class QueryMapper
             request.EndDate);
     
     public static GetAppointmentsByDoctorAndDateQuery ToQuery(
-        this GetAppointmentsByDoctorAndDateRequest request,
+        this GetAppointmentsByDateRequest request,
         string doctorUserId)
         => new(
             doctorUserId,

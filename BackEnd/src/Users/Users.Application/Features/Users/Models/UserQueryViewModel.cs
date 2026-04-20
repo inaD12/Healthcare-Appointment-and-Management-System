@@ -10,4 +10,5 @@ public sealed record UserQueryViewModel(
 	string LastName,
 	string PhoneNumber,
 	string Address,
+	DateTime DateOfBirth,
 	bool EmailVerified);
