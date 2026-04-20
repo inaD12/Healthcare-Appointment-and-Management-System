@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import {
   getMyDoctorInfo,
   updateDoctorInfo,
-  addSpeciality,
-  removeSpeciality,
   addWorkDaySchedule,
   removeWorkDaySchedule,
   addExtraAvailability,
@@ -113,25 +111,6 @@ export default function DoctorProfilePage() {
     }
   }
 
-  const handleAddSpeciality = async () => {
-    if (!newSpeciality) return
-    try {
-      await addSpeciality({ speciality: newSpeciality })
-      setDoctor({ ...doctor, specialities: [...doctor.specialities, newSpeciality] })
-      setNewSpeciality("")
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const handleRemoveSpeciality = async (speciality: string) => {
-    try {
-      await removeSpeciality({ speciality })
-      setDoctor({ ...doctor, specialities: doctor.specialities.filter(s => s !== speciality) })
-    } catch (err) {
-      console.error(err)
-    }
-  }
 
   const handleAddWorkDay = async () => {
     try {
@@ -213,29 +192,11 @@ export default function DoctorProfilePage() {
       </Card>
 
       <DoctorSchedule
+        fetchAppointments={getMyAppointments}
         onAppointmentClick={(appointment) => {
           router.push(`/doctors/appointment/${appointment.id}`)
         }}
       />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Specialities</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="flex flex-wrap gap-2">
-            {doctor.specialities.map(s => (
-              <Badge key={s} variant="outline" className="flex items-center gap-1">
-                {s} <Button size="icon" variant="ghost" onClick={() => handleRemoveSpeciality(s)}>×</Button>
-              </Badge>
-            ))}
-          </div>
-          <div className="flex gap-2 mt-2">
-            <Input placeholder="New speciality" value={newSpeciality} onChange={e => setNewSpeciality(e.target.value)} />
-            <Button onClick={handleAddSpeciality}>Add</Button>
-          </div>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>

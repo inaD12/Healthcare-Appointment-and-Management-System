@@ -66,7 +66,7 @@ internal class AdminAppointmentsEndPoints : IEndPoints
 		    .Produces(StatusCodes.Status500InternalServerError)
 		    .RequireAuthorization(Permissions.GetAppointment);
 	}
-
+	
 
 	private async Task<IResult> CreateAsync(
 		[FromBody] CreateAppointmentByAdminRequest request,

@@ -5,14 +5,22 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-import { getMyAppointments } from "@/features/appointments/services/appointmentService"
 import { AppointmentResponse } from "@/features/appointments/types/appointmentsTypes"
+
+type FetchAppointments = (params: {
+  startDate?: string
+  endDate?: string
+}) => Promise<{ data: any }>
 
 type Props = {
   onAppointmentClick?: (appointment: AppointmentResponse) => void
+  fetchAppointments: FetchAppointments
 }
 
-export default function DoctorSchedule({ onAppointmentClick }: Props) {
+export default function DoctorSchedule({
+  onAppointmentClick,
+  fetchAppointments,
+}: Props) {
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([])
   const [weekStart, setWeekStart] = useState(getStartOfWeek(new Date()))
 
@@ -20,7 +28,7 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
     const d = new Date(date)
     const day = d.getDay()
     d.setDate(d.getDate() - day)
-    d.setHours(0,0,0,0)
+    d.setHours(0, 0, 0, 0)
     return d
   }
 
@@ -37,17 +45,15 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
   })
 
   useEffect(() => {
-
-    const fetchAppointments = async () => {
+    const fetchData = async () => {
       try {
-
         const formatDateOnly = (date: Date) =>
-            date.toISOString().split("T")[0]
+          date.toISOString().split("T")[0]
 
-            const res = await getMyAppointments({
-            startDate: formatDateOnly(weekStart),
-            endDate: formatDateOnly(getEndOfWeek(weekStart))
-            })
+        const res = await fetchAppointments({
+          startDate: formatDateOnly(weekStart),
+          endDate: formatDateOnly(getEndOfWeek(weekStart)),
+        })
 
         const data = res.data.data ?? res.data
 
@@ -58,17 +64,15 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
         )
 
         setAppointments(sorted)
-
       } catch (err: any) {
         if (err.response?.status !== 404) {
-              console.error(err)
-            }
+          console.error(err)
+        }
       }
     }
 
-    fetchAppointments()
-
-  }, [weekStart])
+    fetchData()
+  }, [weekStart, fetchAppointments])
 
   const appointmentsByDay = (day: Date) =>
     appointments.filter(a => {
@@ -91,7 +95,6 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
   return (
     <Card className="p-6 space-y-6">
 
-
       <div className="flex items-center justify-between">
 
         <Button variant="outline" onClick={prevWeek}>
@@ -110,23 +113,17 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
 
       </div>
 
-
       <div className="grid grid-cols-7 gap-4">
 
         {days.map(day => (
           <div key={day.toISOString()} className="space-y-3">
 
-
             <div className="text-center font-medium border-b pb-1">
               <p className="text-sm text-muted-foreground">
                 {day.toLocaleDateString(undefined, { weekday: "short" })}
               </p>
-
-              <p className="text-sm">
-                {day.getDate()}
-              </p>
+              <p className="text-sm">{day.getDate()}</p>
             </div>
-
 
             <div className="space-y-2">
 
@@ -137,7 +134,6 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
               )}
 
               {appointmentsByDay(day).map(a => {
-
                 const start = new Date(a.duration.start)
 
                 return (
@@ -146,15 +142,16 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
                     onClick={() => onAppointmentClick?.(a)}
                     className="w-full text-left rounded-md border p-2 text-xs hover:bg-muted transition"
                   >
-
                     <div className="font-medium">
-                      {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {start.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
 
                     <div className="text-muted-foreground">
                       {a.status}
                     </div>
-
                   </button>
                 )
               })}
@@ -165,7 +162,6 @@ export default function DoctorSchedule({ onAppointmentClick }: Props) {
         ))}
 
       </div>
-
     </Card>
   )
 }

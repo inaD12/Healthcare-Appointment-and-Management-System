@@ -58,5 +58,6 @@ export const ENDPOINTS = {
 
     admin: "/appointments-api/admin/appointments",
     byIdAdmin: (id: string) => `/appointments-api/admin/appointments/${id}`,
+    byUserIdAdmin: (userId: string) => `/appointments-api/admin/appointments/user/${userId}`,
   }
 }

@@ -36,3 +36,14 @@ export const getMyAppointments = (params: {
     ENDPOINTS.appointments.mine,
     { params }
   )
+
+export const getByDateAdmin = (
+  userId: string,
+  params: {
+  startDate?: string
+  endDate?: string
+}) =>
+  api.get<APIResponse<AppointmentResponse[]>>(
+    ENDPOINTS.appointments.byUserIdAdmin(userId),
+    { params }
+  )
