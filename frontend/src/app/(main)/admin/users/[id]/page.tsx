@@ -30,6 +30,9 @@ import { PatientProfile } from "@/features/patients/types/patientTypes"
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
 import DoctorSchedule from "@/components/schedule/DoctorSchedule"
 import { getByDateAdmin } from "@/features/appointments/services/appointmentService"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
+import { DoctorRatings } from "@/components/ratings/DoctorRatings"
 
 export default function AdminUserPage() {
   const { id } = useParams<{ id: string }>()
@@ -39,6 +42,35 @@ export default function AdminUserPage() {
   const [patient, setPatient] = useState<PatientProfile | null>(null)
   const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const [ratings, setRatings] = useState<RatingQueryViewModel[]>([])
+  const [ratingsPage, setRatingsPage] = useState(1)
+  const [ratingsTotalPages, setRatingsTotalPages] = useState(1)
+
+  async function fetchRatings(page = 1) {
+      try {
+        const res = await getRatingsByDoctor(id, {
+          PatientId: "",
+          AppointmentId: "",
+          MinScore: null,
+          MaxScore: null,
+          SortOrder: "DESC",
+          SortPropertyName: "CreatedAt",
+          Page: page,
+          PageSize: 4,
+        })
+  
+        const fetchedRatings = res?.data?.data?.items ?? []
+        setRatings(fetchedRatings)
+        setRatingsPage(page)
+        setRatingsTotalPages(Math.ceil((res?.data?.data?.totalCount ?? fetchedRatings.length) / 4))
+      } catch (err: any) {
+        if (err.response?.status !== 404) console.error(err)
+        setRatings([])
+        setRatingsPage(1)
+        setRatingsTotalPages(1)
+      }
+    }
 
   useEffect(() => {
     const loadUser = async () => {
@@ -59,6 +91,7 @@ export default function AdminUserPage() {
       if (roles.includes(ROLES.DOCTOR)) {
         const doctorRes = await getDoctorByUserId(id)
         setDoctor(doctorRes.data.data)
+        fetchRatings()
       }
 
       setLoading(false)
@@ -131,6 +164,13 @@ export default function AdminUserPage() {
             onAppointmentClick={(appointment) => {
                 router.push(`/admin/appointments/${appointment.id}`)
             }}
+          />
+
+          <DoctorRatings
+            ratings={ratings}
+            page={ratingsPage}
+            totalPages={ratingsTotalPages}
+            onPageChange={fetchRatings}
           />
 
           <DoctorSpecialitiesCard

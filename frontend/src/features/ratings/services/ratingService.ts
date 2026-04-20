@@ -37,6 +37,13 @@ export const removeRating = (
     ENDPOINTS.ratings.byId(ratingId)
   )
 
+export const removeRatingByAdmin = (
+  ratingId: string,
+) =>
+  api.delete<APIResponse<boolean>>(
+    ENDPOINTS.ratings.adminById(ratingId)
+  )
+
 export const getRatingByAppointment = (
   appointmentId: string
 ) =>
