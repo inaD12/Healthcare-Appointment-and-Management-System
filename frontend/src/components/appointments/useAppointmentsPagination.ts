@@ -1,5 +1,4 @@
 "use client"
-
 import { useCallback, useEffect, useState } from "react"
 import { Appointment } from "@/features/patients/types/patientTypes"
 
@@ -13,26 +12,37 @@ type FetchFn = (after?: string) => Promise<{
   pageInfo: PageInfo
 }>
 
+interface InitialData {
+  appointments: Appointment[]
+  pageInfo: PageInfo
+}
+
 export function useAppointmentsPagination(
   fetchFn: FetchFn,
-  pageSize = 10
+  pageSize = 10,
+  initialData?: InitialData
 ) {
-  const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [cursor, setCursor] = useState<string | null>(null)
-  const [hasNextPage, setHasNextPage] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [appointments, setAppointments] = useState<Appointment[]>(
+    initialData?.appointments ?? []
+  )
+  const [cursor, setCursor] = useState<string | null>(
+    initialData?.pageInfo.endCursor ?? null
+  )
+  const [hasNextPage, setHasNextPage] = useState(
+    initialData?.pageInfo.hasNextPage ?? false
+  )
+  const [loading, setLoading] = useState(!initialData)
   const [loadingMore, setLoadingMore] = useState(false)
 
   useEffect(() => {
-    let ignore = false
+    if (initialData) return
 
+    let ignore = false
     const load = async () => {
       setLoading(true)
-
       try {
         const res = await fetchFn(undefined)
         if (ignore) return
-
         setAppointments(res.appointments)
         setCursor(res.pageInfo.endCursor)
         setHasNextPage(res.pageInfo.hasNextPage)
@@ -40,22 +50,15 @@ export function useAppointmentsPagination(
         if (!ignore) setLoading(false)
       }
     }
-
     load()
-
-    return () => {
-      ignore = true
-    }
+    return () => { ignore = true }
   }, [fetchFn])
 
   const loadMore = useCallback(async () => {
     if (!cursor || !hasNextPage) return
-
     setLoadingMore(true)
-
     try {
       const res = await fetchFn(cursor)
-
       setAppointments((prev) => [...prev, ...res.appointments])
       setCursor(res.pageInfo.endCursor)
       setHasNextPage(res.pageInfo.hasNextPage)

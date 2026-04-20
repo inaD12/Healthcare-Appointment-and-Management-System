@@ -20,6 +20,7 @@ export default async function Page({
   let patient = null
   let initialRatings: RatingQueryViewModel[] = []
   let initialRatingsTotalPages = 1
+  let initialAppointments = null
 
   if (user.roles.includes("Doctor")) {
     const doctorRes = await getDoctorByUserId(id)
@@ -47,6 +48,9 @@ export default async function Page({
   if (user.roles.includes("Patient")) {
     const patientRes = await patientService.getPatientInfoInitial(id, 5)
     patient = patientRes.profile
+
+    const apptRes = await patientService.getPatientAppointmentsPage(id, 5)
+    initialAppointments = apptRes
   }
 
   return (
@@ -56,6 +60,7 @@ export default async function Page({
       patient={patient}
       initialRatings={initialRatings}
       initialRatingsTotalPages={initialRatingsTotalPages}
+      initialAppointments={initialAppointments}
     />
   )
 }
