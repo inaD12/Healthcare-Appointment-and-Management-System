@@ -1,5 +1,4 @@
 "use client"
-
 import { createContext, useEffect, useState } from "react"
 import keycloak from "../config/keycloak"
 import { getCurrentUser } from "@/features/users/services/userService"
@@ -23,6 +22,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [roles, setRoles] = useState<string[]>([])
   const [ready, setReady] = useState(false)
 
+  const setAccessTokenCookie = (token: string) => {
+    document.cookie = `access_token=${token}; path=/; SameSite=Strict`
+  }
+
+  const clearAccessTokenCookie = () => {
+    document.cookie = "access_token=; Max-Age=0; path=/"
+  }
+
   useEffect(() => {
     keycloak
       .init({
@@ -34,24 +41,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthenticated(auth)
         setToken(keycloak.token ?? null)
 
-        if (auth) {
+        if (auth && keycloak.token) {
+          setAccessTokenCookie(keycloak.token)
           try {
             const res = await getCurrentUser()
             const currentUser = res.data.data
-
             setUser(currentUser)
             setRoles(currentUser.roles)
           } catch (err) {
             console.error("Failed to fetch user", err)
           }
+        } else {
+          clearAccessTokenCookie()
         }
 
         setReady(true)
 
         const interval = setInterval(() => {
           keycloak.updateToken(60).then((refreshed) => {
-            if (refreshed) {
-              setToken(keycloak.token ?? null)
+            if (refreshed && keycloak.token) {
+              setToken(keycloak.token)
+              setAccessTokenCookie(keycloak.token)
             }
           })
         }, 60000)
