@@ -47,8 +47,8 @@ export const ENDPOINTS = {
     availabilityUnavailable: `/doctors-api/doctors/me/availability/unavailable`,
 
     admin: "/doctors-api/admin/doctors",
-    adminByUser: (userId: string) => `/doctors-api/admin/user/${userId}`,
-    adminSpecialities: (userId: string) => `/doctors-api/admin/user/${userId}/specialities`,
+    adminByUser: (userId: string) => `/doctors-api/admin/doctors/user/${userId}`,
+    adminSpecialities: (userId: string) => `/doctors-api/admin/doctors/user/${userId}/specialities`,
   },
   appointments: {
     root: "/appointments-api/appointments",

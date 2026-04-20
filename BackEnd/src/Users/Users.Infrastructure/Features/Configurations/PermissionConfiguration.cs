@@ -45,6 +45,8 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.AddUnavailability,
             Permission.RemoveUnavailability,
             Permission.ViewAllSpecialities,
+            Permission.RemoveSpecialityByAdmin,
+            Permission.AddSpecialityByAdmin,
             
             // Rating Permissions
             Permission.AddRating,
@@ -124,6 +126,8 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.AddUnavailability),
                     CreateRolePermission(Role.Administrator, Permission.RemoveUnavailability),
                     CreateRolePermission(Role.Administrator, Permission.ViewAllSpecialities),
+                    CreateRolePermission(Role.Administrator, Permission.RemoveSpecialityByAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.AddSpecialityByAdmin),
                     // Admin rating permissions
                     CreateRolePermission(Role.Administrator, Permission.AddRating),
                     CreateRolePermission(Role.Administrator, Permission.RemoveRating),

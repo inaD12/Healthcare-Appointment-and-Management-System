@@ -61,6 +61,20 @@ export const doctorSchema = z.object({
   ratingsCount: z.number().optional().default(0),
 })
 
+export const specialitySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+})
+
+export const specialityPaginatedResponseSchema = z.object({
+  items: z.array(specialitySchema),
+  page: z.number(),
+  pageSize: z.number(),
+  totalCount: z.number(),
+  hasNextPage: z.boolean(),
+  hasPreviousPage: z.boolean(),
+})
 
 export const doctorPaginatedResponseSchema = z.object({
   items: z.array(doctorSchema),
@@ -93,6 +107,26 @@ export const getAllDoctorsSchema = z.object({
   sortOrder: z.enum(["ASC", "DESC"]).default("ASC"),
 
   sortPropertyName: z.string().default("Id"),
+
+  page: z.number().default(1),
+
+  pageSize: z.number().default(10),
+})
+
+export const getAllSpecialitiesSchema = z.object({
+  name: z
+    .string()
+    .optional()
+    .default(""),
+
+  description: z
+    .string()
+    .optional()
+    .default(""),
+
+  sortOrder: z.enum(["ASC", "DESC"]).default("ASC"),
+
+  sortPropertyName: z.string().default("Name"),
 
   page: z.number().default(1),
 
@@ -165,8 +199,11 @@ export type WorkDayDto = z.infer<typeof workDaySchema>
 export type DoctorAvailabilityExceptionDto = z.infer<typeof doctorAvailabilityExceptionSchema>
 export type DoctorQueryViewModel = z.infer<typeof doctorSchema>
 export type DoctorPaginatedQueryResponse = z.infer<typeof doctorPaginatedResponseSchema>
+export type SpecialityPaginatedQueryResponse = z.infer<typeof specialityPaginatedResponseSchema>
 export type GetAllDoctorsRequest = z.infer<typeof getAllDoctorsSchema>
+export type GetAllSpecialitiesRequest = z.infer<typeof getAllSpecialitiesSchema>
 export type RecommendSpecialityRequest = z.infer<typeof recommendSpecialitySchema>
+export type Speciality = z.infer<typeof specialitySchema>
 
 export interface RecommendSpecialityResponse {
     specialities: { name: string }[]

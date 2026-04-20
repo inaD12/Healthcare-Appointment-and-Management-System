@@ -54,24 +54,6 @@ public class DoctorsEndPoints  : IEndPoints
 			.Produces(StatusCodes.Status500InternalServerError)
 			.RequireAuthorization(Permissions.ViewDoctor);
 		
-		meGroup.MapPost("/specialities", AddSpecialityAsync)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.AddSpeciality);
-		
-		meGroup.MapDelete("/specialities", DeleteSpecialityAsync)
-			.Produces(StatusCodes.Status200OK)
-			.Produces(StatusCodes.Status400BadRequest)
-			.Produces(StatusCodes.Status401Unauthorized)
-			.Produces(StatusCodes.Status404NotFound)
-			.Produces(StatusCodes.Status409Conflict)
-			.Produces(StatusCodes.Status500InternalServerError)
-			.RequireAuthorization(Permissions.RemoveSpeciality);
-
 		meGroup.MapPost("/schedule/workdays", AddWorkDayScheduleAsync)
 			.Produces(StatusCodes.Status200OK)
 			.Produces(StatusCodes.Status400BadRequest)
@@ -204,30 +186,6 @@ public class DoctorsEndPoints  : IEndPoints
 
 		var queryResponse = res.Value!.ToResponse();
 		return ControllerResponse.ParseAndReturnMessage(res, queryResponse);
-	}
-	
-	private async Task<IResult> AddSpecialityAsync(
-		[FromBody] AddSpecialityRequest request,
-		HttpContext httpContext,   
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
-	}
-	
-	private async Task<IResult> DeleteSpecialityAsync(
-		[FromBody] RemoveSpecialityRequest request,
-		HttpContext httpContext,   
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
 	}
 	
 	private async Task<IResult> AddWorkDayScheduleAsync(

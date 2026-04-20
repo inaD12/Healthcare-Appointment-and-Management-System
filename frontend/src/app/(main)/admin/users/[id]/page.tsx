@@ -2,7 +2,6 @@
 
   import { useParams, useRouter } from "next/navigation"
   import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-  import { Badge } from "@/components/ui/badge"
 
   import { getUserByAdmin } from "@/features/users/services/userService"
   import { patientService } from "@/features/patients/services/patientService"
@@ -12,9 +11,12 @@
   import { useAppointmentsPagination } from "@/components/appointments/useAppointmentsPagination"
   import { useState, useEffect, useCallback } from "react"
   import { UserQueryResponse } from "@/features/users/types/userTypes"
-import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
-import { PatientProfile } from "@/features/patients/types/patientTypes"
-import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
+  import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
+  import { PatientProfile } from "@/features/patients/types/patientTypes"
+  import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
+  import { DoctorSpecialitiesCard } from "@/components/doctor/DoctorSpecialitiesCard"
+  import { addSpecialityByAdmin, getDoctorByUserId, removeSpecialityByAdmin } from "@/features/doctors/services/doctorService"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
 
   export default function AdminUserPage() {
     const { id } = useParams<{ id: string }>()
@@ -37,12 +39,15 @@ import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
 
     const [user, setUser] = useState<UserQueryResponse | null>(null)
     const [patient, setPatient] = useState<PatientProfile | null>(null)
+    const [doctor, setDoctor] = useState<DoctorQueryViewModel | null>(null)
 
     useEffect(() => {
       const load = async () => {
         const userRes = await getUserByAdmin(id)
         const patientRes = await patientService.getPatientInfoInitial(id, 5)
+        const doctorRes = await getDoctorByUserId(id)
 
+        setDoctor(doctorRes.data.data)
         setUser(userRes.data.data)
         setPatient(patientRes.profile)
       }
@@ -53,6 +58,7 @@ import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
     if (loading) return <div className="p-8">Loading...</div>
     if (!user) return <div className="p-8">User not found</div>
     if (!patient) return <div className="p-8">Patient not found</div>
+    if (!doctor) return <div className="p-8">Doctor not found</div>
 
     return (
       <div className="p-8 max-w-5xl mx-auto space-y-6">
@@ -86,6 +92,16 @@ import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
           onRemoveAllergy={patientService.removeAllergyByAdmin}
           onAddCondition={patientService.addChronicConditionByAdmin}
           onRemoveCondition={patientService.removeChronicConditionByAdmin}
+        />
+
+        <DoctorSpecialitiesCard
+          specialities={doctor.specialities}
+          onAdd={async (s) => {
+            await addSpecialityByAdmin(doctor.userId, { speciality: s })
+          }}
+          onRemove={async (s) => {
+            await removeSpecialityByAdmin(doctor.userId, { speciality: s })
+          }}
         />
 
         <AdminUserEditForm

@@ -11,7 +11,6 @@ public sealed class GetAllSpecialitiesQueryHandler(
 	ISpecialityRepository specialityRepository)
 	: IQueryHandler<GetAllSpecialitiesQuery, SpecialityPaginatedQueryViewModel>
 {
-
 	public async Task<Result<SpecialityPaginatedQueryViewModel>> Handle(GetAllSpecialitiesQuery request, CancellationToken cancellationToken)
 	{
 		var specialityPagedListQuery = request.ToInfraQuery();

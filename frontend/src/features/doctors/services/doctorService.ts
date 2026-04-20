@@ -1,6 +1,6 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { AddAvailabilityExceptionRequest, AddSpecialityRequest, AddWorkDayRequest, CreateDoctorRequest, DeleteAvailabilityExceptionRequest, DoctorPaginatedQueryResponse, DoctorQueryViewModel, GetAllDoctorsRequest, RecommendSpecialityRequest, RecommendSpecialityResponse, RemoveSpecialityRequest, RemoveWorkDayRequest, UpdateDoctorRequest, UpdateWorkDayRequest} from "../types/doctors";
+import { AddAvailabilityExceptionRequest, AddSpecialityRequest, AddWorkDayRequest, CreateDoctorRequest, DeleteAvailabilityExceptionRequest, DoctorPaginatedQueryResponse, DoctorQueryViewModel, GetAllDoctorsRequest, GetAllSpecialitiesRequest, RecommendSpecialityRequest, RecommendSpecialityResponse, RemoveSpecialityRequest, RemoveWorkDayRequest, SpecialityPaginatedQueryResponse, UpdateDoctorRequest, UpdateWorkDayRequest} from "../types/doctors";
 import { APIResponse } from "@/types/types";
 
 export const createDoctor = (data: CreateDoctorRequest) =>
@@ -18,11 +18,14 @@ export const getDoctorByUserId = (userId: string) =>
 export const getAllDoctors = (query: GetAllDoctorsRequest) =>
   api.get<APIResponse<DoctorPaginatedQueryResponse>>(ENDPOINTS.doctors.root, { params: query })
 
-export const addSpeciality = (data: AddSpecialityRequest) =>
-  api.post<APIResponse<null>>(ENDPOINTS.doctors.meSpecialities, data)
+export const getAllSpecialities = (query: GetAllSpecialitiesRequest) =>
+  api.get<APIResponse<SpecialityPaginatedQueryResponse>>(ENDPOINTS.doctors.specialities, { params: query })
 
-export const removeSpeciality = (data: RemoveSpecialityRequest) =>
-  api.delete<APIResponse<null>>(ENDPOINTS.doctors.meSpecialities, { data })
+export const addSpecialityByAdmin = (userId: string, data: AddSpecialityRequest) =>
+  api.post<APIResponse<null>>(ENDPOINTS.doctors.adminSpecialities(userId), data)
+
+export const removeSpecialityByAdmin = (userId: string, data: RemoveSpecialityRequest) =>
+  api.delete<APIResponse<null>>(ENDPOINTS.doctors.adminSpecialities(userId), { data })
 
 export const recommendSpeciality = (data: RecommendSpecialityRequest) =>
   api.post<APIResponse<RecommendSpecialityResponse>>(ENDPOINTS.doctors.specialities + "/recommend", data)
