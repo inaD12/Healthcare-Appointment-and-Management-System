@@ -103,7 +103,7 @@ internal class AppointmentsEndPoints : IEndPoints
 	}
 
 	private async Task<IResult> GetMineAsync(
-		[AsParameters] GetAppointmentsByDoctorAndDateRequest request,
+		[AsParameters] GetAppointmentsByDateRequest request,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
 		CancellationToken cancellationToken)
