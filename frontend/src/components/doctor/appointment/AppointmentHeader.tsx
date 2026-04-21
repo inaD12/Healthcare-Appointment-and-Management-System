@@ -32,7 +32,7 @@ export default function AppointmentHeader({
   const getStatusLabel = () => {
     if (isDoctor) return `Status: ${appointment.status}`
     if (isPatient) return `Visit ${appointment.status.toLowerCase()}`
-    if (isAdmin) return `System status: ${appointment.status}`
+    if (isAdmin) return `Status: ${appointment.status}`
     return appointment.status
   }
 

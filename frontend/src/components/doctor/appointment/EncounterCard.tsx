@@ -30,7 +30,7 @@ export default function EncounterCard({
   encounterId,
   updateEncounter,
 }: Props) {
-  const { isPatient, isDoctor } = useAuth()
+  const { isPatient, isDoctor, isAdmin} = useAuth()
 
   const [newNote, setNewNote] = useState("")
   const [newDiagnosis, setNewDiagnosis] = useState({
@@ -45,13 +45,13 @@ export default function EncounterCard({
   const [newAddendum, setNewAddendum] = useState("")
 
   const isReadOnly =
-    isPatient || encounter.status === EncounterStatus.Locked
+    isPatient || isAdmin || encounter.status === EncounterStatus.Locked
 
   const canEdit =
     !isReadOnly && encounter.status === EncounterStatus.InProgress
 
   const canAddAddendum =
-    !isReadOnly && encounter.status === EncounterStatus.Finalized
+    isDoctor && encounter.status === EncounterStatus.Finalized
 
   const canLock =
     isDoctor &&

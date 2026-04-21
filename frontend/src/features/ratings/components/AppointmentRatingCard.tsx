@@ -27,14 +27,17 @@ export default function AppointmentRatingCard({
   const [score, setScore] = useState(rating?.score ?? 5)
   const [comment, setComment] = useState(rating?.comment ?? "")
 
-  const hasActions = !!onCreate || !!onEdit || !!onDelete
+  const canCreate = !!onCreate
+  const canEdit = !!onEdit && !!rating
+  const canDelete = !!onDelete
+
+  const isReadOnlyMode = !canCreate && !canEdit && !canDelete
 
   const handleSubmit = async () => {
-    if (!hasActions) return
-
     if (rating && onEdit) {
       await onEdit({ score, comment })
       setIsEditing(false)
+      return
     }
 
     if (!rating && onCreate) {
@@ -54,11 +57,11 @@ export default function AppointmentRatingCard({
     setComment(rating?.comment ?? "")
   }
 
-  if (!hasActions) {
+  if (isReadOnlyMode) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Your Rating</CardTitle>
+          <CardTitle>Rating</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -97,7 +100,6 @@ export default function AppointmentRatingCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-
         {rating && !isEditing && (
           <>
             <div className="flex text-3xl text-yellow-400">
@@ -113,15 +115,18 @@ export default function AppointmentRatingCard({
             )}
 
             <div className="flex gap-2">
-              <Button onClick={startEdit}>Edit</Button>
-              <Button variant="destructive" onClick={onDelete}>
-                Delete
-              </Button>
+              {canEdit && <Button onClick={startEdit}>Edit</Button>}
+
+              {canDelete && (
+                <Button variant="destructive" onClick={onDelete}>
+                  Delete
+                </Button>
+              )}
             </div>
           </>
         )}
 
-        {(!rating || isEditing) && (
+        {(!rating || isEditing) && (canCreate || canEdit) && (
           <>
             <div className="flex gap-2 text-3xl">
               {[1, 2, 3, 4, 5].map((s) => (
@@ -146,7 +151,7 @@ export default function AppointmentRatingCard({
                 {rating ? "Save" : "Submit"}
               </Button>
 
-              {rating && (
+              {rating && canEdit && (
                 <Button variant="secondary" onClick={cancelEdit}>
                   Cancel
                 </Button>
@@ -154,7 +159,6 @@ export default function AppointmentRatingCard({
             </div>
           </>
         )}
-
       </CardContent>
     </Card>
   )

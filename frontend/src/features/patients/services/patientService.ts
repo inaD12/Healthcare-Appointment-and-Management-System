@@ -99,6 +99,12 @@ export const patientService = {
   finalizeEncounter: (encounterId: string) =>
     api.post(ENDPOINTS.encounters.finalize(encounterId)),
 
+  unlockEncounter: (encounterId: string) =>
+    api.post(ENDPOINTS.encounters.unlock(encounterId)),
+
+  unfinalizeEncounter: (encounterId: string) =>
+    api.post(ENDPOINTS.encounters.unfinalize(encounterId)),
+
   addNote: (encounterId: string, data: AddNoteRequest) =>
     api.post<APIResponse<NoteCommandResponse>>(ENDPOINTS.encounters.notes(encounterId), data),
 

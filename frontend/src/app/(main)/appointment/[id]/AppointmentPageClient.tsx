@@ -22,9 +22,7 @@ export default function AppointmentPageClient({
   const [appointment] = useState(initialAppointment)
   const [rating, setRating] = useState(initialRating)
 
-  const [encounter, setEncounter] = useState<EncounterDetails | null>(
-    appointment?.encounterDetails ?? null
-  )
+  const encounter = appointment?.encounterDetails ?? null
 
   useRequireRole(ROLES.PATIENT)
   
@@ -68,11 +66,6 @@ export default function AppointmentPageClient({
     setRating(null)
   }
 
-  const updateEncounter = (patch: Partial<EncounterDetails>) => {
-    if (!encounter) return
-    setEncounter({ ...encounter, ...patch })
-  }
-
   if (!appointment) {
     return <div className="p-6 text-red-600">Failed to load appointment</div>
   }
@@ -94,11 +87,11 @@ export default function AppointmentPageClient({
       )}
 
       {encounter && (
-        <EncounterCard
-          encounter={encounter}
-          encounterId={encounter.id}
-          updateEncounter={updateEncounter}
-        />
+       <EncounterCard
+        encounter={encounter}
+        encounterId={encounter.id}
+        updateEncounter={() => {}}
+      />
       )}
 
     </div>
