@@ -84,7 +84,7 @@ export default function AdminUserClient({
                 showLoadMore={hasNextPage}
                 loadingMore={loadingMore}
                 onLoadMore={loadMore}
-                onSelectAppointment={(a) => router.push(`/admin/appointments/${a.id}`)}
+                onSelectAppointment={(a) => router.push(`/admin/appointment/${a.id}`)}
               />
             </CardContent>
           </Card>

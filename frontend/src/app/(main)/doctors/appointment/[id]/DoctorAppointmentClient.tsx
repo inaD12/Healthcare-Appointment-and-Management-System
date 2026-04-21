@@ -14,7 +14,7 @@ import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader
 import AppointmentInfoCard from "@/components/doctor/appointment/AppointmentInfoCard"
 import RatingCard from "@/components/doctor/appointment/RatingCard"
 import StartEncounterCard from "@/components/doctor/appointment/StartEncounterCard"
-import EncounterCard from "@/components/doctor/appointment/EncounterCard"
+import EncounterCard from "@/features/encounters/components/EncounterCard"
 
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 import { ROLES } from "@/features/users/types/userTypes"

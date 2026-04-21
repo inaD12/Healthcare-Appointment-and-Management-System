@@ -96,7 +96,7 @@ export default function AppointmentRatingCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{rating ? "Your Rating" : "Rate appointment"}</CardTitle>
+        <CardTitle>{!canEdit ? "Rating" : rating ? "Your Rating" : "Rate appointment"}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">

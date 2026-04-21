@@ -10,7 +10,7 @@ import {
 import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader"
 import AppointmentInfoCard from "@/components/doctor/appointment/AppointmentInfoCard"
 import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
-import EncounterCard from "@/components/doctor/appointment/EncounterCard"
+import EncounterCard from "@/features/encounters/components/EncounterCard"
 import { addRating, editRating, removeRating } from "@/features/ratings/services/ratingService"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 import { ROLES } from "@/features/users/types/userTypes"

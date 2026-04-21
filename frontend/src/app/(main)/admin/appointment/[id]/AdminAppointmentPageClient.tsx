@@ -11,7 +11,7 @@ import {
 import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader"
 import AppointmentInfoCard from "@/components/doctor/appointment/AppointmentInfoCard"
 import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
-import EncounterCard from "@/components/doctor/appointment/EncounterCard"
+import EncounterCard from "@/features/encounters/components/EncounterCard"
 
 import { removeRating } from "@/features/ratings/services/ratingService"
 import { patientService } from "@/features/patients/services/patientService"
