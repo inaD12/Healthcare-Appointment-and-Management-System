@@ -22,4 +22,6 @@ public static class ErrorMessages
 	public const string ConditionNotFound = "Condition not found";
 	public const string AppointmentNotFound = "Appointment not found";
 	public const string NotTheDoctor = "Only the doctor that created the encounter is allowed to edit it";
+	public const string NotLocked = "Encounter is not locked";
+	public const string NotFinalized = "Encounter is not finalized";
 }

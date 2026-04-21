@@ -8,6 +8,8 @@ internal static class Permissions
     internal const string RemoveAllergyAdmin = "patient:admin:allergy:remove";
     internal const string AddChronicConditionAdmin = "patient:admin:condition:add";
     internal const string RemoveChronicConditionAdmin = "patient:admin:condition:remove";
+    internal const string UnlockEncounterAdmin = "admin:encounter:unlock";
+    internal const string UnfinalizeEncounterAdmin = "admin:encounter:unfinalize";
     
     // Doctor
     internal const string AddAllergy = "patient:allergy:add";

@@ -70,7 +70,9 @@ public sealed class Permission
     public static readonly Permission RemoveAllergyAdmin = new("patient:admin:allergy:remove");
     public static readonly Permission AddChronicConditionAdmin = new("patient:admin:condition:add");
     public static readonly Permission RemoveChronicConditionAdmin = new("patient:admin:condition:remove");
-
+    public static readonly Permission UnlockEncounterAdmin = new("admin:encounter:unlock");
+    public static readonly Permission UnfinalizeEncounterAdmin = new("admin:encounter:unfinalize");
+    
     // Allergies
     public static readonly Permission AddAllergy = new("patient:allergy:add");
     public static readonly Permission RemoveAllergy = new("patient:allergy:remove");

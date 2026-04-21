@@ -69,6 +69,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.AddChronicCondition,
             Permission.RemoveChronicCondition,
             Permission.ViewChronicConditions,
+            Permission.RemoveAllergyAdmin,
+            Permission.AddChronicConditionAdmin,
+            Permission.RemoveChronicConditionAdmin,
 
             // Encounter Permissions
             Permission.StartEncounter,
@@ -86,7 +89,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.RemovePrescription,
             Permission.ViewPrescriptions,
             Permission.AddAddendum,
-            Permission.ViewAddendums
+            Permission.ViewAddendums,
+            Permission.UnfinalizeEncounterAdmin,
+            Permission.UnlockEncounterAdmin
         );
 
         builder
@@ -169,6 +174,8 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.ViewPrescriptions),
                     CreateRolePermission(Role.Administrator, Permission.AddAddendum),
                     CreateRolePermission(Role.Administrator, Permission.ViewAddendums),
+                    CreateRolePermission(Role.Administrator, Permission.UnlockEncounterAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.UnfinalizeEncounterAdmin),
 
 
                     // --- Doctor permissions ---
