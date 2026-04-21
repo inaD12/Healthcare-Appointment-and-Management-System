@@ -173,7 +173,7 @@ export interface Diagnosis {
 
 export interface Prescription {
   id: string
-  medicationName: string
+  name: string
   dosage: string
   instructions: string
 }

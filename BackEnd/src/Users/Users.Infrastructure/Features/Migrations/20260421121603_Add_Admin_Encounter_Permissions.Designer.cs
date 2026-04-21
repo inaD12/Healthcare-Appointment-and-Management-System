@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Users.Infrastructure.Features.DBContexts;
@@ -11,9 +12,11 @@ using Users.Infrastructure.Features.DBContexts;
 namespace Users.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(UsersDbContext))]
-    partial class UsersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260421121603_Add_Admin_Encounter_Permissions")]
+    partial class Add_Admin_Encounter_Permissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,6 +295,41 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:schedule:workday:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:update",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:schedule:workday:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:extra:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:availability:unavailable:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "specialities:view-all",
                             RoleName = "Administrator"
                         },
@@ -417,7 +455,37 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "encounter:start",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "encounter:view",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:edit",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:lock",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:finalize",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:note:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:note:remove",
                             RoleName = "Administrator"
                         },
                         new
@@ -427,12 +495,37 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "encounter:diagnosis:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:diagnosis:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "encounter:diagnosis:view",
                             RoleName = "Administrator"
                         },
                         new
                         {
+                            PermissionCode = "encounter:prescription:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:prescription:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "encounter:prescription:view",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "encounter:addendum:add",
                             RoleName = "Administrator"
                         },
                         new

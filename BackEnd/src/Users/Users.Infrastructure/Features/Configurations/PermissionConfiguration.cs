@@ -69,6 +69,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.AddChronicCondition,
             Permission.RemoveChronicCondition,
             Permission.ViewChronicConditions,
+            Permission.RemoveAllergyAdmin,
+            Permission.AddChronicConditionAdmin,
+            Permission.RemoveChronicConditionAdmin,
 
             // Encounter Permissions
             Permission.StartEncounter,
@@ -86,7 +89,9 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.RemovePrescription,
             Permission.ViewPrescriptions,
             Permission.AddAddendum,
-            Permission.ViewAddendums
+            Permission.ViewAddendums,
+            Permission.UnfinalizeEncounterAdmin,
+            Permission.UnlockEncounterAdmin
         );
 
         builder
@@ -118,13 +123,6 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.AddSpeciality),
                     CreateRolePermission(Role.Administrator, Permission.RemoveSpeciality),
                     CreateRolePermission(Role.Administrator, Permission.RequestRecommendations),
-                    CreateRolePermission(Role.Administrator, Permission.AddWorkDaySchedule),
-                    CreateRolePermission(Role.Administrator, Permission.ChangeWorkDaySchedule),
-                    CreateRolePermission(Role.Administrator, Permission.RemoveWorkDaySchedule),
-                    CreateRolePermission(Role.Administrator, Permission.AddExtraAvailability),
-                    CreateRolePermission(Role.Administrator, Permission.RemoveExtraAvailability),
-                    CreateRolePermission(Role.Administrator, Permission.AddUnavailability),
-                    CreateRolePermission(Role.Administrator, Permission.RemoveUnavailability),
                     CreateRolePermission(Role.Administrator, Permission.ViewAllSpecialities),
                     CreateRolePermission(Role.Administrator, Permission.RemoveSpecialityByAdmin),
                     CreateRolePermission(Role.Administrator, Permission.AddSpecialityByAdmin),
@@ -153,23 +151,13 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
                     CreateRolePermission(Role.Administrator, Permission.AddChronicConditionAdmin),
                     CreateRolePermission(Role.Administrator, Permission.RemoveChronicConditionAdmin),
                     // Admin encounter permissions
-                    CreateRolePermission(Role.Administrator, Permission.StartEncounter),
                     CreateRolePermission(Role.Administrator, Permission.ViewEncounter),
-                    CreateRolePermission(Role.Administrator, Permission.EditEncounter),
-                    CreateRolePermission(Role.Administrator, Permission.LockEncounter),
-                    CreateRolePermission(Role.Administrator, Permission.FinalizeEncounter),
-                    CreateRolePermission(Role.Administrator, Permission.AddNote),
-                    CreateRolePermission(Role.Administrator, Permission.RemoveNote),
                     CreateRolePermission(Role.Administrator, Permission.ViewNotes),
-                    CreateRolePermission(Role.Administrator, Permission.AddDiagnosis),
-                    CreateRolePermission(Role.Administrator, Permission.RemoveDiagnosis),
                     CreateRolePermission(Role.Administrator, Permission.ViewDiagnoses),
-                    CreateRolePermission(Role.Administrator, Permission.AddPrescription),
-                    CreateRolePermission(Role.Administrator, Permission.RemovePrescription),
                     CreateRolePermission(Role.Administrator, Permission.ViewPrescriptions),
-                    CreateRolePermission(Role.Administrator, Permission.AddAddendum),
                     CreateRolePermission(Role.Administrator, Permission.ViewAddendums),
-
+                    CreateRolePermission(Role.Administrator, Permission.UnlockEncounterAdmin),
+                    CreateRolePermission(Role.Administrator, Permission.UnfinalizeEncounterAdmin),
 
                     // --- Doctor permissions ---
                     CreateRolePermission(Role.Doctor, Permission.GetBookings),

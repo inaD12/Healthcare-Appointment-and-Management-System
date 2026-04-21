@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Patients.API.Patients.Mappers;
 using Patients.API.Patients.Models.Requests;
 using Patients.API.Patients.Models.Responses;
+using Patients.Application.Features.Encounters.Commands.UnfinalizeEncounter;
+using Patients.Application.Features.Encounters.Commands.UnlockEncounter;
 using Patients.Application.Features.Patients.Commands.DeletePatient;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
@@ -55,6 +57,25 @@ internal class AdminPatientsEndPoints : IEndPoints
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status500InternalServerError)
         .RequireAuthorization(Permissions.DeletePatient);
+    
+    var encounterGroup = app.MapGroup("/admin/encounters/{encounterId}")
+	    .RequireAuthorization();
+    
+    encounterGroup.MapPost("/unlock", UnlockEncounterAsync)
+	    .Produces(StatusCodes.Status200OK)
+	    .Produces(StatusCodes.Status400BadRequest)
+	    .Produces(StatusCodes.Status409Conflict)
+	    .Produces(StatusCodes.Status404NotFound)
+	    .Produces(StatusCodes.Status500InternalServerError)
+	    .RequireAuthorization(Permissions.UnlockEncounterAdmin);
+    
+    encounterGroup.MapPost("/unfinalize", UnfinalizeEncounterEncounterAsync)
+	    .Produces(StatusCodes.Status200OK)
+	    .Produces(StatusCodes.Status400BadRequest)
+	    .Produces(StatusCodes.Status409Conflict)
+	    .Produces(StatusCodes.Status404NotFound)
+	    .Produces(StatusCodes.Status500InternalServerError)
+	    .RequireAuthorization(Permissions.UnfinalizeEncounterAdmin);
 }
 
 	private async Task<IResult> AddAllergyAsync(
@@ -111,6 +132,26 @@ internal class AdminPatientsEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = new DeletePatientCommand(patientId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> UnlockEncounterAsync(
+		[FromRoute] string encounterId,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = new UnlockEncounterCommand(encounterId);
+		var res = await sender.Send(command, cancellationToken);
+		return ControllerResponse.ParseAndReturnMessage(res);
+	}
+	
+	private async Task<IResult> UnfinalizeEncounterEncounterAsync(
+		[FromRoute] string encounterId,
+		[FromServices] ISender sender,
+		CancellationToken cancellationToken)
+	{
+		var command = new UnfinalizeEncounterCommand(encounterId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

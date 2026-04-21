@@ -36,6 +36,9 @@ export const ENDPOINTS = {
     addendums: (encounterId: string) => `/patients-api/encounters/${encounterId}/addendums`,
     lock: (encounterId: string) => `/patients-api/encounters/${encounterId}/lock`,
     finalize: (encounterId: string) => `/patients-api/encounters/${encounterId}/finalize`,
+
+    unlock: (encounterId: string) => `/patients-api/admin/encounters/${encounterId}/unlock`,
+    unfinalize: (encounterId: string) => `/patients-api/admin/encounters/${encounterId}/unfinalize`,
   },
   doctors: {
     root: "/doctors-api/doctors",

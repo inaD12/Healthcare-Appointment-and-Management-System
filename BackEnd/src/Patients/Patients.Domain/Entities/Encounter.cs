@@ -170,6 +170,28 @@ public sealed class Encounter : BaseConcurrencyEntity
         UpdatedAt = utcNow;
         return Result.Success();
     }
+    
+    public Result Unlock(DateTime utcNow)
+    {
+        if (Status != EncounterStatus.Locked)
+            return Result.Failure(ResponseList.NotLocked);
+
+        Status = EncounterStatus.Finalized;
+        LockedAt = null;
+        UpdatedAt = utcNow;
+        return Result.Success();
+    }
+    
+    public Result UnFinalize(DateTime utcNow)
+    {
+        if (Status != EncounterStatus.Finalized)
+            return Result.Failure(ResponseList.NotFinalized);
+
+        Status = EncounterStatus.InProgress;
+        FinalizedAt = null;
+        UpdatedAt = utcNow;
+        return Result.Success();
+    }
 
     public Result<string> AddAddendum(string text, DateTime utcNow)
     {
