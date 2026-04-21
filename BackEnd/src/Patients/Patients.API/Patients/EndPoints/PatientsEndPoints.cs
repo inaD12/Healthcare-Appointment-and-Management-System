@@ -50,7 +50,7 @@ internal class PatientsEndPoints : IEndPoints
         .Produces(StatusCodes.Status500InternalServerError)
         .RequireAuthorization(Permissions.RemoveChronicCondition);
     
-    var encountersGroup = app.MapGroup("	/encounters");
+    var encountersGroup = app.MapGroup("/encounters");
     
     encountersGroup.MapPost("/", StartEncounterAsync)
         .Produces<EncounterCommandResponse>()

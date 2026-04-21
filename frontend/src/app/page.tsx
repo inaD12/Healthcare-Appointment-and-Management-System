@@ -272,7 +272,7 @@ export default function HomePage() {
 
                                 <Button asChild size="sm">
                                   <Link
-                                    href={`/appointment/${encounter.appointmentId}`}
+                                    href={`/doctors/appointment/${encounter.appointmentId}`}
                                   >
                                     Open
                                   </Link>

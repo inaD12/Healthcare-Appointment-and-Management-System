@@ -360,7 +360,7 @@ export const patientService = {
     }
   },
   
-  getAppointmentWithEncounters: async (appointmentId: string): Promise<AppointmentByIdResponse | null> => {
+  getAppointmentWithEncounters: async (id: string): Promise<AppointmentByIdResponse | null> => {
     const query = `
       query GetAppointmentWithEncounters($appointmentId: String!) {
         appointmentById(appointmentId: $appointmentId) {
@@ -389,7 +389,7 @@ export const patientService = {
             }
             prescriptions {
               id
-              medicationName
+              name
               dosage
               instructions
             }
@@ -402,7 +402,7 @@ export const patientService = {
         }
       }
     `
-    const res = await api.post(ENDPOINTS.patients.graphql, { query, variables: { appointmentId } })
+    const res = await api.post(ENDPOINTS.patients.graphql, { query, variables: { appointmentId: id }, })
     return res.data?.data ?? null
   },
   getPatientDashboard: async (): Promise<PatientDashboard> => {
@@ -460,7 +460,7 @@ export const patientService = {
 
             prescriptions {
               id
-              medicationName
+              name
               dosage
               instructions
               createdAt
