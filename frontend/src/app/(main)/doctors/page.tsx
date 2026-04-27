@@ -1,14 +1,39 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { DoctorQueryViewModel, GetAllDoctorsRequest } from "@/features/doctors/types/doctors"
-import { getAllDoctors, recommendSpeciality } from "@/features/doctors/services/doctorService"
+import {
+  DoctorQueryViewModel,
+  GetAllDoctorsRequest,
+} from "@/features/doctors/types/doctors"
+
+import {
+  getAllDoctors,
+  recommendSpeciality,
+} from "@/features/doctors/services/doctorService"
+
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
-import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card"
+
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card"
+
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { useRouter } from "next/navigation"
+import { DoctorSpecialitiesFilter } from "@/features/doctors/components/DoctorSpecialitiesFilter"
 
 export default function DoctorsPage() {
   const auth = useAuthGuard()
@@ -17,6 +42,7 @@ export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<DoctorQueryViewModel[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
   const [filters, setFilters] = useState<GetAllDoctorsRequest>({
     firstName: "",
     lastName: "",
@@ -26,38 +52,44 @@ export default function DoctorsPage() {
     page: 1,
     pageSize: 10,
   })
+
   const [totalPages, setTotalPages] = useState(1)
+
   const [Symptoms, setSymptoms] = useState("")
   const [recommendedSpecialities, setRecommendedSpecialities] = useState<string[]>([])
   const [aiError, setAiError] = useState("")
 
   async function fetchDoctors(page = filters.page) {
-    if (!auth || !auth.authenticated) return
+    if (!auth?.authenticated) return
+
     setLoading(true)
     setError("")
+
     try {
       const res = await getAllDoctors({ ...filters, page })
-      if (res.data.data.items.length === 0) {
+
+      const data = res.data.data
+
+      if (!data.items.length) {
         setDoctors([])
         setError("No doctors found for these filters.")
       } else {
-        setDoctors(res.data.data.items)
-        setTotalPages(Math.ceil(res.data.data.totalCount / res.data.data.pageSize))
+        setDoctors(data.items)
+        setTotalPages(Math.ceil(data.totalCount / data.pageSize))
       }
+
       setFilters((prev) => ({ ...prev, page }))
     } catch (err: any) {
-  console.error(err)
-
-    if (err.response?.status === 404) {
-      setDoctors([])
-      setError("No doctors found.")
-    } else if (err.response?.status === 403) {
-      setError("You don’t have permission to view doctors.")
-    } else if (err.response?.status === 500) {
-      setError("Server error. Please try again later.")
-    } else {
-      setError("Failed to fetch doctors. Please try again.")
-    }
+      if (err.response?.status === 404) {
+        setDoctors([])
+        setError("No doctors found.")
+      } else if (err.response?.status === 403) {
+        setError("You don’t have permission to view doctors.")
+      } else if (err.response?.status === 500) {
+        setError("Server error. Please try again later.")
+      } else {
+        setError("Failed to fetch doctors. Please try again.")
+      }
     } finally {
       setLoading(false)
     }
@@ -68,22 +100,24 @@ export default function DoctorsPage() {
 
     try {
       const res = await recommendSpeciality({ Symptoms })
-      const specialities: string[] = res.data.data.specialities?.map(s => s.name) ?? []
+
+      const specialities =
+        res.data.data.specialities?.map((s) => s.name) ?? []
+
       setRecommendedSpecialities(specialities)
 
       if (specialities.length > 0) {
-        setFilters({ ...filters, speciality: specialities[0], page: 1 })
+        setFilters((prev) => ({
+          ...prev,
+          speciality: specialities[0],
+          page: 1,
+        }))
+
         fetchDoctors(1)
       }
     } catch (err: any) {
-      if (err.response?.status === 400) {
-        setAiError(err.response.data?.message || "Invalid input for AI recommendation.")
-        setRecommendedSpecialities([])
-      } else {
-        setAiError("Something went wrong. Please try again.")
-        setRecommendedSpecialities([])
-        console.error(err)
-      }
+      setAiError("Something went wrong. Please try again.")
+      setRecommendedSpecialities([])
     }
   }
 
@@ -91,162 +125,180 @@ export default function DoctorsPage() {
     fetchDoctors()
   }, [auth])
 
-  if (!auth || !auth.authenticated) return <p>Checking authentication...</p>
+  if (!auth?.authenticated) return <p>Checking authentication...</p>
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">Doctors</h1>
+    <div className="max-w-6xl mx-auto p-8 space-y-8">
 
-      <Card className="p-4">
-        <CardContent className="flex items-center gap-3">
+      <div>
+        <h1 className="text-3xl font-semibold">Doctors</h1>
+        <p className="text-sm text-muted-foreground">
+          Search medical specialists
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>AI Recommendation</CardTitle>
+          <CardDescription>
+            Describe symptoms to suggest specialities
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex gap-3">
           <Input
             value={Symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
-            placeholder="Describe symptoms"
-            className="flex-1"
+            placeholder="Describe symptoms..."
           />
-          <Button size="sm" onClick={handleRecommend}>
+
+          <Button onClick={handleRecommend}>
             Ask AI
           </Button>
         </CardContent>
 
         {aiError && (
-          <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+          <p className="px-6 pb-4 text-sm text-red-500">
             {aiError}
           </p>
         )}
 
         {recommendedSpecialities.length > 0 && (
-          <p className="mt-1 text-sm text-gray-700">
-            Recommended specialities:{" "}
-            <span className="font-semibold">{recommendedSpecialities.join(", ")}</span>
+          <p className="px-6 pb-4 text-sm text-muted-foreground">
+            Recommended:{" "}
+            {recommendedSpecialities.join(", ")}
           </p>
         )}
       </Card>
 
-      <div className="flex flex-wrap gap-3 items-center">
-        <Input
-          placeholder="First name"
-          value={filters.firstName}
-          onChange={(e) => setFilters({ ...filters, firstName: e.target.value, page: 1 })}
-          className="w-40"
-        />
-        <Input
-          placeholder="Last name"
-          value={filters.lastName}
-          onChange={(e) => setFilters({ ...filters, lastName: e.target.value, page: 1 })}
-          className="w-40"
-        />
-        <Input
-          placeholder="Speciality"
-          value={filters.speciality}
-          onChange={(e) => setFilters({ ...filters, speciality: e.target.value, page: 1 })}
-          className="w-48"
-        />
-        <Select
-          value={filters.sortOrder}
-          onValueChange={(value) => setFilters({ ...filters, sortOrder: value as "ASC" | "DESC" })}
-        >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Sort Order" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ASC">Ascending</SelectItem>
-            <SelectItem value="DESC">Descending</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button size="sm" onClick={() => fetchDoctors(1)}>Search</Button>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Filters</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+        <div className="flex flex-wrap gap-3 items-center w-full">
+
+          <Input
+            placeholder="First name"
+            className="flex-1 min-w-[140px]"
+            value={filters.firstName}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                firstName: e.target.value,
+                page: 1,
+              })
+            }
+          />
+
+          <Input
+            placeholder="Last name"
+            className="flex-1 min-w-[140px]"
+            value={filters.lastName}
+            onChange={(e) =>
+              setFilters({
+                ...filters,
+                lastName: e.target.value,
+                page: 1,
+              })
+            }
+          />
+
+          <div className="flex-[1.5] min-w-[200px]">
+            <DoctorSpecialitiesFilter
+              value={filters.speciality}
+              onChange={(val) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  speciality: val,
+                  page: 1,
+                }))
+              }
+            />
+          </div>
+
+          <div className="flex-1 min-w-[140px]">
+            <Select
+              value={filters.sortOrder}
+              onValueChange={(value) =>
+                setFilters({
+                  ...filters,
+                  sortOrder: value as "ASC" | "DESC",
+                })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="ASC">ASC</SelectItem>
+                <SelectItem value="DESC">DESC</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button
+            className="shrink-0 px-6"
+            onClick={() => fetchDoctors(1)}
+          >
+            Search
+          </Button>
+
+        </div>
+      </CardContent>
+      </Card>
 
       {loading ? (
         <p>Loading doctors...</p>
       ) : error ? (
-        error === "No doctors found." ? (
-          <Card className="border-gray-300 bg-gray-50">
-            <CardContent className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-gray-500"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 13h6m-6 4h6M9 9h6M7 5h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2z"
-                />
-              </svg>
-              <span className="text-gray-600">{error}</span>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="border-red-400 bg-red-50 transition-opacity duration-500">
-            <CardContent className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-red-500"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span className="text-red-700 font-medium">{error}</span>
-            </CardContent>
-          </Card>
-        )
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="p-4 text-red-700">
+            {error}
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-4">
+
           {doctors.map((doctor) => (
             <Card
               key={doctor.id}
-              onClick={() => router.push(`/doctors/${doctor.userId}`)}
+              onClick={() =>
+                router.push(`/doctors/${doctor.userId}`)
+              }
               className="cursor-pointer hover:shadow-lg hover:scale-[1.01] transition"
             >
               <CardContent className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
                 <div>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle>
                     {doctor.firstName} {doctor.lastName}
                   </CardTitle>
-                  <CardDescription className="text-gray-600">{doctor.bio}</CardDescription>
+
+                  <CardDescription>
+                    {doctor.bio}
+                  </CardDescription>
+
                   <p className="mt-2">
-                    <b>Specialities:</b> {doctor.specialities.join(", ")}
+                    <b>Specialities:</b>{" "}
+                    {doctor.specialities.join(", ")}
                   </p>
-                  <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
-                    <span className="text-yellow-500">★</span>
-                    <span className="font-medium">
-                      {doctor.averageRating?.toFixed(1) ?? "0.0"}
-                    </span>
-                    <span className="text-gray-400">
-                      ({doctor.ratingsCount ?? 0} reviews)
-                    </span>
-                  </div>
+
+                  <p className="text-sm text-muted-foreground mt-2">
+                    <span className="text-yellow-400">★</span> {doctor.averageRating?.toFixed(1) ?? "0.0"} (
+                    {doctor.ratingsCount ?? 0})
+                  </p>
                 </div>
+
               </CardContent>
             </Card>
           ))}
+
         </div>
       )}
 
-      <div className="flex justify-center items-center gap-4">
+      <div className="flex justify-center gap-4 items-center">
         <Button
           variant="outline"
           disabled={filters.page === 1}
@@ -254,15 +306,20 @@ export default function DoctorsPage() {
         >
           Previous
         </Button>
-        <span>Page {filters.page} / {totalPages}</span>
+
+        <span className="text-sm text-muted-foreground">
+          Page {filters.page} / {totalPages}
+        </span>
+
         <Button
           variant="outline"
-          disabled={filters.page === totalPages || totalPages === 0}
+          disabled={filters.page === totalPages}
           onClick={() => fetchDoctors(filters.page + 1)}
         >
           Next
         </Button>
       </div>
+
     </div>
   )
 }
