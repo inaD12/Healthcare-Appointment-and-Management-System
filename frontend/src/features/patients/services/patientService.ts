@@ -419,8 +419,16 @@ export const patientService = {
           id
           fullName
           birthDate
-          allergiesList
-          conditionsList
+          allergiesList {
+            id
+            substance
+            reaction
+          }
+
+          conditionsList {
+            id
+            name
+          }
         }
 
         upcomingAppointment: myAppointments(
