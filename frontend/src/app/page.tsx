@@ -20,6 +20,7 @@ import {
   PatientDashboard,
   DoctorDashboardView,
   DoctorEncounterConnection,
+  AdminDashboard,
 } from "@/features/patients/types/patientTypes"
 
 import { DashboardCard } from "@/components/home/DashboardCard"
@@ -35,8 +36,8 @@ export default function HomePage() {
   const isPatient = roles.includes("Patient")
 
   const [dashboard, setDashboard] = useState<PatientDashboard | null>(null)
-  const [doctorDashboard, setDoctorDashboard] =
-    useState<DoctorDashboardView | null>(null)
+  const [doctorDashboard, setDoctorDashboard] = useState<DoctorDashboardView | null>(null)
+  const [adminDashboard, setAdminDashboard] = useState<AdminDashboard | null>(null)
 
   const [loading, setLoading] = useState(false)
 
@@ -66,6 +67,17 @@ export default function HomePage() {
 
     load()
   }, [isDoctor, user?.id])
+
+  useEffect(() => {
+    if (!isAdmin) return
+
+    const load = async () => {
+      const data = await patientService.getAdminDashboard()
+      setAdminDashboard(data)
+    }
+
+    load()
+  }, [isAdmin])
 
   const {
     data: encounterPages,
@@ -305,27 +317,27 @@ export default function HomePage() {
           </>
         )}
 
-        {isAdmin && (
+        {isAdmin && adminDashboard && (
           <div className="grid gap-6 md:grid-cols-3">
             <DashboardCard
               icon={<Users className="h-5 w-5" />}
-              title="Total Users"
-              value="—"
-              description="System-wide"
+              title="Total Patients"
+              value={adminDashboard.patientsTotalCount}
+              description="Registered in system"
             />
 
             <DashboardCard
-              icon={<Stethoscope className="h-5 w-5" />}
-              title="Doctors"
-              value="—"
-              description="Active staff"
+              icon={<FileText className="h-5 w-5" />}
+              title="Encounters"
+              value={adminDashboard.encountersTotalCount}
+              description="Total recorded"
             />
 
             <DashboardCard
               icon={<Calendar className="h-5 w-5" />}
-              title="Appointments Today"
-              value="—"
-              description="All clinics"
+              title="Appointments"
+              value={adminDashboard.appointmentsTotalCount}
+              description="Total scheduled"
             />
           </div>
         )}
@@ -355,24 +367,52 @@ export default function HomePage() {
                   Browse Doctors
                 </Link>
               </Button>
+              
+              <Button asChild>
+                <Link href="/settings">
+                  Settings
+                </Link>
+              </Button>
             </>
           )}
 
           {isDoctor && (
-            <Button asChild>
-              <Link href="/doctors/profile">
-                <Users className="mr-2 h-4 w-4" />
-                View Profile
-              </Link>
-            </Button>
+            <>
+              <Button asChild>
+                <Link href="/doctors/profile">
+                  <Users className="mr-2 h-4 w-4" />
+                  View Profile
+                </Link>
+              </Button>
+
+              <Button asChild>
+                  <Link href="/settings">
+                    Settings
+                  </Link>
+              </Button>
+            </>
           )}
 
           {isAdmin && (
-            <Button asChild>
-              <Link href="/admin/users">
-                Manage Users
-              </Link>
-            </Button>
+            <>
+              <Button asChild>
+                <Link href="/admin/users">
+                  Manage Users
+                </Link>
+              </Button>
+
+              <Button asChild>
+                <Link href="/admin/users/create">
+                  Create User
+                </Link>
+              </Button>
+
+              <Button asChild>
+                <Link href="/settings">
+                  Settings
+                </Link>
+              </Button>
+            </>
           )}
         </div>
       </Card>
