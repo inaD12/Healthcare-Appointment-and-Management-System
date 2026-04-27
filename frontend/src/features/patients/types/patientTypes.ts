@@ -318,6 +318,12 @@ export interface PatientDashboard {
   }
 }
 
+export interface AdminDashboard {
+  patientsTotalCount: number
+  encountersTotalCount: number
+  appointmentsTotalCount: number
+}
+
 export interface DoctorAppointment {
   id: string
   start: string

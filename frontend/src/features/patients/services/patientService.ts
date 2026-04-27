@@ -31,6 +31,7 @@ import {
   DoctorEncounterConnection,
   MyPatientInfo,
   Appointment,
+  AdminDashboard,
 } from "../types/patientTypes"
 
 export const patientService = {
@@ -503,8 +504,33 @@ export const patientService = {
 
     return res.data?.data
   },
+  getAdminDashboard: async (): Promise<AdminDashboard> => {
+    const query = `
+      query GetAdminDashboard {
+        patients(first: 1) {
+          totalCount
+        }
+        encounters(first: 1) {
+          totalCount
+        }
+        appointments(first: 1) {
+          totalCount
+        }
+      }
+      `
+
+    const res = await api.post(ENDPOINTS.patients.graphql, { query })
+
+    const data = res.data.data
+
+    return {
+      patientsTotalCount: data.patients.totalCount,
+      encountersTotalCount: data.encounters.totalCount,
+      appointmentsTotalCount: data.appointments.totalCount
+    }
+  },
   
-getDoctorDashboard: async (
+  getDoctorDashboard: async (
     doctorId: string
   ): Promise<DoctorDashboardView> => {
     const today = new Date().toISOString().split("T")[0]

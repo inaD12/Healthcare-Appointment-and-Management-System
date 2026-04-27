@@ -37,4 +37,17 @@ public sealed class EncounterQueries
 
         return res;
     }
+    
+    [UsePaging(IncludeTotalCount = true)]
+    [UseProjection]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<Encounter> GetEncounters(
+        PatientsQueryDbContext queryDbContext)
+    {
+        var res = queryDbContext.Encounters
+            .AsNoTracking();
+
+        return res;
+    }
 };
