@@ -71,7 +71,7 @@ export default function AppointmentPageClient({
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="max-w-4xl mx-auto p-6 space-y-12">
 
       <AppointmentHeader appointment={appointment} />
 

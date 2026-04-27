@@ -19,6 +19,11 @@ import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 import { DoctorRatings } from "@/components/ratings/DoctorRatings"
+import BookingConfirmBar from "@/features/doctors/components/BookingConfirmBar"
+import CalendarSection from "@/features/doctors/components/CalendarSection"
+import DoctorHeader from "@/features/doctors/components/DoctorHeader"
+import DurationSelector from "@/features/doctors/components/DurationSelector"
+import TimeSlotSection from "@/features/doctors/components/TimeSlotSection"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -143,117 +148,44 @@ export default function DoctorCalendarClient({
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-6">
+    <>
+    <DoctorHeader
+        doctor={doctor}
+        ratings={ratings}
+        ratingsPage={ratingsPage}
+        ratingsTotalPages={ratingsTotalPages}
+        onPageChange={fetchRatings}
+        />
 
-      {!rescheduleId && (
-        <>
-          <Card>
-            <CardContent>
-              <CardTitle className="text-2xl flex justify-between">
-                {doctor.firstName} {doctor.lastName}
-                <span className="text-yellow-600 text-sm">
-                  ⭐ {doctor.averageRating?.toFixed(1) ?? "0.0"} ({doctor.ratingsCount ?? 0})
-                </span>
-              </CardTitle>
-              <CardDescription>{doctor.bio}</CardDescription>
-              <p><b>Specialities:</b> {doctor.specialities.join(", ")}</p>
-            </CardContent>
-          </Card>
+    <CalendarSection
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        weekdays={weekdays}
+        calendarDays={calendarDays}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        rescheduleId={rescheduleId}
+        />
 
-          <DoctorRatings
-            ratings={ratings}
-            page={ratingsPage}
-            totalPages={ratingsTotalPages}
-            onPageChange={fetchRatings}
-          />
-        </>
-      )}
+    <DurationSelector duration={duration} setDuration={setDuration} />
 
-      <Card className="p-4">
-        <CardContent>
-          <h2 className="text-xl font-semibold mb-4">
-            {rescheduleId ? "Reschedule Appointment" : "Book an Appointment"}
-          </h2>
+    {selectedDate && (
+    <TimeSlotSection
+        selectedDate={selectedDate}
+        timeSlots={timeSlots}
+        selectedSlot={selectedSlot}
+        setSelectedSlot={setSelectedSlot}
+    />
+    )}
 
-          <div className="flex justify-between items-center mb-2">
-            <Button onClick={() =>
-              setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
-            }>
-              Previous
-            </Button>
-
-            <h3 className="text-lg font-medium">
-              {currentMonth.toLocaleString("default", { month: "long", year: "numeric" })}
-            </h3>
-
-            <Button onClick={() =>
-              setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))
-            }>
-              Next
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-7 text-center font-medium mb-2">
-            {weekdays.map(d => <div key={d}>{d}</div>)}
-          </div>
-
-          <CalendarGrid
-            days={calendarDays}
-            selectedDate={selectedDate}
-            onSelect={setSelectedDate}
-          />
-        </CardContent>
-      </Card>
-
-      <Card className="p-4">
-        <CardTitle>Select Duration</CardTitle>
-        <CardContent className="flex gap-2 mt-3">
-          {[15, 30, 60].map(d => (
-            <Button
-              key={d}
-              size="sm"
-              variant={duration === d ? "default" : "outline"}
-              onClick={() => setDuration(d as 15 | 30 | 60)}
-            >
-              {d} min
-            </Button>
-          ))}
-        </CardContent>
-      </Card>
-
-      {selectedDate && (
-        <Card className="p-4">
-          <CardContent>
-            <h3 className="font-medium mb-2">
-              Available Slots for {selectedDate.toDateString()}
-            </h3>
-            <TimeSlots
-              slots={timeSlots}
-              selectedSlot={selectedSlot}
-              onSelect={setSelectedSlot}
-            />
-          </CardContent>
-        </Card>
-      )}
-
-      {selectedSlot && (
-        <Card className="p-3">
-          <CardContent>
-            <div className="mb-2 flex justify-between items-center">
-              <p>Selected Time: {new Date(selectedSlot).toLocaleString()}</p>
-              <Button onClick={handleBooking} disabled={bookingLoading}>
-                {bookingLoading ? "Booking..." : rescheduleId ? "Confirm Reschedule" : "Confirm Booking"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {(bookingError || bookingSuccess) && (
-        <p className={`mt-2 text-sm ${bookingError ? "text-red-600" : "text-green-600"}`}>
-          {bookingError || bookingSuccess}
-        </p>
-      )}
-    </div>
+    {selectedSlot && (
+    <BookingConfirmBar
+        selectedSlot={selectedSlot}
+        bookingLoading={bookingLoading}
+        onConfirm={handleBooking}
+        rescheduleId={rescheduleId}
+    />
+    )}
+</>
   )
 }
