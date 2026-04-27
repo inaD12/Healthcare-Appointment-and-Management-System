@@ -69,7 +69,7 @@ export function PersonProfileCard({
   return (
     <Card className="rounded-2xl border shadow-sm hover:shadow-md transition">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">
+        <CardTitle className="text-xl font-semibold">
           Profile
         </CardTitle>
       </CardHeader>
