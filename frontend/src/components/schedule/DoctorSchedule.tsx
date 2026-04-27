@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
@@ -10,19 +10,27 @@ import { AppointmentResponse } from "@/features/appointments/types/appointmentsT
 type FetchAppointments = (params: {
   startDate?: string
   endDate?: string
-}) => Promise<{ data: any }>
+}) => Promise<{ data: { data: AppointmentResponse[] } | AppointmentResponse[] }>
 
 type Props = {
+  initialAppointments?: AppointmentResponse[]
   onAppointmentClick?: (appointment: AppointmentResponse) => void
   fetchAppointments: FetchAppointments
 }
 
 export default function DoctorSchedule({
+  initialAppointments = [],
   onAppointmentClick,
   fetchAppointments,
 }: Props) {
-  const [appointments, setAppointments] = useState<AppointmentResponse[]>([])
-  const [weekStart, setWeekStart] = useState(getStartOfWeek(new Date()))
+
+  const [appointments, setAppointments] =
+    useState<AppointmentResponse[]>(initialAppointments)
+
+  const [weekStart, setWeekStart] =
+    useState(getStartOfWeek(new Date()))
+
+  const firstLoad = useRef(true)
 
   function getStartOfWeek(date: Date) {
     const d = new Date(date)
@@ -32,21 +40,31 @@ export default function DoctorSchedule({
     return d
   }
 
-  const getEndOfWeek = (start: Date) => {
+  function getEndOfWeek(start: Date) {
     const end = new Date(start)
     end.setDate(start.getDate() + 7)
     return end
   }
 
-  const days = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date(weekStart)
-    d.setDate(weekStart.getDate() + i)
-    return d
-  })
+  const days = useMemo(() => {
+    return Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date(weekStart)
+      d.setDate(weekStart.getDate() + i)
+      return d
+    })
+  }, [weekStart])
 
   useEffect(() => {
+
+    if (firstLoad.current) {
+      firstLoad.current = false
+      return
+    }
+
     const fetchData = async () => {
+
       try {
+
         const formatDateOnly = (date: Date) =>
           date.toISOString().split("T")[0]
 
@@ -55,30 +73,48 @@ export default function DoctorSchedule({
           endDate: formatDateOnly(getEndOfWeek(weekStart)),
         })
 
-        const data = res.data.data ?? res.data
+        const data =
+          "data" in res.data ? res.data.data : res.data
 
-        const sorted = data.sort(
-          (a: AppointmentResponse, b: AppointmentResponse) =>
+        const sorted = [...data].sort(
+          (a, b) =>
             new Date(a.duration.start).getTime() -
             new Date(b.duration.start).getTime()
         )
 
         setAppointments(sorted)
+
       } catch (err: any) {
+
         if (err.response?.status !== 404) {
           console.error(err)
         }
+
+        setAppointments([])
+
       }
+
     }
 
     fetchData()
+
   }, [weekStart, fetchAppointments])
 
-  const appointmentsByDay = (day: Date) =>
-    appointments.filter(a => {
-      const d = new Date(a.duration.start)
-      return d.toDateString() === day.toDateString()
+  const appointmentsByDay = useMemo(() => {
+
+    const map: Record<string, AppointmentResponse[]> = {}
+
+    appointments.forEach(a => {
+      const day = new Date(a.duration.start).toDateString()
+
+      if (!map[day]) map[day] = []
+
+      map[day].push(a)
     })
+
+    return map
+
+  }, [appointments])
 
   const nextWeek = () => {
     const d = new Date(weekStart)
@@ -115,53 +151,69 @@ export default function DoctorSchedule({
 
       <div className="grid grid-cols-7 gap-4">
 
-        {days.map(day => (
-          <div key={day.toISOString()} className="space-y-3">
+        {days.map(day => {
 
-            <div className="text-center font-medium border-b pb-1">
-              <p className="text-sm text-muted-foreground">
-                {day.toLocaleDateString(undefined, { weekday: "short" })}
-              </p>
-              <p className="text-sm">{day.getDate()}</p>
-            </div>
+          const key = day.toDateString()
+          const dayAppointments = appointmentsByDay[key] || []
 
-            <div className="space-y-2">
+          return (
 
-              {appointmentsByDay(day).length === 0 && (
-                <p className="text-xs text-muted-foreground text-center">
-                  —
+            <div key={day.toISOString()} className="space-y-3">
+
+              <div className="text-center font-medium border-b pb-1">
+                <p className="text-sm text-muted-foreground">
+                  {day.toLocaleDateString(undefined, { weekday: "short" })}
                 </p>
-              )}
+                <p className="text-sm">{day.getDate()}</p>
+              </div>
 
-              {appointmentsByDay(day).map(a => {
-                const start = new Date(a.duration.start)
+              <div className="space-y-2">
 
-                return (
-                  <button
-                    key={a.id}
-                    onClick={() => onAppointmentClick?.(a)}
-                    className="w-full text-left rounded-md border p-2 text-xs hover:bg-muted transition"
-                  >
-                    <div className="font-medium">
-                      {start.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
+                {dayAppointments.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    —
+                  </p>
+                )}
 
-                    <div className="text-muted-foreground">
-                      {a.status}
-                    </div>
-                  </button>
-                )
-              })}
+                {dayAppointments.map(a => {
+
+                  const start = new Date(a.duration.start)
+
+                  return (
+
+                    <button
+                      key={a.id}
+                      onClick={() => onAppointmentClick?.(a)}
+                      className="w-full text-left rounded-md border p-2 text-xs hover:bg-muted transition"
+                    >
+
+                      <div className="font-medium">
+                        {start.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
+
+                      <div className="text-muted-foreground">
+                        {a.status}
+                      </div>
+
+                    </button>
+
+                  )
+
+                })}
+
+              </div>
 
             </div>
 
-          </div>
-        ))}
+          )
+
+        })}
 
       </div>
+
     </Card>
   )
 }
