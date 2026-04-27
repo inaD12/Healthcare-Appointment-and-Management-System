@@ -14,7 +14,6 @@ import {
 
 import { patientService } from "@/features/patients/services/patientService"
 import { getCurrentUser } from "@/features/users/services/userService"
-import Link from "next/link"
 
 export default async function HomePage() {
   let user = null
