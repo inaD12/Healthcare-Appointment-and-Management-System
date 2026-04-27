@@ -10,10 +10,10 @@ import {
 
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 
-import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader"
-import AppointmentInfoCard from "@/components/doctor/appointment/AppointmentInfoCard"
-import RatingCard from "@/components/doctor/appointment/RatingCard"
-import StartEncounterCard from "@/components/doctor/appointment/StartEncounterCard"
+import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
+import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
+import RatingCard from "@/features/doctors/components/appointment/RatingCard"
+import StartEncounterCard from "@/features/doctors/components/appointment/StartEncounterCard"
 import EncounterCard from "@/features/encounters/components/EncounterCard"
 
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"

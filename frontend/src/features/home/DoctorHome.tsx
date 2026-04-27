@@ -4,7 +4,7 @@ import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query"
 import { Calendar, Users, FileText } from "lucide-react"
 import Link from "next/link"
 
-import { DashboardCard } from "@/components/home/DashboardCard"
+import { DashboardCard } from "@/features/home/DashboardCard"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"

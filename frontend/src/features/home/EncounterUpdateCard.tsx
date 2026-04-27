@@ -3,7 +3,7 @@
 import { DashboardEncounter } from "@/features/patients/types/patientTypes"
 import Link from "next/link"
 import { Stethoscope } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card"
 
 export function EncounterUpdateCard({
   encounter,

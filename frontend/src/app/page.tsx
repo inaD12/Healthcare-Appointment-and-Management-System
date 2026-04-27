@@ -1,8 +1,8 @@
-import AdminHome from "@/components/home/AdminHome"
-import { DoctorHome } from "@/components/home/DoctorHome"
-import PatientHome from "@/components/home/PatientHome"
-import QuickActions from "@/components/home/QuickActions"
-import UnauthenticatedHome from "@/components/home/UnauthenticatedHome"
+import AdminHome from "@/features/home/AdminHome"
+import { DoctorHome } from "@/features/home/DoctorHome"
+import PatientHome from "@/features/home/PatientHome"
+import QuickActions from "@/features/home/QuickActions"
+import UnauthenticatedHome from "@/features/home/UnauthenticatedHome"
 
 import {
   Card,

@@ -8,8 +8,8 @@ import {
   EncounterStatus,
 } from "@/features/patients/types/patientTypes"
 
-import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader"
-import AppointmentInfoCard from "@/components/doctor/appointment/AppointmentInfoCard"
+import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
+import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
 import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
 import EncounterCard from "@/features/encounters/components/EncounterCard"
 
