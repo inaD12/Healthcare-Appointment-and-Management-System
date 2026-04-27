@@ -13,10 +13,12 @@ public sealed class Query : ObjectType
 
         descriptor.Field<EncounterQueries>(t => t.GetMyEncounters(default!, default!));
         descriptor.Field<EncounterQueries>(t => t.GetEncountersByDoctor(default!, default!));
+        descriptor.Field<EncounterQueries>(t => t.GetEncounters(default!));
         
         descriptor.Field<AppointmentQueries>(t => t.GetAppointmentById(default!, default!));
         descriptor.Field<AppointmentQueries>(t => t.GetAppointmentsByUserId(default!, default!));
         descriptor.Field<AppointmentQueries>(t => t.GetAppointmentsByDoctor(default!, default!));
         descriptor.Field<AppointmentQueries>(t => t.GetMyAppointments(default!, default!));
+        descriptor.Field<AppointmentQueries>(t => t.GetAppointments(default!));
     }
 }

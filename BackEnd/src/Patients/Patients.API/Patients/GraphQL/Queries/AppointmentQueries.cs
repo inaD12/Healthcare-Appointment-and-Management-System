@@ -53,6 +53,19 @@ public sealed class AppointmentQueries
         
         return res;
     }
+    
+    [UsePaging(IncludeTotalCount = true)]
+    [UseProjection]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<AppointmentProjection> GetAppointments(
+        PatientsQueryDbContext queryDbContext)
+    {
+        var res = queryDbContext.AppointmentProjections
+            .AsNoTracking();
+        
+        return res;
+    }
 
     [UseProjection]
     public IQueryable<AppointmentProjection> GetAppointmentById(
