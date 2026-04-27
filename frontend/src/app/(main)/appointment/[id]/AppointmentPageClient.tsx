@@ -4,7 +4,6 @@ import { useState } from "react"
 
 import {
   AppointmentStatus,
-  EncounterDetails,
 } from "@/features/patients/types/patientTypes"
 
 import AppointmentHeader from "@/components/doctor/appointment/AppointmentHeader"

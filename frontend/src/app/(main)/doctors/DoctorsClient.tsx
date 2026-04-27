@@ -23,6 +23,8 @@ import { DoctorCard } from "@/features/doctors/components/DoctorCard"
 import { DoctorsFiltersCard } from "@/features/doctors/components/DoctorFiltersCard"
 import { DoctorsHeader } from "@/features/doctors/components/DoctorsHeader"
 import { DoctorsPagination } from "@/features/doctors/components/DoctorsPagination"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { ROLES } from "@/features/users/types/userTypes"
 
 type Props = {
   initialDoctors: DoctorQueryViewModel[]
@@ -33,7 +35,7 @@ export default function DoctorsClient({
   initialDoctors,
   initialTotalPages,
 }: Props) {
-  const auth = useAuthGuard()
+  const auth = useRequireRole(ROLES.DOCTOR)
   const router = useRouter()
 
   const [doctors, setDoctors] =

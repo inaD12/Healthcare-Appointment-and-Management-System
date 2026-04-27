@@ -3,17 +3,18 @@
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 
-import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { patientService } from "@/features/patients/services/patientService"
 import { AppointmentList } from "@/components/appointments/AppointmentsList"
 import { useCallback, useEffect, useState } from "react"
 import { useAppointmentsPagination } from "@/components/appointments/useAppointmentsPagination"
 import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { ROLES } from "@/features/users/types/userTypes"
 
 const PAGE_SIZE = 5
 
 export default function PatientDashboardPage() {
-  useAuthGuard()
+  useRequireRole(ROLES.PATIENT)
   const router = useRouter()
 
   const fetchAppointments = useCallback(

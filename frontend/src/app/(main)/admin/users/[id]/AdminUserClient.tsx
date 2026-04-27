@@ -11,7 +11,7 @@ import { addSpecialityByAdmin, removeSpecialityByAdmin } from "@/features/doctor
 import { useDeleteRating } from "@/features/admin/hooks/useDeleteRating"
 import { useDoctorRatings } from "@/features/admin/hooks/useDoctorRatings"
 import { PatientProfile } from "@/features/patients/types/patientTypes"
-import { UserQueryResponse } from "@/features/users/types/userTypes"
+import { ROLES, UserQueryResponse } from "@/features/users/types/userTypes"
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
 import { AppointmentList } from "@/components/appointments/AppointmentsList"
@@ -19,6 +19,7 @@ import { PatientMedicalCard } from "@/components/patient/PatientMedicalCard"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { patientService } from "@/features/patients/services/patientService"
 import { useAppointmentsPagination } from "@/components/appointments/useAppointmentsPagination"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 
 interface AdminUserClientProps {
   user: UserQueryResponse
@@ -37,6 +38,8 @@ export default function AdminUserClient({
   initialRatingsTotalPages,
   initialAppointments
 }: AdminUserClientProps) {
+  useRequireRole(ROLES.ADMIN)
+  
   const router = useRouter()
   const [ratingsPage, setRatingsPage] = useState(1)
 

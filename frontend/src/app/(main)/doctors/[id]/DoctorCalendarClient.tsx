@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
 import {
@@ -10,20 +9,17 @@ import {
   rescheduleAppointment
 } from "@/features/appointments/services/appointmentService"
 
-import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
-import { CalendarGrid } from "@/components/calendar/CalendarGrid"
-import { TimeSlots } from "@/components/calendar/TimeSlots"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
-import { DoctorRatings } from "@/components/ratings/DoctorRatings"
 import BookingConfirmBar from "@/features/doctors/components/BookingConfirmBar"
 import CalendarSection from "@/features/doctors/components/CalendarSection"
 import DoctorHeader from "@/features/doctors/components/DoctorHeader"
 import DurationSelector from "@/features/doctors/components/DurationSelector"
 import TimeSlotSection from "@/features/doctors/components/TimeSlotSection"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { ROLES } from "@/features/users/types/userTypes"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -40,7 +36,7 @@ export default function DoctorCalendarClient({
   initialRatingsTotalPages,
   rescheduleId,
 }: Props) {
-  const auth = useAuthGuard()
+  const auth = useRequireRole(ROLES.PATIENT)
   const patientId = auth?.keycloak?.subject
 
   const [appointments, setAppointments] = useState(initialAppointments)

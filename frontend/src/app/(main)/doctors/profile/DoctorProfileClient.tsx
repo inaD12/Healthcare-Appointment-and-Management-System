@@ -14,6 +14,8 @@ import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 import DoctorBioCard from "@/features/doctors/components/profile/DoctorBioCard"
 import DoctorWorkDaysCard from "@/features/doctors/components/profile/DoctorWorkDaysCard"
 import DoctorAvailabilityExceptionsCard from "@/features/doctors/components/profile/DoctorAvailabilityExceptionsCard"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { ROLES } from "@/features/users/types/userTypes"
 
 
 type Props = {
@@ -26,7 +28,7 @@ export default function DoctorProfileClient({
   appointments
 }: Props) {
 
-  useAuthGuard()
+  useRequireRole(ROLES.DOCTOR)
 
   const router = useRouter()
 
