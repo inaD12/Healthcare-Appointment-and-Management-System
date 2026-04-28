@@ -21,12 +21,13 @@ import { ROLES } from "@/features/users/types/usersTypes"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ratingService } from "@/features/ratings/services/ratingService"
+import AppointmentControlsCard from "@/features/appointments/components/AppointmentControlsCard"
 
 export default function AdminAppointmentPageClient({
   initialAppointment,
   initialRating,
 }: any) {
-  const [appointment] = useState(initialAppointment)
+  const [appointment, setAppointment] = useState(initialAppointment)
   const [rating, setRating] = useState(initialRating)
 
   const [encounter, setEncounter] = useState<EncounterDetails | null>(
@@ -77,7 +78,21 @@ export default function AdminAppointmentPageClient({
 
       <AppointmentInfoCard appointment={appointment} />
 
-      {appointment.status === AppointmentStatus.Completed && (
+      {appointment.status === AppointmentStatus.Scheduled &&(
+        <AppointmentControlsCard
+          appointmentId={appointment.id}
+          doctorUserId={appointment.doctorId}
+          status={appointment.status}
+          onStatusChange={(status) =>
+            setAppointment((prev: any) => ({
+              ...prev,
+              status,
+            }))
+          }
+        />
+        )}
+
+      {appointment.status === AppointmentStatus.Completed && rating && (
         <AppointmentRatingCard
           rating={rating}
           onDelete={handleDeleteRating}
