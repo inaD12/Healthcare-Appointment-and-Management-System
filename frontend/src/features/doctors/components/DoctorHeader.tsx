@@ -5,7 +5,7 @@ import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 
 type Props = {
   doctor: DoctorQueryViewModel
-  ratings: RatingQueryViewModel[]
+  ratings?: RatingQueryViewModel[]
   ratingsPage: number
   ratingsTotalPages: number
   onPageChange: (page: number) => void
@@ -33,12 +33,14 @@ export default function DoctorHeader({
         </CardContent>
       </Card>
 
-      <DoctorRatings
-        ratings={ratings}
-        page={ratingsPage}
-        totalPages={ratingsTotalPages}
-        onPageChange={onPageChange}
-      />
+      {ratings && (
+        <DoctorRatings
+          ratings={ratings}
+          page={ratingsPage}
+          totalPages={ratingsTotalPages}
+          onPageChange={onPageChange}
+        />
+      )}
     </>
   )
 }

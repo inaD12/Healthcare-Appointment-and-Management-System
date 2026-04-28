@@ -13,12 +13,13 @@ import EncounterCard from "@/features/encounters/components/EncounterCard"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
 import { ROLES } from "@/features/users/types/usersTypes"
 import { ratingService } from "@/features/ratings/services/ratingService"
+import AppointmentControlsCard from "@/features/appointments/components/AppointmentControlsCard"
 
 export default function AppointmentPageClient({
   initialAppointment,
   initialRating,
 }: any) {
-  const [appointment] = useState(initialAppointment)
+  const [appointment, setAppointment] = useState(initialAppointment)
   const [rating, setRating] = useState(initialRating)
 
   const encounter = appointment?.encounterDetails ?? null
@@ -75,6 +76,20 @@ export default function AppointmentPageClient({
       <AppointmentHeader appointment={appointment} />
 
       <AppointmentInfoCard appointment={appointment} />
+
+      {appointment.status === AppointmentStatus.Scheduled &&(
+              <AppointmentControlsCard
+                appointmentId={appointment.id}
+                doctorUserId={appointment.doctorId}
+                status={appointment.status}
+                onStatusChange={(status) =>
+                  setAppointment((prev: any) => ({
+                    ...prev,
+                    status,
+                  }))
+                }
+              />
+              )}
 
       {appointment.status === AppointmentStatus.Completed && (
         <AppointmentRatingCard
