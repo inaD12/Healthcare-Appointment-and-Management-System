@@ -131,8 +131,7 @@ export const AddendumCommandResponseSchema = z.object({
     .max(cfg.ID_MAX_LENGTH),
 })
 
-
-export interface EncounterListItem {
+export type EncounterListItem = {
   id: string
   startedAt: string
   status: EncounterStatus
@@ -140,7 +139,7 @@ export interface EncounterListItem {
   patientId: string
 }
 
-export interface AppointmentByIdResponse {
+export type AppointmentByIdResponse = {
   appointmentById: {
     id: string
     start: string
@@ -154,7 +153,7 @@ export interface AppointmentByIdResponse {
   }[]
 }
 
-export interface EncounterDetails {
+export type EncounterDetails = {
   id: string
   startedAt: string
   finalizedAt?: string | null
@@ -165,20 +164,20 @@ export interface EncounterDetails {
   addendums: Addendum[]
 }
 
-export interface Diagnosis {
+export type Diagnosis = {
   id: string
   icdCode: string
   description: string
 }
 
-export interface Prescription {
+export type Prescription = {
   id: string
   name: string
   dosage: string
   instructions: string
 }
 
-export interface Addendum {
+export type Addendum = {
   id: string
   text: string
   createdAt: string
@@ -190,7 +189,7 @@ export enum EncounterStatus {
   Locked = "LOCKED"
 }
 
-export interface Note {
+export type Note = {
   id: string
   text: string
   createdAt: string
@@ -203,7 +202,7 @@ export enum AppointmentStatus {
   Completed = "COMPLETED"
 }
 
-export interface Appointment {
+export type Appointment = {
   id: string
   start: string
   end: string
@@ -215,12 +214,12 @@ export interface Appointment {
   encounterDetails: EncounterDetails
 }
 
-export interface MyPatientInfo {
+export type MyPatientInfo = {
   profile: PatientProfile
   appointments: Appointment[]
 }
 
-export interface PatientInfo {
+export type PatientInfo = {
   profile: PatientProfile
   appointments: Appointment[]
   pageInfo: {
@@ -229,18 +228,18 @@ export interface PatientInfo {
   }
 }
 
-export interface Allergy {
+export type Allergy = {
   id: string
   substance: string
   reaction: string
 }
 
-export interface Condition {
+export type Condition = {
   id: string
   name: string
 }
 
-export interface PatientProfile {
+export type PatientProfile = {
   id: string
   fullName: string
   birthDate: string
@@ -248,7 +247,7 @@ export interface PatientProfile {
   conditions: Condition[]
 }
 
-export interface DashboardAppointment {
+export type DashboardAppointment = {
   id: string
   start: string
   end: string
@@ -257,7 +256,7 @@ export interface DashboardAppointment {
   doctorName: string
 }
 
-export interface DashboardPrescription {
+export type DashboardPrescription = {
   id: string
   medicationName: string
   dosage: string
@@ -266,21 +265,21 @@ export interface DashboardPrescription {
   deletedAt?: string | null
 }
 
-export interface DashboardMedicalNote {
+export type DashboardMedicalNote = {
   id: string
   text: string
   createdAt: string
   deletedAt?: string | null
 }
 
-export interface DashboardAddendum {
+export type DashboardAddendum = {
   id: string
   text: string
   createdAt: string
   deletedAt?: string | null
 }
 
-export interface DashboardDiagnosis {
+export type DashboardDiagnosis = {
   id: string
   icdCode: string
   description: string
@@ -288,7 +287,7 @@ export interface DashboardDiagnosis {
   deletedAt?: string | null
 }
 
-export interface DashboardEncounter {
+export type DashboardEncounter = {
   id: string
   startedAt: string
   updatedAt: string
@@ -302,7 +301,7 @@ export interface DashboardEncounter {
   diagnoses: DashboardDiagnosis[]
 }
 
-export interface PatientDashboard {
+export type PatientDashboard = {
   myPatientHeader: PatientProfile
 
   upcomingAppointment: {
@@ -318,13 +317,13 @@ export interface PatientDashboard {
   }
 }
 
-export interface AdminDashboard {
+export type AdminDashboard = {
   patientsTotalCount: number
   encountersTotalCount: number
   appointmentsTotalCount: number
 }
 
-export interface DoctorAppointment {
+export type DoctorAppointment = {
   id: string
   start: string
   end: string
@@ -333,14 +332,14 @@ export interface DoctorAppointment {
   patientId: string
 }
 
-export interface DoctorEncounterNote {
+export type DoctorEncounterNote = {
   id: string
   text: string
   createdAt: string
   deletedAt?: string | null
 }
 
-export interface DoctorEncounterDiagnosis {
+export type DoctorEncounterDiagnosis = {
   id: string
   icdCode: string
   description: string
@@ -348,7 +347,7 @@ export interface DoctorEncounterDiagnosis {
   deletedAt?: string | null
 }
 
-export interface DoctorEncounterPrescription {
+export type DoctorEncounterPrescription = {
   id: string
   medicationName: string
   dosage: string
@@ -357,14 +356,14 @@ export interface DoctorEncounterPrescription {
   deletedAt?: string | null
 }
 
-export interface DoctorEncounterAddendum {
+export type DoctorEncounterAddendum = {
   id: string
   text: string
   createdAt: string
   deletedAt?: string | null
 }
 
-export interface DoctorEncounter {
+export type DoctorEncounter = {
   id: string
   appointmentId: string
   patientId: string
@@ -382,7 +381,7 @@ export interface DoctorEncounter {
   addendums: DoctorEncounterAddendum[]
 }
 
-export interface DoctorDashboard {
+export type DoctorDashboard = {
   appointmentsByDoctor: {
     nodes: DoctorAppointment[]
   }
@@ -392,25 +391,25 @@ export interface DoctorDashboard {
   }
 }
 
-export interface DoctorDashboardView {
+export type DoctorDashboardView = {
   todayAppointments: DoctorAppointment[]
   nextAppointment?: DoctorAppointment
   totalToday: number
   minutesUntilNext?: number
 }
 
-export interface TodaySummary {
+export type TodaySummary = {
   nextAppointment?: DoctorAppointment
   todayAppointments: DoctorAppointment[]
   minutesUntilNext?: number
   totalToday: number
 }
 
-export interface DoctorWorkQueue {
+export type DoctorWorkQueue = {
   unfinishedEncounters: DoctorEncounter[]
 }
 
-export interface DoctorEncounterConnectionNode {
+export type DoctorEncounterConnectionNode = {
   id: string
   appointmentId: string
   patientId: string
@@ -422,7 +421,7 @@ export interface DoctorEncounterConnectionNode {
   updatedAt?: string | null
 }
 
-export interface DoctorEncounterConnection {
+export type DoctorEncounterConnection = {
   nodes: DoctorEncounterConnectionNode[]
   totalCount: number
   pageInfo: {
@@ -450,5 +449,6 @@ export type AddAllergyRequest = z.infer<typeof AddAllergySchema>
 export type AddChronicConditionRequest = z.infer<typeof AddChronicConditionSchema>
 export type RemoveAllergyRequest = z.infer<typeof RemoveAllergySchema>
 export type RemoveConditionRequest = z.infer<typeof RemoveConditionSchema>
+
 export type AllergyCommandResponse = z.infer<typeof AllergyCommandResponseSchema>
 export type ConditionCommandResponse = z.infer<typeof ConditionCommandResponseSchema>

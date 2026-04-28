@@ -34,6 +34,7 @@ export type UserPaginatedResponse = {
   hasPreviousPage: boolean
 };
 
+const roleEnum = z.enum(["Patient", "Doctor", "Admin"])
 
 export const registerUserByAdminSchema = z.object({
   email: z
@@ -69,7 +70,7 @@ export const registerUserByAdminSchema = z.object({
     .min(C.ADDRESS_MIN_LENGTH, `Address must be at least ${C.ADDRESS_MIN_LENGTH} characters`)
     .max(C.ADDRESS_MAX_LENGTH, `Address must be at most ${C.ADDRESS_MAX_LENGTH} characters`),
 
-  role: z.enum(["Patient", "Doctor", "Admin"], "Select a role"),
+  role: roleEnum,
 })
 
 export const registerUserSchema = z.object({
@@ -108,13 +109,9 @@ export const registerUserSchema = z.object({
 })
 
 export const getAllUsersSchema = z.object({
-  email: z
-    .string()
-    .optional()
-    .default(""),
+  email: z.string().optional().default(""),
 
-  role: z.enum(["Patient", "Doctor", "Admin"])
-    .optional(),
+  role: roleEnum.optional(),
 
   firstName: z
     .string()
@@ -139,40 +136,36 @@ export const getAllUsersSchema = z.object({
     .max(C.ADDRESS_MAX_LENGTH, `Address must be at most ${C.ADDRESS_MAX_LENGTH} characters`)
     .optional()
     .default(""),
-  
-  emailVerified:z
-    .boolean()
-    .optional(),
+
+  emailVerified: z.boolean().optional(),
 
   sortOrder: z.enum(["ASC", "DESC"]).default("ASC"),
-  
+
   sortPropertyName: z.string().default("Id"),
-  
+
   page: z.number().default(1),
-  
+
   pageSize: z.number().default(10),
 })
 
-export const updateUserSchema = z
-  .object({
-    firstName: z
-      .string()
-      .min(C.FIRSTNAME_MIN_LENGTH, `First name must be at least ${C.FIRSTNAME_MIN_LENGTH} characters`)
-      .max(C.FIRSTNAME_MAX_LENGTH, `First name must be at most ${C.FIRSTNAME_MAX_LENGTH} characters`)
-      .optional(),
+export const updateUserSchema = z.object({
+  firstName: z
+    .string()
+    .min(C.FIRSTNAME_MIN_LENGTH, `First name must be at least ${C.FIRSTNAME_MIN_LENGTH} characters`)
+    .max(C.FIRSTNAME_MAX_LENGTH, `First name must be at most ${C.FIRSTNAME_MAX_LENGTH} characters`)
+    .optional(),
 
-    lastName: z
-      .string()
-      .min(C.LASTNAME_MIN_LENGTH, `Last name must be at least ${C.LASTNAME_MIN_LENGTH} characters`)
-      .max(C.LASTNAME_MAX_LENGTH, `Last name must be at most ${C.LASTNAME_MAX_LENGTH} characters`)
-      .optional(),
-  })
-  .refine(
-    (data) => !!data.firstName || !!data.lastName,
-    {
-      message: "At least one field must be provided",
-    }
-  );
+  lastName: z
+    .string()
+    .min(C.LASTNAME_MIN_LENGTH, `Last name must be at least ${C.LASTNAME_MIN_LENGTH} characters`)
+    .max(C.LASTNAME_MAX_LENGTH, `Last name must be at most ${C.LASTNAME_MAX_LENGTH} characters`)
+    .optional(),
+}).refine(
+  (data) => !!data.firstName || !!data.lastName,
+  {
+    message: "At least one field must be provided",
+  }
+)
 
 export type RegisterFormValues = z.infer<typeof registerUserSchema>
 export type RegisterByAdminFormValues = z.infer<typeof registerUserByAdminSchema>

@@ -1,15 +1,28 @@
 import * as z from "zod"
 import { DoctorsBusinessConfiguration as C } from "../config/business"
 
-
 export const workTimeRangeSchema = z.object({
   start: z.string(),
   end: z.string(),
-})
+}).refine(
+  (data) => data.start < data.end,
+  { message: "Start time must be before end time" }
+)
 
 export const workDaySchema = z.object({
   dayOfWeek: z.number(),
   workTimes: z.array(workTimeRangeSchema),
+}).superRefine((data, ctx) => {
+  const sorted = [...data.workTimes].sort((a, b) => a.start.localeCompare(b.start))
+
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i].start < sorted[i - 1].end) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Work time ranges cannot overlap",
+      })
+    }
+  }
 })
 
 export const doctorAvailabilityExceptionSchema = z.object({
@@ -19,8 +32,10 @@ export const doctorAvailabilityExceptionSchema = z.object({
     .string()
     .max(C.REASON_MAX_LENGTH, `Reason must be at most ${C.REASON_MAX_LENGTH} characters`),
   type: z.number(),
-})
-
+}).refine(
+  (data) => data.start < data.end,
+  { message: "Exception start must be before end" }
+)
 
 export const doctorSchema = z.object({
   id: z
@@ -50,9 +65,18 @@ export const doctorSchema = z.object({
       .string()
       .min(C.SPECIALITY_MIN_LENGTH)
       .max(C.SPECIALITY_MAX_LENGTH)
+  ).refine(
+    (arr) => new Set(arr).size === arr.length,
+    { message: "Duplicate specialities are not allowed" }
   ),
 
-  workDays: z.array(workDaySchema),
+  workDays: z.array(workDaySchema).refine(
+    (days) => {
+      const unique = new Set(days.map(d => d.dayOfWeek))
+      return unique.size === days.length
+    },
+    { message: "Duplicate work days are not allowed" }
+  ),
 
   availabilityExceptions: z.array(doctorAvailabilityExceptionSchema),
 
@@ -206,5 +230,5 @@ export type RecommendSpecialityRequest = z.infer<typeof recommendSpecialitySchem
 export type Speciality = z.infer<typeof specialitySchema>
 
 export interface RecommendSpecialityResponse {
-    specialities: { name: string }[]
+  specialities: { name: string }[]
 }
