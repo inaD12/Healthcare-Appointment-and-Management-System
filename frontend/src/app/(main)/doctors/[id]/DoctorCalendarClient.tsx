@@ -1,19 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
+
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
-import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
 import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
+
+import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
+import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
+
 import BookingConfirmBar from "@/features/doctors/components/BookingConfirmBar"
 import CalendarSection from "@/features/doctors/components/CalendarSection"
 import DoctorHeader from "@/features/doctors/components/DoctorHeader"
 import DurationSelector from "@/features/doctors/components/DurationSelector"
 import TimeSlotSection from "@/features/doctors/components/TimeSlotSection"
-import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/usersTypes"
+
 import { appointmentService } from "@/features/appointments/services/appointmentService"
 import { ratingService } from "@/features/ratings/services/ratingService"
+import { useRouter } from "next/router"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -30,8 +34,11 @@ export default function DoctorCalendarClient({
   initialRatingsTotalPages,
   rescheduleId,
 }: Props) {
-  const auth = useRequireRole(ROLES.PATIENT)
+  const auth = useAuthGuard()
+  const router = useRouter()
+
   const patientId = auth?.keycloak?.subject
+  const isAdmin = auth?.isAdmin
 
   const [appointments, setAppointments] = useState(initialAppointments)
   const [ratings, setRatings] = useState(initialRatings)
@@ -52,10 +59,13 @@ export default function DoctorCalendarClient({
       const startOfMonth = new Date(year, month, 1)
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
 
-      const res = await appointmentService.getAppointmentsByDoctor(doctor.userId, {
-        startDate: startOfMonth.toISOString().split("T")[0],
-        endDate: endOfMonth.toISOString().split("T")[0],
-      })
+      const res = await appointmentService.getAppointmentsByDoctor(
+        doctor.userId,
+        {
+          startDate: startOfMonth.toISOString().split("T")[0],
+          endDate: endOfMonth.toISOString().split("T")[0],
+        }
+      )
 
       setAppointments(res.data.data)
     } catch {}
@@ -63,6 +73,7 @@ export default function DoctorCalendarClient({
 
   async function fetchRatings(page = 1) {
     if (rescheduleId) return
+
     try {
       const res = await ratingService.getRatingsByDoctor(doctor.userId, {
         PatientId: "",
@@ -76,6 +87,7 @@ export default function DoctorCalendarClient({
       })
 
       const fetchedRatings = res?.data?.data?.items ?? []
+
       setRatings(fetchedRatings)
       setRatingsPage(page)
       setRatingsTotalPages(
@@ -88,6 +100,16 @@ export default function DoctorCalendarClient({
     fetchAppointments(currentMonth.getMonth(), currentMonth.getFullYear())
     fetchRatings()
   }, [currentMonth])
+
+  useEffect(() => {
+    if (!bookingSuccess) return
+
+    const t = setTimeout(() => {
+      setBookingSuccess("")
+    }, 3000)
+
+    return () => clearTimeout(t)
+  }, [bookingSuccess])
 
   const { calendarDays, timeSlots } = useDoctorCalendar({
     doctor,
@@ -108,18 +130,31 @@ export default function DoctorCalendarClient({
     setBookingSuccess("")
 
     try {
+      const payload = {
+        scheduledStartTime: selectedSlot,
+        duration,
+      }
+
       if (rescheduleId) {
-        await appointmentService.rescheduleAppointment(rescheduleId, {
-          scheduledStartTime: selectedSlot,
-          duration,
-        })
+        if (isAdmin) {
+          await appointmentService.rescheduleAppointmentByAdmin(rescheduleId, payload)
+        } else {
+          await appointmentService.rescheduleAppointment(rescheduleId, payload)
+        }
+
         setBookingSuccess("Appointment rescheduled successfully")
+
+        setTimeout(() => {
+          router.back()
+        }, 600)
+
       } else {
         await appointmentService.createAppointment({
           doctorUserId: doctor.userId,
           scheduledStartTime: selectedSlot,
           duration,
         })
+
         setBookingSuccess("Appointment booked successfully")
       }
 
@@ -128,7 +163,7 @@ export default function DoctorCalendarClient({
       setBookingError(
         err.response?.status === 409
           ? "This time slot is already taken."
-          : "Failed to book appointment."
+          : "Failed to process appointment."
       )
     } finally {
       setBookingLoading(false)
@@ -139,15 +174,27 @@ export default function DoctorCalendarClient({
 
   return (
     <>
-    <DoctorHeader
+      {bookingSuccess && (
+        <div className="mb-4 rounded-md bg-green-100 text-green-800 px-4 py-2">
+          {bookingSuccess}
+        </div>
+      )}
+
+      {bookingError && (
+        <div className="mb-4 rounded-md bg-red-100 text-red-800 px-4 py-2">
+          {bookingError}
+        </div>
+      )}
+
+      <DoctorHeader
         doctor={doctor}
-        ratings={ratings}
+        ratings={rescheduleId ? undefined : ratings}
         ratingsPage={ratingsPage}
         ratingsTotalPages={ratingsTotalPages}
         onPageChange={fetchRatings}
-        />
+      />
 
-    <CalendarSection
+      <CalendarSection
         currentMonth={currentMonth}
         setCurrentMonth={setCurrentMonth}
         weekdays={weekdays}
@@ -155,27 +202,27 @@ export default function DoctorCalendarClient({
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         rescheduleId={rescheduleId}
+      />
+
+      <DurationSelector duration={duration} setDuration={setDuration} />
+
+      {selectedDate && (
+        <TimeSlotSection
+          selectedDate={selectedDate}
+          timeSlots={timeSlots}
+          selectedSlot={selectedSlot}
+          setSelectedSlot={setSelectedSlot}
         />
+      )}
 
-    <DurationSelector duration={duration} setDuration={setDuration} />
-
-    {selectedDate && (
-    <TimeSlotSection
-        selectedDate={selectedDate}
-        timeSlots={timeSlots}
-        selectedSlot={selectedSlot}
-        setSelectedSlot={setSelectedSlot}
-    />
-    )}
-
-    {selectedSlot && (
-    <BookingConfirmBar
-        selectedSlot={selectedSlot}
-        bookingLoading={bookingLoading}
-        onConfirm={handleBooking}
-        rescheduleId={rescheduleId}
-    />
-    )}
-</>
+      {selectedSlot && (
+        <BookingConfirmBar
+          selectedSlot={selectedSlot}
+          bookingLoading={bookingLoading}
+          onConfirm={handleBooking}
+          rescheduleId={rescheduleId}
+        />
+      )}
+    </>
   )
 }
