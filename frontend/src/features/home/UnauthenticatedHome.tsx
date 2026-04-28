@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card"
 
 import { Stethoscope, LogIn, UserPlus } from "lucide-react"
+import keycloak from "@/config/keycloak"
 
 export default function UnauthenticatedHome() {
   return (
@@ -22,7 +23,7 @@ export default function UnauthenticatedHome() {
 
           <div className="flex items-center gap-2 text-primary font-semibold">
             <Stethoscope className="h-5 w-5" />
-            MediCare
+            Mediflow
           </div>
 
           <h1 className="text-4xl font-semibold tracking-tight">
@@ -35,12 +36,16 @@ export default function UnauthenticatedHome() {
           </p>
 
           <div className="flex gap-3">
-            <Button asChild>
-              <Link href="/login">
-                <LogIn className="mr-2 h-4 w-4" />
-                Sign in
-              </Link>
-            </Button>
+           <Button
+              onClick={() =>
+                keycloak.login({
+                  redirectUri: window.location.href,
+                })
+              }
+              >
+              <LogIn className="mr-2 h-4 w-4" />
+              Sign in
+          </Button>
 
             <Button asChild variant="outline">
               <Link href="/register">

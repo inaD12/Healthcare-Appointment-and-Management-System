@@ -1,20 +1,34 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useMemo } from "react"
 import { AuthContext } from "@/providers/AuthProvider"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 export function useAuthGuard() {
-  const auth = useContext(AuthContext)
+  const context = useContext(AuthContext)
 
   useEffect(() => {
-    if (!auth) return
+    if (!context) return
 
-    if (!auth.authenticated) {
-      auth.keycloak.login()
+    if (!context.authenticated) {
+      context.keycloak.login()
     }
-  }, [auth])
+  }, [context])
 
-  if (!auth) {
+  if (!context) {
     throw new Error("useAuthGuard must be used within AuthProvider")
   }
 
-  return auth
+  const { roles } = context
+  
+    const roleFlags = useMemo(() => {
+      return {
+        isPatient: roles.includes(ROLES.PATIENT),
+        isAdmin: roles.includes(ROLES.ADMIN),
+        isDoctor: roles.includes(ROLES.DOCTOR),
+      }
+    }, [roles])
+  
+    return {
+      ...context,
+      ...roleFlags,
+    }
 }
