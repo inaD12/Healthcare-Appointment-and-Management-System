@@ -15,9 +15,8 @@ import { DoctorCard } from "@/features/doctors/components/DoctorCard"
 import { DoctorsFiltersCard } from "@/features/doctors/components/DoctorFiltersCard"
 import { DoctorsHeader } from "@/features/doctors/components/DoctorsHeader"
 import { DoctorsPagination } from "@/features/doctors/components/DoctorsPagination"
-import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/usersTypes"
 import { doctorService } from "@/features/doctors/services/doctorService"
+import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 
 type Props = {
   initialDoctors: DoctorQueryViewModel[]
@@ -28,7 +27,7 @@ export default function DoctorsClient({
   initialDoctors,
   initialTotalPages,
 }: Props) {
-  const auth = useRequireRole(ROLES.DOCTOR)
+  const auth = useAuthGuard()
   const router = useRouter()
 
   const [doctors, setDoctors] =
@@ -107,8 +106,10 @@ export default function DoctorsClient({
   }
 
   useEffect(() => {
-    fetchDoctors()
-  }, [auth])
+    if (auth?.authenticated) {
+      fetchDoctors()
+    }
+  }, [auth?.authenticated])
 
   if (!auth?.authenticated) {
     return <p>Checking authentication...</p>

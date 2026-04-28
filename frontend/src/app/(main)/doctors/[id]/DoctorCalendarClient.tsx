@@ -17,7 +17,7 @@ import TimeSlotSection from "@/features/doctors/components/TimeSlotSection"
 
 import { appointmentService } from "@/features/appointments/services/appointmentService"
 import { ratingService } from "@/features/ratings/services/ratingService"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -173,7 +173,7 @@ export default function DoctorCalendarClient({
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
   return (
-    <>
+    <div className="space-y-4">
       {bookingSuccess && (
         <div className="mb-4 rounded-md bg-green-100 text-green-800 px-4 py-2">
           {bookingSuccess}
@@ -223,6 +223,6 @@ export default function DoctorCalendarClient({
           rescheduleId={rescheduleId}
         />
       )}
-    </>
+    </div>
   )
 }
