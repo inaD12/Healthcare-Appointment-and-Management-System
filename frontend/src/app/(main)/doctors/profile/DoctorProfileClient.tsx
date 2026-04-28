@@ -3,11 +3,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { AppointmentResponse } from "@/features/appointments/types/appointmentsTypes"
-
-import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
-import { getMyAppointments } from "@/features/appointments/services/appointmentService"
 
 import DoctorSchedule from "@/features/doctors/components/DoctorSchedule"
 import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
@@ -15,7 +12,8 @@ import DoctorBioCard from "@/features/doctors/components/profile/DoctorBioCard"
 import DoctorWorkDaysCard from "@/features/doctors/components/profile/DoctorWorkDaysCard"
 import DoctorAvailabilityExceptionsCard from "@/features/doctors/components/profile/DoctorAvailabilityExceptionsCard"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
+import { appointmentService } from "@/features/appointments/services/appointmentService"
 
 
 type Props = {
@@ -46,7 +44,7 @@ export default function DoctorProfileClient({
 
       <DoctorSchedule
         initialAppointments={appointments}
-        fetchAppointments={getMyAppointments}
+        fetchAppointments={appointmentService.getMyAppointments}
         onAppointmentClick={(appointment) =>
           router.push(`/doctors/appointment/${appointment.id}`)
         }

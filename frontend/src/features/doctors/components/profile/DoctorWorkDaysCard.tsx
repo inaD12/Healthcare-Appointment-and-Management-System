@@ -3,14 +3,9 @@
 import { useState } from "react"
 
 import {
-  addWorkDaySchedule,
-  removeWorkDaySchedule
-} from "@/features/doctors/services/doctorService"
-
-import {
   DoctorQueryViewModel,
   WorkDayDto
-} from "@/features/doctors/types/doctors"
+} from "@/features/doctors/types/doctorsTypes"
 
 import {
   Card,
@@ -29,6 +24,7 @@ import {
 } from "@/components/ui/table"
 
 import { Button } from "@/components/ui/button"
+import { doctorService } from "../../services/doctorService"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -47,7 +43,7 @@ export default function DoctorWorkDaysCard({
 
   const add = async () => {
 
-    await addWorkDaySchedule(newWorkDay)
+    await doctorService.addWorkDaySchedule(newWorkDay)
 
     setDoctor({
       ...doctor,
@@ -57,7 +53,7 @@ export default function DoctorWorkDaysCard({
 
   const remove = async (dayOfWeek: number) => {
 
-    await removeWorkDaySchedule({ dayOfWeek })
+    await doctorService.removeWorkDaySchedule({ dayOfWeek })
 
     setDoctor({
       ...doctor,

@@ -1,6 +1,6 @@
 "use client"
 
-import { AdminDashboard } from "@/features/patients/types/patientTypes"
+import { AdminDashboard } from "@/features/patients/types/patientsTypes"
 import { DashboardCard } from "@/features/home/DashboardCard"
 import { Users, FileText, Calendar } from "lucide-react"
 

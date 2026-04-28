@@ -4,15 +4,15 @@ import { useState } from "react"
 
 import {
   AppointmentStatus,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
 import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
 import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
 import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
 import EncounterCard from "@/features/encounters/components/EncounterCard"
-import { addRating, editRating, removeRating } from "@/features/ratings/services/ratingService"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default function AppointmentPageClient({
   initialAppointment,
@@ -26,7 +26,7 @@ export default function AppointmentPageClient({
   useRequireRole(ROLES.PATIENT)
   
   const handleCreateRating = async (data: { score: number; comment: string }) => {
-    const res = await addRating({
+    const res = await ratingService.addRating({
       AppointmentId: appointment.id,
       Score: data.score,
       Comment: data.comment,
@@ -46,7 +46,7 @@ export default function AppointmentPageClient({
   const handleEditRating = async (data: { score: number; comment: string }) => {
     if (!rating?.id) return
 
-    await editRating(rating.id, {
+    await ratingService.editRating(rating.id, {
       Score: data.score,
       Comment: data.comment,
     })
@@ -61,7 +61,7 @@ export default function AppointmentPageClient({
   const handleDeleteRating = async () => {
     if (!rating?.id) return
 
-    await removeRating(rating.id)
+    await ratingService.removeRating(rating.id)
     setRating(null)
   }
 

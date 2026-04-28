@@ -1,9 +1,9 @@
+import { appointmentService } from "@/features/appointments/services/appointmentService"
 import DoctorCalendarClient from "./DoctorCalendarClient"
-import { getDoctorByUserId } from "@/features/doctors/services/doctorService"
-import { getAppointmentsByDoctor } from "@/features/appointments/services/appointmentService"
-import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { doctorService } from "@/features/doctors/services/doctorService"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default async function DoctorCalendarPage(props: {
   params: Promise<{ id: string }>
@@ -13,7 +13,7 @@ export default async function DoctorCalendarPage(props: {
 
   const { id } = await params
   const { rescheduleId } = await searchParams
-  const doctorRes = await getDoctorByUserId(id)
+  const doctorRes = await doctorService.getDoctorByUserId(id)
   const doctor = doctorRes.data.data
 
   let appointments: BookingQueryResponse[] = []
@@ -25,7 +25,7 @@ export default async function DoctorCalendarPage(props: {
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
 
   try {
-    const apptRes = await getAppointmentsByDoctor(doctor.userId, {
+    const apptRes = await appointmentService.getAppointmentsByDoctor(doctor.userId, {
       startDate: startOfMonth.toISOString().split("T")[0],
       endDate: endOfMonth.toISOString().split("T")[0],
     })
@@ -33,7 +33,7 @@ export default async function DoctorCalendarPage(props: {
   } catch {}
 
   try {
-    const ratingRes = await getRatingsByDoctor(doctor.userId, {
+    const ratingRes = await ratingService.getRatingsByDoctor(doctor.userId, {
       PatientId: "",
       AppointmentId: "",
       MinScore: null,

@@ -1,9 +1,9 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
-import { PatientProfile } from "@/features/patients/types/patientTypes"
-import { UserQueryResponse } from "@/features/users/types/userTypes"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
+import { PatientProfile } from "@/features/patients/types/patientsTypes"
+import { UserQueryResponse } from "@/features/users/types/usersTypes"
 
 type PersonProfile = {
   user?: UserQueryResponse | null

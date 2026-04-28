@@ -1,6 +1,6 @@
 "use client"
 
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 import { AuthContext } from "@/providers/AuthProvider"
 import { useContext, useMemo } from "react"
 

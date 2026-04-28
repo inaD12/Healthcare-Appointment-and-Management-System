@@ -1,11 +1,11 @@
-import { getMyDoctorInfo } from "@/features/doctors/services/doctorService"
-import { getMyAppointments } from "@/features/appointments/services/appointmentService"
+import { doctorService } from "@/features/doctors/services/doctorService"
 import DoctorProfileClient from "./DoctorProfileClient"
 import { AppointmentResponse } from "@/features/appointments/types/appointmentsTypes"
+import { appointmentService } from "@/features/appointments/services/appointmentService"
 
 export default async function DoctorProfilePage() {
 
-  const doctorRes = await getMyDoctorInfo()
+  const doctorRes = await doctorService.getMyDoctorInfo()
 
   const start = new Date()
   const end = new Date()
@@ -17,7 +17,7 @@ export default async function DoctorProfilePage() {
 
   try {
 
-    const apptRes = await getMyAppointments({
+    const apptRes = await appointmentService.getMyAppointments({
       startDate: formatDate(start),
       endDate: formatDate(end)
     })

@@ -1,6 +1,6 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
-import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 interface InitialData {
   items: RatingQueryViewModel[]
@@ -13,7 +13,7 @@ export function useDoctorRatings(id: string, page: number, initialData?: Initial
     placeholderData: keepPreviousData,
     initialData: page === 1 ? initialData : undefined,
     queryFn: async () => {
-      const res = await getRatingsByDoctor(id, {
+      const res = await ratingService.getRatingsByDoctor(id, {
         PatientId: "",
         AppointmentId: "",
         MinScore: null,

@@ -1,6 +1,6 @@
 "use client"
 
-import { DashboardEncounter } from "@/features/patients/types/patientTypes"
+import { DashboardEncounter } from "@/features/patients/types/patientsTypes"
 import Link from "next/link"
 import { Stethoscope } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card"

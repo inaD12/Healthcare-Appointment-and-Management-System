@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { updateDoctorInfo } from "@/features/doctors/services/doctorService"
 
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 
 import {
   Card,
@@ -14,6 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { doctorService } from "../../services/doctorService"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -30,7 +30,7 @@ export default function DoctorBioCard({
 
   const save = async () => {
 
-    await updateDoctorInfo({ newBio: bio })
+    await doctorService.updateDoctorInfo({ newBio: bio })
 
     setDoctor({
       ...doctor,

@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
-import { getAllSpecialities } from "@/features/doctors/services/doctorService"
-import { Speciality } from "@/features/doctors/types/doctors"
+import { Speciality } from "@/features/doctors/types/doctorsTypes"
+import { doctorService } from "../services/doctorService"
 
 type Props = {
   value: string
@@ -53,7 +53,7 @@ export function DoctorSpecialitiesFilter({ value, onChange }: Props) {
   ) => {
     setLoading(true)
 
-    const res = await getAllSpecialities({
+    const res = await doctorService.getAllSpecialities({
       name: query,
       description: "",
       sortOrder: "ASC",

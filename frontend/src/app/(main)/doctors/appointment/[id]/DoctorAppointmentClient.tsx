@@ -6,9 +6,9 @@ import {
   Appointment,
   EncounterDetails,
   AppointmentStatus,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 
 import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
 import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
@@ -17,7 +17,7 @@ import StartEncounterCard from "@/features/doctors/components/appointment/StartE
 import EncounterCard from "@/features/encounters/components/EncounterCard"
 
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 export default function DoctorAppointmentClient({
   initialAppointment,

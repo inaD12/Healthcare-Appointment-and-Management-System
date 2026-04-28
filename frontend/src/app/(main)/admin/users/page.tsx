@@ -4,15 +4,15 @@ import { useRouter } from "next/navigation"
 
 import { SearchPage } from "@/components/search/SearchPage"
 import { ColumnDef, FilterField } from "@/components/search/types"
-import { getAllUsers } from "@/features/users/services/userService"
 import {
   GetAllUsersRequest,
   ROLES,
   UserQueryResponse,
-} from "@/features/users/types/userTypes"
+} from "@/features/users/types/usersTypes"
 
 import { Badge } from "@/components/ui/badge"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { userService } from "@/features/users/services/userService"
 
 export default function AdminUsersPage() {
   useRequireRole(ROLES.ADMIN)
@@ -87,7 +87,7 @@ export default function AdminUsersPage() {
         title="Users"
         filters={filters}
         columns={columns}
-        queryFn={getAllUsers}
+        queryFn={userService.getAllUsers}
         defaultQuery={defaultQuery}
 
         onRowClick={(user) =>

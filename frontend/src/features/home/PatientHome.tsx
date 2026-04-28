@@ -1,6 +1,6 @@
 "use client"
 
-import { PatientDashboard } from "@/features/patients/types/patientTypes"
+import { PatientDashboard } from "@/features/patients/types/patientsTypes"
 import { DashboardCard } from "@/features/home/DashboardCard"
 import { EncounterUpdateCard } from "@/features/home/EncounterUpdateCard"
 import { Calendar } from "lucide-react"

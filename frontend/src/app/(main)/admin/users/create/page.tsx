@@ -9,7 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 export default function CreateDoctorPage() {
   useRequireRole(ROLES.ADMIN)

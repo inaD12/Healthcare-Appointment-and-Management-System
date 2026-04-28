@@ -1,7 +1,7 @@
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card"
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { DoctorRatings } from "@/features/ratings/components/DoctorRatings"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 
 type Props = {
   doctor: DoctorQueryViewModel

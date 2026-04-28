@@ -1,11 +1,11 @@
+import { ratingService } from "@/features/ratings/services/ratingService"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { removeRatingByAdmin } from "@/features/ratings/services/ratingService"
 
 export function useDeleteRating() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => removeRatingByAdmin(id),
+    mutationFn: (id: string) => ratingService.removeRatingByAdmin(id),
 
     onSuccess: (_, ratingId) => {
       queryClient.invalidateQueries({

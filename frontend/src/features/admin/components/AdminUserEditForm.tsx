@@ -6,11 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 
 import {
-  updateUserByAdmin,
-  deleteUserByAdmin,
-} from "@/features/users/services/userService"
-
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -27,7 +22,8 @@ import { Loader2, Trash2, User } from "lucide-react"
 import {
   UpdateUserRequest,
   updateUserSchema,
-} from "@/features/users/types/userTypes"
+} from "@/features/users/types/usersTypes"
+import { userService } from "@/features/users/services/userService"
 
 interface Props {
   userId: string
@@ -55,7 +51,7 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
     setSuccess(false)
 
     try {
-      await updateUserByAdmin(data, userId)
+      await userService.updateUserByAdmin(userId, data)
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
     } finally {
@@ -69,7 +65,7 @@ export function AdminUserEditForm({ userId, defaultValues }: Props) {
     setDeleting(true)
 
     try {
-      await deleteUserByAdmin(userId)
+      await userService.deleteUserByAdmin(userId)
       router.push("/admin/users")
     } finally {
       setDeleting(false)

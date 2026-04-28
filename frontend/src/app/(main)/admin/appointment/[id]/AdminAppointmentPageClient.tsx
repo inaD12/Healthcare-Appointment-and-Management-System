@@ -6,21 +6,21 @@ import {
   AppointmentStatus,
   EncounterDetails,
   EncounterStatus,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
 import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
 import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
 import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
 import EncounterCard from "@/features/encounters/components/EncounterCard"
 
-import { removeRating } from "@/features/ratings/services/ratingService"
 import { patientService } from "@/features/patients/services/patientService"
 
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default function AdminAppointmentPageClient({
   initialAppointment,
@@ -42,7 +42,7 @@ export default function AdminAppointmentPageClient({
 
   const handleDeleteRating = async () => {
     if (!rating?.id) return
-    await removeRating(rating.id)
+    await ratingService.removeRating(rating.id)
     setRating(null)
   }
 

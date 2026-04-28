@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuthGuard } from "./useAuthGuard"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 type Role = typeof ROLES[keyof typeof ROLES]
 

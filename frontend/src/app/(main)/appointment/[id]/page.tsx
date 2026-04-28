@@ -1,10 +1,10 @@
 import { patientService } from "@/features/patients/services/patientService"
 import { mapAppointmentResponseToAppointment } from "@/features/patients/mappers/appointmentMapper"
 
-import { AppointmentStatus } from "@/features/patients/types/patientTypes"
-import { getRatingByAppointment } from "@/features/ratings/services/ratingService"
+import { AppointmentStatus } from "@/features/patients/types/patientsTypes"
 
 import AppointmentPageClient from "./AppointmentPageClient"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default async function AppointmentPage({
   params,
@@ -26,7 +26,7 @@ export default async function AppointmentPage({
     if (appointment?.status === AppointmentStatus.Completed) {
       try {
         const ratingRes =
-          await getRatingByAppointment(id)
+          await ratingService.getRatingByAppointment(id)
 
         rating = ratingRes.data.data
       } catch (err: any) {

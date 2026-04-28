@@ -7,7 +7,7 @@ import {
   Appointment,
   EncounterDetails,
   EncounterStatus,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
 import { patientService } from "@/features/patients/services/patientService"
 

@@ -1,25 +1,19 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
-import {
-  createAppointment,
-  getAppointmentsByDoctor,
-  rescheduleAppointment
-} from "@/features/appointments/services/appointmentService"
-
 import { useDoctorCalendar } from "@/features/appointments/hooks/useDoctorCalendar"
-import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
-import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 import BookingConfirmBar from "@/features/doctors/components/BookingConfirmBar"
 import CalendarSection from "@/features/doctors/components/CalendarSection"
 import DoctorHeader from "@/features/doctors/components/DoctorHeader"
 import DurationSelector from "@/features/doctors/components/DurationSelector"
 import TimeSlotSection from "@/features/doctors/components/TimeSlotSection"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
+import { appointmentService } from "@/features/appointments/services/appointmentService"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -58,7 +52,7 @@ export default function DoctorCalendarClient({
       const startOfMonth = new Date(year, month, 1)
       const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59)
 
-      const res = await getAppointmentsByDoctor(doctor.userId, {
+      const res = await appointmentService.getAppointmentsByDoctor(doctor.userId, {
         startDate: startOfMonth.toISOString().split("T")[0],
         endDate: endOfMonth.toISOString().split("T")[0],
       })
@@ -70,7 +64,7 @@ export default function DoctorCalendarClient({
   async function fetchRatings(page = 1) {
     if (rescheduleId) return
     try {
-      const res = await getRatingsByDoctor(doctor.userId, {
+      const res = await ratingService.getRatingsByDoctor(doctor.userId, {
         PatientId: "",
         AppointmentId: "",
         MinScore: null,
@@ -115,13 +109,13 @@ export default function DoctorCalendarClient({
 
     try {
       if (rescheduleId) {
-        await rescheduleAppointment(rescheduleId, {
+        await appointmentService.rescheduleAppointment(rescheduleId, {
           scheduledStartTime: selectedSlot,
           duration,
         })
         setBookingSuccess("Appointment rescheduled successfully")
       } else {
-        await createAppointment({
+        await appointmentService.createAppointment({
           doctorUserId: doctor.userId,
           scheduledStartTime: selectedSlot,
           duration,
