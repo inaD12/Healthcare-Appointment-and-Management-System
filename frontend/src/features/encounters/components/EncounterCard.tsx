@@ -8,7 +8,7 @@ import {
   EncounterDetails,
   EncounterStatus,
   PrescribeMedicationSchema,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
 import {
   NoteIcon,

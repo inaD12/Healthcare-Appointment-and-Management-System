@@ -1,8 +1,8 @@
 "use client"
 import { createContext, useEffect, useState } from "react"
 import keycloak from "../config/keycloak"
-import { getCurrentUser } from "@/features/users/services/userService"
-import { UserQueryResponse } from "@/features/users/types/userTypes"
+import { UserQueryResponse } from "@/features/users/types/usersTypes"
+import { userService } from "@/features/users/services/userService"
 
 type AuthContextType = {
   keycloak: typeof keycloak
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (auth && keycloak.token) {
           setAccessTokenCookie(keycloak.token)
           try {
-            const res = await getCurrentUser()
+            const res = await userService.getCurrentUser()
             const currentUser = res.data.data
             setUser(currentUser)
             setRoles(currentUser.roles)

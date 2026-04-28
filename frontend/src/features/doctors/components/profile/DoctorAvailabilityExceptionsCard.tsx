@@ -3,16 +3,9 @@
 import { useState } from "react"
 
 import {
-  addExtraAvailability,
-  deleteExtraAvailability,
-  addUnavailability,
-  deleteUnavailability
-} from "@/features/doctors/services/doctorService"
-
-import {
   DoctorQueryViewModel,
   DoctorAvailabilityExceptionDto
-} from "@/features/doctors/types/doctors"
+} from "@/features/doctors/types/doctorsTypes"
 
 import {
   Card,
@@ -32,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
+import { doctorService } from "../../services/doctorService"
 
 type Props = {
   doctor: DoctorQueryViewModel
@@ -54,9 +48,9 @@ export default function DoctorAvailabilityExceptionsCard({
   const add = async () => {
 
     if (newAvailability.type === 1) {
-      await addExtraAvailability(newAvailability)
+      await doctorService.addExtraAvailability(newAvailability)
     } else {
-      await addUnavailability(newAvailability)
+      await doctorService.addUnavailability(newAvailability)
     }
 
     setDoctor({
@@ -78,12 +72,12 @@ export default function DoctorAvailabilityExceptionsCard({
   const remove = async (availability: DoctorAvailabilityExceptionDto) => {
 
     if (availability.type === 1) {
-      await deleteExtraAvailability({
+      await doctorService.deleteExtraAvailability({
         start: availability.start,
         end: availability.end
       })
     } else {
-      await deleteUnavailability({
+      await doctorService.deleteUnavailability({
         start: availability.start,
         end: availability.end
       })

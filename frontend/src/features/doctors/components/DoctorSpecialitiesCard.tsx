@@ -7,8 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-import { getAllSpecialities } from "@/features/doctors/services/doctorService"
-import { Speciality } from "@/features/doctors/types/doctors"
+import { Speciality } from "@/features/doctors/types/doctorsTypes"
+import { doctorService } from "../services/doctorService"
 
 type Props = {
   specialities: string[]
@@ -49,7 +49,7 @@ export function DoctorSpecialitiesCard({
   const fetchSpecialities = async (pageToLoad = 1, reset = false) => {
     setLoading(true)
 
-    const res = await getAllSpecialities({
+    const res = await doctorService.getAllSpecialities({
       name: query,
       description: "",
       sortOrder: "ASC",

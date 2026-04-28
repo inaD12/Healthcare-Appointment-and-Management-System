@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 
 export default function RatingCard({ rating }: { rating: RatingQueryViewModel }) {
 

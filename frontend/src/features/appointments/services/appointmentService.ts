@@ -1,4 +1,6 @@
 import { api } from "@/lib/api/axios"
+import { ENDPOINTS } from "@/config/endpoints"
+import { APIResponse } from "@/types/types"
 import {
   CreateAppointmentRequest,
   AppointmentResponse,
@@ -6,44 +8,55 @@ import {
   BookingQueryResponse,
   RescheduleAppointmentRequest
 } from "@/features/appointments/types/appointmentsTypes"
-import { ENDPOINTS } from "@/config/endpoints"
-import { APIResponse } from "@/types/types"
 
+export const appointmentService = {
+  createAppointment: (data: CreateAppointmentRequest) =>
+    api.post<APIResponse<AppointmentResponse>>(
+      ENDPOINTS.appointments.root,
+      data
+    ),
 
-export const createAppointment = (data: CreateAppointmentRequest) =>
-  api.post<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.root, data)
+  getAppointmentsByDoctor: (
+    doctorUserId: string,
+    request: GetBookingsByDoctorAndDateRequest
+  ) =>
+    api.get<APIResponse<BookingQueryResponse[]>>(
+      ENDPOINTS.appointments.byDoctor(doctorUserId),
+      { params: request }
+    ),
 
-export const getAppointmentsByDoctor = (
-  doctorUserId: string,
-  data: GetBookingsByDoctorAndDateRequest
-) =>
-  api.get<APIResponse<BookingQueryResponse[]>>(
-    ENDPOINTS.appointments.byDoctor(doctorUserId),
-    { params: data }
-  )
+  cancelAppointment: (id: string) =>
+    api.delete<APIResponse<boolean>>(
+      ENDPOINTS.appointments.byId(id)
+    ),
 
-export const cancelAppointment = (id: string) =>
-  api.delete<APIResponse<boolean>>(ENDPOINTS.appointments.byId(id))
+  rescheduleAppointment: (
+    id: string,
+    data: RescheduleAppointmentRequest
+  ) =>
+    api.put<APIResponse<AppointmentResponse>>(
+      ENDPOINTS.appointments.byId(id),
+      data
+    ),
 
-export const rescheduleAppointment = (id: string, data: RescheduleAppointmentRequest) =>
-  api.put<APIResponse<AppointmentResponse>>(ENDPOINTS.appointments.byId(id), data)
+  getMyAppointments: (params: {
+    startDate?: string
+    endDate?: string
+  }) =>
+    api.get<APIResponse<AppointmentResponse[]>>(
+      ENDPOINTS.appointments.mine,
+      { params }
+    ),
 
-export const getMyAppointments = (params: {
-  startDate?: string
-  endDate?: string
-}) =>
-  api.get<APIResponse<AppointmentResponse[]>>(
-    ENDPOINTS.appointments.mine,
-    { params }
-  )
-
-export const getByDateAdmin = (
-  userId: string,
-  params: {
-  startDate?: string
-  endDate?: string
-}) =>
-  api.get<APIResponse<AppointmentResponse[]>>(
-    ENDPOINTS.appointments.byUserIdAdmin(userId),
-    { params }
-  )
+  getByDateAdmin: (
+    userId: string,
+    params: {
+      startDate?: string
+      endDate?: string
+    }
+  ) =>
+    api.get<APIResponse<AppointmentResponse[]>>(
+      ENDPOINTS.appointments.byUserIdAdmin(userId),
+      { params }
+    ),
+}

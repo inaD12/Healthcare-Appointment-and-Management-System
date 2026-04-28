@@ -5,11 +5,6 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import {
-  updateCurrentUser,
-  deleteCurrentUser,
-} from "@/features/users/services/userService"
-
-import {
   Card,
   CardHeader,
   CardTitle,
@@ -25,7 +20,8 @@ import { Button } from "@/components/ui/button"
 import { Loader2, Trash2, User } from "lucide-react"
 import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
 import keycloak from "@/config/keycloak"
-import { UpdateUserRequest, updateUserSchema } from "@/features/users/types/userTypes"
+import { UpdateUserRequest, updateUserSchema } from "@/features/users/types/usersTypes"
+import { userService } from "@/features/users/services/userService"
 
 export default function AccountPage() {
   const auth = useAuthGuard()
@@ -58,7 +54,7 @@ export default function AccountPage() {
     setSuccess(false)
 
     try {
-        await updateCurrentUser(data)
+        await userService.updateCurrentUser(data)
         setSuccess(true)
 
         setTimeout(() => {
@@ -75,7 +71,7 @@ export default function AccountPage() {
     setDeleting(true)
 
     try {
-      await deleteCurrentUser()
+      await userService.deleteCurrentUser()
     } finally {
       setDeleting(false)
     }

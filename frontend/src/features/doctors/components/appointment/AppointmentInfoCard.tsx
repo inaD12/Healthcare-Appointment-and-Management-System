@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import { Appointment } from "@/features/patients/types/patientTypes"
+import { Appointment } from "@/features/patients/types/patientsTypes"
 
 export default function AppointmentInfoCard({
   appointment,

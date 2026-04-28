@@ -1,8 +1,8 @@
+import { doctorService } from "@/features/doctors/services/doctorService"
 import DoctorsClient from "./DoctorsClient"
-import { getAllDoctors } from "@/features/doctors/services/doctorService"
 
 export default async function Page() {
-  const res = await getAllDoctors({
+  const res = await doctorService.getAllDoctors({
     firstName: "",
     lastName: "",
     speciality: "",

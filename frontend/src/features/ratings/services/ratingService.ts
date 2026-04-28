@@ -1,52 +1,52 @@
 import { api } from "@/lib/api/axios"
 import { ENDPOINTS } from "@/config/endpoints"
-import { AddRatingRequest, EditRatingRequest, GetAllRatingsByDoctorRequest, RatingCommandResponse, RatingPaginatedQueryResponse, RatingQueryViewModel } from "../types/ratingTypes"
 import { APIResponse } from "@/types/types"
+import {
+  AddRatingRequest,
+  EditRatingRequest,
+  GetAllRatingsByDoctorRequest,
+  RatingCommandResponse,
+  RatingPaginatedQueryResponse,
+  RatingQueryViewModel
+} from "../types/ratingsTypes"
 
+export const ratingService = {
+  getRatingsByDoctor: (
+    doctorId: string,
+    request: GetAllRatingsByDoctorRequest
+  ) =>
+    api.get<APIResponse<RatingPaginatedQueryResponse>>(
+      ENDPOINTS.ratings.byDoctor(doctorId),
+      { params: request }
+    ),
 
-export const getRatingsByDoctor = (
-  doctorId: string,
-  data: GetAllRatingsByDoctorRequest
-) =>
-  api.get<APIResponse<RatingPaginatedQueryResponse>>(
-    ENDPOINTS.ratings.byDoctor(doctorId),
-    { params: data }
-  )
+  addRating: (data: AddRatingRequest) =>
+    api.post<APIResponse<RatingCommandResponse>>(
+      ENDPOINTS.ratings.root,
+      data
+    ),
 
-export const addRating = (
-  data: AddRatingRequest
-) =>
-  api.post<APIResponse<RatingCommandResponse>>(
-    ENDPOINTS.ratings.root,
-    data
-  )
+  editRating: (
+    ratingId: string,
+    data: EditRatingRequest
+  ) =>
+    api.put<APIResponse<boolean>>(
+      ENDPOINTS.ratings.byId(ratingId),
+      data
+    ),
 
-export const editRating = (
-  ratingId: string,
-  data: EditRatingRequest
-) =>
-  api.put<APIResponse<boolean>>(
-    ENDPOINTS.ratings.byId(ratingId),
-    data
-  )
+  removeRating: (ratingId: string) =>
+    api.delete<APIResponse<boolean>>(
+      ENDPOINTS.ratings.byId(ratingId)
+    ),
 
-export const removeRating = (
-  ratingId: string,
-) =>
-  api.delete<APIResponse<boolean>>(
-    ENDPOINTS.ratings.byId(ratingId)
-  )
+  removeRatingByAdmin: (ratingId: string) =>
+    api.delete<APIResponse<boolean>>(
+      ENDPOINTS.ratings.adminById(ratingId)
+    ),
 
-export const removeRatingByAdmin = (
-  ratingId: string,
-) =>
-  api.delete<APIResponse<boolean>>(
-    ENDPOINTS.ratings.adminById(ratingId)
-  )
-
-export const getRatingByAppointment = (
-  appointmentId: string
-) =>
-  api.get<APIResponse<RatingQueryViewModel>>(
-    ENDPOINTS.ratings.byAppointment(appointmentId)
-  )
+  getRatingByAppointment: (appointmentId: string) =>
+    api.get<APIResponse<RatingQueryViewModel>>(
+      ENDPOINTS.ratings.byAppointment(appointmentId)
+    ),
+}

@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/card"
 
 import { patientService } from "@/features/patients/services/patientService"
-import { getCurrentUser } from "@/features/users/services/userService"
+import { userService } from "@/features/users/services/userService"
 
 export default async function HomePage() {
   let user = null
 
   try {
-    const res = await getCurrentUser()
+    const res = await userService.getCurrentUser()
     user = res.data.data
   } catch (err: any) {
     user = null

@@ -1,8 +1,8 @@
-import { getRatingByAppointment } from "@/features/ratings/services/ratingService"
 import { mapAppointmentResponseToAppointment } from "@/features/patients/mappers/appointmentMapper"
 import DoctorAppointmentClient from "./DoctorAppointmentClient"
-import { AppointmentStatus } from "@/features/patients/types/patientTypes"
+import { AppointmentStatus } from "@/features/patients/types/patientsTypes"
 import { patientService } from "@/features/patients/services/patientService"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   if (appointment?.status === AppointmentStatus.Completed) {
     try {
-      const ratingRes = await getRatingByAppointment(appointment.id)
+      const ratingRes = await ratingService.getRatingByAppointment(appointment.id)
       rating = ratingRes.data.data
     } catch {
       rating = null

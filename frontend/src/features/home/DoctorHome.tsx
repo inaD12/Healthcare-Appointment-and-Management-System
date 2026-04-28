@@ -14,7 +14,7 @@ import { patientService } from "@/features/patients/services/patientService"
 import {
   DoctorDashboardView,
   DoctorEncounterConnection,
-} from "@/features/patients/types/patientTypes"
+} from "@/features/patients/types/patientsTypes"
 
 interface Props {
   doctorDashboard: DoctorDashboardView

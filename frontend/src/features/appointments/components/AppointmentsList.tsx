@@ -1,6 +1,6 @@
 "use client"
 
-import { Appointment, AppointmentStatus } from "@/features/patients/types/patientTypes"
+import { Appointment, AppointmentStatus } from "@/features/patients/types/patientsTypes"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 

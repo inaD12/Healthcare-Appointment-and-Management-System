@@ -1,5 +1,5 @@
 import { useMemo} from "react"
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
 
 export type StatusType = "past" | "empty" | "fullyBooked" | "partiallyBooked"

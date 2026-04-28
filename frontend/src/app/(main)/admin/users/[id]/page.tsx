@@ -1,10 +1,10 @@
+import { doctorService } from "@/features/doctors/services/doctorService"
 import AdminUserClient from "./AdminUserClient"
 
-import { getUserByAdmin } from "@/features/users/services/userService"
-import { getDoctorByUserId } from "@/features/doctors/services/doctorService"
 import { patientService } from "@/features/patients/services/patientService"
-import { getRatingsByDoctor } from "@/features/ratings/services/ratingService"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
+import { userService } from "@/features/users/services/userService"
+import { ratingService } from "@/features/ratings/services/ratingService"
 
 export default async function Page({
   params,
@@ -13,7 +13,7 @@ export default async function Page({
 }) {
   const { id } = await params
 
-  const userRes = await getUserByAdmin(id)
+  const userRes = await userService.getUserByAdmin(id)
   const user = userRes.data.data
 
   let doctor = null
@@ -23,10 +23,10 @@ export default async function Page({
   let initialAppointments = null
 
   if (user.roles.includes("Doctor")) {
-    const doctorRes = await getDoctorByUserId(id)
+    const doctorRes = await doctorService.getDoctorByUserId(id)
     doctor = doctorRes.data.data
 
-    const ratingsRes = await getRatingsByDoctor(id, {
+    const ratingsRes = await ratingService.getRatingsByDoctor(id, {
       PatientId: "",
       AppointmentId: "",
       MinScore: null,

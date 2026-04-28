@@ -1,6 +1,6 @@
 "use client"
 import { useCallback, useEffect, useState } from "react"
-import { Appointment } from "@/features/patients/types/patientTypes"
+import { Appointment } from "@/features/patients/types/patientsTypes"
 
 type PageInfo = {
   hasNextPage: boolean

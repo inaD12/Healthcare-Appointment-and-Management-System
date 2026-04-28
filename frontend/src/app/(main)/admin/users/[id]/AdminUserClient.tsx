@@ -6,20 +6,20 @@ import { DoctorRatings } from "@/features/ratings/components/DoctorRatings"
 import { DoctorSpecialitiesCard } from "@/features/doctors/components/DoctorSpecialitiesCard"
 import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 import { AdminUserEditForm } from "@/features/admin/components/AdminUserEditForm"
-import { getByDateAdmin } from "@/features/appointments/services/appointmentService"
-import { addSpecialityByAdmin, removeSpecialityByAdmin } from "@/features/doctors/services/doctorService"
 import { useDeleteRating } from "@/features/admin/hooks/useDeleteRating"
 import { useDoctorRatings } from "@/features/admin/hooks/useDoctorRatings"
-import { PatientProfile } from "@/features/patients/types/patientTypes"
-import { ROLES, UserQueryResponse } from "@/features/users/types/userTypes"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
-import { DoctorQueryViewModel } from "@/features/doctors/types/doctors"
+import { PatientProfile } from "@/features/patients/types/patientsTypes"
+import { ROLES, UserQueryResponse } from "@/features/users/types/usersTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
+import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { AppointmentList } from "@/features/appointments/components/AppointmentsList"
 import { PatientMedicalCard } from "@/features/patients/components/PatientMedicalCard"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { patientService } from "@/features/patients/services/patientService"
 import { useAppointmentsPagination } from "@/features/appointments/hooks/useAppointmentsPagination"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { doctorService } from "@/features/doctors/services/doctorService"
+import { appointmentService } from "@/features/appointments/services/appointmentService"
 
 interface AdminUserClientProps {
   user: UserQueryResponse
@@ -107,7 +107,7 @@ export default function AdminUserClient({
       {isDoctor && doctor && (
         <>
           <DoctorSchedule
-            fetchAppointments={(params) => getByDateAdmin(user.id, params)}
+            fetchAppointments={(params) => appointmentService.getByDateAdmin(user.id, params)}
             onAppointmentClick={(a) => router.push(`/admin/appointments/${a.id}`)}
           />
           <DoctorRatings
@@ -119,8 +119,8 @@ export default function AdminUserClient({
           />
           <DoctorSpecialitiesCard
             specialities={doctor.specialities}
-            onAdd={async (s) => { await addSpecialityByAdmin(doctor.userId, { speciality: s }) }}
-            onRemove={async (s) => { await removeSpecialityByAdmin(doctor.userId, { speciality: s }) }}
+            onAdd={async (s) => { await doctorService.addSpecialityByAdmin(doctor.userId, { speciality: s }) }}
+            onRemove={async (s) => { await doctorService.removeSpecialityByAdmin(doctor.userId, { speciality: s }) }}
           />
         </>
       )}

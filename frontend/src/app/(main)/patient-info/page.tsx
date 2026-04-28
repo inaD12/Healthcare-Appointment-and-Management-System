@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useAppointmentsPagination } from "@/features/appointments/hooks/useAppointmentsPagination"
 import { PersonProfileCard } from "@/components/profile/PersonProfileCard"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 
 const PAGE_SIZE = 5
 

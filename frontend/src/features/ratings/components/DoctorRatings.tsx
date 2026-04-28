@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { RatingQueryViewModel } from "@/features/ratings/types/ratingTypes"
+import { RatingQueryViewModel } from "@/features/ratings/types/ratingsTypes"
 import {
   Pagination,
   PaginationPrevious,
@@ -13,10 +13,10 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination"
 
-import { removeRatingByAdmin } from "@/features/ratings/services/ratingService"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
 import { Trash2 } from "lucide-react"
+import { ratingService } from "../services/ratingService"
 
 interface DoctorRatingsProps {
   ratings: RatingQueryViewModel[]
@@ -62,7 +62,7 @@ export function DoctorRatings({
     try {
       setLoadingId(ratingId)
 
-      await removeRatingByAdmin(ratingId)
+      await ratingService.removeRatingByAdmin(ratingId)
 
       onDeleteSuccess?.(ratingId)
     } catch (err) {

@@ -21,7 +21,6 @@ import {
   EncounterCommandResponse,
   NoteCommandResponse,
   PrescriptionCommandResponse,
-  PatientProfile,
   AppointmentStatus,
   AppointmentByIdResponse,
   PatientInfo,
@@ -29,10 +28,9 @@ import {
   DoctorAppointment,
   DoctorDashboardView,
   DoctorEncounterConnection,
-  MyPatientInfo,
   Appointment,
   AdminDashboard,
-} from "../types/patientTypes"
+} from "../types/patientsTypes"
 
 export const patientService = {
   addAllergy: (patientId: string, data: AddAllergyRequest) =>

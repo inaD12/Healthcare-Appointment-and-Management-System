@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/features/auth/hooks/useAuth"
-import { Appointment } from "@/features/patients/types/patientTypes"
+import { Appointment } from "@/features/patients/types/patientsTypes"
 
 export default function AppointmentHeader({
   appointment,

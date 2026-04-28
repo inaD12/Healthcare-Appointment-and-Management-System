@@ -9,12 +9,7 @@ import {
   ROLES,
   RegisterUserRequest,
   RegisterUserByAdminRequest,
-} from "@/features/users/types/userTypes"
-
-import {
-  registerUser,
-  registerUserByAdmin,
-} from "@/features/users/services/userService"
+} from "@/features/users/types/usersTypes"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -29,6 +24,7 @@ import {
 } from "@/components/ui/select"
 
 import { useAuth } from "@/features/auth/hooks/useAuth"
+import { userService } from "../services/userService"
 
 export default function RegisterForm() {
   const { roles} = useAuth()
@@ -56,10 +52,10 @@ export default function RegisterForm() {
       }
 
       if (isAdmin) {
-        await registerUserByAdmin(payload as RegisterUserByAdminRequest)
+        await userService.registerUserByAdmin(payload as RegisterUserByAdminRequest)
         alert("User created successfully")
       } else {
-        await registerUser(payload as RegisterUserRequest)
+        await userService.registerUser(payload as RegisterUserRequest)
         alert("Registration successful!")
       }
     } catch (err: any) {

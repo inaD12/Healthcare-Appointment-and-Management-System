@@ -1,4 +1,4 @@
-import { Appointment, AppointmentByIdResponse, AppointmentStatus, EncounterDetails } from "../types/patientTypes"
+import { Appointment, AppointmentByIdResponse, AppointmentStatus, EncounterDetails } from "../types/patientsTypes"
 
 export function mapAppointmentResponseToAppointment(
   response: AppointmentByIdResponse | null

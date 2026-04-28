@@ -6,15 +6,7 @@ import { useRouter } from "next/navigation"
 import {
   DoctorQueryViewModel,
   GetAllDoctorsRequest,
-} from "@/features/doctors/types/doctors"
-
-import {
-  getAllDoctors,
-  recommendSpeciality,
-} from "@/features/doctors/services/doctorService"
-
-import { useAuthGuard } from "@/features/auth/hooks/useAuthGuard"
-
+} from "@/features/doctors/types/doctorsTypes"
 
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,7 +16,8 @@ import { DoctorsFiltersCard } from "@/features/doctors/components/DoctorFiltersC
 import { DoctorsHeader } from "@/features/doctors/components/DoctorsHeader"
 import { DoctorsPagination } from "@/features/doctors/components/DoctorsPagination"
 import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
-import { ROLES } from "@/features/users/types/userTypes"
+import { ROLES } from "@/features/users/types/usersTypes"
+import { doctorService } from "@/features/doctors/services/doctorService"
 
 type Props = {
   initialDoctors: DoctorQueryViewModel[]
@@ -69,7 +62,7 @@ export default function DoctorsClient({
     setError("")
 
     try {
-      const res = await getAllDoctors({ ...filters, page })
+      const res = await doctorService.getAllDoctors({ ...filters, page })
       const data = res.data.data
 
       if (!data.items.length) {
@@ -92,7 +85,7 @@ export default function DoctorsClient({
     setAiError("")
 
     try {
-      const res = await recommendSpeciality({ Symptoms })
+      const res = await doctorService.recommendSpeciality({ Symptoms })
 
       const specialities =
         res.data.data.specialities?.map((s) => s.name) ?? []
