@@ -17,7 +17,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Mediflow",
-  description: "A modern platform for managing doctor appointments and healthcare workflows."
+  description:
+    "A modern platform for managing doctor appointments and healthcare workflows.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/icon.png",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
