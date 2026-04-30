@@ -40,4 +40,18 @@ public static class QueryMapper
             appointments.HasNextPage,
             appointments.HasPreviousPage
             );
+    
+    public static ICollection<BookingQueryViewModel> ToBookingQueryViewModelCollection(
+        this List<Appointment> appointments)
+        => appointments.Select(a => a.ToBookingQueryViewModel()).ToList();
+    
+    public static ICollection<AppointmentQueryViewModel> ToAppointmentsQueryViewModelCollection(
+        this List<Appointment> appointments)
+        => appointments.Select(a => a.ToQueryViewModel()).ToList();
+    
+    public static BookingQueryViewModel ToBookingQueryViewModel(
+        this Appointment appointment)
+        => new(
+            appointment.Duration.Start,
+            appointment.Duration.End);
 }

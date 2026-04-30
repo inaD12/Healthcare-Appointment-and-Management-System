@@ -81,4 +81,26 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		return base.AddAsync(entity, cancellationToken);
 	}
+	
+	public async Task<Dictionary<string, NamesResponse>> GetNamesByIdsAsync(
+		IEnumerable<string> userIds,
+		CancellationToken cancellationToken = default)
+	{
+		var ids = userIds.Distinct().ToList();
+
+		return await _context.Users
+			.AsNoTracking()
+			.Where(u => ids.Contains(u.Id))
+			.Select(u => new
+			{
+				u.Id,
+				u.FirstName,
+				u.LastName
+			})
+			.ToDictionaryAsync(
+				u => u.Id,
+				u => new NamesResponse(u.FirstName, u.LastName),
+				cancellationToken
+			);
+	}
 }

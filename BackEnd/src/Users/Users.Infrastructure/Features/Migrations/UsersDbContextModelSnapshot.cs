@@ -222,6 +222,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "users:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Administrator"
                         },
@@ -242,6 +247,26 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "appointment:admin:reschedule",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:admin:cancel",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:admin:create",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "bookings:read",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
                             PermissionCode = "doctor:create",
                             RoleName = "Administrator"
                         },
@@ -257,22 +282,12 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "doctor:admin:create",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
                             PermissionCode = "doctor:admin:update",
                             RoleName = "Administrator"
                         },
                         new
                         {
-                            PermissionCode = "doctor:admin:view",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:admin:view-all",
+                            PermissionCode = "doctor:view-all",
                             RoleName = "Administrator"
                         },
                         new
@@ -292,37 +307,17 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "doctor:schedule:workday:add",
+                            PermissionCode = "specialities:view-all",
                             RoleName = "Administrator"
                         },
                         new
                         {
-                            PermissionCode = "doctor:schedule:workday:update",
+                            PermissionCode = "doctor:admin:speciality:remove",
                             RoleName = "Administrator"
                         },
                         new
                         {
-                            PermissionCode = "doctor:schedule:workday:remove",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:availability:extra:add",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:availability:extra:remove",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:availability:unavailable:add",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "doctor:availability:unavailable:remove",
+                            PermissionCode = "doctor:admin:speciality:add",
                             RoleName = "Administrator"
                         },
                         new
@@ -348,6 +343,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "ratingStats:read",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "ratings:admin:delete",
                             RoleName = "Administrator"
                         },
                         new
@@ -412,7 +412,22 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "encounter:start",
+                            PermissionCode = "patient:admin:allergy:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:allergy:remove",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:condition:add",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:admin:condition:remove",
                             RoleName = "Administrator"
                         },
                         new
@@ -422,42 +437,7 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "encounter:edit",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:lock",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:finalize",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:note:add",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:note:remove",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
                             PermissionCode = "encounter:note:view",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:diagnosis:add",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:diagnosis:remove",
                             RoleName = "Administrator"
                         },
                         new
@@ -467,28 +447,28 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            PermissionCode = "encounter:prescription:add",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:prescription:remove",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
                             PermissionCode = "encounter:prescription:view",
-                            RoleName = "Administrator"
-                        },
-                        new
-                        {
-                            PermissionCode = "encounter:addendum:add",
                             RoleName = "Administrator"
                         },
                         new
                         {
                             PermissionCode = "encounter:addendum:view",
                             RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "admin:encounter:unlock",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "admin:encounter:unfinalize",
+                            RoleName = "Administrator"
+                        },
+                        new
+                        {
+                            PermissionCode = "bookings:read",
+                            RoleName = "Doctor"
                         },
                         new
                         {
@@ -503,6 +483,11 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "appointment:reschedule",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "appointment:mine:read",
                             RoleName = "Doctor"
                         },
                         new
@@ -677,6 +662,31 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:view-all",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:condition:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:allergy:add",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "specialities:view-all",
+                            RoleName = "Doctor"
+                        },
+                        new
+                        {
+                            PermissionCode = "bookings:read",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
                             PermissionCode = "appointment:create",
                             RoleName = "Patient"
                         },
@@ -747,6 +757,16 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            PermissionCode = "doctor:view-all",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "doctor:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
                             PermissionCode = "encounter:diagnosis:view",
                             RoleName = "Patient"
                         },
@@ -758,6 +778,21 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             PermissionCode = "encounter:addendum:view",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:condition:add",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "patient:allergy:add",
+                            RoleName = "Patient"
+                        },
+                        new
+                        {
+                            PermissionCode = "specialities:view-all",
                             RoleName = "Patient"
                         });
                 });
@@ -815,7 +850,27 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            Code = "appointment:admin:reschedule"
+                        },
+                        new
+                        {
+                            Code = "appointment:admin:cancel"
+                        },
+                        new
+                        {
+                            Code = "appointment:admin:create"
+                        },
+                        new
+                        {
                             Code = "appointment:read"
+                        },
+                        new
+                        {
+                            Code = "appointment:mine:read"
+                        },
+                        new
+                        {
+                            Code = "bookings:read"
                         },
                         new
                         {
@@ -831,19 +886,11 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
-                            Code = "doctor:admin:create"
-                        },
-                        new
-                        {
                             Code = "doctor:admin:update"
                         },
                         new
                         {
-                            Code = "doctor:admin:view"
-                        },
-                        new
-                        {
-                            Code = "doctor:admin:view-all"
+                            Code = "doctor:view-all"
                         },
                         new
                         {
@@ -887,6 +934,18 @@ namespace Users.Infrastructure.Features.Migrations
                         },
                         new
                         {
+                            Code = "specialities:view-all"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:speciality:remove"
+                        },
+                        new
+                        {
+                            Code = "doctor:admin:speciality:add"
+                        },
+                        new
+                        {
                             Code = "ratings:create"
                         },
                         new
@@ -904,6 +963,10 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "ratingStats:read"
+                        },
+                        new
+                        {
+                            Code = "ratings:admin:delete"
                         },
                         new
                         {
@@ -952,6 +1015,18 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "patient:condition:view"
+                        },
+                        new
+                        {
+                            Code = "patient:admin:allergy:remove"
+                        },
+                        new
+                        {
+                            Code = "patient:admin:condition:add"
+                        },
+                        new
+                        {
+                            Code = "patient:admin:condition:remove"
                         },
                         new
                         {
@@ -1016,6 +1091,14 @@ namespace Users.Infrastructure.Features.Migrations
                         new
                         {
                             Code = "encounter:addendum:view"
+                        },
+                        new
+                        {
+                            Code = "admin:encounter:unfinalize"
+                        },
+                        new
+                        {
+                            Code = "admin:encounter:unlock"
                         });
                 });
 

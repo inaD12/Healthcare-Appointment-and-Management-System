@@ -1,7 +1,9 @@
 using Doctors.Domain.Events;
 using Doctors.Domain.Utilities;
+using FluentValidation.Results;
 using Shared.Domain.Entities.Base;
 using Shared.Domain.Entities.ValueObjects;
+using Shared.Domain.Exceptions;
 using Shared.Domain.Results;
 
 namespace Doctors.Domain.Entities;
@@ -11,11 +13,12 @@ public sealed class Doctor : BaseEntity
     public string UserId { get; init; }
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
-    public string Bio { get; private set; }
-    public string TimeZoneId { get; private set; }
+    public string? Bio { get; private set; }
     public List<Speciality> Specialities { get; private set; }
     public WeeklySchedule WeeklySchedule { get; private set; }
     public List<DoctorAvailabilityException> AvailabilityExceptions { get; private set; }
+    public double AverageRating { get; private set; }
+    public int RatingsCount { get; private set; }
 
     private Doctor(){}
     
@@ -23,44 +26,43 @@ public sealed class Doctor : BaseEntity
         string userId,
         string firstName,
         string lastName,
-        string bio,
+        string? bio,
         List<Speciality> specialities,
-        string timeZoneId,
         WeeklySchedule weeklySchedule,
-        List<DoctorAvailabilityException> availabilityExceptions)
+        List<DoctorAvailabilityException> availabilityExceptions,
+        double averageRating,
+        int ratingsCount)
     {
         UserId = userId;
         FirstName = firstName;
         LastName = lastName;
         Bio = bio;
         Specialities = specialities;
-        TimeZoneId = timeZoneId;
         WeeklySchedule = weeklySchedule;
         AvailabilityExceptions = availabilityExceptions;
+        AverageRating = averageRating;
+        RatingsCount = ratingsCount;
     }
 
     public static Result<Doctor> Create(
         string userId,
         string firstName,
         string lastName,
-        string bio,
+        string? bio,
         List<Speciality> specialities,
-        string timeZoneId,
         WeeklySchedule? weeklySchedule = null,
         List<DoctorAvailabilityException>? availabilityExceptions = null)
     {
-        if (!IsValidTimeZone(timeZoneId))
-            return Result<Doctor>.Failure(ResponseList.InvalidTimezone);
-        
         return  Result<Doctor>.Success(new Doctor(
             userId,
-            bio,
             firstName,
             lastName,
+            bio,
             specialities,
-            timeZoneId,
             weeklySchedule ?? WeeklySchedule.Create(null).Value!,
-            availabilityExceptions ?? new List<DoctorAvailabilityException>()));
+            availabilityExceptions ?? new List<DoctorAvailabilityException>(),
+            0,
+            0));
     }
     
     public Result AddUnavailability(DateTime start, DateTime end, string reason = "")
@@ -69,7 +71,7 @@ public sealed class Doctor : BaseEntity
         
         if (result.IsSuccess)
         {
-            RaiseDomainEvent(new DoctorAddedUnavailabilityDomainEvent(Id, start, end, reason));
+            RaiseDomainEvent(new DoctorAddedUnavailabilityDomainEvent(UserId, start, end, reason));
         }
         
         return result;
@@ -81,7 +83,7 @@ public sealed class Doctor : BaseEntity
 
         if (result.IsSuccess)
         {
-            RaiseDomainEvent(new DoctorAddedExtraAvailabilityDomainEvent(Id, start, end, reason));
+            RaiseDomainEvent(new DoctorAddedExtraAvailabilityDomainEvent(UserId, start, end, reason));
         }
         
         return result;
@@ -99,7 +101,7 @@ public sealed class Doctor : BaseEntity
         foreach (var exception in exceptions)
             AvailabilityExceptions.Remove(exception);
 
-        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(UserId, start, end));
         return Result.Success();
         
     }
@@ -116,7 +118,7 @@ public sealed class Doctor : BaseEntity
         foreach (var exception in exceptions)
             AvailabilityExceptions.Remove(exception);
 
-        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(Id, start, end));
+        RaiseDomainEvent(new DoctorRemovedUnavailabilityDomainEvent(UserId, start, end));
         return Result.Success();
         
     }
@@ -127,7 +129,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleAddedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
+        RaiseDomainEvent(new WorkDayScheduleAddedDomainEvent(UserId, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -137,7 +139,7 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleChangedDomainEvent(Id, workDay.DayOfWeek, workDay.WorkTimes ));
+        RaiseDomainEvent(new WorkDayScheduleChangedDomainEvent(UserId, workDay.DayOfWeek, workDay.WorkTimes ));
         return Result.Success();
     }
 
@@ -147,15 +149,12 @@ public sealed class Doctor : BaseEntity
         if (result.IsFailure)
             return result;
 
-        RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(Id, dayOfWeek));
+        RaiseDomainEvent(new WorkDayScheduleRemovedDomainEvent(UserId, dayOfWeek));
         return Result.Success();
     }
     
-    public void UpdateProfile(string? timeZoneId, string? bio)
+    public void UpdateProfile(string? bio)
     {
-        if (!string.IsNullOrWhiteSpace(timeZoneId))
-            TimeZoneId = timeZoneId;
-
         if (!string.IsNullOrWhiteSpace(bio))
             Bio = bio;
     }
@@ -180,15 +179,28 @@ public sealed class Doctor : BaseEntity
         return Result.Success();
     }
     
-    public Result RemoveSpeciality(string name)
+    public void ChangeAverageRating(double newRating)
     {
-        var speciality = Specialities.Find(p => p.Name == name);
-        if (speciality == null)
-            return Result.Failure(ResponseList.SpecialityNotBelongDoctor);
+        if (newRating < 1 || newRating > 5)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Doctor", "Rating score must be between 1 and 5.")
+            });
         
-        Specialities.Remove(speciality);
-
-        return Result.Success();
+        AverageRating = newRating;
+    }
+    
+    public void ChangeRatingsCount(int ratingsCount)
+    {
+        if (ratingsCount < 0)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Doctor", "Ratings count must be greater than 0.")
+            });
+        
+        RatingsCount = ratingsCount;
     }
 
     public bool IsAvailable(DateTimeRange range)
@@ -212,6 +224,17 @@ public sealed class Doctor : BaseEntity
         return true;
     }
     
+    public Result RemoveSpeciality(string name)
+    {
+        var speciality = Specialities.Find(p => p.Name == name);
+        if (speciality == null)
+            return Result.Failure(ResponseList.SpecialityNotBelongDoctor);
+        
+        Specialities.Remove(speciality);
+
+        return Result.Success();
+    }
+    
     private Result AddAvailabilityException(DoctorAvailabilityException exception)
     {
         if (AvailabilityExceptions.Any(e => e.Overlaps(exception.Range)))
@@ -229,18 +252,6 @@ public sealed class Doctor : BaseEntity
 
         return overlapping;
     }
-    
-    private static bool IsValidTimeZone(string timeZoneId)
-    {
-        try
-        {
-            TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
+
 }
 

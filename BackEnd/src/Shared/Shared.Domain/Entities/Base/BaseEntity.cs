@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Abstractions;
+﻿using HotChocolate;
+using Shared.Domain.Abstractions;
 
 namespace Shared.Domain.Entities.Base;
 
@@ -11,6 +12,7 @@ public abstract class BaseEntity
 	}
 	public string Id { get; set; }
 
+	[GraphQLIgnore]
 	public IReadOnlyList<IDomainEvent> GetDomainEvents()
 	{
 		return _domainEvents.ToList();

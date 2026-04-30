@@ -1,0 +1,113 @@
+"use client"
+
+import { useState } from "react"
+
+import {
+  AppointmentStatus,
+} from "@/features/patients/types/patientsTypes"
+
+import AppointmentHeader from "@/features/doctors/components/appointment/AppointmentHeader"
+import AppointmentInfoCard from "@/features/doctors/components/appointment/AppointmentInfoCard"
+import AppointmentRatingCard from "@/features/ratings/components/AppointmentRatingCard"
+import EncounterCard from "@/features/encounters/components/EncounterCard"
+import { useRequireRole } from "@/features/auth/hooks/useRequireRole"
+import { ROLES } from "@/features/users/types/usersTypes"
+import { ratingService } from "@/features/ratings/services/ratingService"
+import AppointmentControlsCard from "@/features/appointments/components/AppointmentControlsCard"
+
+export default function AppointmentPageClient({
+  initialAppointment,
+  initialRating,
+}: any) {
+  const [appointment, setAppointment] = useState(initialAppointment)
+  const [rating, setRating] = useState(initialRating)
+
+  const encounter = appointment?.encounterDetails ?? null
+
+  useRequireRole(ROLES.PATIENT)
+  
+  const handleCreateRating = async (data: { score: number; comment: string }) => {
+    const res = await ratingService.addRating({
+      AppointmentId: appointment.id,
+      Score: data.score,
+      Comment: data.comment,
+    })
+
+    setRating({
+      id: res.data.data.id,
+      appointmentId: appointment.id,
+      doctorId: "",
+      patientId: "",
+      score: data.score,
+      comment: data.comment,
+      createdAt: new Date().toISOString(),
+    })
+  }
+
+  const handleEditRating = async (data: { score: number; comment: string }) => {
+    if (!rating?.id) return
+
+    await ratingService.editRating(rating.id, {
+      Score: data.score,
+      Comment: data.comment,
+    })
+
+    setRating({
+      ...rating,
+      score: data.score,
+      comment: data.comment,
+    })
+  }
+
+  const handleDeleteRating = async () => {
+    if (!rating?.id) return
+
+    await ratingService.removeRating(rating.id)
+    setRating(null)
+  }
+
+  if (!appointment) {
+    return <div className="p-6 text-red-600">Failed to load appointment</div>
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-12">
+
+      <AppointmentHeader appointment={appointment} />
+
+      <AppointmentInfoCard appointment={appointment} />
+
+      {appointment.status === AppointmentStatus.Scheduled &&(
+              <AppointmentControlsCard
+                appointmentId={appointment.id}
+                doctorUserId={appointment.doctorId}
+                status={appointment.status}
+                onStatusChange={(status) =>
+                  setAppointment((prev: any) => ({
+                    ...prev,
+                    status,
+                  }))
+                }
+              />
+              )}
+
+      {appointment.status === AppointmentStatus.Completed && (
+        <AppointmentRatingCard
+          rating={rating}
+          onCreate={handleCreateRating}
+          onEdit={handleEditRating}
+          onDelete={handleDeleteRating}
+        />
+      )}
+
+      {encounter && (
+       <EncounterCard
+        encounter={encounter}
+        encounterId={encounter.id}
+        updateEncounter={() => {}}
+      />
+      )}
+
+    </div>
+  )
+}

@@ -11,6 +11,7 @@ public sealed class Rating: BaseEntity
     public string AppointmentId { get; private set; }
 
     public int Score { get; private set; }
+    public DateTime CreatedAt { get; private set; }
     public string? Comment { get; private set; }
 
 
@@ -21,12 +22,14 @@ public sealed class Rating: BaseEntity
         string patientId,
         string appointmentId,
         int score,
+        DateTime createdAt,
         string? comment)
     {
         DoctorId = doctorId;
         PatientId = patientId;
         AppointmentId = appointmentId;
         Score = score;
+        CreatedAt = createdAt;
         Comment = comment;
     }
 
@@ -35,6 +38,7 @@ public sealed class Rating: BaseEntity
         string patientId,
         string appointmentId,
         int score,
+        DateTime createdAt,
         string? comment)
     {
         if (score < 1 || score > 5)
@@ -49,6 +53,7 @@ public sealed class Rating: BaseEntity
             patientId,
             appointmentId,
             score,
+            createdAt,
             comment);
     }
 

@@ -51,6 +51,7 @@ public sealed class User : BaseEntity
 		string firstName,
 		string lastName,
 		DateTime dateOfBirth,
+		bool emailVerified,
 		string identityId,
 		string phoneNumber,
 		string address)
@@ -60,14 +61,20 @@ public sealed class User : BaseEntity
 			firstName,
 			lastName,
 			dateOfBirth,
-			false,
+			emailVerified,
 			identityId,
 			phoneNumber,
 			address);
 
 		user._roles.Add(role);
 		
-		user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, user.Email, user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
+		user.RaiseDomainEvent(new UserCreatedDomainEvent(
+			user.Id,
+			user.Email,
+			user.FirstName,
+			user.LastName,
+			DateOnly.FromDateTime(user.DateOfBirth),
+			user.Roles.Select(p => p.MapToRoleEnum()).ToList()));
 
 		return user;
 	}
@@ -82,14 +89,9 @@ public sealed class User : BaseEntity
 		return Result.Success();
 	}
 
-	public void UpdateProfile(string? newEmail, string? firstName, string? lastName)
+	public void UpdateProfile(string? firstName, string? lastName)
 	{
 		bool namesChanged = false;
-		
-		if (!string.IsNullOrWhiteSpace(newEmail))
-		{
-			Email = newEmail;
-		}
 		
 		if (!string.IsNullOrWhiteSpace(firstName))
 		{

@@ -10,24 +10,31 @@ namespace Appointments.API.Appointments.Mappers;
 public static class CommandMapper
 {
     public static CreateAppointmentCommand ToCommand(
-        this CreateAppointmentRequest request)
+        this CreateAppointmentRequest request,
+        string patientId)
         => new(
-            request.PatientId,
-            request.DoctorId,
+            patientId,
+            request.DoctorUserId,
             request.ScheduledStartTime,
             request.Duration);
     
-    public static CancelAppointmentCommand ToCommand(
-        this CancelAppointmentRequest request)
+    public static CreateAppointmentCommand ToCommand(
+        this CreateAppointmentByAdminRequest request)
         => new(
-            request.AppointmentId);
+            request.PatientUserId,
+            request.DoctorUserId,
+            request.ScheduledStartTime,
+            request.Duration);
     
     public static RescheduleAppointmentCommand ToCommand(
-        this RescheduleAppointmentRequest request)
+        this RescheduleAppointmentRequest request,
+        string appointmentId,
+        bool isAdmin = false)
         => new(
-            request.AppointmentId,
+            appointmentId,
             request.ScheduledStartTime,
-            request.Duration);
+            request.Duration,
+            isAdmin);
     
     public static AppointmentCommandResponse ToResponse(
         this AppointmentCommandViewModel request)

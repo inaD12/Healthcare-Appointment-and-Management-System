@@ -8,6 +8,7 @@ namespace Ratings.Application.Features.Ratings.Commands.RemoveRating;
 
 public sealed class RemoveRatingCommandHandler(
     IRatingRepository ratingRepository,
+    IRateableAppointmentRepository rateableAppointmentRepository,
     IDoctorRatingStatsRepository doctorRatingStatsRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RemoveRatingCommand>
@@ -17,7 +18,7 @@ public sealed class RemoveRatingCommandHandler(
         var rating = await ratingRepository.GetByIdAsync(request.RatingId, cancellationToken);
         if (rating == null)
             return Result.Failure(ResponseList.RatingNotFound);
-        if(rating.PatientId != request.UserId)
+        if(rating.PatientId != request.UserId && !request.IsAdmin)
             return Result.Failure(ResponseList.RatingNotYours);
         
         ratingRepository.Delete(rating);
@@ -30,6 +31,7 @@ public sealed class RemoveRatingCommandHandler(
         }
         
         doctorRatingStats.RemoveRating(rating.Score);
+        await rateableAppointmentRepository.MarkAsNotRatedAsync(rating.AppointmentId, cancellationToken);
         
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();

@@ -6,6 +6,7 @@ using Appointments.Domain.Entities.Enums;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using Shared.Domain.Entities.ValueObjects;
 
@@ -21,7 +22,8 @@ public class RescheduleAppointmentCommandHandlerUnitTests : BaseAppointmentsUnit
 			UnitOfWork,
 			AppointmentRepository,
 			DateTimeProvider,
-			AuthService);
+			AuthService,
+			new HttpContextAccessor());
 	}
 
 	[Fact]

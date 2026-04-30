@@ -6,6 +6,7 @@ using Ratings.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Shared.Infrastructure.Clock;
 
 namespace Ratings.Application.Features.Ratings.Commands.AddRating;
 
@@ -13,6 +14,7 @@ public sealed class AddRatingCommandHandler(
     IRatingRepository ratingRepository,
     IDoctorRatingStatsRepository doctorRatingStatsRepository,
     IRateableAppointmentRepository rateableAppointmentRepository,
+    IDateTimeProvider  dateTimeProvider,
     IUnitOfWork unitOfWork)
     : ICommandHandler<AddRatingCommand, RatingCommandViewModel>
 {
@@ -31,9 +33,11 @@ public sealed class AddRatingCommandHandler(
             rateableAppointment.PatientId,
             rateableAppointment.Id,
             request.Score,
+            dateTimeProvider.UtcNow,
             request.Comment);
         
         await ratingRepository.AddAsync(rating, cancellationToken);
+        await rateableAppointmentRepository.MarkAsRatedAsync(request.AppointmentId, cancellationToken);
         
         var doctorRatingStats = await doctorRatingStatsRepository.GetOrCreateByIdAsync(rating.DoctorId, cancellationToken);
         doctorRatingStats.ApplyNewRating(request.Score);

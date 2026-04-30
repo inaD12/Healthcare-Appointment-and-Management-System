@@ -12,11 +12,6 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 			.MinimumLength(UsersBusinessConfiguration.ID_MIN_LENGTH)
 			.MaximumLength(UsersBusinessConfiguration.ID_MAX_LENGTH);
 
-		RuleFor(x => x.NewEmail)
-			.MinimumLength(UsersBusinessConfiguration.EMAIL_MIN_LENGTH)
-			.MaximumLength(UsersBusinessConfiguration.EMAIL_MAX_LENGTH)
-			.EmailAddress();
-
 		RuleFor(x => x.FirstName)
 			.MinimumLength(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH)
 			.MaximumLength(UsersBusinessConfiguration.FIRSTNAME_MAX_LENGTH);
@@ -26,7 +21,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 			.MaximumLength(UsersBusinessConfiguration.LASTNAME_MAX_LENGTH);
 
 		RuleFor(x => x)
-			.Must(x => x.NewEmail != null || x.FirstName != null || x.LastName != null)
+			.Must(x => x.FirstName != null || x.LastName != null)
 			.WithMessage("At least one field must be changed.");
 	}
 }

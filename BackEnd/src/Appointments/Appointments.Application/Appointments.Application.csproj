@@ -23,8 +23,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\Appointments.Domain\Appointments.Domain.csproj" />
-    <ProjectReference Include="..\Appointments.Infrastructure\Appointments.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

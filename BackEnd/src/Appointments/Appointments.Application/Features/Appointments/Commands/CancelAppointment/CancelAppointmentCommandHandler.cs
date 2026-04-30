@@ -3,6 +3,7 @@ using Appointments.Application.Features.Appointments.Requirements.ModifyAppointm
 using Appointments.Domain.Abstractions;
 using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;
@@ -14,7 +15,8 @@ public sealed class CancelAppointmentCommandHandler(
 	IUnitOfWork unitOfWork,
 	IDateTimeProvider dateTimeProvider,
 	IAppointmentRepository repositoryManager,
-	IAuthorizationService authService)
+	IAuthorizationService authService,
+	IHttpContextAccessor  httpContextAccessor)
 	: ICommandHandler<CancelAppointmentCommand>
 {
 	public async Task<Result> Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
@@ -25,12 +27,16 @@ public sealed class CancelAppointmentCommandHandler(
 			return Result.Failure(ResponseList.AppointmentNotFound);
 		}
 
-		var requirement = new ModifyAppointmentRequirement();
-
-		var authResult = await authService.AuthorizeAsync(ClaimsPrincipal.Current!, appointment, requirement );
-		if (!authResult.Succeeded)
+		if (!request.IsAdmin)
 		{
-			return Result.Failure(ResponseList.CannotCancelOthersAppointment);
+			var requirement = new ModifyAppointmentRequirement();
+
+			var authResult =
+				await authService.AuthorizeAsync(httpContextAccessor.HttpContext!.User, appointment, requirement);
+			if (!authResult.Succeeded)
+			{
+				return Result.Failure(ResponseList.CannotCancelOthersAppointment);
+			}
 		}
 
 		var res = appointment.Cancel(dateTimeProvider.UtcNow);

@@ -12,11 +12,11 @@ public sealed class AddExtraAvailabilityCommandHandler(
 {
     public async Task<Result> Handle(AddExtraAvailabilityCommand request, CancellationToken cancellationToken)
     {
-        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorId, cancellationToken);
+        var schedule = await scheduleRepository.GetByIdAsync(request.DoctorUserId, cancellationToken);
 
         if (schedule is null)
         {
-            schedule = new Domain.Entities.DoctorSchedule(request.DoctorId);
+            schedule = new Domain.Entities.DoctorSchedule(request.DoctorUserId);
             schedule.AddExtraAvailability(request.Start, request.End, request.Reason);
 
             await scheduleRepository.AddAsync(schedule, cancellationToken);

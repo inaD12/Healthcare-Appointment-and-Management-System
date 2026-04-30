@@ -15,9 +15,6 @@ internal class DoctorConfiguration : IEntityTypeConfiguration<Doctor>
         builder.Property(d => d.UserId)
             .IsRequired();
 
-        builder.Property(d => d.TimeZoneId)
-            .IsRequired();
-                
         builder.HasMany(d => d.Specialities)
             .WithMany()
             .UsingEntity<Dictionary<string, object>>(

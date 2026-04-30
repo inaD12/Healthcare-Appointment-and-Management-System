@@ -1,9 +1,10 @@
 using Patients.Application.Features.Encounters.Mappers;
 using Patients.Application.Features.Encounters.Models;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Domain.Abstractions.Repositories.Query;
 using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
-using Patients.Infrastructure.Features.ReadModels.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Infrastructure.Clock;
@@ -11,15 +12,15 @@ using Shared.Infrastructure.Clock;
 namespace Patients.Application.Features.Encounters.Commands.StartEncounter;
 
 public sealed class StartEncounterCommandHandler(
-    IEncounterRepository encounterRepository,
-    IAppointmentReadRepository  appointmentRepository,
+    IEncounterCommandRepository encounterCommandRepository,
+    IAppointmentQueryRepository  appointmentRepository,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<StartEncounterCommand, EncounterCommandViewModel>
 {
     public async Task<Shared.Domain.Results.Result<EncounterCommandViewModel>> Handle(StartEncounterCommand request, CancellationToken cancellationToken)
     {
-        var encounter = await encounterRepository.GetByAppointmentId(request.AppointmentId, cancellationToken);
+        var encounter = await encounterCommandRepository.GetByAppointmentId(request.AppointmentId, cancellationToken);
         if (encounter is not null)
             return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.EncounterAlreadyExists);
         
@@ -27,12 +28,16 @@ public sealed class StartEncounterCommandHandler(
         if (appointment is null)
             return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(ResponseList.AppointmentNotFound);
         
-        encounter = Encounter.Start(request.PatientId, request.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow);
+        var encounterResult = Encounter.Start(appointment.PatientId, appointment.DoctorId, request.AppointmentId, dateTimeProvider.UtcNow, appointment.Status);
+        if (encounterResult.IsFailure)
+            return Shared.Domain.Results.Result<EncounterCommandViewModel>.Failure(encounterResult.Response);
         
-       await encounterRepository.AddAsync(encounter, cancellationToken);
+        encounter = encounterResult.Value;
+        
+       await encounterCommandRepository.AddAsync(encounter!, cancellationToken);
        await unitOfWork.SaveChangesAsync(cancellationToken);
 
-       var viewModel = encounter.ToCommandViewModel();
+       var viewModel = encounter!.ToCommandViewModel();
        return Shared.Domain.Results.Result<EncounterCommandViewModel>.Success(viewModel);
     }
 }

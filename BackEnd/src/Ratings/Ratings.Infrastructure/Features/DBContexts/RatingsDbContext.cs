@@ -5,8 +5,12 @@ using Ratings.Infrastructure.Features.Configurations;
 
 namespace Ratings.Infrastructure.Features.DBContexts;
 
-public sealed class RatingsDbContext(DbContextOptions<RatingsDbContext> options) : DbContext(options)
+public sealed class RatingsDbContext: DbContext
 {
+	public RatingsDbContext(DbContextOptions<RatingsDbContext> options)
+		: base(options)
+	{ }
+	
 	public DbSet<Rating> Ratings => Set<Rating>();
 	public DbSet<DoctorRatingStats> DoctorRatingStats => Set<DoctorRatingStats>();
 	public DbSet<RateableAppointment> RateableAppointments => Set<RateableAppointment>();

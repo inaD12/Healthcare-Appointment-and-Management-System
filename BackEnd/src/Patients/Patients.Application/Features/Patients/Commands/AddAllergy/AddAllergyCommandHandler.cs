@@ -1,5 +1,6 @@
 using Patients.Application.Features.Patients.Models;
 using Patients.Domain.Abstractions.Repositories;
+using Patients.Domain.Abstractions.Repositories.Command;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
@@ -7,13 +8,13 @@ using Shared.Domain.Abstractions.Messaging;
 namespace Patients.Application.Features.Patients.Commands.AddAllergy;
 
 public sealed class AddAllergyCommandHandler(
-    IPatientRepository patientRepository,
+    IPatientCommandRepository patientCommandRepository,
     IUnitOfWork unitOfWork)
     : ICommandHandler<AddAllergyCommand, AllergyCommandViewModel>
 {
     public async Task<Shared.Domain.Results.Result<AllergyCommandViewModel>> Handle(AddAllergyCommand request, CancellationToken cancellationToken)
     {
-        var patient = await patientRepository.GetByIdAsync(request.Id, cancellationToken);
+        var patient = await patientCommandRepository.GetByIdAsync(request.Id, cancellationToken);
         if (patient == null)
             return Shared.Domain.Results.Result<AllergyCommandViewModel>.Failure(ResponseList.PatientNotFound);
         

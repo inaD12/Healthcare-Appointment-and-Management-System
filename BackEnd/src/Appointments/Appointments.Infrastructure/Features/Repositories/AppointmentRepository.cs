@@ -36,6 +36,7 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 		var appointments = await PagedList<Appointment>.CreateAsync(entitiesQuery, query.Page, query.PageSize, cancellationToken);
 		return appointments;
 	}
+	
 	public async Task<bool> IsTimeSlotAvailableAsync(string doctorId, DateTimeRange dateTimeRange, CancellationToken cancellationToken = default)
 	{
 		bool isSlotTaken = await _context.Appointments
@@ -57,4 +58,31 @@ internal class AppointmentRepository : GenericRepository<Appointment>, IAppointm
 
 		return res;
 	}
+	
+	public async Task<List<Appointment>> GetByDoctorAndDateAsync(
+		string doctorUserId,
+		DateOnly startDate,
+		DateOnly endDate,
+		CancellationToken cancellationToken = default)
+	{
+		var start = DateTime.SpecifyKind(
+			startDate.ToDateTime(TimeOnly.MinValue),
+			DateTimeKind.Utc);
+
+		var end = DateTime.SpecifyKind(
+			endDate.ToDateTime(TimeOnly.MaxValue),
+			DateTimeKind.Utc);
+
+		return await _context.Appointments
+			.Where(a =>
+					a.DoctorId == doctorUserId &&
+					a.Status != AppointmentStatus.Cancelled &&
+					a.Status != AppointmentStatus.Rescheduled &&
+					a.Duration.End > start &&
+					a.Duration.Start < end
+			)
+			.OrderBy(a => a.Duration.Start)
+			.ToListAsync(cancellationToken);
+	}
 }
+	

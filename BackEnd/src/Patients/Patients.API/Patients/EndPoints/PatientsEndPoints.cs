@@ -4,7 +4,6 @@ using Patients.API.Patients.Mappers;
 using Patients.API.Patients.Models.Requests;
 using Patients.API.Patients.Models.Responses;
 using Patients.Application.Features.Encounters.Commands.LockEncounter;
-using Patients.Application.Features.Patients.Commands.DeletePatient;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Infrastructure.Authentication;
@@ -16,7 +15,7 @@ internal class PatientsEndPoints : IEndPoints
 {
 	public void RegisterEndpoints(IEndpointRouteBuilder app)
 {
-    var patientsGroup = app.MapGroup("/api/patients/{patientId}")
+    var patientsGroup = app.MapGroup("/patients/{patientId}")
         .RequireAuthorization();
     
     patientsGroup.MapPost("/allergies", AddAllergyAsync)
@@ -50,17 +49,8 @@ internal class PatientsEndPoints : IEndPoints
         .Produces(StatusCodes.Status404NotFound)
         .Produces(StatusCodes.Status500InternalServerError)
         .RequireAuthorization(Permissions.RemoveChronicCondition);
-
-    patientsGroup.MapDelete("/", DeletePatientAsync)
-        .Produces(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status409Conflict)
-        .Produces(StatusCodes.Status404NotFound)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .RequireAuthorization(Permissions.DeletePatient);
-
     
-    var encountersGroup = patientsGroup.MapGroup("/encounters");
+    var encountersGroup = app.MapGroup("/encounters");
     
     encountersGroup.MapPost("/", StartEncounterAsync)
         .Produces<EncounterCommandResponse>()
@@ -71,7 +61,7 @@ internal class PatientsEndPoints : IEndPoints
         .RequireAuthorization(Permissions.StartEncounter);
     
     
-    var encounterActionsGroup = app.MapGroup("/api/encounters/{encounterId}")
+    var encounterActionsGroup = encountersGroup.MapGroup("/{encounterId}")
 	    .RequireAuthorization();
 
     encounterActionsGroup.MapPost("/notes", AddNoteAsync)
@@ -148,14 +138,13 @@ internal class PatientsEndPoints : IEndPoints
 }
 
 	private async Task<IResult> StartEncounterAsync(
-		[FromRoute] string patientId,
 		[FromBody] StartEncounterRequest request,
 		[FromServices] ISender sender,
 		HttpContext httpContext,
 		CancellationToken cancellationToken)
 	{
 		var userId = httpContext.User.GetUserId();
-		var command = request.ToCommand(userId, patientId);
+		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
@@ -308,7 +297,7 @@ internal class PatientsEndPoints : IEndPoints
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
 			return ControllerResponse.ParseAndReturnMessage(res);
-		return ControllerResponse.ParseAndReturnMessage(res, new AllergyCommandResponse(res.Value!.Id));
+		return ControllerResponse.ParseAndReturnMessage(res, new ConditionCommandResponse(res.Value!.Id));
 	}
 	
 	private async Task<IResult> RemoveAllergyAsync(
@@ -329,16 +318,6 @@ internal class PatientsEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var command = request.ToCommand(patientId);
-		var res = await sender.Send(command, cancellationToken);
-		return ControllerResponse.ParseAndReturnMessage(res);
-	}
-	
-	private async Task<IResult> DeletePatientAsync(
-		[FromRoute] string patientId,
-		[FromServices] ISender sender,
-		CancellationToken cancellationToken)
-	{
-		var command = new DeletePatientCommand(patientId);
 		var res = await sender.Send(command, cancellationToken);
 		return ControllerResponse.ParseAndReturnMessage(res);
 	}

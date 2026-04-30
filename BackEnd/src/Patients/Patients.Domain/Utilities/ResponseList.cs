@@ -10,9 +10,12 @@ public static class ResponseList
 
 	// Error Responses
 	public static Response EncounterNotEditable => Response.Create(ErrorMessages.EncounterNotEditable, HttpStatusCode.Forbidden);
+	public static Response AppointmentNotCompletedOrScheduled => Response.Create(ErrorMessages.AppointmentNotCompletedOrScheduled, HttpStatusCode.Forbidden);
 	public static Response DiagnosisAlreadyAdded => Response.Create(ErrorMessages.DiagnosisAlreadyAdded, HttpStatusCode.Conflict);
 	public static Response EncounterNeedsDiagnosis => Response.Create(ErrorMessages.EncounterNeedsDiagnosis, HttpStatusCode.Conflict);
 	public static Response LockUnfinalizedEncounter => Response.Create(ErrorMessages.LockUnfinalizedEncounter, HttpStatusCode.Forbidden);
+	public static Response NotLocked => Response.Create(ErrorMessages.NotLocked, HttpStatusCode.Conflict);
+	public static Response NotFinalized => Response.Create(ErrorMessages.NotFinalized, HttpStatusCode.Conflict);
 	public static Response EncounterLocked => Response.Create(ErrorMessages.EncounterLocked, HttpStatusCode.Conflict);
 	public static Response UseNormalNotesBeforeFinalization => Response.Create(ErrorMessages.UseNormalNotesBeforeFinalization, HttpStatusCode.Forbidden);
 	public static Response ConditionAlreadyAdded => Response.Create(ErrorMessages.ConditionAlreadyAdded, HttpStatusCode.Conflict);

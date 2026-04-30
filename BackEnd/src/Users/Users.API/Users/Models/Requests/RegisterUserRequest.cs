@@ -1,6 +1,4 @@
-﻿using Shared.Domain.Enums;
-
-namespace Users.Users.Models.Requests;
+﻿namespace Users.Users.Models.Requests;
 
 public sealed record RegisterUserRequest(
 	string Email,
@@ -9,6 +7,5 @@ public sealed record RegisterUserRequest(
 	string LastName,
 	DateTime DateOfBirth,
 	string PhoneNumber,
-	string Address,
-	Roles Role
+	string Address
 );

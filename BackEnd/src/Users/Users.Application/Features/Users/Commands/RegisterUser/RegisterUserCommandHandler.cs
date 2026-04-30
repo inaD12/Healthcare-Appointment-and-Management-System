@@ -26,7 +26,7 @@ public sealed class RegisterUserCommandHandler(
 		if (identityResult.IsFailure)
 			return Result<UserCommandViewModel>.Failure(identityResult.Response);
 
-		var user = User.Create(request.Email, request.Role, request.FirstName, request.LastName,  request.DateOfBirth, identityResult.Value!, request.PhoneNumber, request.Address);
+		var user = User.Create(request.Email, request.Role, request.FirstName, request.LastName,  request.DateOfBirth, false, identityResult.Value!, request.PhoneNumber, request.Address);
 		await userRepository.AddAsync(user, cancellationToken);
 		await unitOfWork.SaveChangesAsync(cancellationToken);
 

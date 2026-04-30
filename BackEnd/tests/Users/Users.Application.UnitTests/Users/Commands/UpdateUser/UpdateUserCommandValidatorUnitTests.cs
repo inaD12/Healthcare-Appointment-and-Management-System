@@ -23,7 +23,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			null!,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 		);
@@ -43,7 +42,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			SharedTestUtilities.GetString(length),
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 		);
@@ -55,25 +53,6 @@ public class UpdateUserCommandValidatorUnitTests
 		result.ShouldHaveValidationErrorFor(m => m.Id);
 	}
 
-	[Theory]
-	[InlineData(UsersBusinessConfiguration.EMAIL_MIN_LENGTH - 1)]
-	[InlineData(UsersBusinessConfiguration.EMAIL_MAX_LENGTH + 1)]
-	public void TestValidate_ShouldHaveAnErrorForNewEmail_WhenNewEmailLengthIsInvalid(int length)
-	{
-		// Arrange
-		var command = new UpdateUserCommand(
-			UsersTestUtilities.ValidId,
-			SharedTestUtilities.GetString(length),
-			UsersTestUtilities.ValidFirstName,
-			UsersTestUtilities.ValidLastName
-		);
-
-		// Act
-		var result = _validator.TestValidate(command);
-
-		// Assert
-		result.ShouldHaveValidationErrorFor(m => m.NewEmail);
-	}
 
 	[Theory]
 	[InlineData(UsersBusinessConfiguration.FIRSTNAME_MIN_LENGTH - 1)]
@@ -83,7 +62,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.ValidId,
-			UsersTestUtilities.ValidEmail,
 			SharedTestUtilities.GetString(length),
 			UsersTestUtilities.ValidLastName
 		);
@@ -103,7 +81,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.ValidId,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			SharedTestUtilities.GetString(length)
 		);
@@ -122,7 +99,6 @@ public class UpdateUserCommandValidatorUnitTests
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.ValidId,
 			null!,
-			null!,
 			null!
 		);
 
@@ -139,7 +115,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.ValidId,
-			UsersTestUtilities.ValidEmail,
 			UsersTestUtilities.ValidFirstName,
 			UsersTestUtilities.ValidLastName
 		);
@@ -157,7 +132,6 @@ public class UpdateUserCommandValidatorUnitTests
 		// Arrange
 		var command = new UpdateUserCommand(
 			UsersTestUtilities.ValidId,
-			UsersTestUtilities.ValidEmail,
 			null!,
 			null!
 		);

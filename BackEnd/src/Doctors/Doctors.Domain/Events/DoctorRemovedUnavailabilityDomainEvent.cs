@@ -3,7 +3,7 @@
 namespace Doctors.Domain.Events;
 
 public sealed record DoctorRemovedUnavailabilityDomainEvent(
-    string DoctorId,
+    string DoctorUserId,
     DateTime Start,
     DateTime End
 ) : IDomainEvent;

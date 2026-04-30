@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
 using Shared.Application.Authorization;
@@ -97,6 +98,44 @@ public static class ServiceCollectionExtentions
 			.Get<DatabaseOptions>()!;
 
 		services.AddDbContext<TContext>(options =>
+		{
+			options.UseNpgsql(
+				databaseOptions.ConnectionString,
+				npgsqlOptions =>
+				{
+					npgsqlOptions.EnableRetryOnFailure();
+					optionsAction?.Invoke(npgsqlOptions);
+				});
+		});
+
+		services
+			.AddHealthChecks()
+			.AddDbContextCheck<TContext>();
+		
+		NpgsqlDataSource npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseOptions.ConnectionString).Build();
+		services.AddSingleton<NpgsqlDataSource>(npgsqlDataSource);
+		services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
+
+		return services;
+	}
+	
+	public static IServiceCollection AddDatabaseContextFactory<TContext>(
+		this IServiceCollection services,
+		IConfiguration configuration,
+		Action<NpgsqlDbContextOptionsBuilder>? optionsAction = null)
+		where TContext : DbContext
+	{
+		services
+			.AddOptions<DatabaseOptions>()
+			.BindConfiguration(nameof(DatabaseOptions))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		var databaseOptions = configuration
+			.GetSection(nameof(DatabaseOptions))
+			.Get<DatabaseOptions>()!;
+
+		services.AddDbContextFactory<TContext>(options =>
 		{
 			options.UseNpgsql(
 				databaseOptions.ConnectionString,

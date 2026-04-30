@@ -33,6 +33,7 @@ public static class QueryMapper
             viewModel.LastName,
             viewModel.PhoneNumber,
             viewModel.Address,
+            viewModel.DateOfBirth,
             viewModel.EmailVerified);
     
     public static UserPaginatedQueryResponse ToResponse(

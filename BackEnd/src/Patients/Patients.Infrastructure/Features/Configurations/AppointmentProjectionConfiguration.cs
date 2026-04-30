@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
-using Patients.Infrastructure.Features.ReadModels;
 
 namespace Patients.Infrastructure.Features.Configurations;
 

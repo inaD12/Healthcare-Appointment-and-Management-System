@@ -10,13 +10,18 @@
     <ItemGroup>
         <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.12" />
         <PackageReference Include="HotChocolate.Data" Version="15.1.12" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.20"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Shared.API\Shared.API.csproj" />
       <ProjectReference Include="..\Patients.Application\Patients.Application.csproj" />
+      <ProjectReference Include="..\Patients.Infrastructure\Patients.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

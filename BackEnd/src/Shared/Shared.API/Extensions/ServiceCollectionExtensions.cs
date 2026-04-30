@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Shared.API.Abstractions;
-using Shared.API.Helpers;
+using Shared.API.ExceptionHandlers;
 using Shared.API.Options;
 using Shared.API.Utilities;
-using Shared.Domain.Options;
-using System.Text;
-using Shared.API.ExceptionHandlers;
 
 namespace Shared.API.Extensions;
 
@@ -32,7 +28,7 @@ public static class ServiceCollectionExtensions
 		{
 			var securityScheme = new OpenApiSecurityScheme
 			{
-				Name = "JWT Authentication",
+				Name = "Authorization",
 				Description = "Enter JWT Bearer token **_only_**",
 				In = ParameterLocation.Header,
 				Type = SecuritySchemeType.Http,
@@ -44,10 +40,12 @@ public static class ServiceCollectionExtensions
 					Type = ReferenceType.SecurityScheme
 				}
 			};
+
 			options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+
 			options.AddSecurityRequirement(new OpenApiSecurityRequirement
 			{
-				{securityScheme, new string[] { }}
+				{ securityScheme, Array.Empty<string>() }
 			});
 		});
 
@@ -60,6 +58,17 @@ public static class ServiceCollectionExtensions
 			.AddExceptionHandler<ValidationExceptionHandler>()
 			.AddExceptionHandler<GlobalExceptionHandler>()
 			.AddProblemDetails();
+
+		return services;
+	}
+	
+	public static IServiceCollection AddEnumConversion(this IServiceCollection services)
+	{
+		services
+			.ConfigureHttpJsonOptions(options =>
+			{
+				options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+			});
 
 		return services;
 	}

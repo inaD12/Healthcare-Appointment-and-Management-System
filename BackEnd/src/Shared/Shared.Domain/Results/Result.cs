@@ -1,7 +1,12 @@
-﻿namespace Shared.Domain.Results;
+﻿using Newtonsoft.Json;
+
+namespace Shared.Domain.Results;
 
 public class Result<T>
 {
+	[JsonConstructor]
+	private Result() {}
+	
 	private Result(bool isSuccess, Response response, T? value)
 	{
 		IsSuccess = isSuccess;
@@ -20,6 +25,9 @@ public class Result<T>
 }
 public class Result
 {
+	[JsonConstructor]
+	private Result() {}
+	
 	private Result(bool isSuccess, Response response)
 	{
 
