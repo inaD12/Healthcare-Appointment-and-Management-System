@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.DoctorSchedule.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;

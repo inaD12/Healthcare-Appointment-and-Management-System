@@ -1,10 +1,10 @@
-﻿using Appointments.Domain.Entities;
-using Appointments.Domain.Models;
+﻿using Appointments.Application.Features.Appointments.Models;
+using Appointments.Domain.Entities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Entities.ValueObjects;
 using Shared.Domain.Models;
 
-namespace Appointments.Domain.Abstractions;
+namespace Appointments.Application.Features.Appointments.Abstractions;
 
 public interface IAppointmentRepository : IGenericRepository<Appointment>
 {

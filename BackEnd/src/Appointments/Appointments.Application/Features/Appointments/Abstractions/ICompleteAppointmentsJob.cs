@@ -1,4 +1,4 @@
-﻿namespace Appointments.Domain.Abstractions;
+﻿namespace Appointments.Application.Features.Appointments.Abstractions;
 
 public interface ICompleteAppointmentsJob
 {

@@ -1,7 +1,7 @@
-﻿using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Domain.Enums;
 using Shared.Domain.Enums;
 
-namespace Appointments.Domain.Models;
+namespace Appointments.Application.Features.Appointments.Models;
 
 public sealed record AppointmentPagedListQuery(
 	string? PatientId,

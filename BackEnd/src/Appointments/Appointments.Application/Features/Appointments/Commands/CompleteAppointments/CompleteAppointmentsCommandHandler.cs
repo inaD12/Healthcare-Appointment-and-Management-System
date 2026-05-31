@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;
 using Shared.Domain.Results;

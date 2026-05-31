@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Appointments.Infrastructure.Features.DBContexts;

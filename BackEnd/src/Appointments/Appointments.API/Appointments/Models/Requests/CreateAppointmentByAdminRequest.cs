@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Domain.Enums;
 
 namespace Appointments.API.Appointments.Models.Requests;
 

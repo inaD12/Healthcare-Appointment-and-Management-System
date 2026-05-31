@@ -1,7 +1,8 @@
 ﻿using System.Security.Claims;
-using Appointments.Domain.Abstractions;
+using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Models;
+using Appointments.Application.Features.DoctorSchedule.Abstractions;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Models;
 using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using NSubstitute;

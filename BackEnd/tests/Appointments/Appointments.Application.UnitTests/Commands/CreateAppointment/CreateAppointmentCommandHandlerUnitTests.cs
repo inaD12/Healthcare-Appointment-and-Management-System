@@ -1,7 +1,7 @@
 ﻿using Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 using Appointments.Application.UnitTests.Utilities;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Enums;
 using Appointments.Domain.Utilities;
 using FluentAssertions;
 using NSubstitute;

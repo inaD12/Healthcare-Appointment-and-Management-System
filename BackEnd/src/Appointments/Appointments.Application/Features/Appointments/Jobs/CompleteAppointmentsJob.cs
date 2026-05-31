@@ -1,5 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Commands.CompleteAppointments;
-using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Commands.CompleteAppointments;
 using MediatR;
 
 namespace Appointments.Application.Features.Appointments.Jobs;

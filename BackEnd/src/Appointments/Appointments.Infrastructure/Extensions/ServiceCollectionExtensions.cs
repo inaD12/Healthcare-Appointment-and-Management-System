@@ -1,5 +1,6 @@
-﻿using Appointments.Domain.Abstractions;
-using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.DoctorSchedule.Abstractions;
+using Appointments.Domain.Enums;
 using Appointments.Infrastructure.Features.BackgroundJobs;
 using Appointments.Infrastructure.Features.DBContexts;
 using Appointments.Infrastructure.Features.Helpers;

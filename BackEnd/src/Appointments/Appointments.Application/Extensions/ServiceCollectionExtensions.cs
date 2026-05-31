@@ -1,5 +1,5 @@
-﻿using Appointments.Application.Features.Appointments.Jobs;
-using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Jobs;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

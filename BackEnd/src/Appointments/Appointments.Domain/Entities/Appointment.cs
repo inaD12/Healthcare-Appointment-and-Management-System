@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Domain.Enums;
 using Appointments.Domain.Events;
 using Appointments.Domain.Utilities;
 using Shared.Domain.Entities.Base;

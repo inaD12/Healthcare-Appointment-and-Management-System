@@ -1,6 +1,7 @@
-﻿using Appointments.Application.Features.Appointments.Mappers;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Abstractions;
+using Appointments.Application.Features.DoctorSchedule.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Shared.Domain.Abstractions;
