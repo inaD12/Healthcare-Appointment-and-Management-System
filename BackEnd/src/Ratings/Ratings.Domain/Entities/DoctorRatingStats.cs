@@ -1,5 +1,7 @@
+using FluentValidation.Results;
 using Ratings.Domain.Events;
 using Shared.Domain.Entities.Base;
+using Shared.Domain.Exceptions;
 
 namespace Ratings.Domain.Entities;
 
@@ -24,6 +26,13 @@ public sealed class DoctorRatingStats: BaseEntity
 
     public void ApplyNewRating(int score)
     {
+        if (score < 1 || score > 5)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Rating", "Rating score must be between 1 and 5.")
+            });
+        
         var total = AverageRating * RatingsCount;
         RatingsCount++;
         AverageRating = (total + score) / RatingsCount;
@@ -37,10 +46,23 @@ public sealed class DoctorRatingStats: BaseEntity
 
     public void RemoveRating(int score)
     {
+        if (score < 1 || score > 5)
+            throw new HamsValidationException(new[]
+            {
+                new ValidationFailure(
+                    "Rating", "Rating score must be between 1 and 5.")
+            });
+        
         if (RatingsCount <= 1)
         {
             RatingsCount = 0;
             AverageRating = 0;
+
+            RaiseDomainEvent(new DoctorAverageRatingUpdatedDomainEvent(
+                Id,
+                AverageRating,
+                RatingsCount));
+
             return;
         }
 
