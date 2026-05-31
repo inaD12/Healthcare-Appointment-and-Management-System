@@ -1,4 +1,6 @@
-namespace Patients.Domain.Dtos;
+using Patients.Application.Features.Encounters.Dtos;
+
+namespace Patients.Application.Features.Patients.Dtos;
 
 public sealed record PatientHeaderDto(
     string Id,

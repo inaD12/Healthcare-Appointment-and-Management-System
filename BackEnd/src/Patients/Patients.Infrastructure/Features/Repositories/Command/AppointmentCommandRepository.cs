@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 

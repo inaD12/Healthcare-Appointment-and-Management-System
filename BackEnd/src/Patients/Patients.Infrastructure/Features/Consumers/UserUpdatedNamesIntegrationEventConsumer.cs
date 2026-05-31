@@ -1,5 +1,5 @@
 ﻿using MassTransit;
-using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Application.Features.Patients.Abstractions;
 using Serilog;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Abstractions;

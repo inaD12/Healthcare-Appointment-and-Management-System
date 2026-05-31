@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Patients.Application.Features.Encounters.Dtos;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Application.Features.Patients.Dtos;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Query;
-using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Repositories;

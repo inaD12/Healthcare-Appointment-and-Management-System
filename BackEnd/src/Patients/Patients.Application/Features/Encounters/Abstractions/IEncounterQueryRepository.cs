@@ -1,8 +1,8 @@
-﻿using Patients.Domain.Dtos;
+﻿using Patients.Application.Features.Encounters.Dtos;
 using Patients.Domain.Entities;
 using Shared.Domain.Abstractions;
 
-namespace Patients.Domain.Abstractions.Repositories.Query;
+namespace Patients.Application.Features.Encounters.Abstractions;
 
 public interface IEncounterQueryRepository : IGenericReadRepository<Encounter>
 {

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 

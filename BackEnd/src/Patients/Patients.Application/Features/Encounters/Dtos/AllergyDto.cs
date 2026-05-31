@@ -1,4 +1,4 @@
-namespace Patients.Domain.Dtos;
+namespace Patients.Application.Features.Encounters.Dtos;
 
 public sealed record AllergyDto(
     string Id,

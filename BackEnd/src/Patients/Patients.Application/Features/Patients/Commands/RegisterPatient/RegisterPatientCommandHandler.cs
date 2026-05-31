@@ -1,7 +1,6 @@
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Application.Features.Patients.Mappers;
 using Patients.Application.Features.Patients.Models;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
 using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;

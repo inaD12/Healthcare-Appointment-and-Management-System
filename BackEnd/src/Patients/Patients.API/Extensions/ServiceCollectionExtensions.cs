@@ -1,5 +1,5 @@
 ﻿using Patients.API.Patients.GraphQL;
-using Patients.API.Patients.GraphQL.Queries.DataLoaders;
+using Patients.API.Patients.GraphQL.DataLoaders;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.API.Extensions;
 using Shared.Application.Extensions;

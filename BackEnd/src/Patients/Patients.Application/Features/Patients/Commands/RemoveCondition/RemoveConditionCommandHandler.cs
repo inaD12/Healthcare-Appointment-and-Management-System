@@ -1,6 +1,4 @@
-using Patients.Application.Features.Patients.Commands.RemoveAllergy;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

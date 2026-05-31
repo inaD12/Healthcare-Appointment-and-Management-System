@@ -1,9 +1,8 @@
 ﻿using Patients.Application.Features.Patients.Dtos;
-using Patients.Domain.Dtos;
 using Patients.Domain.Entities;
 using Shared.Domain.Abstractions;
 
-namespace Patients.Domain.Abstractions.Repositories.Query;
+namespace Patients.Application.Features.Patients.Abstractions;
 
 public interface IPatientQueryRepository : IGenericReadRepository<Patient>
 {

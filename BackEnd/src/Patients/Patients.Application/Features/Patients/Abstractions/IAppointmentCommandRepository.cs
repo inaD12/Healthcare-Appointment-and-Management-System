@@ -1,6 +1,6 @@
 using Patients.Domain.Entities;
 
-namespace Patients.Domain.Abstractions.Repositories.Command;
+namespace Patients.Application.Features.Patients.Abstractions;
 
 public interface IAppointmentCommandRepository
 {

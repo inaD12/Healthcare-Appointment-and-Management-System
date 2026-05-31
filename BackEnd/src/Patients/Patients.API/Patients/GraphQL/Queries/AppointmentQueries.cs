@@ -1,5 +1,4 @@
 using System.Data.Entity;
-using Patients.Domain.Abstractions.Repositories;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;

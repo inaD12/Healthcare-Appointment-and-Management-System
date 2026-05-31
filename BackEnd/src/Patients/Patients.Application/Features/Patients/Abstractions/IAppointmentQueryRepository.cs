@@ -1,6 +1,6 @@
 using Patients.Domain.Entities;
 
-namespace Patients.Domain.Abstractions.Repositories.Query;
+namespace Patients.Application.Features.Patients.Abstractions;
 
 public interface IAppointmentQueryRepository
 {

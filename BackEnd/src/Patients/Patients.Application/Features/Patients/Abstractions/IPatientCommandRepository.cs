@@ -1,7 +1,7 @@
 ﻿using Patients.Domain.Entities;
 using Shared.Domain.Abstractions;
 
-namespace Patients.Domain.Abstractions.Repositories.Command;
+namespace Patients.Application.Features.Patients.Abstractions;
 
 public interface IPatientCommandRepository : IGenericRepository<Patient>
 {
