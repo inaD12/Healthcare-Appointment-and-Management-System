@@ -1,4 +1,5 @@
-using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Application.Features.Doctors.Abstractions;
+using Doctors.Application.Features.Specialities.Abstractions;
 using Doctors.Domain.Utilities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Abstractions.Messaging;

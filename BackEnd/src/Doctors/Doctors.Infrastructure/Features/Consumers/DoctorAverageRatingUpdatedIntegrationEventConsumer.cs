@@ -1,4 +1,4 @@
-﻿using Doctors.Domain.Abstractions.Repositories;
+﻿using Doctors.Application.Features.Doctors.Abstractions;
 using MassTransit;
 using Shared.Application.IntegrationEvents;
 using Shared.Domain.Abstractions;

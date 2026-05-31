@@ -1,7 +1,7 @@
+using Doctors.Application.Features.Doctors.Abstractions;
 using Doctors.Application.Features.Doctors.Mappers;
 using Doctors.Application.Features.Doctors.Models;
-using Doctors.Domain.Abstractions;
-using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Application.Features.Specialities.Abstractions;
 using Doctors.Domain.Utilities;
 using Serilog;
 using Shared.Domain.Abstractions.Messaging;

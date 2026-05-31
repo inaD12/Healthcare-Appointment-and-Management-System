@@ -1,9 +1,9 @@
-﻿using Doctors.Domain.Entities;
-using Doctors.Domain.Models;
+﻿using Doctors.Application.Features.Doctors.Models;
+using Doctors.Domain.Entities;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Models;
 
-namespace Doctors.Domain.Abstractions.Repositories;
+namespace Doctors.Application.Features.Doctors.Abstractions;
 
 public interface IDoctorRepository : IGenericRepository<Doctor>
 {

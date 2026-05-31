@@ -1,7 +1,7 @@
 using Doctors.Application.Features.Doctors.Dtos;
 using Doctors.Application.Features.Doctors.Models;
 using Doctors.Application.Features.Doctors.Queries.GetAllDoctors;
-using Doctors.Domain.Dtos;
+using Doctors.Application.Features.Specialities.Dtos;
 using Doctors.Domain.Entities;
 using Shared.Domain.Models;
 

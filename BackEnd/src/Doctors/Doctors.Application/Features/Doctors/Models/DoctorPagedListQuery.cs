@@ -1,6 +1,6 @@
 using Shared.Domain.Enums;
 
-namespace Doctors.Domain.Models;
+namespace Doctors.Application.Features.Doctors.Models;
 
 public sealed record DoctorPagedListQuery(
     string? FirstName,

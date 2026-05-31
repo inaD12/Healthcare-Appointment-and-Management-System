@@ -1,11 +1,11 @@
-﻿using Doctors.Domain.Dtos;
+﻿using Doctors.Application.Features.Specialities.Dtos;
+using Doctors.Application.Features.Specialities.Models;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Models;
 using Pgvector;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Models;
 
-namespace Doctors.Domain.Abstractions.Repositories;
+namespace Doctors.Application.Features.Specialities.Abstractions;
 
 public interface ISpecialityRepository : IGenericRepository<Speciality>
 {

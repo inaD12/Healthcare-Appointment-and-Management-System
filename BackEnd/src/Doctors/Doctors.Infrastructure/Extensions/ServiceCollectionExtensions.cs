@@ -1,5 +1,5 @@
-﻿using Doctors.Domain.Abstractions;
-using Doctors.Domain.Abstractions.Repositories;
+﻿using Doctors.Application.Features.Doctors.Abstractions;
+using Doctors.Application.Features.Specialities.Abstractions;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Options;
 using Doctors.Infrastructure.Features.Clients;

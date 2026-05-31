@@ -1,6 +1,6 @@
 using Pgvector;
 
-namespace Doctors.Domain.Abstractions;
+namespace Doctors.Application.Features.Doctors.Abstractions;
 
 public interface IEmbeddingClient
 {
