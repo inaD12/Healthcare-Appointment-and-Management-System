@@ -76,4 +76,10 @@ public sealed class Patient : BaseConcurrencyEntity
         _conditions.Remove(condition);
         return Result.Success();
     }
+
+    public void ChangeNames(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
 }
