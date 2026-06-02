@@ -1,9 +1,9 @@
 ﻿using Shared.Application.Abstractions;
 using Shared.Application.Models;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
-using Users.Domain.Models;
 
-namespace Users.Domain.Abstractions.Repositories;
+namespace Users.Application.Features.Users.Abstractions;
 
 public interface IUserRepository : IGenericRepository<User>
 {

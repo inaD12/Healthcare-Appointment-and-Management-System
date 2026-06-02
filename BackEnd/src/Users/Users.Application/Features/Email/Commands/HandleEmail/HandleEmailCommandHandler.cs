@@ -1,8 +1,7 @@
 ﻿using Shared.Application.Abstractions;
 using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Shared.Infrastructure.Clock;
-using Users.Domain.Abstractions.Repositories;
+using Users.Application.Features.Users.Abstractions;
 using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Email.Commands.HandleEmail;

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.Ratings.Abstractions;
 using Ratings.Domain.Entities;
 using Ratings.Infrastructure.Features.DBContexts;
 using Shared.Domain.Exceptions;

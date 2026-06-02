@@ -1,7 +1,7 @@
 ﻿using Shared.Domain.Results;
-using Users.Domain.Auth.Models;
+using Users.Application.Features.Users.Models;
 
-namespace Users.Domain.Auth.Abstractions;
+namespace Users.Application.Features.Users.Abstractions;
 
 public interface IIdentityProviderService
 {

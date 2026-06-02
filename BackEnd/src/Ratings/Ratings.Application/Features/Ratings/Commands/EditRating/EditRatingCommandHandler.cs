@@ -1,4 +1,4 @@
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.Ratings.Abstractions;
 using Ratings.Domain.Utilities;
 using Shared.Application.Abstractions;
 using Shared.Application.Abstractions.Messaging;

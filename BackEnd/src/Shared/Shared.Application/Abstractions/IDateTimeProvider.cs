@@ -1,4 +1,4 @@
-﻿namespace Shared.Infrastructure.Clock;
+﻿namespace Shared.Application.Abstractions;
 
 public interface IDateTimeProvider
 {

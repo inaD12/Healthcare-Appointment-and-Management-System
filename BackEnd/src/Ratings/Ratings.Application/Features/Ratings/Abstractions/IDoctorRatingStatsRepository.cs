@@ -1,7 +1,7 @@
 ﻿using Ratings.Domain.Entities;
 using Shared.Application.Abstractions;
 
-namespace Ratings.Domain.Abstractions.Repositories;
+namespace Ratings.Application.Features.Ratings.Abstractions;
 
 public interface IDoctorRatingStatsRepository : IGenericRepository<DoctorRatingStats>
 {

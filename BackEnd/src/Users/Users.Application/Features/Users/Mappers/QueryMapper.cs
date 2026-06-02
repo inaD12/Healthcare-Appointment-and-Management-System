@@ -4,7 +4,6 @@ using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Domain.Entities;
-using Users.Domain.Models;
 
 namespace Users.Application.Features.Users.Mappers;
 

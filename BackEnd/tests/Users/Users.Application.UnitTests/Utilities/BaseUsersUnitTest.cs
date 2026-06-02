@@ -6,11 +6,9 @@ using Shared.Domain.Entities;
 using Shared.Domain.Results;
 using Shared.Domain.Utilities;
 using Shared.Infrastructure.Clock;
-using Users.Domain.Abstractions.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Models;
+using Users.Application.Features.Users.Abstractions;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
-using Users.Domain.Models;
 using Users.Domain.Utilities;
 
 namespace Users.Application.UnitTests.Utilities;

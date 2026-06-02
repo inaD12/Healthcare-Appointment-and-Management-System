@@ -1,6 +1,6 @@
 using Shared.Domain.Enums;
 
-namespace Ratings.Domain.Models;
+namespace Ratings.Application.Features.Ratings.Models;
 
 public sealed record RatingPagedListQuery(
     string? PatientId,

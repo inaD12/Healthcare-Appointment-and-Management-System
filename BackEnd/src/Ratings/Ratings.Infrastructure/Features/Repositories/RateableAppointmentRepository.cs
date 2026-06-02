@@ -1,7 +1,7 @@
-using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Domain.Entities;
 using Ratings.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
+using Ratings.Application.Features.RateableAppointments.Abstractions;
 
 namespace Ratings.Infrastructure.Features.Repositories;
 

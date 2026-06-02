@@ -1,6 +1,6 @@
 using Ratings.Domain.Entities;
 
-namespace Ratings.Domain.Abstractions.Repositories;
+namespace Ratings.Application.Features.RateableAppointments.Abstractions;
 
 public interface IRateableAppointmentRepository
 {

@@ -2,9 +2,9 @@
 using Shared.Application.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
-using Users.Domain.Abstractions.Repositories;
+using Users.Application.Features.Users.Abstractions;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
-using Users.Domain.Models;
 using Users.Infrastructure.Features.DBContexts;
 
 namespace Users.Infrastructure.Features.Repositories;

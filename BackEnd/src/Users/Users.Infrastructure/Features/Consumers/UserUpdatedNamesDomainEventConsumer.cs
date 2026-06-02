@@ -3,7 +3,7 @@ using Shared.Application.Abstractions;
 using Users.Domain.Events;
 using Users.Infrastructure.Features.Mappers;
 
-namespace Users.Application.Features.Users.Consumers;
+namespace Users.Infrastructure.Features.Consumers;
 
 public sealed class UserUpdatedNamesDomainEventConsumer(IEventBus eventBus) : IConsumer<UserUpdatedNamesDomainEvent>
 {

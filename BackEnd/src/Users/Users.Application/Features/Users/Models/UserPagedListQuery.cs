@@ -1,7 +1,7 @@
 ﻿using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 
-namespace Users.Domain.Models;
+namespace Users.Application.Features.Users.Models;
 
 public sealed record UserPagedListQuery(
 	string? Email,
