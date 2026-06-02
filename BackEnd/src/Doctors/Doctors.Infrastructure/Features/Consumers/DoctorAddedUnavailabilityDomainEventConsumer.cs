@@ -1,7 +1,7 @@
 ﻿using Doctors.Domain.Events;
 using Doctors.Infrastructure.Features.Mappers;
 using MassTransit;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Doctors.Infrastructure.Features.Consumers;
 

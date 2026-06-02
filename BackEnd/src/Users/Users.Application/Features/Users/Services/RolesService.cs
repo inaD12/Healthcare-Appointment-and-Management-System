@@ -1,6 +1,6 @@
 using MediatR;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Queries.GetUserRoles;
 

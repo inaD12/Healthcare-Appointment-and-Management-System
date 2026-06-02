@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Shared.Domain.Results;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Models;
+using Users.Application.Features.Users.Abstractions;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Utilities;
 
 namespace Users.Infrastructure.Features.Identity;

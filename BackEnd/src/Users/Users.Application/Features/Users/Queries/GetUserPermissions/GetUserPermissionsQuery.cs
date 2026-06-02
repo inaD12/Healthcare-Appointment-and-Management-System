@@ -1,5 +1,5 @@
-﻿using Shared.Application.Authorization;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions.Messaging;
+using Shared.Application.Authorization;
 
 namespace Users.Application.Features.Users.Queries.GetUserPermissions;
 

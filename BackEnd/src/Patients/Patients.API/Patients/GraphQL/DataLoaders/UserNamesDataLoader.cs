@@ -1,7 +1,7 @@
-using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 
-namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
+namespace Patients.API.Patients.GraphQL.DataLoaders;
 
 public class UserNamesDataLoader(
     IBatchScheduler batchScheduler,

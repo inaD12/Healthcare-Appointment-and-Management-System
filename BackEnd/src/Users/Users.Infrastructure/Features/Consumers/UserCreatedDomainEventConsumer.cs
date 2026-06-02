@@ -1,8 +1,8 @@
 ﻿using MassTransit;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
-using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Clock;
-using Users.Domain.Abstractions.Repositories;
+using Users.Application.Features.Users.Abstractions;
 using Users.Domain.Entities;
 using Users.Domain.Events;
 using Users.Infrastructure.Features.Helpers.Abstractions;

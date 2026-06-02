@@ -1,8 +1,8 @@
 ﻿using System.Data.Common;
 using Dapper;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Application.Data;
-using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 using Shared.Domain.Results;
 using Users.Domain.Utilities;
 

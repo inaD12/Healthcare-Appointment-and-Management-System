@@ -1,5 +1,5 @@
-﻿using Doctors.Domain.Abstractions;
-using Doctors.Domain.Abstractions.Repositories;
+﻿using Doctors.Application.Features.Doctors.Abstractions;
+using Doctors.Application.Features.Specialities.Abstractions;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Options;
 using Doctors.Infrastructure.Features.Clients;
@@ -10,7 +10,7 @@ using Doctors.Infrastructure.Features.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Doctors.Infrastructure.Extensions;

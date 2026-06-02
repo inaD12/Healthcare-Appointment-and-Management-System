@@ -1,9 +1,9 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Shared.Domain.Options;
+using Shared.Infrastructure.Options;
 
 namespace Appointments.Infrastructure.Features.BackgroundJobs;
 

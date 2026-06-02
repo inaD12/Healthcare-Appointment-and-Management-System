@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Appointments.Domain.Utilities.Strings;
+using Shared.Domain.Responses;
 using Shared.Domain.Results;
 
 namespace Appointments.Domain.Utilities;

@@ -32,7 +32,9 @@
 	 <ProjectReference Include="..\..\Shared\Shared.API\Shared.API.csproj" />
 	 <ProjectReference Include="..\..\Shared\Shared.Application\Shared.Application.csproj" />
 	 <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
+	 <ProjectReference Include="..\..\Shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\Users.Application\Users.Application.csproj" />
+    <ProjectReference Include="..\Users.Infrastructure\Users.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Abstractions;
 using Shared.Application.Authorization;
 using Shared.Application.Extensions;
-using Shared.Domain.Abstractions;
-using Shared.Infrastructure.Extensions;
 using Users.Application.Features.Users.Services;
 
 namespace Users.Application.Extensions;
@@ -25,8 +24,7 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddMediatR(currentAssembly)
-			.AddValidatorsFromAssembly(currentAssembly)
-			.AddDateTimeProvider();
+			.AddValidatorsFromAssembly(currentAssembly);
 		
 		return services;
 	}

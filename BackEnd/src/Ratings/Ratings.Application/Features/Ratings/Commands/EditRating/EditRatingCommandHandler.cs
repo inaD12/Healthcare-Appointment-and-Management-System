@@ -1,7 +1,7 @@
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.Ratings.Abstractions;
 using Ratings.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 
 namespace Ratings.Application.Features.Ratings.Commands.EditRating;

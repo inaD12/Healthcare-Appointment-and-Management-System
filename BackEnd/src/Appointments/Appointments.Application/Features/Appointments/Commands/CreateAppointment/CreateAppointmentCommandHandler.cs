@@ -1,10 +1,11 @@
-﻿using Appointments.Application.Features.Appointments.Mappers;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Abstractions;
+using Appointments.Application.Features.DoctorSchedule.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Enums;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Results;

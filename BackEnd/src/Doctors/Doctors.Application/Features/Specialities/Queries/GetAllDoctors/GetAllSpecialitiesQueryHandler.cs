@@ -1,8 +1,8 @@
-﻿using Doctors.Application.Features.Specialities.Mappers;
+﻿using Doctors.Application.Features.Specialities.Abstractions;
+using Doctors.Application.Features.Specialities.Mappers;
 using Doctors.Application.Features.Specialities.Models;
-using Doctors.Domain.Abstractions.Repositories;
 using Doctors.Domain.Utilities;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 
 namespace Doctors.Application.Features.Specialities.Queries.GetAllDoctors;

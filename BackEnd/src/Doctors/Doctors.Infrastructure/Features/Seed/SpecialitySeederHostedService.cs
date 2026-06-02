@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Doctors.Domain.Abstractions;
+using Doctors.Application.Features.Doctors.Abstractions;
 using Doctors.Domain.Entities;
 using Doctors.Infrastructure.Features.DBContexts;
 using Doctors.Infrastructure.Features.Dtos;

@@ -1,4 +1,4 @@
-﻿using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Domain.Enums;
 using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.API.Appointments.Models.Responses;

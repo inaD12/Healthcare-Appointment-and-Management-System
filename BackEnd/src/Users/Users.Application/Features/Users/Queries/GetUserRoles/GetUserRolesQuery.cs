@@ -1,5 +1,5 @@
-﻿using Shared.Domain.Abstractions.Messaging;
-using Shared.Domain.Models;
+﻿using Shared.Application.Abstractions.Messaging;
+using Shared.Application.Models;
 
 namespace Users.Application.Features.Users.Queries.GetUserRoles;
 

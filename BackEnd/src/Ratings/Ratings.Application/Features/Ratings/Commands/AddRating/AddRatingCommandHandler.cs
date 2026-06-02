@@ -1,10 +1,11 @@
+using Ratings.Application.Features.RateableAppointments.Abstractions;
+using Ratings.Application.Features.Ratings.Abstractions;
 using Ratings.Application.Features.Ratings.Mappers;
 using Ratings.Application.Features.Ratings.Models;
-using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Domain.Entities;
 using Ratings.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 

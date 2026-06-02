@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.RateableAppointments.Abstractions;
+using Ratings.Application.Features.Ratings.Abstractions;
 using Ratings.Infrastructure.Features.DBContexts;
 using Ratings.Infrastructure.Features.Helpers;
 using Ratings.Infrastructure.Features.Repositories;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Ratings.Infrastructure.Extensions;

@@ -1,8 +1,7 @@
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Queries.GetAllAppointments;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Models;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 
 namespace Appointments.Application.Features.Appointments.Mappers;
 

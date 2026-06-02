@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
-using Doctors.Domain.Abstractions;
+using Doctors.Application.Features.Doctors.Abstractions;
 using Doctors.Domain.Options;
 using Microsoft.Extensions.Options;
 using Pgvector;

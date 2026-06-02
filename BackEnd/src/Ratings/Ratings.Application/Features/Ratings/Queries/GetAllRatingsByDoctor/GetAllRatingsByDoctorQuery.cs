@@ -1,5 +1,5 @@
 ﻿using Ratings.Application.Features.Ratings.Models;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Enums;
 
 namespace Ratings.Application.Features.Ratings.Queries.GetAllRatingsByDoctor;

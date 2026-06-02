@@ -1,12 +1,11 @@
+using Patients.Application.Features.Encounters.Abstractions;
 using Patients.Application.Features.Encounters.Mappers;
 using Patients.Application.Features.Encounters.Models;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
-using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.StartEncounter;

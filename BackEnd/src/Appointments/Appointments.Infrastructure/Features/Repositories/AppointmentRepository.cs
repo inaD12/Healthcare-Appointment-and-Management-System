@@ -1,11 +1,11 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Entities;
-using Appointments.Domain.Entities.Enums;
-using Appointments.Domain.Models;
+using Appointments.Domain.Enums;
 using Appointments.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
+using Shared.Application.Models;
 using Shared.Domain.Entities.ValueObjects;
-using Shared.Domain.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 

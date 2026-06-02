@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ratings.Infrastructure.Features.DBContexts;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Ratings.Infrastructure.Features.Helpers;
 

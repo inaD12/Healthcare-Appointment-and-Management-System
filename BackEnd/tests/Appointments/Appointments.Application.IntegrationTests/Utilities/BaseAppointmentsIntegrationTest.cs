@@ -1,12 +1,12 @@
-﻿using Appointments.Domain.Abstractions;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Appointments.Infrastructure.Features.DBContexts;
 using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationTests.Utilities;
-using Shared.Domain.Abstractions;
 using Shared.Domain.Entities.ValueObjects;
 
 namespace Appointments.Application.IntegrationTests.Utilities;

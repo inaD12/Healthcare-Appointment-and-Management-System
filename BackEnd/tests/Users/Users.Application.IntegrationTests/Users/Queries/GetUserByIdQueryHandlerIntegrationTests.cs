@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Shared.API.Extensions;
 using Shared.Domain.Exceptions;
 using Shared.Domain.Extensions;
 using Shared.Domain.Utilities;

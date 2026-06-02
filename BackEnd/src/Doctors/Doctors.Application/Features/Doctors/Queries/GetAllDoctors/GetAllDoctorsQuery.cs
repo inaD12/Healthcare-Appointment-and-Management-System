@@ -1,5 +1,5 @@
 ﻿using Doctors.Application.Features.Doctors.Models;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Enums;
 
 namespace Doctors.Application.Features.Doctors.Queries.GetAllDoctors;

@@ -1,5 +1,5 @@
 using System.Data.Entity;
-using Patients.Domain.Abstractions.Repositories.Command;
+using Patients.Application.Features.Encounters.Abstractions;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Repositories;

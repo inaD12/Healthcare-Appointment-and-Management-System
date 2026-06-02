@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.API.Extensions;
 using Shared.Domain.Extensions;
+using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.UnitTests.Utilities;
-using Users.Domain.Models;
 using Users.Domain.Utilities;
 using Xunit;
 

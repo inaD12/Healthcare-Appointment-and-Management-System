@@ -1,3 +1,4 @@
+using Shared.API.Extensions;
 using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;

@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions.Messaging;
 using Users.Application.Features.Users.Models;
 
 namespace Users.Application.Features.Users.Queries.GetUserById;

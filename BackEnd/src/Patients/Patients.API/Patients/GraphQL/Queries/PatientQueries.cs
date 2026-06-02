@@ -1,9 +1,6 @@
 using System.Data.Entity;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Application.Features.Patients.Dtos;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
-using Patients.Domain.Abstractions.Repositories.Query;
-using Patients.Domain.Dtos;
 using Patients.Infrastructure.Features.DBContexts;
 using Shared.Infrastructure.Authentication;
 

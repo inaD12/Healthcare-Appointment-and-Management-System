@@ -1,5 +1,5 @@
 ﻿using System;
-using Appointments.Domain.Entities.Enums;
+using Appointments.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 

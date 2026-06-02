@@ -1,14 +1,14 @@
 ﻿using System.Security.Claims;
+using Appointments.Application.Features.Appointments.Abstractions;
 using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Application.Features.Appointments.Requirements.ModifyAppointment;
-using Appointments.Domain.Abstractions;
 using Appointments.Domain.Entities;
 using Appointments.Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 

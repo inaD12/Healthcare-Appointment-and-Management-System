@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
-using Appointments.Domain.Entities.Enums;
-using Shared.Domain.Abstractions.Messaging;
+using Appointments.Domain.Enums;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Enums;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;

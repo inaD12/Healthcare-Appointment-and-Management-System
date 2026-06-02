@@ -1,9 +1,9 @@
-using Doctors.Domain.Abstractions.Repositories;
+using Doctors.Application.Features.Doctors.Abstractions;
+using Doctors.Application.Features.Doctors.Models;
 using Doctors.Domain.Entities;
-using Doctors.Domain.Models;
 using Doctors.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 

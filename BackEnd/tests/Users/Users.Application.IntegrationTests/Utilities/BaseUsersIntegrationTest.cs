@@ -1,13 +1,12 @@
 ﻿using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationTests.Utilities;
-using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
 using Shared.Domain.Utilities;
-using Users.Domain.Abstractions.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Models;
+using Users.Application.Features.Users.Abstractions;
+using Users.Application.Features.Users.Models;
 using Users.Domain.Entities;
 using Users.Domain.Utilities;
 using Users.Infrastructure.Features.DBContexts;

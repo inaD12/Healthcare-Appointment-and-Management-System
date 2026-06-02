@@ -1,8 +1,7 @@
 using Ratings.Application.Features.Ratings.Models;
 using Ratings.Application.Features.Ratings.Queries.GetAllRatingsByDoctor;
 using Ratings.Domain.Entities;
-using Ratings.Domain.Models;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 
 namespace Ratings.Application.Features.Ratings.Mappers;
 

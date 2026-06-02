@@ -1,16 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
-using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Application.Features.Encounters.Abstractions;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Infrastructure.Features.DBContexts;
 using Patients.Infrastructure.Features.Helpers;
-using Patients.Infrastructure.Features.Repositories;
 using Patients.Infrastructure.Features.Repositories.Command;
 using Patients.Infrastructure.Features.Repositories.Query;
 using Patients.Infrastructure.Features.Services;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Patients.Infrastructure.Extensions;

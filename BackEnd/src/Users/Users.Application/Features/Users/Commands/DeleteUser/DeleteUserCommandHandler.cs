@@ -1,7 +1,7 @@
-﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
-using Users.Domain.Abstractions.Repositories;
+using Users.Application.Features.Users.Abstractions;
 using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Commands.DeleteUser;

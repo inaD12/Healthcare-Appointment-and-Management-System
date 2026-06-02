@@ -1,7 +1,5 @@
 ﻿using MassTransit;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
-using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Entities;
 using Shared.Application.IntegrationEvents;
 

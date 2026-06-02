@@ -1,5 +1,6 @@
-﻿using Appointments.Domain.Abstractions;
-using Appointments.Domain.Entities.Enums;
+﻿using Appointments.Application.Features.Appointments.Abstractions;
+using Appointments.Application.Features.DoctorSchedule.Abstractions;
+using Appointments.Domain.Enums;
 using Appointments.Infrastructure.Features.BackgroundJobs;
 using Appointments.Infrastructure.Features.DBContexts;
 using Appointments.Infrastructure.Features.Helpers;
@@ -7,7 +8,7 @@ using Appointments.Infrastructure.Features.Repositories;
 using Appointments.Infrastructure.Features.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 

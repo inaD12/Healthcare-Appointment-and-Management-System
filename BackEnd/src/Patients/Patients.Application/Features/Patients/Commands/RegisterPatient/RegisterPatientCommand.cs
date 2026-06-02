@@ -1,5 +1,5 @@
 using Patients.Application.Features.Patients.Models;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Patients.Commands.RegisterPatient;
 

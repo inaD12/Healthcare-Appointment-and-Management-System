@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Doctors.Domain.Utilities.Strings;
+using Shared.Domain.Responses;
 using Shared.Domain.Results;
 
 namespace Doctors.Domain.Utilities;

@@ -1,4 +1,6 @@
-﻿namespace Shared.Infrastructure.Clock;
+﻿using Shared.Application.Abstractions;
+
+namespace Shared.Infrastructure.Clock;
 
 internal sealed class DateTimeProvider : IDateTimeProvider
 {

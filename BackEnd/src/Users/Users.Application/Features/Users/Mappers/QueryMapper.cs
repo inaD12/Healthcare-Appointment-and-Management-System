@@ -1,9 +1,9 @@
+using Shared.API.Extensions;
+using Shared.Application.Models;
 using Shared.Domain.Extensions;
-using Shared.Domain.Models;
 using Users.Application.Features.Users.Models;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Domain.Entities;
-using Users.Domain.Models;
 
 namespace Users.Application.Features.Users.Mappers;
 

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.Ratings.Abstractions;
+using Ratings.Application.Features.Ratings.Models;
 using Ratings.Domain.Entities;
-using Ratings.Domain.Models;
 using Ratings.Infrastructure.Features.DBContexts;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 

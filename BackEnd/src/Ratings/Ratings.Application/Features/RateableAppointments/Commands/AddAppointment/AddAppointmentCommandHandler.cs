@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Ratings.Domain.Abstractions.Repositories;
+using Ratings.Application.Features.RateableAppointments.Abstractions;
 using Ratings.Domain.Entities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 
 namespace Ratings.Application.Features.RateableAppointments.Commands.AddAppointment;

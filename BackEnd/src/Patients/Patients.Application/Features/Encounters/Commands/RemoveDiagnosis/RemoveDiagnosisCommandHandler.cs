@@ -1,10 +1,7 @@
-using Patients.Application.Features.Encounters.Commands.RemoveNote;
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Command;
-using Patients.Domain.Abstractions.Repositories.Query;
+using Patients.Application.Features.Encounters.Abstractions;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Shared.Infrastructure.Clock;
 

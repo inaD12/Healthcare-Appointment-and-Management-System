@@ -1,5 +1,5 @@
 using Patients.Application.Features.Encounters.Models;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Encounters.Commands.AddNote;
 

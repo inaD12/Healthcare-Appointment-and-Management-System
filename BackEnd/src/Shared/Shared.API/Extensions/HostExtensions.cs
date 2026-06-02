@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Shared.API.Extensions;
 

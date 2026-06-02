@@ -1,8 +1,7 @@
-using Patients.Domain.Abstractions.Repositories;
-using Patients.Domain.Abstractions.Repositories.Query;
-using Patients.Domain.Dtos;
+using Patients.Application.Features.Encounters.Abstractions;
+using Patients.Application.Features.Encounters.Dtos;
 
-namespace Patients.API.Patients.GraphQL.Queries.DataLoaders;
+namespace Patients.API.Patients.GraphQL.DataLoaders;
 
 public sealed class DiagnosesByEncounterDataLoader(
     IBatchScheduler batchScheduler,

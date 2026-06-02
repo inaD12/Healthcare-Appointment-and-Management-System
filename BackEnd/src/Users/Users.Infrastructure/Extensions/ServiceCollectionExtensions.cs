@@ -2,17 +2,16 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
-using Users.Domain.Abstractions.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Options;
+using Users.Application.Features.Users.Abstractions;
 using Users.Infrastructure.Features.Consumers;
 using Users.Infrastructure.Features.Helpers;
 using Users.Infrastructure.Features.Repositories;
 using Users.Infrastructure.Features.DBContexts;
 using Users.Infrastructure.Features.Helpers.Abstractions;
 using Users.Infrastructure.Features.Identity;
+using Users.Infrastructure.Features.Options;
 
 namespace Users.Infrastructure.Extensions;
 
@@ -37,7 +36,8 @@ public static class ServiceCollectionExtensions
 			})
 			.AddDatabaseContext<UsersDbContext>(configuration)
 			.AddUnitOfWork<UsersDbContext>()
-			.AddAuth(configuration);
+			.AddAuth(configuration)
+			.AddDateTimeProvider();
 		
 		services.Configure<KeyCloakOptions>(configuration.GetSection("KeyCloak"));
 

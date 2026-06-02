@@ -1,4 +1,4 @@
-using Patients.API.Patients.GraphQL.Queries.DataLoaders;
+using Patients.API.Patients.GraphQL.DataLoaders;
 using Patients.Domain.Entities;
 
 namespace Patients.API.Patients.GraphQL;

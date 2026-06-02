@@ -1,11 +1,9 @@
-﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
+using Users.Application.Features.Users.Abstractions;
 using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;
-using Users.Domain.Abstractions.Repositories;
-using Users.Domain.Auth.Abstractions;
-using Users.Domain.Auth.Models;
 using Users.Domain.Entities;
 using Users.Domain.Utilities;
 
