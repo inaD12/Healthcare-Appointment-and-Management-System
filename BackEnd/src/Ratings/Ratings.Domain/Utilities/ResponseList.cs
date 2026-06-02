@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Ratings.Domain.Utilities.Strings;
-using Shared.Domain.Results;
+using Shared.Domain.Responses;
 
 namespace Ratings.Domain.Utilities;
 

@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Shared.Domain.Results;
+using Shared.Domain.Responses;
 using Users.Domain.Utilities.Strings;
 
 namespace Users.Domain.Utilities;

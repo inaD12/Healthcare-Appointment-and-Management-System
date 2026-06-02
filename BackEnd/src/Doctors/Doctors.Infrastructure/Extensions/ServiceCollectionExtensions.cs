@@ -10,7 +10,7 @@ using Doctors.Infrastructure.Features.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Doctors.Infrastructure.Extensions;

@@ -1,6 +1,6 @@
 ﻿using MassTransit;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
-using Shared.Domain.Abstractions;
 using Shared.Infrastructure.Clock;
 using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Entities;

@@ -1,6 +1,6 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Enums;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Appointments.Commands.CreateAppointment;
 

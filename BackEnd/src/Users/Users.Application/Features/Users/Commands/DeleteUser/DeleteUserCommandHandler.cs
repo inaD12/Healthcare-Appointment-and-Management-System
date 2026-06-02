@@ -1,5 +1,5 @@
-﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Domain.Abstractions.Repositories;
 using Users.Domain.Utilities;

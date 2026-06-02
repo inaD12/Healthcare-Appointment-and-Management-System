@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Application.Extensions;
-using Shared.Domain.Options;
 using Shared.Infrastructure.Extensions;
+using Shared.Infrastructure.Options;
 
 namespace Appointments.Application.Extensions;
 

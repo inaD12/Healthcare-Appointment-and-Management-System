@@ -1,7 +1,7 @@
 using Patients.Application.Features.Patients.Abstractions;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 
 namespace Patients.Application.Features.Patients.Commands.DeletePatient;

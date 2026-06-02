@@ -1,5 +1,5 @@
 ﻿using Ratings.Domain.Entities;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Ratings.Domain.Abstractions.Repositories;
 

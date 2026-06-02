@@ -1,5 +1,5 @@
-﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+﻿using Shared.Application.Abstractions;
+using Shared.Application.Models;
 using Users.Domain.Entities;
 using Users.Domain.Models;
 

@@ -1,8 +1,8 @@
 ﻿using MassTransit;
 using Patients.Application.Features.Patients.Abstractions;
 using Serilog;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
-using Shared.Domain.Abstractions;
 
 namespace Patients.Infrastructure.Features.Consumers;
 

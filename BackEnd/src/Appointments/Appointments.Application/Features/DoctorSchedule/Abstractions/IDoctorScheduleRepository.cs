@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Shared.Application.Abstractions;
 
 namespace Appointments.Application.Features.DoctorSchedule.Abstractions;
 

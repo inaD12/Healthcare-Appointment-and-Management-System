@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Shared.API.Extensions;
 using Shared.Domain.Extensions;
 using Users.Application.Features.Users.Queries.GetAllUsers;
 using Users.Application.UnitTests.Utilities;

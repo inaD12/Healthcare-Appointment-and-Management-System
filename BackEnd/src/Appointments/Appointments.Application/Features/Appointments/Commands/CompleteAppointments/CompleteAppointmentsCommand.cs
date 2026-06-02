@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Appointments.Commands.CompleteAppointments;
 

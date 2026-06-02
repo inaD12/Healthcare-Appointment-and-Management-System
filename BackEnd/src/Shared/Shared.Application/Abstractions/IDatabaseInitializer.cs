@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Shared.Domain.Abstractions;
+namespace Shared.Application.Abstractions;
 
 public interface IDatabaseInitializer
 {

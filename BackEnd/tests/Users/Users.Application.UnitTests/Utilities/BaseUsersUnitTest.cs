@@ -1,8 +1,8 @@
 ﻿using NSubstitute;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 using Shared.Application.UnitTests.Utilities;
-using Shared.Domain.Abstractions;
 using Shared.Domain.Entities;
-using Shared.Domain.Models;
 using Shared.Domain.Results;
 using Shared.Domain.Utilities;
 using Shared.Infrastructure.Clock;

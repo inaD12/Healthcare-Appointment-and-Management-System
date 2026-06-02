@@ -1,4 +1,4 @@
-﻿namespace Shared.Domain.Abstractions;
+﻿namespace Shared.Application.Abstractions;
 
 public interface IGenericRepository<T> where T : class
 {

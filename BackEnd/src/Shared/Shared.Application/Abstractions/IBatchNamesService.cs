@@ -1,6 +1,6 @@
-using Shared.Domain.Models;
+using Shared.Application.Models;
 
-namespace Shared.Domain.Abstractions;
+namespace Shared.Application.Abstractions;
 
 public interface IBatchNamesService
 {

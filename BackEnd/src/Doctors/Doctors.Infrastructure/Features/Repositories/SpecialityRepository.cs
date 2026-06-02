@@ -6,7 +6,7 @@ using Doctors.Infrastructure.Features.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Pgvector;
 using Pgvector.EntityFrameworkCore;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 

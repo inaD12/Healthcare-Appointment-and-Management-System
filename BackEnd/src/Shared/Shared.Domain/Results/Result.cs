@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Shared.Domain.Responses;
 
 namespace Shared.Domain.Results;
 

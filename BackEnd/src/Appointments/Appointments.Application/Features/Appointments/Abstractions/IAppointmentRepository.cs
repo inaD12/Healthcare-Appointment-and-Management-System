@@ -1,8 +1,8 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Entities;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 using Shared.Domain.Entities.ValueObjects;
-using Shared.Domain.Models;
 
 namespace Appointments.Application.Features.Appointments.Abstractions;
 

@@ -1,8 +1,8 @@
 using Patients.Application.Features.Encounters.Abstractions;
 using Patients.Application.Features.Encounters.Models;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Infrastructure.Clock;
 
 namespace Patients.Application.Features.Encounters.Commands.AddAddendum;

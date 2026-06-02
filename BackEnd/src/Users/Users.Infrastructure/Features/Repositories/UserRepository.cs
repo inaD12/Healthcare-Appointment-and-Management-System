@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 using Shared.Infrastructure.Extensions;
 using Shared.Infrastructure.Repositories;
 using Users.Domain.Abstractions.Repositories;

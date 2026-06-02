@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Domain.Entities.Base;
 
 namespace Shared.Infrastructure.Repositories;

@@ -1,5 +1,4 @@
-﻿using Shared.Domain.Results;
-using Shared.Domain.Strings;
+﻿using Shared.Domain.Strings;
 using System.Net;
 
 namespace Shared.Domain.Responses;

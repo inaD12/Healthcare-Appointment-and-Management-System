@@ -1,3 +1,4 @@
+using Shared.API.Extensions;
 using Shared.Domain.Entities;
 using Shared.Domain.Extensions;
 using Users.Application.Features.Email.Commands.HandleEmail;

@@ -1,6 +1,6 @@
 using MassTransit;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
-using Shared.Domain.Abstractions;
 
 namespace Users.Infrastructure.Features.Consumers;
 

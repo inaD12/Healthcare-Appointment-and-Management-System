@@ -7,14 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
+using Shared.Application.Abstractions;
 using Shared.Application.Authorization;
 using Shared.Application.Data;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Options;
 using Shared.Infrastructure.Authorization;
 using Shared.Infrastructure.Clock;
 using Shared.Infrastructure.Data;
 using Shared.Infrastructure.MessageBroker;
+using Shared.Infrastructure.Options;
 
 namespace Shared.Infrastructure.Extensions;
 

@@ -2,7 +2,7 @@
 using Appointments.Application.Features.Appointments.Mappers;
 using Appointments.Application.Features.Appointments.Models;
 using Appointments.Domain.Utilities;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetAllAppointments;

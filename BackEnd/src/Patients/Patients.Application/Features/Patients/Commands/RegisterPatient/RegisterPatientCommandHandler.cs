@@ -3,8 +3,8 @@ using Patients.Application.Features.Patients.Mappers;
 using Patients.Application.Features.Patients.Models;
 using Patients.Domain.Entities;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Patients.Commands.RegisterPatient;
 

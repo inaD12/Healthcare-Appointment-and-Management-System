@@ -1,5 +1,5 @@
 ﻿using Appointments.Application.Features.Appointments.Models;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Appointments.Application.Features.Appointments.Queries.GetAppointmentsByDoctorAndDate;
 

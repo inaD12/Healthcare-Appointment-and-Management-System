@@ -1,5 +1,4 @@
 ﻿using Shared.Domain.Abstractions;
-using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 
 namespace Users.Domain.Events;

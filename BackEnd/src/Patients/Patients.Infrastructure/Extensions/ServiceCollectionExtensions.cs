@@ -8,7 +8,7 @@ using Patients.Infrastructure.Features.Helpers;
 using Patients.Infrastructure.Features.Repositories.Command;
 using Patients.Infrastructure.Features.Repositories.Query;
 using Patients.Infrastructure.Features.Services;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Patients.Infrastructure.Extensions;

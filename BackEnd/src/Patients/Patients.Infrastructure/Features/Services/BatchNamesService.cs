@@ -1,7 +1,7 @@
 using MassTransit;
+using Shared.Application.Abstractions;
 using Shared.Application.IntegrationEvents;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 
 namespace Patients.Infrastructure.Features.Services;
 

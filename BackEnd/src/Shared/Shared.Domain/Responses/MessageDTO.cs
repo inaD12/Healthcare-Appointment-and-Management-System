@@ -1,3 +1,3 @@
-﻿namespace Shared.Domain.Results;
+﻿namespace Shared.Domain.Responses;
 
 public record MessageDTO(string Message);

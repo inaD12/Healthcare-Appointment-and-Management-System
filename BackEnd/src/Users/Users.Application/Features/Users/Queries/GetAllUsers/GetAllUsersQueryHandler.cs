@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Mappers;
 using Users.Application.Features.Users.Models;

@@ -1,5 +1,5 @@
 ﻿using Patients.Domain.Entities;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Patients.Application.Features.Encounters.Abstractions;
 

@@ -1,7 +1,7 @@
 ﻿using Appointments.Domain.Events;
 using Appointments.Infrastructure.Features.Mappers;
 using MassTransit;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Appointments.Infrastructure.Features.Consumers;
 

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Shared.Domain.Results;
+namespace Shared.Domain.Responses;
 
 public class Response
 {

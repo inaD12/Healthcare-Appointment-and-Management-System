@@ -2,9 +2,10 @@ using System.Net;
 using Doctors.Application.Features.Doctors.Abstractions;
 using Doctors.Domain.Entities;
 using Doctors.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Exceptions;
+using Shared.Domain.Responses;
 using Shared.Domain.Results;
 
 namespace Doctors.Application.Features.Doctors.Commands.AddWorkDaySchedule;

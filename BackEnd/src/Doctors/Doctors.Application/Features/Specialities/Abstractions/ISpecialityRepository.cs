@@ -2,8 +2,8 @@
 using Doctors.Application.Features.Specialities.Models;
 using Doctors.Domain.Entities;
 using Pgvector;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 
 namespace Doctors.Application.Features.Specialities.Abstractions;
 

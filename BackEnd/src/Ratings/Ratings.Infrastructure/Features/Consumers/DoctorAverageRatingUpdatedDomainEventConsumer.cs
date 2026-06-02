@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Ratings.Application.Features.Ratings.Mappers;
 using Ratings.Domain.Events;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 
 namespace Ratings.Infrastructure.Features.Consumers;
 

@@ -4,7 +4,7 @@ using Ratings.Domain.Abstractions.Repositories;
 using Ratings.Infrastructure.Features.DBContexts;
 using Ratings.Infrastructure.Features.Helpers;
 using Ratings.Infrastructure.Features.Repositories;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Infrastructure.Extensions;
 
 namespace Ratings.Infrastructure.Extensions;

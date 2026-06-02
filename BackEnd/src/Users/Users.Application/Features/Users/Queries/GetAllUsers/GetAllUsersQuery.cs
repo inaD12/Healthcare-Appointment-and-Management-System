@@ -1,4 +1,4 @@
-﻿using Shared.Domain.Abstractions.Messaging;
+﻿using Shared.Application.Abstractions.Messaging;
 using Shared.Domain.Entities;
 using Shared.Domain.Enums;
 using Users.Application.Features.Users.Models;

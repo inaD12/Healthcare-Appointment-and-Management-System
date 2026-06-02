@@ -8,7 +8,7 @@ using Appointments.Infrastructure.Features.Repositories;
 using Appointments.Infrastructure.Features.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Shared.Domain.Abstractions;
+using Shared.Application.Abstractions;
 using Shared.Domain.Enums;
 using Shared.Infrastructure.Extensions;
 

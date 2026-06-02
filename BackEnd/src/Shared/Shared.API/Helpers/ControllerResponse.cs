@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Shared.Domain.Results;
 using System.Net;
+using Shared.Domain.Results;
 
 namespace Shared.API.Helpers;
 

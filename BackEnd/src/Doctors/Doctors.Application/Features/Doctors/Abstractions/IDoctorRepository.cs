@@ -1,7 +1,7 @@
 ﻿using Doctors.Application.Features.Doctors.Models;
 using Doctors.Domain.Entities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Models;
+using Shared.Application.Abstractions;
+using Shared.Application.Models;
 
 namespace Doctors.Application.Features.Doctors.Abstractions;
 

@@ -1,7 +1,7 @@
 using Doctors.Application.Features.Specialities.Models;
 using Doctors.Application.Features.Specialities.Queries.GetAllDoctors;
 using Doctors.Domain.Entities;
-using Shared.Domain.Models;
+using Shared.Application.Models;
 
 namespace Doctors.Application.Features.Specialities.Mappers;
 

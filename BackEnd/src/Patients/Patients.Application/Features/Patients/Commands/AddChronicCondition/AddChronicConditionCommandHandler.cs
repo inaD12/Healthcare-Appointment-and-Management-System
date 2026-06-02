@@ -1,8 +1,8 @@
 using Patients.Application.Features.Patients.Abstractions;
 using Patients.Application.Features.Patients.Models;
 using Patients.Domain.Utilities;
-using Shared.Domain.Abstractions;
-using Shared.Domain.Abstractions.Messaging;
+using Shared.Application.Abstractions;
+using Shared.Application.Abstractions.Messaging;
 
 namespace Patients.Application.Features.Patients.Commands.AddChronicCondition;
 
