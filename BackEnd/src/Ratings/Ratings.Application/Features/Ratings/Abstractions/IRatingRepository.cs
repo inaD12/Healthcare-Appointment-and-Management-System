@@ -9,4 +9,5 @@ public interface IRatingRepository : IGenericRepository<Rating>
 {
     Task<Rating?> GetByAppointmentId(string appointmentId, CancellationToken cancellationToken = default);
     Task<PagedList<Rating>> GetAllAsync(RatingPagedListQuery query, CancellationToken cancellationToken = default);
+    void DeleteByDoctorId(string doctorId);
 }

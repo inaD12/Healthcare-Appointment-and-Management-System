@@ -19,6 +19,14 @@ public abstract class GenericRepository<T>(DbContext context) : IGenericReposito
 		Entities.Remove(entity);
 	}
 
+	public virtual async Task DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+	{
+		var entity = await GetByIdAsync(id,  cancellationToken);
+
+		if (entity != null)
+			Entities.Remove(entity);
+	}
+
 	public virtual async Task<T?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
 		var res = await Entities.FindAsync(id, cancellationToken);
