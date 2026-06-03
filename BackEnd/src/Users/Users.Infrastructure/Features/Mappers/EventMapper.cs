@@ -21,4 +21,10 @@ public static class EventMapper
             domainEvent.LastName,
             domainEvent.BirthDay,
             domainEvent.Roles);
+    
+    public static UserDeletedIntegrationEvent ToIntEvent(
+        this UserDeletedDomainEvent domainEvent)
+        => new(
+            domainEvent.Id,
+            domainEvent.Roles);
 }

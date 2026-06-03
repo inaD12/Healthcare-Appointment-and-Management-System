@@ -66,6 +66,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 	public override async Task<User?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
 	{
 		var user = await _context.Users
+			.Where(u => !u.IsDeleted)
 			.Include(u => u.Roles)
 			.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
@@ -81,7 +82,14 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 
 		return base.AddAsync(entity, cancellationToken);
 	}
-	
+
+	public override void Delete(User entity)
+	{
+		entity.Delete();
+		
+		base.Update(entity);
+	}
+
 	public async Task<Dictionary<string, NamesResponse>> GetNamesByIdsAsync(
 		IEnumerable<string> userIds,
 		CancellationToken cancellationToken = default)
@@ -102,5 +110,16 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 				u => new NamesResponse(u.FirstName, u.LastName),
 				cancellationToken
 			);
+	}
+	
+	public async Task<NamesResponse?> GetNameByIdAsync(
+		string userId,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Users
+			.AsNoTracking()
+			.Where(u => u.Id == userId)
+			.Select(u => new NamesResponse(u.FirstName, u.LastName))
+			.FirstOrDefaultAsync(cancellationToken);
 	}
 }

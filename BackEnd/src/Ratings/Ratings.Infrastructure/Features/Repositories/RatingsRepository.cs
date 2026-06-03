@@ -49,4 +49,13 @@ public class RatingsRepository(RatingsDbContext context)
             cancellationToken
         );
     }
+    
+    public void DeleteByDoctorId(string doctorId)
+    {
+        var ratings = context.Ratings
+            .Where(r => r.DoctorId == doctorId)
+            .ToList();
+
+        context.Ratings.RemoveRange(ratings);
+    }
 }

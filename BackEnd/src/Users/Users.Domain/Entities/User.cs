@@ -20,6 +20,7 @@ public sealed class User : BaseEntity
 	public bool EmailVerified { get; private set; }
 	public string IdentityId { get; private set; }
 	public IReadOnlyCollection<Role> Roles => _roles.ToList();
+	public bool IsDeleted { get; private set; }
 
 	private User()
 	{
@@ -33,7 +34,8 @@ public sealed class User : BaseEntity
 		bool emailVerified,
 		string identityId,
 		string phoneNumber,
-		string address)
+		string address,
+		bool isDeleted)
 	{
 		Email = email;
 		FirstName = firstName;
@@ -43,6 +45,7 @@ public sealed class User : BaseEntity
 		Address = address;
 		EmailVerified = emailVerified;
 		IdentityId = identityId;
+		IsDeleted = isDeleted;
 	}
 
 	public static User Create(
@@ -64,7 +67,8 @@ public sealed class User : BaseEntity
 			emailVerified,
 			identityId,
 			phoneNumber,
-			address);
+			address,
+			false);
 
 		user._roles.Add(role);
 		
@@ -109,6 +113,15 @@ public sealed class User : BaseEntity
 		{
 			RaiseDomainEvent(new UserUpdatedNamesDomainEvent(Id, FirstName, LastName));
 		}
+	}
+	
+	public void Delete()
+	{
+		IsDeleted = true;
+		
+		RaiseDomainEvent(new UserDeletedDomainEvent(
+			Id, 
+			Roles.Select(p => p.MapToRoleEnum()).ToList()));
 	}
 }
 
