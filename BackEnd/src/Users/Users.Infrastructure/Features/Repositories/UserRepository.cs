@@ -111,4 +111,15 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 				cancellationToken
 			);
 	}
+	
+	public async Task<NamesResponse?> GetNameByIdAsync(
+		string userId,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Users
+			.AsNoTracking()
+			.Where(u => u.Id == userId)
+			.Select(u => new NamesResponse(u.FirstName, u.LastName))
+			.FirstOrDefaultAsync(cancellationToken);
+	}
 }

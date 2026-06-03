@@ -4,6 +4,7 @@ using Shared.Application.Models;
 using Shared.Domain.Results;
 using Users.Application.Features.Users.Abstractions;
 using Users.Application.Features.Users.Queries.GetUserById;
+using Users.Domain.Utilities;
 
 namespace Users.Application.Features.Users.Services;
 
@@ -11,16 +12,14 @@ public class NamesService(ISender sender, IUserRepository repository): INamesSer
 {
     public async Task<Result<NamesResponse>> GetUserNamesAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var query = new GetUserByIdQuery(userId);
+        var name = await repository.GetNameByIdAsync(userId, cancellationToken);
         
-        var result = await sender.Send(query, cancellationToken);
-        if (result.IsFailure)
+        if (name is null)
         {
-            return Result<NamesResponse>.Failure(result.Response);
+            return Result<NamesResponse>.Failure(ResponseList.UserNotFound);
         }
         
-        var response = new NamesResponse(result.Value!.FirstName, result.Value.LastName);
-        return Result<NamesResponse>.Success(response);
+        return Result<NamesResponse>.Success(name);
     }
     
     public async Task<GetUsersByIdsResponse> GetUsersNamesByIdsAsync(
