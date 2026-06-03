@@ -113,7 +113,9 @@ public sealed class User : BaseEntity
 	
 	public void Delete()
 	{
-		RaiseDomainEvent(new UserDeletedDomainEvent(Id));
+		RaiseDomainEvent(new UserDeletedDomainEvent(
+			Id, 
+			Roles.Select(p => p.MapToRoleEnum()).ToList()));
 	}
 }
 

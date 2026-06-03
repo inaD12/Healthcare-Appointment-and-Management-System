@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Shared.Application.Abstractions;
-using Shared.Application.IntegrationEvents;
 using Users.Domain.Events;
+using Users.Infrastructure.Features.Mappers;
 
 namespace Users.Infrastructure.Features.Consumers;
 
@@ -13,7 +13,7 @@ public sealed class UserDeletedDomainEventConsumer(
 	{
 		var msg = context.Message;
 
-		var userDeletedEvent = new UserDeletedIntegrationEvent(msg.Id);
+		var userDeletedEvent = msg.ToIntEvent();
 
 		await eventBus.PublishAsync(userDeletedEvent, context.CancellationToken);
 	}
