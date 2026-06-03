@@ -110,5 +110,10 @@ public sealed class User : BaseEntity
 			RaiseDomainEvent(new UserUpdatedNamesDomainEvent(Id, FirstName, LastName));
 		}
 	}
+	
+	public void Delete()
+	{
+		RaiseDomainEvent(new UserDeletedDomainEvent(Id));
+	}
 }
 

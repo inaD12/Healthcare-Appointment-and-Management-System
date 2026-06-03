@@ -15,6 +15,8 @@ public sealed class DeleteUserCommandHandler(IUnitOfWork unitOfWork, IUserReposi
 		if (user == null)
 			return Result.Failure(ResponseList.UserNotFound);
 
+		user.Delete();
+		
 		userRepository.Delete(user);
 		await unitOfWork.SaveChangesAsync(cancellationToken);
 		return Result.Success();
