@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
 using Shared.Domain.Entities;
-using Shared.Domain.Enums;
 using Shared.Infrastructure.Authentication;
 using Users.Application.Features.Users.Commands.DeleteUser;
 using Users.Application.Features.Users.Commands.RegisterUserByAdmin;
@@ -66,18 +65,6 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 
 	{
-		var commandd = new RegisterUserByAdminCommand(
-			"admin@admin.admin",
-			"adminadminadmin",
-			"Admin",
-			"Admin",
-			DateTime.Now.ToUniversalTime(), 
-			"0878718931",
-			"Vasil LEvski 437a",
-			Role.Administrator
-		);
-		await sender.Send(commandd, cancellationToken);
-		
 		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
