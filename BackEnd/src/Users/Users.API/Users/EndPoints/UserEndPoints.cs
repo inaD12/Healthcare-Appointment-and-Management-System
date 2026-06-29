@@ -96,19 +96,6 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var userId = httpContext.User.GetUserId();
-		
-		var command = new RegisterUserByAdminCommand(
-			"admin@admin.admin",
-			"adminadminadmin",
-			"Admin",
-			"Admin",
-			DateTime.Now, 
-			"0878718931",
-			"Vasil LEvski 437a",
-			Role.Administrator
-			);
-		await sender.Send(command, cancellationToken);
-		
 		var query = new GetUserByIdQuery(userId);
 		var res = await sender.Send(query, cancellationToken);
 		if (res.IsFailure)
