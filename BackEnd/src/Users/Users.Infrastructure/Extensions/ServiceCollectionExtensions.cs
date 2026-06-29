@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
 			.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
 
 		services
-			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
+			.AddMessageBroker(configuration, currentAssembly,"users", busConfigurator =>
 			{
 				busConfigurator.AddTransactionalOutbox<UsersDbContext>();
 				

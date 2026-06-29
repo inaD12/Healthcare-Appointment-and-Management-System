@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
 			.AddUnitOfWork<DoctorsDbContext>()
 			.AddAuth(configuration)
 			.AddPermissionService()
-			.AddMessageBroker(configuration, currentAssembly, busConfigurator =>
+			.AddMessageBroker(configuration, currentAssembly,"doctors", busConfigurator =>
 			{
 				busConfigurator.AddTransactionalOutbox<DoctorsDbContext>();
 			})

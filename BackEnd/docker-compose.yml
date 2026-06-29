@@ -134,7 +134,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - doctors-db:/var/lib/postgresql/data
+      - doctors-db:/var/lib/postgresql
     ports:
       - "5435:5432"
     restart: always

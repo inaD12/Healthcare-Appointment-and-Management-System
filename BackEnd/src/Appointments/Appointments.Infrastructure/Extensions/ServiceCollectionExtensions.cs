@@ -29,7 +29,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddUnitOfWork<AppointmentsDBContext>()
 			.AddHostedService<HangfireHostedService>()
-			.AddMessageBroker(configuration, currentAssembly)
+			.AddMessageBroker(configuration, currentAssembly, "appointments")
 			.AddAuth(configuration)
 			.AddPermissionService()
 			.AddDatabaseContext<AppointmentsDBContext>(configuration, optionsAction =>

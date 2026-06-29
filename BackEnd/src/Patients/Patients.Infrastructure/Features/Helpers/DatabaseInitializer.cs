@@ -9,8 +9,8 @@ internal class DatabaseInitializer : IDatabaseInitializer
 {
 	public async Task ApplyMigrationsAsync(IServiceScope scope)
 	{
-		PatientsQueryDbContext dBContext =
-		   scope.ServiceProvider.GetRequiredService<PatientsQueryDbContext>();
+		PatientsCommandDbContext dBContext =
+		   scope.ServiceProvider.GetRequiredService<PatientsCommandDbContext>();
 
 		var pendingMigrations = await dBContext.Database.GetPendingMigrationsAsync();
 

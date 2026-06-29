@@ -39,8 +39,8 @@ public static class ServiceCollectionExtentions
 		this IServiceCollection services,
 		IConfiguration configuration,
 		Assembly assembly,
-		Action<IBusRegistrationConfigurator>? configure = null
-	)
+		string endpointPrefix,
+		Action<IBusRegistrationConfigurator>? configure = null)
 	{
 		services
 			.AddOptions<MessageBrokerOptions>()
@@ -54,8 +54,6 @@ public static class ServiceCollectionExtentions
 
 		services.AddMassTransit(busConfigurator =>
 		{
-			busConfigurator.SetKebabCaseEndpointNameFormatter();
-
 			busConfigurator.AddConsumers(assembly);
 
 			configure?.Invoke(busConfigurator);
@@ -68,15 +66,16 @@ public static class ServiceCollectionExtentions
 					h.Password(settings.Password);
 				});
 
-				configurator.ConfigureEndpoints(context);
+				configurator.ConfigureEndpoints(
+					context,
+					new KebabCaseEndpointNameFormatter(endpointPrefix, false));
 
 				configurator.UseNewtonsoftJsonSerializer();
 				configurator.UseNewtonsoftJsonDeserializer();
 			});
 		});
 
-		services
-			.AddScoped<IEventBus, EventBus>();
+		services.AddScoped<IEventBus, EventBus>();
 
 		return services;
 	}

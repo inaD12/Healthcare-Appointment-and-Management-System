@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
 			.AddEmailService(configuration);
 
 		services
-			.AddMessageBroker(configuration, currentAssembly);
+			.AddMessageBroker(configuration, currentAssembly,"emails");
 
 		return services;
 	}

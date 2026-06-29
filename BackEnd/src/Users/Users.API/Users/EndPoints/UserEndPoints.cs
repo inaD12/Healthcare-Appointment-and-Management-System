@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
+using Shared.Domain.Entities;
+using Shared.Domain.Enums;
 using Shared.Infrastructure.Authentication;
 using Users.Application.Features.Users.Commands.DeleteUser;
+using Users.Application.Features.Users.Commands.RegisterUserByAdmin;
 using Users.Application.Features.Users.Queries.GetUserById;
 using Users.Users.Mappers;
 using Users.Users.Models.Requests;
@@ -63,6 +66,18 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 
 	{
+		var commandd = new RegisterUserByAdminCommand(
+			"admin@admin.admin",
+			"adminadminadmin",
+			"Admin",
+			"Admin",
+			DateTime.Now.ToUniversalTime(), 
+			"0878718931",
+			"Vasil LEvski 437a",
+			Role.Administrator
+		);
+		await sender.Send(commandd, cancellationToken);
+		
 		var command = request.ToCommand();
 		var res = await sender.Send(command, cancellationToken);
 		if (res.IsFailure)
@@ -94,6 +109,19 @@ internal class UserEndPoints : IEndPoints
 		CancellationToken cancellationToken)
 	{
 		var userId = httpContext.User.GetUserId();
+		
+		var command = new RegisterUserByAdminCommand(
+			"admin@admin.admin",
+			"adminadminadmin",
+			"Admin",
+			"Admin",
+			DateTime.Now, 
+			"0878718931",
+			"Vasil LEvski 437a",
+			Role.Administrator
+			);
+		await sender.Send(command, cancellationToken);
+		
 		var query = new GetUserByIdQuery(userId);
 		var res = await sender.Send(query, cancellationToken);
 		if (res.IsFailure)

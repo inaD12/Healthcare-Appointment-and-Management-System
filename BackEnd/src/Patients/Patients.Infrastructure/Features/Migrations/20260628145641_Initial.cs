@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Patients.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Database : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,13 +33,14 @@ namespace Patients.Infrastructure.Features.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    PatientId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DoctorId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    AppointmentId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PatientId = table.Column<string>(type: "text", nullable: false),
+                    DoctorId = table.Column<string>(type: "text", nullable: false),
+                    AppointmentId = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     StartedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FinalizedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LockedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -106,10 +107,12 @@ namespace Patients.Infrastructure.Features.Migrations
                 name: "EncounterAddendums",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Text = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false)
+                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,10 +129,13 @@ namespace Patients.Infrastructure.Features.Migrations
                 name: "EncounterDiagnoses",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    IcdCode = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    IcdCode = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -146,10 +152,12 @@ namespace Patients.Infrastructure.Features.Migrations
                 name: "EncounterNotes",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Text = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false)
+                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -166,11 +174,14 @@ namespace Patients.Infrastructure.Features.Migrations
                 name: "EncounterPrescriptions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    MedicationName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Dosage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Instructions = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    MedicationName = table.Column<string>(type: "text", nullable: false),
+                    Dosage = table.Column<string>(type: "text", nullable: false),
+                    Instructions = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EncounterId = table.Column<string>(type: "character varying(100)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

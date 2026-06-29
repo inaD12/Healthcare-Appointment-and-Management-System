@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddUnitOfWork<PatientsCommandDbContext>()
-			.AddMessageBroker(configuration, currentAssembly)
+			.AddMessageBroker(configuration, currentAssembly, "patients")
 			.AddAuth(configuration)
 			.AddPermissionService()
 			.AddDatabaseContextFactory<PatientsQueryDbContext>(configuration, optionsAction =>

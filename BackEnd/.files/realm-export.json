@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "76c1fce0-70fa-40d3-a245-58ebd62cfd11",
   "realm": "hams",
   "displayName": "",
@@ -703,7 +703,7 @@
       "name": "",
       "description": "",
       "rootUrl": "",
-      "adminUrl": "xzxzxz",
+      "adminUrl": "http://localhost:3000",
       "baseUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
