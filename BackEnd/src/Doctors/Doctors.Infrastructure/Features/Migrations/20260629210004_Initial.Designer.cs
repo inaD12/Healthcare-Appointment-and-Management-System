@@ -14,15 +14,15 @@ using Pgvector;
 namespace Doctors.Infrastructure.Features.Migrations
 {
     [DbContext(typeof(DoctorsDbContext))]
-    [Migration("20251111180514_Add_Description_To_Speciality")]
-    partial class Add_Description_To_Speciality
+    [Migration("20260629210004_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "availabilityexceptiontype", new[] { "extra_availability", "unavailable" });
@@ -50,8 +50,10 @@ namespace Doctors.Infrastructure.Features.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
+                    b.Property<double>("AverageRating")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -62,9 +64,8 @@ namespace Doctors.Infrastructure.Features.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TimeZoneId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RatingsCount")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -393,11 +394,11 @@ namespace Doctors.Infrastructure.Features.Migrations
 
                                             NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b3.Property<int>("Id"));
 
-                                            b3.Property<TimeSpan>("End")
-                                                .HasColumnType("interval");
+                                            b3.Property<TimeOnly>("End")
+                                                .HasColumnType("time without time zone");
 
-                                            b3.Property<TimeSpan>("Start")
-                                                .HasColumnType("interval");
+                                            b3.Property<TimeOnly>("Start")
+                                                .HasColumnType("time without time zone");
 
                                             b3.HasKey("WorkDayWeeklyScheduleId", "WorkDayId", "Id");
 

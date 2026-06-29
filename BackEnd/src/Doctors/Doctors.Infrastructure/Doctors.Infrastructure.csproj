@@ -30,4 +30,8 @@
       <Compile Remove="Features\Migrations\20260414164215_Remove_TimeZoneId.Designer.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Migrations\" />
+    </ItemGroup>
+
 </Project>
