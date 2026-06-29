@@ -22,6 +22,7 @@ internal class UserRepository : GenericRepository<User>, IUserRepository
 	{
 		var entitiesQuery = _context.Users
 			.Include(u => u.Roles)
+			.Where(u => !u.IsDeleted)
 			.AsQueryable();
 
 		if (!string.IsNullOrWhiteSpace(query.FirstName))
