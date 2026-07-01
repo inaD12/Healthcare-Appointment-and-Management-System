@@ -542,31 +542,34 @@ export const patientService = {
     const today = new Date().toISOString().split("T")[0]
 
     const query = `
-      query DoctorDashboard($doctorId: String!, $todayStart: DateTime!, $todayEnd: DateTime!) {
+    query DoctorDashboard($doctorId: String!, $todayStart: DateTime!, $todayEnd: DateTime!) {
 
-        todayAppointments: appointmentsByDoctor(
-          doctorId: $doctorId
-          first: 20
-          where: {
-            start: {
-              gte: $todayStart
-              lt: $todayEnd
-            }
+      todayAppointments: appointmentsByDoctor(
+        doctorId: $doctorId
+        first: 20
+        where: {
+          start: {
+            gte: $todayStart
+            lt: $todayEnd
           }
-          order: [{ start: ASC }]
-        ) {
-          nodes {
-            id
-            start
-            end
-            status
-            patientName
-            patientId
+          status: {
+            nin: [RESCHEDULED, CANCELLED]
           }
-          totalCount
         }
+        order: [{ start: ASC }]
+      ) {
+        nodes {
+          id
+          start
+          end
+          status
+          patientName
+          patientId
+        }
+        totalCount
       }
-    `
+    }
+  `
 
     const todayStart = new Date(`${today}T00:00:00.000Z`).toISOString()
     const todayEnd = new Date(`${today}T23:59:59.999Z`).toISOString()
