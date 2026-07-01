@@ -29,7 +29,7 @@ export const ENDPOINTS = {
     adminChronicConditions: (patientId: string) => `/patients-api/admin/patients/${patientId}/chronic-conditions`,
   },
   encounters: {
-    root: `/patients-api/api/encounters`,
+    root: `/patients-api/encounters`,
     notes: (encounterId: string) => `/patients-api/encounters/${encounterId}/notes`,
     diagnoses: (encounterId: string) => `/patients-api/encounters/${encounterId}/diagnoses`,
     prescriptions: (encounterId: string) => `/patients-api/encounters/${encounterId}/prescriptions`,

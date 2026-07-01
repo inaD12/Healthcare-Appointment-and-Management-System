@@ -119,10 +119,10 @@ export default function DoctorAvailabilityExceptionsCard({
 
                 <div className="flex items-center gap-2">
 
-                  <Badge variant={a.type === 1 ? "default" : "destructive"}>
+                  <Badge variant={a.type === 1 ? "destructive" : "default"}>
                     {a.type === 1
-                      ? "Extra Availability"
-                      : "Unavailable"}
+                      ? "Unavailable"
+                      : "Extra Availability"}
                   </Badge>
 
                 </div>

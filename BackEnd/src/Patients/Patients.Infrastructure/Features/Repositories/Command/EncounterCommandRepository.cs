@@ -1,4 +1,4 @@
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Patients.Application.Features.Encounters.Abstractions;
 using Patients.Domain.Entities;
 using Patients.Infrastructure.Features.DBContexts;

@@ -101,8 +101,14 @@ export default function EncounterCard({ encounter, encounterId, updateEncounter 
   const isReadOnly = isPatient || isAdmin || encounter.status === EncounterStatus.Locked
   const canEdit = !isReadOnly && encounter.status === EncounterStatus.InProgress
   const canAddAddendum = isDoctor && encounter.status === EncounterStatus.Finalized
-  const canLock = isDoctor && encounter.status !== EncounterStatus.Locked
-  const canFinalize = isDoctor && encounter.status === EncounterStatus.InProgress
+  const canLock =
+    isDoctor &&
+    encounter.status === EncounterStatus.Finalized
+  const hasDiagnosis = encounter.diagnoses.length > 0
+  const canFinalize =
+    isDoctor &&
+    encounter.status === EncounterStatus.InProgress &&
+    hasDiagnosis
   const status = statusConfig[encounter.status]
 
   const withLoading = async (key: string, fn: () => Promise<void>) => {
@@ -381,7 +387,13 @@ export default function EncounterCard({ encounter, encounterId, updateEncounter 
             <div className="h-px bg-slate-100" />
             <div className="flex items-center justify-between pt-1">
               <p className="text-xs text-slate-400">
-                {canFinalize ? "Ready to close this encounter?" : "Lock to prevent further edits."}
+                {encounter.status === EncounterStatus.InProgress && !hasDiagnosis
+                  ? "Add at least one diagnosis before finalizing."
+                  : canFinalize
+                    ? "Ready to finalize this encounter?"
+                    : canLock
+                      ? "Lock this finalized encounter to prevent further edits."
+                      : ""}
               </p>
               <div className="flex gap-2">
                 {canLock && (
