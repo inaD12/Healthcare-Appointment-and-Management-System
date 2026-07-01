@@ -111,64 +111,81 @@ export default function DoctorCalendarClient({
     return () => clearTimeout(t)
   }, [bookingSuccess])
 
-  const { calendarDays, timeSlots } = useDoctorCalendar({
-    doctor,
-    appointments,
-    currentMonth,
-    duration,
-    selectedDate,
-  })
+const adjustedAppointments = appointments.map((a) => {
+  const start = new Date(a.start)
+  const end = new Date(a.end)
+
+  start.setHours(start.getHours() - 3)
+  end.setHours(end.getHours() - 3)
+
+  return {
+    ...a,
+    start: start.toISOString(),
+    end: end.toISOString(),
+  }
+})
+
+const { calendarDays, timeSlots } = useDoctorCalendar({
+  doctor,
+  appointments: adjustedAppointments,
+  currentMonth,
+  duration,
+  selectedDate,
+})
 
   async function handleBooking() {
-    if (!selectedSlot || !patientId) {
-      setBookingError("You must select a time slot.")
-      return
-    }
-
-    setBookingLoading(true)
-    setBookingError("")
-    setBookingSuccess("")
-
-    try {
-      const payload = {
-        scheduledStartTime: selectedSlot,
-        duration,
-      }
-
-      if (rescheduleId) {
-        if (isAdmin) {
-          await appointmentService.rescheduleAppointmentByAdmin(rescheduleId, payload)
-        } else {
-          await appointmentService.rescheduleAppointment(rescheduleId, payload)
-        }
-
-        setBookingSuccess("Appointment rescheduled successfully")
-
-        setTimeout(() => {
-          router.back()
-        }, 600)
-
-      } else {
-        await appointmentService.createAppointment({
-          doctorUserId: doctor.userId,
-          scheduledStartTime: selectedSlot,
-          duration,
-        })
-
-        setBookingSuccess("Appointment booked successfully")
-      }
-
-      setSelectedSlot(null)
-    } catch (err: any) {
-      setBookingError(
-        err.response?.status === 409
-          ? "This time slot is already taken."
-          : "Failed to process appointment."
-      )
-    } finally {
-      setBookingLoading(false)
-    }
+  if (!selectedSlot || !patientId) {
+    setBookingError("You must select a time slot.")
+    return
   }
+
+  setBookingLoading(true)
+  setBookingError("")
+  setBookingSuccess("")
+
+  try {
+    // add +3 hours
+    const adjustedStartTime = new Date(selectedSlot)
+    adjustedStartTime.setHours(adjustedStartTime.getHours() + 3)
+
+    const payload = {
+      scheduledStartTime: adjustedStartTime.toISOString(),
+      duration,
+    }
+
+    if (rescheduleId) {
+      if (isAdmin) {
+        await appointmentService.rescheduleAppointmentByAdmin(rescheduleId, payload)
+      } else {
+        await appointmentService.rescheduleAppointment(rescheduleId, payload)
+      }
+
+      setBookingSuccess("Appointment rescheduled successfully")
+
+      setTimeout(() => {
+        router.back()
+      }, 600)
+    } else {
+      await appointmentService.createAppointment({
+        doctorUserId: doctor.userId,
+        scheduledStartTime: adjustedStartTime.toISOString(),
+        duration,
+      })
+
+      setBookingSuccess("Appointment booked successfully")
+    }
+
+    setSelectedSlot(null)
+  } catch (err: any) {
+    setBookingError(
+      err.response?.status === 409
+        ? "This time slot is already taken."
+        : "Failed to process appointment."
+    )
+  } finally {
+    setBookingLoading(false)
+  }
+}
 
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 

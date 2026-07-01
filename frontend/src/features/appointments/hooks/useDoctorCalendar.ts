@@ -1,8 +1,12 @@
-import { useMemo} from "react"
+import { useMemo } from "react"
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 import { BookingQueryResponse } from "@/features/appointments/types/appointmentsTypes"
 
-export type StatusType = "past" | "empty" | "fullyBooked" | "partiallyBooked"
+export type StatusType =
+  | "past"
+  | "empty"
+  | "fullyBooked"
+  | "partiallyBooked"
 
 export type CalendarDay = {
   date: Date
@@ -24,6 +28,15 @@ type UseDoctorCalendarProps = {
   selectedDate: Date | null
 }
 
+function overlaps(
+  start1: Date,
+  end1: Date,
+  start2: Date,
+  end2: Date
+) {
+  return start1 < end2 && end1 > start2
+}
+
 export function useDoctorCalendar({
   doctor,
   appointments,
@@ -31,15 +44,61 @@ export function useDoctorCalendar({
   duration,
   selectedDate,
 }: UseDoctorCalendarProps) {
+  /**
+   * Group appointments by day
+   */
   const appointmentsByDate = useMemo(() => {
     const map = new Map<string, BookingQueryResponse[]>()
-    for (const a of appointments) {
-      const key = new Date(a.start).toDateString()
-      if (!map.has(key)) map.set(key, [])
-      map.get(key)!.push(a)
+
+    for (const appointment of appointments) {
+      const key = new Date(appointment.start).toDateString()
+
+      if (!map.has(key)) {
+        map.set(key, [])
+      }
+
+      map.get(key)!.push(appointment)
     }
+
     return map
   }, [appointments])
+
+  /**
+   * Group availability exceptions by day
+   */
+  const exceptionsByDate = useMemo(() => {
+    const map = new Map<
+      string,
+      DoctorQueryViewModel["availabilityExceptions"]
+    >()
+
+    if (!doctor) return map
+
+    for (const exception of doctor.availabilityExceptions) {
+      const start = new Date(exception.start)
+      const end = new Date(exception.end)
+
+      const current = new Date(start)
+      current.setHours(0, 0, 0, 0)
+
+      const last = new Date(end)
+      last.setHours(0, 0, 0, 0)
+
+      while (current <= last) {
+        const key = current.toDateString()
+
+        if (!map.has(key)) {
+          map.set(key, [])
+        }
+
+        map.get(key)!.push(exception)
+
+        current.setDate(current.getDate() + 1)
+      }
+    }
+
+    return map
+  }, [doctor])
 
   const todayStart = useMemo(() => {
     const d = new Date()
@@ -47,11 +106,15 @@ export function useDoctorCalendar({
     return d
   }, [])
 
+  /**
+   * Calendar Days
+   */
   const calendarDays: CalendarDay[] = useMemo(() => {
     if (!doctor) return []
 
     const month = currentMonth.getMonth()
     const year = currentMonth.getFullYear()
+
     const firstDay = new Date(year, month, 1).getDay()
     const lastDate = new Date(year, month + 1, 0).getDate()
     const prevMonthLastDate = new Date(year, month, 0).getDate()
@@ -59,87 +122,222 @@ export function useDoctorCalendar({
     const days: CalendarDay[] = []
 
     for (let i = firstDay - 1; i >= 0; i--) {
-      const date = new Date(year, month - 1, prevMonthLastDate - i)
-      days.push({ date, isCurrentMonth: false, status: "past" })
+      days.push({
+        date: new Date(year, month - 1, prevMonthLastDate - i),
+        isCurrentMonth: false,
+        status: "past",
+      })
     }
 
-    for (let i = 1; i <= lastDate; i++) {
-      const date = new Date(year, month, i)
-      const dayAppointments = appointmentsByDate.get(date.toDateString()) || []
-      const workDay = doctor.workDays.find(d => d.dayOfWeek === date.getDay())
+    for (let day = 1; day <= lastDate; day++) {
+      const date = new Date(year, month, day)
 
-      let status: StatusType = "empty"
-      if (date < todayStart) status = "past"
-      else if (!workDay) status = "fullyBooked"
-      else {
-        let totalSlots = 0
-        for (const wt of workDay.workTimes) {
-          const [sh, sm] = wt.start.split(":").map(Number)
-          const [eh, em] = wt.end.split(":").map(Number)
-          let start = new Date(date)
-          start.setHours(sh, sm, 0, 0)
-          const end = new Date(date)
-          end.setHours(eh, em, 0, 0)
-          while (start < end) {
-            const slotEnd = new Date(start.getTime() + duration * 60000)
-            if (slotEnd > end) break
-            totalSlots++
-            start = slotEnd
-          }
-        }
-        if (dayAppointments.length === 0) status = "empty"
-        else if (dayAppointments.length < totalSlots) status = "partiallyBooked"
-        else status = "fullyBooked"
+      const workDay = doctor.workDays.find(
+        (d) => d.dayOfWeek === date.getDay()
+      )
+
+      if (date < todayStart) {
+        days.push({
+          date,
+          isCurrentMonth: true,
+          status: "past",
+        })
+        continue
       }
 
-      days.push({ date, isCurrentMonth: true, status })
+      if (!workDay) {
+        days.push({
+          date,
+          isCurrentMonth: true,
+          status: "fullyBooked",
+        })
+        continue
+      }
+
+      const dayAppointments =
+        appointmentsByDate.get(date.toDateString()) ?? []
+
+      const dayExceptions =
+        exceptionsByDate.get(date.toDateString()) ?? []
+
+      let totalSlots = 0
+      let blockedSlots = 0
+
+      for (const workTime of workDay.workTimes) {
+        const [sh, sm] = workTime.start.split(":").map(Number)
+        const [eh, em] = workTime.end.split(":").map(Number)
+
+        let slotStart = new Date(date)
+        slotStart.setHours(sh, sm, 0, 0)
+
+        const workEnd = new Date(date)
+        workEnd.setHours(eh, em, 0, 0)
+
+        while (slotStart < workEnd) {
+          const slotEnd = new Date(
+            slotStart.getTime() + duration * 60000
+          )
+
+          if (slotEnd > workEnd) {
+            break
+          }
+
+          totalSlots++
+
+          const blockedByAppointment = dayAppointments.some((appointment) =>
+            overlaps(
+              slotStart,
+              slotEnd,
+              new Date(appointment.start),
+              new Date(appointment.end)
+            )
+          )
+
+          const blockedByException = dayExceptions.some((exception) =>
+            overlaps(
+              slotStart,
+              slotEnd,
+              new Date(exception.start),
+              new Date(exception.end)
+            )
+          )
+
+          if (blockedByAppointment || blockedByException) {
+            blockedSlots++
+          }
+
+          slotStart = slotEnd
+        }
+      }
+
+      let status: StatusType
+
+      if (blockedSlots === 0) {
+        status = "empty"
+      } else if (blockedSlots < totalSlots) {
+        status = "partiallyBooked"
+      } else {
+        status = "fullyBooked"
+      }
+
+      days.push({
+        date,
+        isCurrentMonth: true,
+        status,
+      })
     }
 
     while (days.length < 42) {
       const last = days[days.length - 1].date
+
       const next = new Date(last)
       next.setDate(last.getDate() + 1)
-      days.push({ date: next, isCurrentMonth: false, status: "past" })
+
+      days.push({
+        date: next,
+        isCurrentMonth: false,
+        status: "past",
+      })
     }
 
     return days
-  }, [doctor, appointmentsByDate, currentMonth, duration, todayStart])
+  }, [
+    doctor,
+    appointmentsByDate,
+    exceptionsByDate,
+    currentMonth,
+    duration,
+    todayStart,
+  ])
 
+  /**
+   * Time Slots
+   */
   const timeSlots: TimeSlotItem[] = useMemo(() => {
-    if (!doctor || !selectedDate) return []
+    if (!doctor || !selectedDate) {
+      return []
+    }
 
-    const dayOfWeek = selectedDate.getDay()
-    const workDay = doctor.workDays.find(d => d.dayOfWeek === dayOfWeek)
-    if (!workDay) return []
+    const workDay = doctor.workDays.find(
+      (d) => d.dayOfWeek === selectedDate.getDay()
+    )
+
+    if (!workDay) {
+      return []
+    }
 
     const now = new Date()
-    const dayAppointments = appointmentsByDate.get(selectedDate.toDateString()) || []
+
+    const dayAppointments =
+      appointmentsByDate.get(selectedDate.toDateString()) ?? []
+
+    const dayExceptions =
+      exceptionsByDate.get(selectedDate.toDateString()) ?? []
+
     const slots: TimeSlotItem[] = []
 
-    for (const wt of workDay.workTimes) {
-      const [sh, sm] = wt.start.split(":").map(Number)
-      const [eh, em] = wt.end.split(":").map(Number)
-      let start = new Date(selectedDate)
-      start.setHours(sh, sm, 0, 0)
-      const end = new Date(selectedDate)
-      end.setHours(eh, em, 0, 0)
+    for (const workTime of workDay.workTimes) {
+      const [sh, sm] = workTime.start.split(":").map(Number)
+      const [eh, em] = workTime.end.split(":").map(Number)
 
-      while (start < end) {
-        const slotEnd = new Date(start.getTime() + duration * 60000)
-        if (slotEnd > end) break
-        const isPast = start < now
-        const isBlocked = dayAppointments.some(a => {
-          const aStart = new Date(a.start)
-          const aEnd = new Date(a.end)
-          return start < aEnd && slotEnd > aStart
+      let slotStart = new Date(selectedDate)
+      slotStart.setHours(sh, sm, 0, 0)
+
+      const workEnd = new Date(selectedDate)
+      workEnd.setHours(eh, em, 0, 0)
+
+      while (slotStart < workEnd) {
+        const slotEnd = new Date(
+          slotStart.getTime() + duration * 60000
+        )
+
+        if (slotEnd > workEnd) {
+          break
+        }
+
+        const isPast = slotStart < now
+
+        const blockedByAppointment = dayAppointments.some((appointment) =>
+          overlaps(
+            slotStart,
+            slotEnd,
+            new Date(appointment.start),
+            new Date(appointment.end)
+          )
+        )
+
+        const blockedByException = dayExceptions.some((exception) =>
+          overlaps(
+            slotStart,
+            slotEnd,
+            new Date(exception.start),
+            new Date(exception.end)
+          )
+        )
+
+        slots.push({
+          start: slotStart.toISOString(),
+          isPast,
+          isBlocked:
+            blockedByAppointment || blockedByException,
         })
-        slots.push({ start: start.toISOString(), isBlocked, isPast })
-        start = slotEnd
+
+        slotStart = slotEnd
       }
     }
 
     return slots
-  }, [appointmentsByDate, doctor, duration, selectedDate])
+  }, [
+    doctor,
+    selectedDate,
+    appointmentsByDate,
+    exceptionsByDate,
+    duration,
+  ])
 
-  return { calendarDays, appointmentsByDate, timeSlots }
+  return {
+    calendarDays,
+    appointmentsByDate,
+    timeSlots,
+  }
 }
