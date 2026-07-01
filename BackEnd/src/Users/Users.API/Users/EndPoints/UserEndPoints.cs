@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.API.Abstractions;
 using Shared.API.Helpers;
+using Shared.Domain.Entities;
 using Shared.Infrastructure.Authentication;
 using Users.Application.Features.Users.Commands.DeleteUser;
+using Users.Application.Features.Users.Commands.RegisterUserByAdmin;
 using Users.Application.Features.Users.Queries.GetUserById;
 using Users.Users.Mappers;
 using Users.Users.Models.Requests;

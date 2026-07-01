@@ -9,7 +9,7 @@ using Pgvector;
 namespace Doctors.Infrastructure.Features.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Database : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,8 +27,9 @@ namespace Doctors.Infrastructure.Features.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
-                    Bio = table.Column<string>(type: "text", nullable: false),
-                    TimeZoneId = table.Column<string>(type: "text", nullable: false)
+                    Bio = table.Column<string>(type: "text", nullable: true),
+                    AverageRating = table.Column<double>(type: "double precision", nullable: false),
+                    RatingsCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,6 +81,7 @@ namespace Doctors.Infrastructure.Features.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
                     Embedding = table.Column<Vector>(type: "vector(1024)", nullable: false)
                 },
                 constraints: table =>
@@ -221,8 +223,8 @@ namespace Doctors.Infrastructure.Features.Migrations
                     WorkDayId = table.Column<int>(type: "integer", nullable: false),
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Start = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    End = table.Column<TimeSpan>(type: "interval", nullable: false)
+                    Start = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    End = table.Column<TimeOnly>(type: "time without time zone", nullable: false)
                 },
                 constraints: table =>
                 {

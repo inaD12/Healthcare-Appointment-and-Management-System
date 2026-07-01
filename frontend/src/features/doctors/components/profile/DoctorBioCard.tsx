@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { DoctorQueryViewModel } from "@/features/doctors/types/doctorsTypes"
 
@@ -20,13 +20,14 @@ type Props = {
   setDoctor: (d: DoctorQueryViewModel) => void
 }
 
+
 export default function DoctorBioCard({
   doctor,
   setDoctor
 }: Props) {
 
   const [editing, setEditing] = useState(false)
-  const [bio, setBio] = useState(doctor.bio)
+  const [bio, setBio] = useState(doctor.bio ?? "")
 
   const save = async () => {
 
@@ -39,6 +40,10 @@ export default function DoctorBioCard({
 
     setEditing(false)
   }
+
+  useEffect(() => {
+    setBio(doctor.bio ?? "")
+  }, [doctor.bio])
 
   return (
     <Card>

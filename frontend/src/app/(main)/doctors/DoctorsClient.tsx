@@ -64,17 +64,17 @@ export default function DoctorsClient({
       const res = await doctorService.getAllDoctors({ ...filters, page })
       const data = res.data.data
 
-      if (!data.items.length) {
-        setDoctors([])
-        setError("No doctors found for these filters.")
-      } else {
-        setDoctors(data.items)
-        setTotalPages(Math.ceil(data.totalCount / data.pageSize))
-      }
-
+      setDoctors(data.items)
+      setTotalPages(Math.ceil(data.totalCount / data.pageSize))
       setFilters((prev) => ({ ...prev, page }))
-    } catch {
-      setError("Failed to fetch doctors.")
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        setDoctors([])
+        setTotalPages(1)
+        setError("")
+      } else {
+        setError("Failed to fetch doctors. Please try again.")
+      }
     } finally {
       setLoading(false)
     }
@@ -91,15 +91,15 @@ export default function DoctorsClient({
 
       setRecommendedSpecialities(specialities)
 
-      if (specialities.length > 0) {
-        setFilters((prev) => ({
-          ...prev,
-          speciality: specialities[0],
-          page: 1,
-        }))
+      // if (specialities.length > 0) {
+      //   setFilters((prev) => ({
+      //     ...prev,
+      //     speciality: specialities[0],
+      //     page: 1,
+      //   }))
 
-        fetchDoctors(1)
-      }
+      //   fetchDoctors(1)
+      // }
     } catch {
       setAiError("Something went wrong. Please try again.")
     }
@@ -135,11 +135,29 @@ export default function DoctorsClient({
       />
 
       {loading ? (
-        <p>Loading doctors...</p>
+        <p className="text-center text-muted-foreground py-10">
+          Loading doctors...
+        </p>
       ) : error ? (
-        <Card className="bg-red-50 border-red-200">
-          <CardContent className="p-4 text-red-700">
-            {error}
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="py-8 text-center text-red-700">
+            <p className="font-semibold">Something went wrong</p>
+            <p className="text-sm mt-1">
+              Failed to load doctors. Please try again.
+            </p>
+          </CardContent>
+        </Card>
+      ) : doctors.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="py-12 flex flex-col items-center text-center space-y-3">
+            <h3 className="text-xl font-semibold">
+              No doctors found
+            </h3>
+
+            <p className="text-muted-foreground max-w-md">
+              We couldn't find any doctors matching your current filters.
+              Try adjusting the doctor's name, specialty, or sorting options.
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -148,9 +166,7 @@ export default function DoctorsClient({
             <DoctorCard
               key={doctor.id}
               doctor={doctor}
-              onClick={() =>
-                router.push(`/doctors/${doctor.userId}`)
-              }
+              onClick={() => router.push(`/doctors/${doctor.userId}`)}
             />
           ))}
         </div>

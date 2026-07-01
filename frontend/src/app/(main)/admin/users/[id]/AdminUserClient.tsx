@@ -108,7 +108,7 @@ export default function AdminUserClient({
         <>
           <DoctorSchedule
             fetchAppointments={(params) => appointmentService.getByDateAdmin(user.id, params)}
-            onAppointmentClick={(a) => router.push(`/admin/appointments/${a.id}`)}
+            onAppointmentClick={(a) => router.push(`/admin/appointment/${a.id}`)}
           />
           <DoctorRatings
             ratings={ratings}

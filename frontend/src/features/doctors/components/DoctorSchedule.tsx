@@ -101,20 +101,32 @@ export default function DoctorSchedule({
   }, [weekStart, fetchAppointments])
 
   const appointmentsByDay = useMemo(() => {
+  const map: Record<string, AppointmentResponse[]> = {}
 
-    const map: Record<string, AppointmentResponse[]> = {}
+  appointments.forEach((a) => {
+    const start = new Date(a.duration.start)
+    const end = new Date(a.duration.end)
 
-    appointments.forEach(a => {
-      const day = new Date(a.duration.start).toDateString()
+    start.setHours(start.getHours() - 3)
+    end.setHours(end.getHours() - 3)
 
-      if (!map[day]) map[day] = []
+    const adjusted = {
+      ...a,
+      duration: {
+        start: start.toISOString(),
+        end: end.toISOString(),
+      },
+    }
 
-      map[day].push(a)
-    })
+    const day = new Date(adjusted.duration.start).toDateString()
 
-    return map
+    if (!map[day]) map[day] = []
 
-  }, [appointments])
+    map[day].push(adjusted)
+  })
+
+  return map
+}, [appointments])
 
   const nextWeek = () => {
     const d = new Date(weekStart)

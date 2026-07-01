@@ -17,8 +17,8 @@ public sealed class AppointmentCreatedIntegrationEventConsumer(
             Id = context.Message.AppointmentId,
             DoctorId = context.Message.DoctorId,
             PatientId = context.Message.PatientId,
-            Start = context.Message.Start,
-            End = context.Message.End
+            Start = context.Message.Start.AddHours(-3),
+            End = context.Message.End.AddHours(-3)
         };
 
         await appointmentQueryRepository.UpsertAsync(projection, context.CancellationToken);
